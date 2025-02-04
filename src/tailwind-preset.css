@@ -1,0 +1,7 @@
+@import './styles/fonts.less';
+@import './styles/variables.css';
+
+@theme {
+  --font-*: initial;
+  --text-*: initial;
+}
