@@ -12,6 +12,7 @@ const tailwindThemeVariableMap = {
   'color-background': 'background-color',
   'color-text': 'text-color',
   'color-border': 'border-color',
+  'color-ring': 'ring-color',
   'elevation-shadow': 'box-shadow',
   'font-size': 'text',
 };
@@ -68,11 +69,16 @@ fs.readFile(inputFile, 'utf8', (err, data) => {
     // @theme inline block
     result += '@theme inline {\n';
     // Add the color reset to remove tailwinds default colors
-    result += '  --color-*: initial;\n\n';
+    result += '  --color-*: initial;\n  --text-*: initial;\n  --spacing-*: initial;\n\n';
 
     Object.keys(themes[defaultThemeName]).forEach(token => {
         result += `  ${mapTokenToTailwindThemeVariables(token)}: var(--token-${token.slice(2)});\n`;
     });
+    // Save border-colors also as ring-colors
+    Object.keys(themes[defaultThemeName]).filter(token => token.startsWith('--color-border')).forEach(token => {
+        result += `  --ring-color${token.slice(14)}: var(--token-${token.slice(2)});\n`;
+    });
+
     result += '}\n\n';
 
     // @layer base block

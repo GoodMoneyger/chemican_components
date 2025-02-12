@@ -1,30 +1,73 @@
 import type { Meta, StoryFn } from '@storybook/react';
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconX,
+  IconCheck,
+} from '@tabler/icons-react';
 
 import { Button } from './Button';
 
+const iconMap = {
+  IconArrowLeft,
+  IconArrowRight,
+  IconX,
+  IconCheck,
+  None: undefined,
+};
+
 const meta: Meta<typeof Button> = {
-  title: 'Example/Button',
+  title: 'Components/Button',
   component: Button,
   argTypes: {
     intent: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'outline'],
+      options: ['primary', 'secondary', 'tertiary', 'ghost'],
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      options: ['xs', 'sm', 'md', 'lg'],
     },
     disabled: {
       control: { type: 'boolean' },
+    },
+    icon: {
+      control: { type: 'select' },
+      options: [
+        'None',
+        'IconArrowLeft',
+        'IconArrowRight',
+        'IconX',
+        'IconCheck',
+      ],
     },
   },
 };
 
 export default meta;
 
-const Template: StoryFn<typeof Button> = (args) => (
-  <Button {...args}>Primary</Button>
-);
+const Template: StoryFn<typeof Button> = (args) => {
+  const icon = iconMap[args.icon];
+  const asChild = args.asChild;
+  if (asChild) {
+    return (
+      <Button {...args} icon={icon} asChild>
+        <a href="#">ラベル</a>
+      </Button>
+    );
+  }
+  return (
+    <Button {...args} icon={icon}>
+      ラベル
+    </Button>
+  );
+};
 
 export const Primary = Template.bind({});
-Primary.args = { intent: 'primary', size: 'md', disabled: false };
+Primary.args = {
+  intent: 'primary',
+  size: 'md',
+  disabled: false,
+  icon: undefined,
+  asChild: false,
+};

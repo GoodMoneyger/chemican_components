@@ -1,0 +1,22 @@
+import type { Meta, StoryFn } from '@storybook/react';
+
+import { RadioButtonGroup, RadioButton, RadioButtonProps } from './RadioButton';
+
+export default {
+  title: 'Components/RadioButton',
+  component: RadioButton,
+} as Meta;
+
+const Template: Story<RadioButtonProps> = (args) => (
+  <RadioButtonGroup>
+    <RadioButton {...args} label="Option 1" value="option1" />
+    <RadioButton {...args} label="Option 2" value="option2" />
+    <RadioButton {...args} label="Option 3" value="option3" />
+  </RadioButtonGroup>
+);
+
+export const Default = Template.bind({});
+Default.args = {
+  invalid: false,
+  disabled: false,
+};
