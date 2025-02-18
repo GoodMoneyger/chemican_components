@@ -27,7 +27,7 @@ export interface SpinnerProps
 
 const sizeClasses = {
   sm: 'h-[1.25rem] w-[1.25rem]',
-  md: 'h-3 w-3',
+  md: 'h-9 w-9',
 };
 
 const strokeWidths = {

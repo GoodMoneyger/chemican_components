@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
 import {
   IconArrowLeft,
@@ -47,7 +48,7 @@ const meta: Meta<typeof Button> = {
 export default meta;
 
 const Template: StoryFn<typeof Button> = (args) => {
-  const icon = iconMap[args.icon];
+  const icon = iconMap[args.icon || 'None'];
   const asChild = args.asChild;
   if (asChild) {
     return (

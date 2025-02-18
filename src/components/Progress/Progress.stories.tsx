@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react';
+
 import { Progress, ProgressProps } from './Progress';
 
 const meta: Meta<typeof Progress> = {
@@ -23,7 +24,7 @@ const meta: Meta<typeof Progress> = {
 export default meta;
 
 const Template: StoryFn<ProgressProps> = (args) => (
-  <div className="w-24">
+  <div className="w-96">
     <Progress {...args} />
   </div>
 );

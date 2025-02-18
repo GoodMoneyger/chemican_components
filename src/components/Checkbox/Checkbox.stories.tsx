@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react';
+
 import { Checkbox, CheckboxGroup } from './Checkbox';
 
 const meta: Meta<typeof Button> = {

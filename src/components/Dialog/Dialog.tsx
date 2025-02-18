@@ -39,7 +39,7 @@ export const Dialog: React.FC<DialogProps> = ({
               </button>
             </RadixDialog.Close>
           </div>
-          <div className="flex min-h-10 flex-grow-0 border-y-1 border-divider-default bg-surface-secondary px-xl py-lg text-body-primary">
+          <div className="flex min-h-40 flex-grow-0 border-y-1 border-divider-default bg-surface-secondary px-xl py-lg text-body-primary">
             {children}
           </div>
           <div className="flex flex-grow gap-xs px-md py-lg">

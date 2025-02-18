@@ -29,7 +29,7 @@ export const Toast: React.FC<ToastProps> = ({
       <RadixToast.Root
         open={isOpen}
         onOpenChange={onClose}
-        className="shadow-high w-24 rounded border-1 border-surface-default bg-surface-primary p-md text-body-primary"
+        className="shadow-high w-96 rounded border-1 border-surface-default bg-surface-primary p-md text-body-primary"
       >
         <div className="flex items-start justify-between gap-xs">
           <div className="flex items-start gap-xs">

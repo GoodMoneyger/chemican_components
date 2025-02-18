@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title='Design System/Installation' />
+
+# Installation
+
+## Prerequisites
+
+- Start by making sure your project uses Tailwind v4, use the [official Tailwind documentation](https://tailwindcss.com/docs/installation/using-vite) to set it up
+- To streamline the development process, it is highly recommended to use `vite` to bundle your frontend project (though not strictly required)
+
+## Installation
+
+Install the design library via npm
+
+```sh
+npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-1.0.0
+```
+> Note: Since this is a private repository, you will need to be authenticated to run this command. In CI, this means that the right SSH keys need to be available.
+
+> Note: Ensure you are using a fixed release tag `#release-x.x.x`, that you have to keep updated manually. This is to avoid automatically introducing breaking changes.
+
+**Include the Chemican preset in your CSS:**
+
+```css
+@import "tailwindcss"
+
+@import "@chemican/components/tailwind-preset.css"
+```
+
+This will add the Chemican theme variables to your project and you can use utility classes like `.bg-interactive-primary-default`.
+
+**Include Components in your project:**
+```jsx
+import { Button } from '@chemican/components';
+
+const MyComp = () => <div><Button>Chemican Button</Button></div>
+
+```

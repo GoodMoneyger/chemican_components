@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
 
 const textareaVariants = cva(
-  'h-[3rem] min-h-[7.5rem] w-full rounded border border-input-default bg-surface-primary px-md py-sm hover:bg-surface-secondary focus:border-input-focused focus:border-transparent focus:ring-3 focus:ring-input-focused focus:outline-0 disabled:border-input-disabled disabled:bg-surface-disabled disabled:text-body-disabled',
+  'h-12 min-h-30 w-full rounded border border-input-default bg-surface-primary px-md py-sm hover:bg-surface-secondary focus:border-input-focused focus:border-transparent focus:ring-3 focus:ring-input-focused focus:outline-0 disabled:border-input-disabled disabled:bg-surface-disabled disabled:text-body-disabled',
   {
     variants: {
       invalid: {

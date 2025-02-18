@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/react';
+
 import { Spinner, SpinnerProps } from './Spinner';
 
 const meta: Meta<typeof Spinner> = {

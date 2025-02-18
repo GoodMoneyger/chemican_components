@@ -20,7 +20,7 @@ export const Progress: React.FC<ProgressProps> = ({
   return (
     <RadixProgress.Root
       className={classNames(
-        'relative h-0.25 w-full overflow-hidden rounded bg-surface-disabled',
+        'relative h-1 w-full overflow-hidden rounded bg-surface-disabled',
         className
       )}
       value={value}
