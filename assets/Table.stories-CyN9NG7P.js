@@ -1,0 +1,16 @@
+import{j as e}from"./jsx-runtime-BRtPMPcD.js";import{R as o}from"./index-B6zSntGL.js";import{c as t}from"./index-GW4lMJ8d.js";import"./index-BVKZFYvx.js";const i=o.forwardRef(({className:a,...l},s)=>e.jsx("div",{className:"relative w-full overflow-auto",children:e.jsx("table",{ref:s,className:t("text-sm w-full caption-bottom",a),...l})}));i.displayName="Table";const c=o.forwardRef(({className:a,...l},s)=>e.jsx("thead",{ref:s,className:t("[&_tr]:border-b",a),...l}));c.displayName="TableHeader";const b=o.forwardRef(({className:a,...l},s)=>e.jsx("tbody",{ref:s,className:t("[&_tr:last-child]:border-0",a),...l}));b.displayName="TableBody";const N=o.forwardRef(({className:a,...l},s)=>e.jsx("tfoot",{ref:s,className:t("bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",a),...l}));N.displayName="TableFooter";const m=o.forwardRef(({className:a,...l},s)=>e.jsx("tr",{ref:s,className:t("hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",a),...l}));m.displayName="TableRow";const r=o.forwardRef(({className:a,...l},s)=>e.jsx("th",{ref:s,className:t("text-muted-foreground h-12 px-4 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0",a),...l}));r.displayName="TableHead";const n=o.forwardRef(({className:a,...l},s)=>e.jsx("td",{ref:s,className:t("p-4 align-middle [&:has([role=checkbox])]:pr-0",a),...l}));n.displayName="TableCell";const x=o.forwardRef(({className:a,...l},s)=>e.jsx("caption",{ref:s,className:t("text-sm text-muted-foreground mt-4",a),...l}));x.displayName="TableCaption";i.__docgenInfo={description:"",methods:[],displayName:"Table"};c.__docgenInfo={description:"",methods:[],displayName:"TableHeader"};b.__docgenInfo={description:"",methods:[],displayName:"TableBody"};N.__docgenInfo={description:"",methods:[],displayName:"TableFooter"};r.__docgenInfo={description:"",methods:[],displayName:"TableHead"};m.__docgenInfo={description:"",methods:[],displayName:"TableRow"};n.__docgenInfo={description:"",methods:[],displayName:"TableCell"};x.__docgenInfo={description:"",methods:[],displayName:"TableCaption"};const h=[{firstName:"John",lastName:"Doe",age:28},{firstName:"Jane",lastName:"Doe",age:26},{firstName:"James",lastName:"Smith",age:32},{firstName:"Jill",lastName:"Johnson",age:34}],u={title:"Components/Table",component:i},g=()=>e.jsxs(i,{children:[e.jsx(c,{children:e.jsxs(m,{children:[e.jsx(r,{children:"First Name"}),e.jsx(r,{children:"Last Name"}),e.jsx(r,{children:"Age"})]})}),e.jsx(b,{children:h.map((a,l)=>e.jsxs(m,{children:[e.jsx(n,{children:a.firstName}),e.jsx(n,{children:a.lastName}),e.jsx(n,{children:a.age})]},l))})]}),d=g.bind({});d.args={data:h};var p,T,f;d.parameters={...d.parameters,docs:{...(p=d.parameters)==null?void 0:p.docs,source:{originalSource:`() => <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead>First Name</TableHead>
+        <TableHead>Last Name</TableHead>
+        <TableHead>Age</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {data.map((row, index) => <TableRow key={index}>
+          <TableCell>{row.firstName}</TableCell>
+          <TableCell>{row.lastName}</TableCell>
+          <TableCell>{row.age}</TableCell>
+        </TableRow>)}
+    </TableBody>
+  </Table>`,...(f=(T=d.parameters)==null?void 0:T.docs)==null?void 0:f.source}}};const R=["Default"];export{d as Default,R as __namedExportsOrder,u as default};
