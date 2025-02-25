@@ -1,21 +1,30 @@
 import React from 'react';
 import classNames from 'classnames';
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>
+const Table = React.forwardRef<
+  HTMLTableElement,
+  React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
+  <div className="relative w-full overflow-auto border border-surface-default">
     <table
-      ref={ref} className={classNames('text-sm w-full caption-bottom', className)} {...props}
+      ref={ref}
+      className={classNames('text-sm w-full caption-bottom', className)}
+      {...props}
     />
   </div>
 ));
 Table.displayName = 'Table';
 
-const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>
+const TableHeader = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={classNames('[&_tr]:border-b', className)}
+    className={classNames(
+      'h-10 bg-surface-secondary [&_tr]:border-b',
+      className
+    )}
     {...props}
   />
 ));
@@ -55,7 +64,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={classNames(
-      'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors',
+      'hover:bg-muted/50 data-[state=selected]:bg-muted border-b border-surface-default transition-colors',
       className
     )}
     {...props}
@@ -70,7 +79,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={classNames(
-      'text-muted-foreground h-12 px-4 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0',
+      'text-muted-foreground px-4 text-left align-middle font-medium [&:has([role=checkbox])]:w-4 [&:has([role=checkbox])]:pr-0',
       className
     )}
     {...props}
@@ -85,7 +94,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={classNames(
-      'p-4 align-middle [&:has([role=checkbox])]:pr-0',
+      'h-12 w-fit px-4 py-4 align-middle [&:has([role=checkbox])]:pr-0',
       className
     )}
     {...props}

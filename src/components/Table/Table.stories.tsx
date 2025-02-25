@@ -1,5 +1,7 @@
 import React from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
+import { IconPdf, IconExternalLink } from '@tabler/icons-react';
+import { Chip } from '../Chip/Chip';
 
 import {
   Table,
@@ -9,12 +11,66 @@ import {
   TableBody,
   TableCell,
 } from './Table';
+import { Checkbox } from '../Checkbox/Checkbox';
 
-const data = [
-  { firstName: 'John', lastName: 'Doe', age: 28 },
-  { firstName: 'Jane', lastName: 'Doe', age: 26 },
-  { firstName: 'James', lastName: 'Smith', age: 32 },
-  { firstName: 'Jill', lastName: 'Johnson', age: 34 },
+type DataEntry = {
+  sdsName: string;
+  productName: string;
+  companyName: string;
+  creation: string;
+  status: string;
+  statusColor: string;
+};
+
+const data: DataEntry[] = [
+  {
+    sdsName: 'SDS-Uranium_Metal_2020.pdf',
+    productName: 'Uranium Metal',
+    companyName: '検見間株式会社',
+    creation: '2024/04/16',
+    status: '分析前',
+    statusColor: 'bg-status-neutral',
+  },
+  {
+    sdsName: 'SDS-Plutonium_Oxide_2021.pdf',
+    productName: 'Plutonium Oxide',
+    companyName: '福田商事株式会社',
+    creation: '2023/03/21',
+    status: '分析中',
+    statusColor: 'bg-status-inProgress',
+  },
+  {
+    sdsName: 'SDS-Thorium_2022.pdf',
+    productName: 'Thorium',
+    companyName: '中村化学工業株式会社',
+    creation: '2022/08/15',
+    status: '登録済み',
+    statusColor: 'bg-status-success',
+  },
+  {
+    sdsName: 'SDS-Cobalt_Alloy_2019.pdf',
+    productName: 'Cobalt Alloy',
+    companyName: '大和工業株式会社',
+    creation: '2021/11/05',
+    status: '分析不可',
+    statusColor: 'bg-status-alert',
+  },
+  {
+    sdsName: 'SDS-Lead_Metal_2023.pdf',
+    productName: 'Lead Metal',
+    companyName: '山田金属株式会社',
+    creation: '2023/07/29',
+    status: '分析不可',
+    statusColor: 'bg-status-warning',
+  },
+  {
+    sdsName: 'SDS-Cadmium_Compound_2020.pdf',
+    productName: 'Cadmium Compound',
+    companyName: '川崎薬品株式会社',
+    creation: '2020/05/12',
+    status: '再データ化中',
+    statusColor: 'bg-status-queue',
+  },
 ];
 
 const meta: Meta<typeof Table> = {
@@ -28,17 +84,45 @@ const Template: StoryFn = () => (
   <Table>
     <TableHeader>
       <TableRow>
-        <TableHead>First Name</TableHead>
-        <TableHead>Last Name</TableHead>
-        <TableHead>Age</TableHead>
+        <TableHead>
+          <Checkbox label="" />
+        </TableHead>
+        <TableHead>SDS名</TableHead>
+        <TableHead>製品名</TableHead>
+        <TableHead>会社名</TableHead>
+        <TableHead>作成日 / 改訂日</TableHead>
+        <TableHead>ステータス</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
       {data.map((row, index) => (
         <TableRow key={index}>
-          <TableCell>{row.firstName}</TableCell>
-          <TableCell>{row.lastName}</TableCell>
-          <TableCell>{row.age}</TableCell>
+          <TableCell>
+            <Checkbox label="" />
+          </TableCell>
+          <TableCell>
+            <div className="inline-flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <div className="inline-flex aspect-auto rounded bg-shape-secondary p-0.5">
+                  <IconPdf size={16} className="text-shape-inverse" />
+                </div>
+                {row.sdsName}
+              </div>
+              <a href="#">
+                <IconExternalLink size={20} className="text-shape-primary" />
+              </a>
+            </div>
+          </TableCell>
+          <TableCell>
+            <div className="inline-flex rounded bg-surface-secondary px-xs py-xxs uppercase">
+              {row.productName}
+            </div>
+          </TableCell>
+          <TableCell>{row.companyName}</TableCell>
+          <TableCell>{row.creation}</TableCell>
+          <TableCell>
+            <Chip className={row.statusColor}>{row.status}</Chip>
+          </TableCell>
         </TableRow>
       ))}
     </TableBody>
