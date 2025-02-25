@@ -28,7 +28,7 @@ const containerVariants = cva('flex w-fit cursor-pointer items-center gap-xs', {
 });
 
 const radioButtonVariants = cva(
-  'focus:shadow-black size-[1rem] cursor-pointer rounded-full border-1 border-input-default bg-surface-secondary text-body-primary outline-none focus-visible:ring-2 focus-visible:ring-input-focused disabled:cursor-not-allowed disabled:text-body-disabled data-[state=checked]:text-body-secondary',
+  'focus:shadow-black size-[1rem] cursor-pointer rounded-full border-1 border-input-default text-body-primary outline-none focus-visible:ring-2 focus-visible:ring-input-focused disabled:cursor-not-allowed disabled:text-body-disabled data-[state=checked]:text-body-secondary',
   {
     variants: {
       disabled: {

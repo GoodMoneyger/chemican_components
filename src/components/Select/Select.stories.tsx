@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
 import { IconRocket } from '@tabler/icons-react';
 
@@ -31,7 +32,7 @@ Default.args = {
     { value: 'option3', label: 'Option 3' },
     { value: 'option4', label: 'Option 4', icon: IconRocket },
     { type: 'Separator' },
-    { value: 'option4', label: 'Option 4' },
+    { value: 'option4', label: 'Option 5' },
   ],
   placeholder: 'Select an option',
   disabled: false,
