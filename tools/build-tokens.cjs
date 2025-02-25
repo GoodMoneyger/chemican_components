@@ -10,6 +10,7 @@ const categories = [
   'color-background',
   'color-text',
   'color-border',
+  'color-shape',
   'spacing',
   'text-size',
   'radius',
@@ -147,19 +148,19 @@ fs.readFile(inputFile, 'utf8', (err, data) => {
       Object.entries(tokens)
         .sort(([a], [b]) => a.localeCompare(b))
         .forEach(([token, value]) => {
-        const category = categories.find((key) => token.includes(key));
-        if (category) {
-          if (!jsonResult[themeName][category]) {
-            jsonResult[themeName][category] = {};
+          const category = categories.find((key) => token.includes(key));
+          if (category) {
+            if (!jsonResult[themeName][category]) {
+              jsonResult[themeName][category] = {};
+            }
+            jsonResult[themeName][category][token] = value;
+          } else {
+            if (!jsonResult[themeName]['other']) {
+              jsonResult[themeName]['other'] = {};
+            }
+            jsonResult[themeName]['other'][token] = value;
           }
-          jsonResult[themeName][category][token] = value;
-        } else {
-          if (!jsonResult[themeName]['other']) {
-            jsonResult[themeName]['other'] = {};
-          }
-          jsonResult[themeName]['other'][token] = value;
-        }
-      });
+        });
     }
   );
 
