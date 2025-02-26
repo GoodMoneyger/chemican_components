@@ -1,8 +1,10 @@
 import React from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
 import { IconPdf, IconExternalLink } from '@tabler/icons-react';
+
 import { Chip } from '../Chip/Chip';
 import { ColorBackgroundTokens } from '../../tokens';
+import { Checkbox } from '../Checkbox/Checkbox';
 
 import {
   Table,
@@ -12,7 +14,6 @@ import {
   TableBody,
   TableCell,
 } from './Table';
-import { Checkbox } from '../Checkbox/Checkbox';
 
 type DataEntry = {
   sdsName: string;

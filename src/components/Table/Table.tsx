@@ -8,7 +8,7 @@ const Table = React.forwardRef<
   <div className="relative w-full overflow-auto border border-surface-default">
     <table
       ref={ref}
-      className={classNames('text-sm w-full caption-bottom', className)}
+      className={classNames('w-full caption-bottom text-sm', className)}
       {...props}
     />
   </div>
@@ -108,7 +108,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={classNames('text-sm text-muted-foreground mt-4', className)}
+    className={classNames('text-muted-foreground mt-4 text-sm', className)}
     {...props}
   />
 ));

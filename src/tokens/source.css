@@ -1,4 +1,4 @@
-[data-theme="Light [Default]"] {
+[data-theme='Light [Default]'] {
   --color-background-status-success: var(--chemican-green-500);
   --color-background-status-alert: var(--sun-500);
   --color-background-status-warning: var(--yellow-500);
@@ -127,7 +127,7 @@
   --color-text-interactive-disabled: var(--neutral-400);
 }
 
-[data-theme="Primitive"] {
+[data-theme='Primitive'] {
   --chemican-green-100: hsl(173, 40%, 85%);
   --cyan-1200: hsl(189, 100%, 13%);
   --cyan-1100: hsl(189, 100%, 17%);
@@ -181,7 +181,7 @@
   --sea-200: hsl(224, 87%, 88%);
   --sea-100: hsl(224, 100%, 93%);
   --sea-50: hsl(224, 92%, 95%);
-  --alpha-300: hsla(0, 0%, 0%, 0.40);
+  --alpha-300: hsla(0, 0%, 0%, 0.4);
   --neutral-0: hsl(0, 0%, 100%);
   --neutral-1100: hsl(0, 0%, 3%);
   --neutral-1000: hsl(0, 0%, 7%);

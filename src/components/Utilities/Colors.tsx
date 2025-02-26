@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { tokens } from '../../tokens';
-import { TokenCategory } from '../../tokens';
+import { tokens, TokenCategory } from '../../tokens';
 
 const kebabToTitle = (str: string) =>
   str
@@ -25,15 +24,22 @@ export function Colors() {
       Object.entries(categories as Record<string, TokenCategory>).forEach(
         ([category, toks]: [string, TokenCategory]) => {
           if (category.includes('color')) {
-            Object.entries(toks).forEach(([name, value]) => {
-              // extract the value within var() if it exists
-              const match = value.match(/var\(([^)]+)\)/);
-              const rawValue = match ? match[1] : value;
-              const primitiveValue =
-                tokens.Primitives?.other?.[rawValue] || rawValue;
+            Object.entries(toks as Record<string, string>).forEach(
+              ([name, value]: [string, string]) => {
+                // extract the value within var() if it exists
+                const match = value.match(/var\(([^)]+)\)/);
+                const rawValue = (match ? match[1] : value) as string;
+                const primitiveValue =
+                  tokens.Primitives?.other?.[rawValue] || rawValue;
 
-              colors.push({ category, name, value: rawValue, primitiveValue });
-            });
+                colors.push({
+                  category,
+                  name,
+                  value: rawValue,
+                  primitiveValue,
+                });
+              }
+            );
           }
         }
       );

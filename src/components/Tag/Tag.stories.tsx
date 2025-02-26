@@ -1,7 +1,9 @@
 import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import { Tag, TagProps } from './Tag';
+
 import { ColorShapeTokens } from '../../tokens';
+
+import { Tag, TagProps } from './Tag';
 
 export default {
   title: 'Components/Tag',

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import { Chip, ChipProps } from './Chip';
+
 import { ColorShapeTokens, ColorBackgroundTokens } from '../../tokens';
+
+import { Chip, ChipProps } from './Chip';
 
 export default {
   title: 'Components/Chip',
