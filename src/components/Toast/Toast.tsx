@@ -35,26 +35,24 @@ export const Toast: React.FC<ToastProps> = ({
           <div className="flex items-start gap-xs">
             <div>
               {level === 'success' && (
-                <IconCircleCheckFilled className="h-md w-md text-status-success" />
+                <IconCircleCheckFilled className="text-status-success h-md w-md" />
               )}
               {level === 'error' && (
-                <IconCircleXFilled className="h-md w-md text-status-alert" />
+                <IconCircleXFilled className="text-status-alert h-md w-md" />
               )}
               {level === 'warning' && (
-                <IconExclamationCircleFilled className="h-md w-md text-status-warning" />
+                <IconExclamationCircleFilled className="text-status-warning h-md w-md" />
               )}
               {level === 'info' && (
-                <IconInfoCircleFilled className="h-md w-md text-status-processing" />
+                <IconInfoCircleFilled className="text-status-processing h-md w-md" />
               )}
             </div>
             <div>
               <RadixToast.Title className="font-bold text-body-primary">
-                <h5 className="text-size-medium mb-xxs leading-none">
-                  {title}
-                </h5>
+                <h5 className="text-medium mb-xxs leading-none">{title}</h5>
               </RadixToast.Title>
               <RadixToast.Description>
-                <p className="text-size-md">{message}</p>
+                <p className="text-md">{message}</p>
               </RadixToast.Description>
             </div>
           </div>

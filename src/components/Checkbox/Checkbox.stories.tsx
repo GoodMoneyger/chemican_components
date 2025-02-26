@@ -1,15 +1,11 @@
+import React from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
 
 import { Checkbox, CheckboxGroup } from './Checkbox';
 
-const meta: Meta<typeof Button> = {
+const meta: Meta<typeof CheckboxGroup> = {
   title: 'Components/Checkbox',
   component: CheckboxGroup,
-  argTypes: {
-    invalid: {
-      control: { type: 'boolean' },
-    },
-  },
 };
 
 export default meta;

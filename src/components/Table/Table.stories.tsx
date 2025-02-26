@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
 import { IconPdf, IconExternalLink } from '@tabler/icons-react';
 import { Chip } from '../Chip/Chip';
+import { ColorBackgroundTokens } from '../../tokens';
 
 import {
   Table,
@@ -19,7 +20,7 @@ type DataEntry = {
   companyName: string;
   creation: string;
   status: string;
-  statusColor: string;
+  statusColor: ColorBackgroundTokens;
 };
 
 const data: DataEntry[] = [
@@ -29,7 +30,7 @@ const data: DataEntry[] = [
     companyName: '検見間株式会社',
     creation: '2024/04/16',
     status: '分析前',
-    statusColor: 'bg-status-neutral',
+    statusColor: ColorBackgroundTokens.StatusNeutral,
   },
   {
     sdsName: 'SDS-Plutonium_Oxide_2021.pdf',
@@ -37,7 +38,7 @@ const data: DataEntry[] = [
     companyName: '福田商事株式会社',
     creation: '2023/03/21',
     status: '分析中',
-    statusColor: 'bg-status-inProgress',
+    statusColor: ColorBackgroundTokens.StatusInProgress,
   },
   {
     sdsName: 'SDS-Thorium_2022.pdf',
@@ -45,7 +46,7 @@ const data: DataEntry[] = [
     companyName: '中村化学工業株式会社',
     creation: '2022/08/15',
     status: '登録済み',
-    statusColor: 'bg-status-success',
+    statusColor: ColorBackgroundTokens.StatusSuccess,
   },
   {
     sdsName: 'SDS-Cobalt_Alloy_2019.pdf',
@@ -53,7 +54,7 @@ const data: DataEntry[] = [
     companyName: '大和工業株式会社',
     creation: '2021/11/05',
     status: '分析不可',
-    statusColor: 'bg-status-alert',
+    statusColor: ColorBackgroundTokens.StatusAlert,
   },
   {
     sdsName: 'SDS-Lead_Metal_2023.pdf',
@@ -61,7 +62,7 @@ const data: DataEntry[] = [
     companyName: '山田金属株式会社',
     creation: '2023/07/29',
     status: '分析不可',
-    statusColor: 'bg-status-warning',
+    statusColor: ColorBackgroundTokens.StatusWarning,
   },
   {
     sdsName: 'SDS-Cadmium_Compound_2020.pdf',
@@ -69,7 +70,7 @@ const data: DataEntry[] = [
     companyName: '川崎薬品株式会社',
     creation: '2020/05/12',
     status: '再データ化中',
-    statusColor: 'bg-status-queue',
+    statusColor: ColorBackgroundTokens.StatusQueue,
   },
 ];
 
@@ -121,7 +122,7 @@ const Template: StoryFn = () => (
           <TableCell>{row.companyName}</TableCell>
           <TableCell>{row.creation}</TableCell>
           <TableCell>
-            <Chip className={row.statusColor}>{row.status}</Chip>
+            <Chip accentColor={row.statusColor}>{row.status}</Chip>
           </TableCell>
         </TableRow>
       ))}

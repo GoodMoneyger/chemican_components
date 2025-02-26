@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 import { Chip, ChipProps } from './Chip';
+import { ColorShapeTokens, ColorBackgroundTokens } from '../../tokens';
 
 export default {
   title: 'Components/Chip',
@@ -11,5 +12,13 @@ const ChipTemplate: StoryFn<ChipProps> = (args) => <Chip {...args} />;
 
 export const DefaultChip = ChipTemplate.bind({});
 DefaultChip.args = {
-  children: 'Chip Content',
+  children: 'チップの内容',
+  accentColor: ColorShapeTokens.AccentBlueSoft,
+};
+
+DefaultChip.argTypes = {
+  accentColor: {
+    control: 'select',
+    options: { ...ColorShapeTokens, ...ColorBackgroundTokens },
+  },
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 import { Tag, TagProps } from './Tag';
+import { ColorShapeTokens } from '../../tokens';
 
 export default {
   title: 'Components/Tag',
@@ -11,11 +12,16 @@ const TagTemplate: StoryFn<TagProps> = (args) => <Tag {...args} />;
 
 export const DefaultTag = TagTemplate.bind({});
 DefaultTag.args = {
-  children: 'Tag Content',
+  children: 'タグ',
   onRemove: undefined,
+  accentColor: ColorShapeTokens.AccentBlueSoft,
 };
 
 DefaultTag.argTypes = {
+  accentColor: {
+    control: 'select',
+    options: ColorShapeTokens,
+  },
   onRemove: {
     control: 'boolean',
     defaultValue: false,

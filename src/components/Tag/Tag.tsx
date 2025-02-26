@@ -1,22 +1,33 @@
 import React from 'react';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
+import { ColorShapeTokens } from '../../tokens';
 
 export interface TagProps {
   className?: string;
   children?: React.ReactNode;
   onRemove?: () => void;
+  accentColor: ColorShapeTokens;
 }
 
-export const Tag: React.FC<TagProps> = ({ children, className, onRemove }) => {
+export const Tag: React.FC<TagProps> = ({
+  accentColor,
+  children,
+  className,
+  onRemove,
+}) => {
+  console.log('TagProps:', accentColor);
   return (
     <div
       className={twMerge(
         classNames(
-          'text-black my-1 inline-flex items-center gap-xxs rounded-full bg-status-neutral px-xs py-xs text-size-sm text-accent-gray-strong',
+          'text-black my-1 inline-flex items-center gap-xxs rounded-full p-xs text-sm text-accent-gray-strong',
           className
         )
       )}
+      style={{
+        backgroundColor: `var(${accentColor})`,
+      }}
     >
       {children}
       {Boolean(onRemove) && (

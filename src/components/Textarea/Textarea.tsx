@@ -59,7 +59,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           onChange={handleChange}
         />
         {Boolean(characterLimit && showCharacterLimit) && (
-          <div className="p1 text-right text-size-sm text-body-secondary">
+          <div className="p1 text-right text-sm text-body-secondary">
             {value.toString().length}/{characterLimit}
           </div>
         )}

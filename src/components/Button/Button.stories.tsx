@@ -21,6 +21,9 @@ const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   argTypes: {
+    children: {
+      control: { type: 'text' },
+    },
     intent: {
       control: { type: 'select' },
       options: ['primary', 'secondary', 'tertiary', 'ghost'],
@@ -41,6 +44,7 @@ const meta: Meta<typeof Button> = {
         'IconX',
         'IconCheck',
       ],
+      mapping: iconMap,
     },
   },
 };
@@ -48,20 +52,15 @@ const meta: Meta<typeof Button> = {
 export default meta;
 
 const Template: StoryFn<typeof Button> = (args) => {
-  const icon = iconMap[args.icon || 'None'];
   const asChild = args.asChild;
   if (asChild) {
     return (
-      <Button {...args} icon={icon} asChild>
-        <a href="#">ラベル</a>
+      <Button {...args} asChild>
+        <a href="#">{args.children}</a>
       </Button>
     );
   }
-  return (
-    <Button {...args} icon={icon}>
-      ラベル
-    </Button>
-  );
+  return <Button {...args}>{args.children}</Button>;
 };
 
 export const Primary = Template.bind({});
@@ -71,4 +70,5 @@ Primary.args = {
   disabled: false,
   icon: undefined,
   asChild: false,
+  children: 'ラベル',
 };
