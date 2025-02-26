@@ -5,6 +5,7 @@ declare const buttonVariants: (props?: ({
     intent?: "primary" | "secondary" | "tertiary" | "ghost" | null | undefined;
     size?: "xs" | "sm" | "md" | "lg" | null | undefined;
     iconOnly?: boolean | null | undefined;
+    textOnly?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
     asChild?: boolean;
