@@ -50,13 +50,6 @@ export function Colors() {
   return (
     <div className="p-4">
       <h2 className="mb-4 text-xxl font-bold">Color Swatches</h2>
-      <p className="mb-4">
-        Please note that utility classes are available only for the respective
-        property. For example, tokens for border color cannot be used for a
-        background.
-        <br />➡ If you believe a color is missing, please notify the design
-        team and <b>do not use unfitting tokens</b>.
-      </p>
       <h3 className="mt-8 mb-4 text-xl font-bold">Tokens</h3>
       {Object.entries(
         colorTokens.reduce(
