@@ -14,6 +14,8 @@ export interface PrimitiveTokens {
     'other': TokenCategory;
 }
 export declare enum ColorBackgroundTokens {
+    SurfaceSecondary = "--token-color-background-surface-secondary",
+    SurfaceSuccess = "--token-color-background-surface-success",
     StatusSuccess = "--token-color-background-status-success",
     StatusAlert = "--token-color-background-status-alert",
     StatusWarning = "--token-color-background-status-warning",
@@ -32,7 +34,6 @@ export declare enum ColorBackgroundTokens {
     InteractivePrimaryHover = "--token-color-background-interactive-primary-hover",
     InteractivePrimaryDisabled = "--token-color-background-interactive-primary-disabled",
     SurfacePrimary = "--token-color-background-surface-primary",
-    SurfaceSecondary = "--token-color-background-surface-secondary",
     SurfaceTertiary = "--token-color-background-surface-tertiary",
     SurfaceScrimmed = "--token-color-background-surface-scrimmed",
     SurfaceAlert = "--token-color-background-surface-alert",
@@ -99,6 +100,10 @@ export declare enum ColorBorderTokens {
     SurfaceDefault = "--token-color-border-surface-default"
 }
 export declare enum ColorShapeTokens {
+    StatusInfo = "--token-color-shape-status-info",
+    StatusSuccess = "--token-color-shape-status-success",
+    StatusWarning = "--token-color-shape-status-warning",
+    StatusAlert = "--token-color-shape-status-alert",
     Primary = "--token-color-shape-primary",
     Subtle = "--token-color-shape-subtle",
     Secondary = "--token-color-shape-secondary",
