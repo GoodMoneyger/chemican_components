@@ -35,16 +35,16 @@ export const Toast: React.FC<ToastProps> = ({
           <div className="flex items-start gap-xs">
             <div>
               {level === 'success' && (
-                <IconCircleCheckFilled className="text-status-success h-md w-md" />
+                <IconCircleCheckFilled className="h-md w-md text-shape-status-success" />
               )}
               {level === 'error' && (
-                <IconCircleXFilled className="text-status-alert h-md w-md" />
+                <IconCircleXFilled className="h-md w-md text-shape-status-alert" />
               )}
               {level === 'warning' && (
-                <IconExclamationCircleFilled className="text-status-warning h-md w-md" />
+                <IconExclamationCircleFilled className="h-md w-md text-shape-status-warning" />
               )}
               {level === 'info' && (
-                <IconInfoCircleFilled className="text-status-processing h-md w-md" />
+                <IconInfoCircleFilled className="h-md w-md text-shape-status-info" />
               )}
             </div>
             <div>
