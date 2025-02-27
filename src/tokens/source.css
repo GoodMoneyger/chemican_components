@@ -1,4 +1,10 @@
 [data-theme='Light [Default]'] {
+  --color-background-surface-secondary: var(--raspberry-leaf-100);
+  --color-background-surface-success: var(--chemican-green-50);
+  --color-shape-status-info: var(--sea-500);
+  --color-shape-status-success: var(--chemican-green-500);
+  --color-shape-status-warning: var(--yellow-500);
+  --color-shape-status-alert: var(--sun-500);
   --color-background-status-success: var(--chemican-green-500);
   --color-background-status-alert: var(--sun-500);
   --color-background-status-warning: var(--yellow-500);
@@ -88,7 +94,6 @@
   --color-background-interactive-primary-hover: var(--chemican-green-900);
   --color-background-interactive-primary-disabled: var(--neutral-500);
   --color-background-surface-primary: var(--neutral-0);
-  --color-background-surface-secondary: var(--raspberry-leaf-50);
   --color-background-surface-tertiary: var(--chemican-green-50);
   --color-background-surface-scrimmed: var(--alpha-300);
   --color-background-surface-alert: var(--sun-50);

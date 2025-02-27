@@ -20,6 +20,8 @@ export interface PrimitiveTokens {
 }
 
 export enum ColorBackgroundTokens {
+  SurfaceSecondary = '--token-color-background-surface-secondary',
+  SurfaceSuccess = '--token-color-background-surface-success',
   StatusSuccess = '--token-color-background-status-success',
   StatusAlert = '--token-color-background-status-alert',
   StatusWarning = '--token-color-background-status-warning',
@@ -38,7 +40,6 @@ export enum ColorBackgroundTokens {
   InteractivePrimaryHover = '--token-color-background-interactive-primary-hover',
   InteractivePrimaryDisabled = '--token-color-background-interactive-primary-disabled',
   SurfacePrimary = '--token-color-background-surface-primary',
-  SurfaceSecondary = '--token-color-background-surface-secondary',
   SurfaceTertiary = '--token-color-background-surface-tertiary',
   SurfaceScrimmed = '--token-color-background-surface-scrimmed',
   SurfaceAlert = '--token-color-background-surface-alert',
@@ -108,6 +109,10 @@ export enum ColorBorderTokens {
 }
 
 export enum ColorShapeTokens {
+  StatusInfo = '--token-color-shape-status-info',
+  StatusSuccess = '--token-color-shape-status-success',
+  StatusWarning = '--token-color-shape-status-warning',
+  StatusAlert = '--token-color-shape-status-alert',
   Primary = '--token-color-shape-primary',
   Subtle = '--token-color-shape-subtle',
   Secondary = '--token-color-shape-secondary',
@@ -204,7 +209,8 @@ export const tokens: Tokens = {
       '--token-color-background-surface-inProgress': 'var(--sea-50)',
       '--token-color-background-surface-primary': 'var(--neutral-0)',
       '--token-color-background-surface-scrimmed': 'var(--alpha-300)',
-      '--token-color-background-surface-secondary': 'var(--raspberry-leaf-50)',
+      '--token-color-background-surface-secondary': 'var(--raspberry-leaf-100)',
+      '--token-color-background-surface-success': 'var(--chemican-green-50)',
       '--token-color-background-surface-tertiary': 'var(--chemican-green-50)',
       '--token-color-background-surface-warning': 'var(--yellow-50)',
     },
@@ -244,6 +250,10 @@ export const tokens: Tokens = {
       '--token-color-shape-inverse': 'var(--neutral-0)',
       '--token-color-shape-primary': 'var(--chemican-green-500)',
       '--token-color-shape-secondary': 'var(--raspberry-leaf-500)',
+      '--token-color-shape-status-alert': 'var(--sun-500)',
+      '--token-color-shape-status-info': 'var(--sea-500)',
+      '--token-color-shape-status-success': 'var(--chemican-green-500)',
+      '--token-color-shape-status-warning': 'var(--yellow-500)',
       '--token-color-shape-subtle': 'var(--neutral-100)',
       '--token-color-shape-tertiary': 'var(--raspberry-leaf-800)',
     },
