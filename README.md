@@ -2,6 +2,8 @@
 
 Our **React component library** built with **Radix UI, TailwindCSS, and TypeScript**. Designed for internal company use, it provides reusable, accessible, and customizable UI components.
 
+**Please see the [live component library storybook here](https://goodmoneyger.github.io/chemican_components/).**
+
 ---
 
 ## **📦 Installation**
