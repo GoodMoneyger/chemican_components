@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/blocks';
 
-<Meta title='Design System/Tokens' />
+<Meta title='Design System/Tokens/Introduction' />
 
 # Design Tokens
 
@@ -14,7 +14,7 @@ To leverage their full potential, it is important to **not use any arbitrary col
 
 ## Updating Design Tokens from Figma
 
-The design tokens can be extracted from Figma using the [Variable History plugin](). After replacing `/src/tokens/source.css` with the new token values, run `npm run tokens:generate` to create the new `src/styles/variables.css`, which will be picked up automatically by tailwind to create CSS variables and utility classes.
+The design tokens can be extracted from Figma using the [Variable History plugin](). After replacing `/src/tokens/source.css` with the new token values, run `npm run tokens:generate` to create the new `src/styles/variables.css`, which will be picked up automatically by tailwind to create CSS variables and utility classes. Additionally, it will also create the `src/tokens.ts` file, exporting an Object with all avaliable tokens as well as various types and enums.
 
 ## Tailwind integration
 

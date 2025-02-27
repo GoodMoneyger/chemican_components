@@ -1,0 +1,96 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Utility Classes" />
+
+# Chemican Design System: Token-Based Utility Classes
+
+## Overview
+
+The Chemican Design System provides custom utility classes generated from [design tokens](?path=/story/design-system-tokens-colors--default), allowing for consistent styling across your application.
+
+Below is a list of examples of utility classes that exist, based on our design tokens. Note that this is just a very small fraction of available utilities.
+
+## Token Categories
+
+### Colors
+- **Background Colors**: 
+  ```jsx
+  <div className="bg-surface-primary">Primary Surface</div>
+  <div className="bg-surface-secondary">Secondary Surface</div>
+  <div className="bg-interactive-primary-default">Interactive Primary</div>
+  ```
+
+### Text Colors
+- **Base & Interactive**: 
+  ```jsx
+  <p className="text-body-primary">Primary text</p>
+  <p className="text-body-secondary">Secondary text</p>
+  <a className="text-interactive-default">Default link</a>
+  ```
+
+- **Accent Colors**:
+  ```jsx
+  <span className="text-accent-blue-soft">Blue (soft)</span>
+  <span className="text-accent-green-strong">Green (strong)</span>
+  ```
+
+### Spacing
+```jsx
+<div className="p-xxs">XXS Padding</div>
+<div className="m-sm">SM Margin</div>
+<div className="gap-lg">LG Gap</div>
+```
+
+Available spacing tokens: `xxxs`, `xxs`, `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`
+
+### Typography
+```jsx
+<p className="text-xs">Extra Small Text</p>
+<p className="text-md">Medium Text</p>
+<p className="text-xxl">Extra Extra Large Text</p>
+```
+
+Available size tokens: `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`
+
+### Border Radius
+```jsx
+<div className="rounded-xs">Extra Small Radius</div>
+<div className="rounded-md">Medium Radius</div>
+<div className="rounded-max">Maximum Radius (pill)</div>
+```
+
+## State Variants
+
+### Interactive States
+```jsx
+<button className="bg-interactive-primary-default hover:bg-interactive-primary-hover active:bg-interactive-primary-active">
+  Interactive Button
+</button>
+```
+
+### Form States
+```jsx
+<input className="border-input-default focus:border-input-focused" placeholder="Focus me" />
+<input className="border-input-alert" placeholder="Error state" />
+<input className="border-input-disabled bg-input-disabled" disabled placeholder="Disabled" />
+```
+
+## Status Indicators
+```jsx
+<div className="bg-status-success text-body-inverse">Success</div>
+<div className="bg-status-warning">Warning</div>
+<div className="bg-status-alert">Alert</div>
+<div className="bg-status-neutral">Neutral</div>
+<div className="bg-status-inProgress">In Progress</div>
+<div className="bg-status-queue">Queue</div>
+```
+
+## Responsive Design
+Combine with standard Tailwind responsive prefixes:
+
+```jsx
+<div className="p-sm md:p-md lg:p-lg">
+  Responsive padding that increases at each breakpoint
+</div>
+```
+

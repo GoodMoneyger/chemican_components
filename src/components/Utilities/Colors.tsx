@@ -49,8 +49,6 @@ export function Colors() {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 text-xxl font-bold">Color Swatches</h2>
-      <h3 className="mt-8 mb-4 text-xl font-bold">Tokens</h3>
       {Object.entries(
         colorTokens.reduce(
           (acc, { category, name, value, primitiveValue }) => {

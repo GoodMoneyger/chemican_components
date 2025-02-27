@@ -47,8 +47,6 @@ export function Spacing() {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 text-xxl font-bold">Spacing Tokens</h2>
-      <h3 className="mt-8 mb-4 text-xl font-bold">Tokens</h3>
       {Object.entries(
         spacingTokens.reduce(
           (acc, { category, name, value }) => {
@@ -86,15 +84,15 @@ export function Spacing() {
                     </pre>
                   </td>
                   <td className="py-1">
+                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                      {parseFloat(value) * 16}px
+                    </pre>
+                  </td>
+                  <td className="py-1">
                     <div
                       className="inline-block bg-surface-secondary"
                       style={{ width: value, height: '1rem' }}
                     />
-                  </td>
-                  <td className="py-1">
-                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
-                      {parseFloat(value) * 16}px
-                    </pre>
                   </td>
                 </tr>
               ))}

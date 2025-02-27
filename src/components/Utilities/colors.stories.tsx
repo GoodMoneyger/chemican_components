@@ -11,6 +11,10 @@ const meta: Meta<typeof Colors> = {
       control: { type: 'boolean' },
     },
   },
+  // Add documentation
+  parameters: {
+    controls: { disable: true },
+  },
 };
 
 export default meta;
