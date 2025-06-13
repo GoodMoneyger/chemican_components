@@ -79,7 +79,7 @@ export function Colors() {
               {tokens.map(({ name, value, primitiveValue }) => (
                 <tr key={name}>
                   <td className="py-1">
-                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                    <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
                       {name}
                     </pre>
                   </td>
@@ -90,12 +90,12 @@ export function Colors() {
                     />
                   </td>
                   <td className="py-1">
-                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                    <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
                       {value}
                     </pre>
                   </td>
                   <td className="py-1">
-                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                    <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
                       {primitiveValue}
                     </pre>
                   </td>
@@ -126,7 +126,7 @@ export function Colors() {
             ([name, value]) => (
               <tr key={name}>
                 <td className="py-1">
-                  <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                  <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
                     {name}
                   </pre>
                 </td>
@@ -137,7 +137,7 @@ export function Colors() {
                   />
                 </td>
                 <td className="py-1">
-                  <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                  <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
                     {value}
                   </pre>
                 </td>
