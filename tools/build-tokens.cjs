@@ -158,12 +158,17 @@ fs.readFile(inputFile, 'utf8', (err, data) => {
       .split('-')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join('');
+    let tokensOfCategory = [];
     tsResult += `export enum ${pascalCaseCategory}Tokens {\n`;
     Object.entries({ ...themes, Primitives: primitives }).forEach(
       ([themeName, tokens]) => {
         Object.keys(tokens)
           .filter((token) => token.includes(category))
           .forEach((token) => {
+            if (tokensOfCategory.includes(token)) {
+              return;
+            }
+            tokensOfCategory.push(token);
             const tokenName = token
               .slice(2 + category.length)
               .replace(/-./g, (x) => x[1].toUpperCase());
@@ -183,8 +188,13 @@ fs.readFile(inputFile, 'utf8', (err, data) => {
   tsResult += `export const tokens: Tokens = {\n`;
 
   let currentCategory = null;
+  currentTheme = null;
   Object.entries({ ...themes, Primitives: primitives }).forEach(
     ([themeName, tokens]) => {
+      if (currentTheme && currentTheme !== themeName) {
+        currentCategory = null;
+      }
+      currentTheme = themeName;
       tsResult += `  '${themeName}': {\n`;
       Object.entries(tokens)
         .sort(([a], [b]) => a.localeCompare(b))
@@ -199,7 +209,7 @@ fs.readFile(inputFile, 'utf8', (err, data) => {
               }
               currentCategory = category;
             }
-            if (!tsResult.includes(`'${category}': {`)) {
+            if (!tsResult.split(themeName)[2].includes(`'${category}': {`)) {
               tsResult += `    '${category}': {\n`;
             }
             tsResult += `      '${tokenName}': '${value}',\n`;
