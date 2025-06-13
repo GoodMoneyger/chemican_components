@@ -8,7 +8,6 @@
     "outDir": "./dist",
     "jsx": "react-jsx",
     "strict": true,
-    "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
@@ -26,7 +25,9 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "exclude": [
     "node_modules",
     "dist",
