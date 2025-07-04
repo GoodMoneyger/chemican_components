@@ -2,7 +2,7 @@ name: Build & Release to `release` Branch
 on:
   push:
     tags:
-      - 'release-*.*.*'  # Trigger on version tags like v1.0.0
+      - 'v-*.*.*'  # Trigger on version tags like v1.0.0
 jobs:
   build:
     runs-on: ubuntu-latest
