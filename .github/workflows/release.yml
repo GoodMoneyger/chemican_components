@@ -23,8 +23,34 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Run Linting
+        run: npm run lint
+
+      - name: Run Type Checking
+        run: npm run typecheck
+
       - name: Build Package
         run: npm run build
+
+      - name: Verify Build Output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Error: dist directory not found after build"
+            exit 1
+          fi
+          echo "Build verification passed"
+
+      - name: Verify Package Integrity
+        run: |
+          # Check if package.json exists and has required fields
+          if [ ! -f "package.json" ]; then
+            echo "Error: package.json not found"
+            exit 1
+          fi
+          
+          # Verify package can be packed without errors
+          npm pack --dry-run
+          echo "Package integrity check passed"
 
       - name: Get Version from package.json
         id: get_version
@@ -36,7 +62,7 @@ jobs:
           git config --global user.email "ci@github.com"
           git checkout -b release || git checkout release
           git rm -rf .
-          git checkout main -- dist src package.json README.md
+          git checkout origin/main -- dist src package.json README.md
           git add .
           git commit -m "chore: release build"
           git push origin release --force
