@@ -1,37 +1,34 @@
 name: Build & Release to `release` Branch
-
 on:
   push:
     tags:
       - 'release-*.*.*'  # Trigger on version tags like v1.0.0
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Fetch full history to access all branches
-
+      
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 23
-
+      
       - name: Install Dependencies
         run: npm install
-
+      
       - name: Run Linting
         run: npm run lint
-
+      
       - name: Run Type Checking
         run: npm run typecheck
-
+      
       - name: Build Package
         run: npm run build
-
+      
       - name: Verify Build Output
         run: |
           if [ ! -d "dist" ]; then
@@ -39,7 +36,7 @@ jobs:
             exit 1
           fi
           echo "Build verification passed"
-
+      
       - name: Verify Package Integrity
         run: |
           # Check if package.json exists and has required fields
@@ -51,23 +48,47 @@ jobs:
           # Verify package can be packed without errors
           npm pack --dry-run
           echo "Package integrity check passed"
-
+      
       - name: Get Version from package.json
         id: get_version
         run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-
-      - name: Create Release Branch
+      
+      - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "ci@github.com"
-          git checkout -b release || git checkout release
-          git rm -rf .
-          git checkout origin/main -- dist src package.json README.md
+      
+      - name: Create Release Branch
+        run: |
+          # Check if release branch exists remotely
+          if git ls-remote --exit-code --heads origin release; then
+            echo "Release branch exists, checking it out"
+            git checkout release
+            git pull origin release
+          else
+            echo "Release branch doesn't exist, creating it"
+            git checkout -b release
+          fi
+          
+          # Clear the release branch content
+          git rm -rf . || true
+          
+          # Copy files from the current tag (detached HEAD state)
+          git checkout HEAD -- dist src package.json README.md
+          
+          # Add and commit changes
           git add .
-          git commit -m "chore: release build"
-          git push origin release --force
-
+          git commit -m "chore: release build v${{ env.VERSION }}" || echo "No changes to commit"
+          
+          # Push the release branch
+          git push origin release
+      
       - name: Create Git Tag for Release
         run: |
-          git tag release-${{ env.VERSION }}
-          git push origin release-${{ env.VERSION }}
+          # Only create the tag if it doesn't exist
+          if ! git tag -l | grep -q "^release-${{ env.VERSION }}$"; then
+            git tag release-${{ env.VERSION }}
+            git push origin release-${{ env.VERSION }}
+          else
+            echo "Tag release-${{ env.VERSION }} already exists"
+          fi
