@@ -2,7 +2,7 @@ name: Build & Release to `release` Branch
 on:
   push:
     tags:
-      - 'v*.*.*'  # Trigger on version tags like v1.0.0
+      - 'release-*.*.*'  # Trigger on version tags like v1.0.0
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
           # Create a temporary directory to store release files
           mkdir -p ../release-files
           
-          # Copy files we want in the release
+          # Copy only the files we want in the release
           cp package.json ../release-files/
           cp README.md ../release-files/
           cp -r dist ../release-files/
@@ -84,8 +84,14 @@ jobs:
           # Copy our release files
           cp -r ../release-files/* .
           
-          # Add all files including the dist directory
-          git add . --force
+          # Add files specifically (avoiding node_modules and other unwanted files)
+          git add package.json README.md
+          git add dist/ --force  # Force add dist even if it's in gitignore
+          
+          # Add src directory if it exists
+          if [ -d "src" ]; then
+            git add src/
+          fi
           
           # Commit the changes
           if git diff --staged --quiet; then
