@@ -1,12 +1,289 @@
 import React from 'react';
 
 import { tokens, TokenCategory } from '../../tokens';
+import { twMerge } from 'tailwind-merge';
 
 const kebabToTitle = (str: string) =>
   str
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+
+// Function to calculate relative luminance of a color
+const getLuminance = (color: string): number => {
+  // Convert hex to RGB
+  const hex = color.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16) / 255;
+  const g = parseInt(hex.substr(2, 2), 16) / 255;
+  const b = parseInt(hex.substr(4, 2), 16) / 255;
+
+  // Apply gamma correction
+  const sRGBtoLin = (colorChannel: number) => {
+    if (colorChannel <= 0.03928) {
+      return colorChannel / 12.92;
+    } else {
+      return Math.pow((colorChannel + 0.055) / 1.055, 2.4);
+    }
+  };
+
+  const rLin = sRGBtoLin(r);
+  const gLin = sRGBtoLin(g);
+  const bLin = sRGBtoLin(b);
+
+  // Calculate relative luminance
+  return 0.2126 * rLin + 0.7152 * gLin + 0.0722 * bLin;
+};
+
+// Function to check if a color needs a border (low contrast against white)
+const needsBorder = (color: string): boolean => {
+  if (!color || !color.startsWith('#')) return true; // Default to border if invalid color
+
+  const colorLuminance = getLuminance(color);
+  const whiteLuminance = 1; // White has luminance of 1
+
+  // Calculate contrast ratio
+  const contrastRatio = (whiteLuminance + 0.05) / (colorLuminance + 0.05);
+
+  // If contrast ratio is less than 1.5, we need a border
+  return contrastRatio < 1.5;
+};
+
+// Function to generate main Tailwind utility classes for a token (simplified)
+const getTailwindClasses = (tokenName: string): string[] => {
+  const classes: string[] = [];
+
+  // Remove --token- prefix to get the semantic name
+  const semanticName = tokenName.replace('--token-', '');
+
+  if (semanticName.startsWith('color-background-')) {
+    const bgName = semanticName.replace('color-background-', '');
+    classes.push(`bg-${bgName}`);
+  } else if (semanticName.startsWith('color-text-')) {
+    const textName = semanticName.replace('color-text-', '');
+    classes.push(`text-${textName}`);
+  } else if (semanticName.startsWith('color-border-')) {
+    const borderName = semanticName.replace('color-border-', '');
+    classes.push(`border-${borderName}`, `ring-${borderName}`);
+  } else if (semanticName.startsWith('spacing-')) {
+    const spacingName = semanticName.replace('spacing-', '');
+    classes.push(`p-${spacingName}`, `gap-${spacingName}`);
+  } else if (semanticName.startsWith('text-size-')) {
+    const sizeName = semanticName.replace('text-size-', '');
+    classes.push(`text-${sizeName}`);
+  } else if (semanticName.startsWith('radius-')) {
+    const radiusName = semanticName.replace('radius-', '');
+    classes.push(`rounded-${radiusName}`);
+  }
+
+  return classes.filter(Boolean);
+};
+
+const Tooltip = ({
+  children,
+  content,
+  show,
+}: {
+  children: React.ReactNode;
+  content: string;
+  show: boolean;
+}) => {
+  return (
+    <div className="relative w-fit">
+      {children}
+      {show && (
+        <div
+          className="absolute bottom-full left-1/2 z-10 mb-xxs -translate-x-1/2
+            transform"
+        >
+          <div
+            className="sb-unstyled rounded bg-surface-scrimmed px-xxs py-xxxs
+              text-sm whitespace-nowrap text-body-inverse opacity-80"
+          >
+            {content}
+            <div
+              className="absolute top-full left-1/2 h-0 w-0 -translate-x-1/2
+                transform border-t-[3px] border-r-[3px] border-l-[3px]
+                border-transparent"
+              style={{
+                borderTopColor:
+                  'var(--token-color-background-surface-scrimmed)',
+              }}
+            ></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CopyableValue = ({
+  text,
+  tooltip,
+  className = '',
+}: {
+  text: string;
+  tooltip: string;
+  className?: string;
+}) => {
+  const [copied, setCopied] = React.useState(false);
+  const [showTooltip, setShowTooltip] = React.useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    timeoutRef.current = setTimeout(() => {
+      setShowTooltip(true);
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setShowTooltip(false);
+  };
+
+  return (
+    <Tooltip
+      content={copied ? 'Copied!' : `Click to copy ${tooltip}`}
+      show={showTooltip}
+    >
+      <button
+        onClick={handleCopy}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={twMerge(
+          `cursor-pointer rounded-xs px-xs py-xxxs text-left transition-colors
+          hover:bg-surface-secondary ${className}`
+        )}
+      >
+        <code className="break-all">{text}</code>
+      </button>
+    </Tooltip>
+  );
+};
+
+const TailwindClass = ({ className }: { className: string }) => {
+  const [copied, setCopied] = React.useState(false);
+  const [showTooltip, setShowTooltip] = React.useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(className); // Copy without the dot
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    timeoutRef.current = setTimeout(() => {
+      setShowTooltip(true);
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setShowTooltip(false);
+  };
+
+  return (
+    <Tooltip
+      content={copied ? 'Copied!' : 'Click to copy Tailwind class'}
+      show={showTooltip}
+    >
+      <button
+        onClick={handleCopy}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="cursor-pointer rounded-xs px-xs py-xxxs text-left text-sm
+          text-body-secondary transition-colors hover:bg-surface-secondary"
+      >
+        .<code>{className}</code>
+      </button>
+    </Tooltip>
+  );
+};
+
+const TokenRow = ({
+  name,
+  value,
+  primitiveValue,
+  showPrimitive = true,
+}: {
+  name: string;
+  value: string;
+  primitiveValue: string;
+  showPrimitive?: boolean;
+}) => {
+  const showBorder = needsBorder(primitiveValue);
+  const tailwindClasses = getTailwindClasses(name);
+
+  return (
+    <div
+      className="grid grid-cols-[auto_2fr_1fr_1fr] items-center gap-md border-b
+        border-divider-default py-sm last:border-b-0"
+    >
+      <div
+        className={`h-8 w-8 flex-shrink-0 rounded-sm
+          ${showBorder ? 'border border-divider-default' : ''}`}
+        style={{ backgroundColor: `var(${value})` }}
+      />
+
+      <div className="min-w-0">
+        <div className="mb-xxs">
+          <CopyableValue
+            text={name}
+            tooltip="token name"
+            className="w-fit text-sm font-medium text-body-primary"
+          />
+        </div>
+        {tailwindClasses.length > 0 && (
+          <div className="flex flex-wrap gap-xs">
+            {tailwindClasses.map((className, index) => (
+              <TailwindClass key={index} className={className} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {showPrimitive ? (
+        <div className="min-w-0">
+          <CopyableValue
+            text={value}
+            tooltip="CSS variable"
+            className="w-fit text-sm text-body-secondary"
+          />
+        </div>
+      ) : (
+        <div></div>
+      )}
+
+      <div className="min-w-0">
+        <CopyableValue
+          text={primitiveValue}
+          tooltip="hex value"
+          className="w-fit text-sm text-body-secondary"
+        />
+      </div>
+    </div>
+  );
+};
 
 export function Colors() {
   const [themeTokens, setThemeTokens] = React.useState<
@@ -58,122 +335,113 @@ export function Colors() {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="mx-auto max-w-7xl p-md">
       {Object.entries(themeTokens).map(([theme, categories]) => (
-        <div key={theme} className="mb-12">
+        <div key={theme} className="mb-xxxl">
           <h2
-            className="mb-6 border-b border-divider-default pb-2 text-xxl
-              font-bold"
+            className="sb-unstyled mt-10 mb-lg border-b border-divider-default
+              pb-sm text-xxl font-bold"
           >
             {kebabToTitle(theme)} Theme
           </h2>
 
           {Object.entries(categories).map(([category, tokens]) => (
-            <div key={category} className="mb-8 ml-4">
-              <h4 className="mb-4 text-lg font-semibold">
+            <div key={category} className="mb-xl">
+              <h3
+                className="sb-unstyled mt-10 mb-md text-xl font-semibold
+                  text-body-primary"
+              >
                 {kebabToTitle(category)}
-              </h4>
-              <table className="min-w-full table-auto">
-                <thead>
-                  <tr className="border-b border-divider-default">
-                    <th className="w-4/12 py-2 text-left">Token</th>
-                    <th className="w-1/12 py-2 text-left">Swatch</th>
-                    <th className="w-3/12 py-2 text-left">Primitive</th>
-                    <th className="w-3/12 py-2 text-left">Color Value</th>
-                  </tr>
-                </thead>
-                <tbody>
+              </h3>
+
+              <div
+                className="overflow-hidden rounded-md border
+                  border-divider-default bg-surface-primary"
+              >
+                {/* Header */}
+                <div
+                  className="sb-unstyled grid grid-cols-[auto_2fr_1fr_1fr]
+                    items-center gap-md border-b border-divider-default
+                    bg-surface-secondary px-md py-sm"
+                >
+                  <div className="text-sm font-medium text-body-secondary">
+                    Swatch
+                  </div>
+                  <div className="text-sm font-medium text-body-secondary">
+                    Token Name and Tailwind Classes
+                  </div>
+                  <div className="text-sm font-medium text-body-secondary">
+                    CSS Variable
+                  </div>
+                  <div className="text-sm font-medium text-body-secondary">
+                    Hex Value
+                  </div>
+                </div>
+
+                {/* Rows */}
+                <div className="px-md">
                   {tokens.map(({ name, value, primitiveValue }) => (
-                    <tr key={name}>
-                      <td className="py-1">
-                        <pre
-                          className="sb-unstyled inline rounded
-                            bg-surface-secondary px-2 py-1 text-sm
-                            whitespace-pre-wrap"
-                        >
-                          {name}
-                        </pre>
-                      </td>
-                      <td className="py-1">
-                        <div
-                          className="h-8 w-16 rounded"
-                          style={{ backgroundColor: `var(${value})` }}
-                        />
-                      </td>
-                      <td className="py-1">
-                        <pre
-                          className="sb-unstyled inline rounded
-                            bg-surface-secondary px-2 py-1 text-sm
-                            whitespace-pre-wrap"
-                        >
-                          {value}
-                        </pre>
-                      </td>
-                      <td className="py-1">
-                        <pre
-                          className="sb-unstyled inline rounded
-                            bg-surface-secondary px-2 py-1 text-sm
-                            whitespace-pre-wrap"
-                        >
-                          {primitiveValue}
-                        </pre>
-                      </td>
-                    </tr>
+                    <TokenRow
+                      key={name}
+                      name={name}
+                      value={value}
+                      primitiveValue={primitiveValue}
+                    />
                   ))}
-                </tbody>
-              </table>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       ))}
 
-      <h2 className="mt-8 mb-4 text-xl font-bold">Primitive Values</h2>
-      <p className="mb-8 text-lg">
-        The following table lists all primitive values that are used in the
-        color tokens. These values are used to define the color tokens and are
-        referenced in the color token definitions. Usually, you should not use
-        these values in your components directly, but rather use the color
-        tokens.
-      </p>
-      <table className="min-w-full table-auto">
-        <thead>
-          <tr className="border-b border-divider-default">
-            <th className="w-1/3 py-2 text-left">Token</th>
-            <th className="w-1/3 py-2 text-left">Swatch</th>
-            <th className="w-1/3 py-2 text-left">Primitive Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(tokens.Primitives?.other || []).map(
-            ([name, value]) => (
-              <tr key={name}>
-                <td className="py-1">
-                  <pre
-                    className="sb-unstyled inline rounded bg-surface-secondary
-                      px-2 py-1 text-sm whitespace-pre-wrap"
-                  >
-                    {name}
-                  </pre>
-                </td>
-                <td className="py-1">
-                  <div
-                    className="h-8 w-16 rounded"
-                    style={{ backgroundColor: value }}
-                  />
-                </td>
-                <td className="py-1">
-                  <pre
-                    className="sb-unstyled inline rounded bg-surface-secondary
-                      px-2 py-1 text-sm whitespace-pre-wrap"
-                  >
-                    {value}
-                  </pre>
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+      <div className="mt-xxxl">
+        <h2 className="mb-md text-xl font-bold">Primitive Values</h2>
+        <p className="mb-lg text-body-secondary">
+          The following list shows all primitive values that are used in the
+          color tokens. These values are used to define the color tokens and are
+          referenced in the color token definitions. Usually, you should not use
+          these values in your components directly, but rather use the color
+          tokens.
+        </p>
+
+        <div
+          className="overflow-hidden rounded-md border border-divider-default
+            bg-surface-primary"
+        >
+          {/* Header */}
+          <div
+            className="grid grid-cols-[auto_2fr_1fr_1fr] items-center gap-md
+              border-b border-divider-default bg-surface-secondary px-md py-sm"
+          >
+            <div className="text-xs font-medium text-body-secondary">
+              Swatch
+            </div>
+            <div className="text-xs font-medium text-body-secondary">
+              Token Name
+            </div>
+            <div className="text-xs font-medium text-body-secondary"></div>
+            <div className="text-xs font-medium text-body-secondary">
+              Hex Value
+            </div>
+          </div>
+
+          {/* Rows */}
+          <div className="px-md">
+            {Object.entries(tokens.Primitives?.other || []).map(
+              ([name, value]) => (
+                <TokenRow
+                  key={name}
+                  name={name}
+                  value={name}
+                  primitiveValue={value}
+                  showPrimitive={false}
+                />
+              )
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
