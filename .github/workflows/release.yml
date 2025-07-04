@@ -3,7 +3,7 @@ name: Build & Release to `release` Branch
 on:
   push:
     tags:
-      - 'v*' # Triggers only on version tags
+      - 'release-*.*.*'  # Trigger on version tags like v1.0.0
 
 jobs:
   build:
