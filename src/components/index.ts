@@ -7,6 +7,7 @@ export * from './Progress';
 export * from './RadioButton';
 export * from './Select';
 export * from './Spinner';
+export * from './Switch';
 export * from './Table';
 export * from './Tag';
 export * from './Textarea';
