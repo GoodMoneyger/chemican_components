@@ -3,8 +3,24 @@
   "trailingComma": "es5",
   "singleQuote": true,
   "tabWidth": 2,
-  "plugins": ["prettier-plugin-tailwindcss"],
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-classnames",
+    "prettier-plugin-merge"
+  ],
   "tailwindStylesheet": "./src/index.css",
-  "tailwindFunctions": ["classNames", "classnames", "cva"]
+  "tailwindFunctions": [
+    "tw",
+    "twMerge",
+    "twMergeClass",
+    "classNames",
+    "classnames",
+    "cva"
+  ],
+  "customFunctions": [
+    "tw",
+    "twMerge",
+    "twMergeClass",
+    "cva"
+  ],
 }
-
