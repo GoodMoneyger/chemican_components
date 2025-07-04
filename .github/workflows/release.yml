@@ -2,7 +2,7 @@ name: Build & Release to `release` Branch
 on:
   push:
     tags:
-      - 'v*.*.*'  # Trigger on version tags like v1.0.0
+      - 'release-*.*.*'  # Trigger on version tags like v1.0.0
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -58,30 +58,34 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "ci@github.com"
           
+          # Store current branch (should be main)
+          CURRENT_BRANCH=$(git branch --show-current)
+          echo "Current branch: $CURRENT_BRANCH"
+          
+          # Create a temporary directory to store release files
+          mkdir -p ../release-files
+          
+          # Copy files we want in the release
+          cp package.json ../release-files/
+          cp README.md ../release-files/
+          cp -r dist ../release-files/
+          
+          # Copy src directory if it exists
+          if [ -d "src" ]; then
+            cp -r src ../release-files/
+          fi
+          
           # Create or switch to release branch
-          git checkout -b release || git checkout release
+          git checkout -b release 2>/dev/null || git checkout release
           
           # Remove all existing files from the release branch
           git rm -rf . 2>/dev/null || true
           
-          # Copy the files we want to include in the release
-          # Note: We're still in the workspace with the built dist folder
-          git checkout main -- package.json README.md
+          # Copy our release files
+          cp -r ../release-files/* .
           
-          # Copy source files if needed
-          if git show main:src > /dev/null 2>&1; then
-            git checkout main -- src 2>/dev/null || true
-          fi
-          
-          # Force add the dist directory (this is the key fix)
-          # The dist folder exists in our workspace from the build step
-          git add dist/ --force
-          
-          # Add other files
-          git add package.json README.md
-          if [ -d "src" ]; then
-            git add src/
-          fi
+          # Add all files including the dist directory
+          git add . --force
           
           # Commit the changes
           if git diff --staged --quiet; then
@@ -90,6 +94,9 @@ jobs:
             git commit -m "chore: release build v${{ env.VERSION }}"
             git push origin release --force
           fi
+          
+          # Clean up temp directory
+          rm -rf ../release-files
       
       - name: Create Git Tag for Release
         run: |
