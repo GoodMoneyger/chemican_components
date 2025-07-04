@@ -8,6 +8,12 @@ import { Toast, ToastProps } from './Toast';
 export default {
   title: 'Components/Toast',
   component: Toast,
+  parameters: {
+    radixDocs: {
+      primitive: 'Toast',
+      url: 'https://www.radix-ui.com/primitives/docs/components/toast'
+    }
+  },
 } as Meta;
 
 const Template: StoryFn<ToastProps> = (args) => {

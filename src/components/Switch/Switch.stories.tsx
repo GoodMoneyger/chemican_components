@@ -54,22 +54,3 @@ Default.args = {
   disabled: false,
   defaultChecked: false,
 };
-
-export const Checked = Template.bind({});
-Checked.args = {
-  disabled: false,
-  defaultChecked: true,
-};
-
-export const Disabled = Template.bind({});
-Disabled.args = {
-  disabled: true,
-  defaultChecked: false,
-};
-
-export const DisabledChecked = Template.bind({});
-DisabledChecked.args = {
-  disabled: true,
-  defaultChecked: true,
-};
-

@@ -1,7 +1,7 @@
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { tokens, TokenCategory } from '../../tokens';
-import { twMerge } from 'tailwind-merge';
 
 const kebabToTitle = (str: string) =>
   str

@@ -8,6 +8,12 @@ import { Dialog, DialogProps } from './Dialog';
 export default {
   title: 'Components/Dialog',
   component: Dialog,
+  parameters: {
+    radixDocs: {
+      primitive: 'Dialog',
+      url: 'https://www.radix-ui.com/primitives/docs/components/dialog'
+    }
+  },
 } as Meta;
 
 const Template: StoryFn<DialogProps> = (args) => {

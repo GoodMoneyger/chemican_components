@@ -6,6 +6,7 @@ import {
   IconX,
   IconCheck,
 } from '@tabler/icons-react';
+import figma from '@figma/code-connect';
 
 import { Button } from './Button';
 
@@ -46,6 +47,30 @@ const meta: Meta<typeof Button> = {
       ],
       mapping: iconMap,
     },
+  },
+  parameters: {
+    design: {
+      type: 'figma',
+      url: 'https://www.figma.com/design/f46iSbgpNKClOOIDRfG7AB/Master-v2.0-SDS%E7%AE%A1%E7%90%86%EF%BC%88JP_Products%EF%BC%89?node-id=6129-2237&m=dev',
+      examples: [Button],
+      props: {
+        size: figma.enum('Size', {
+          'X-Small': 'xs',
+          Small: 'sm',
+          Medium: 'md',
+          Large: 'lg',
+        }),
+        label: figma.string('Label'),
+        icon: figma.boolean('Show front icon', {
+          true: 'IconArrowLeft',
+          false: 'None',
+        }),
+      },
+    },
+    radixDocs: {
+      primitive: 'Slot',
+      url: 'https://www.radix-ui.com/primitives/docs/utilities/slot'
+    }
   },
 };
 

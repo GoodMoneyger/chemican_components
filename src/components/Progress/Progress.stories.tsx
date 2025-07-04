@@ -20,6 +20,12 @@ const meta: Meta<typeof Progress> = {
       defaultValue: false,
     },
   },
+  parameters: {
+    radixDocs: {
+      primitive: 'Progress',
+      url: 'https://www.radix-ui.com/primitives/docs/components/progress'
+    }
+  },
 };
 
 export default meta;
