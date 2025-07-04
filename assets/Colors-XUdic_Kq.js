@@ -1,7 +1,0 @@
-import{j as o}from"./jsx-runtime-BRtPMPcD.js";import{useMDXComponents as s}from"./index-BOuqtQNS.js";import"./index-DpHcdcsg.js";import{C as n}from"./Colors-6XJtQ_kt.js";import{M as i}from"./index-BiTukhwB.js";import"./index-BVKZFYvx.js";import"./index-BbByKtjX.js";import"./preview-DWo7nVk-.js";import"./iframe-BUUe3IyR.js";import"./DocsRenderer-CFRXHY34-BoR3XOVr.js";import"./react-18-ByA98dvp.js";import"./index-_63jvynG.js";import"./tokens-DuUp2xzB.js";import"./index-B_H0m6Hz.js";import"./index-CXQShRbs.js";import"./index-DrFu-skq.js";function r(t){const e={h1:"h1",h2:"h2",p:"p",strong:"strong",...s(),...t.components};return o.jsxs(o.Fragment,{children:[o.jsx(i,{title:"Design System/Tokens/Colors",component:n}),`
-`,o.jsx(e.h1,{id:"color-tokens",children:"Color Tokens"}),`
-`,o.jsx(e.p,{children:"This document provides an overview of the color tokens used in our design system. The color tokens are categorized into background, text, border, and shape colors."}),`
-`,o.jsx(e.h2,{id:"usage",children:"Usage"}),`
-`,o.jsx(e.p,{children:"Please note that utility classes are available only for the respective property. For example, tokens for border color cannot be used for a background."}),`
-`,o.jsxs(e.p,{children:["➡ If you believe a color is missing, please notify the design team and ",o.jsx(e.strong,{children:"do not use unfitting tokens"}),"."]}),`
-`,o.jsx(n,{})]})}function v(t={}){const{wrapper:e}={...s(),...t.components};return e?o.jsx(e,{...t,children:o.jsx(r,{...t})}):r(t)}export{v as default};
