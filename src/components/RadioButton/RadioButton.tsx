@@ -28,13 +28,16 @@ const containerVariants = cva('flex w-fit cursor-pointer items-center gap-xs', {
 });
 
 const radioButtonVariants = cva(
-  'focus:shadow-black size-[1rem] cursor-pointer rounded-full border-1 border-input-default text-body-primary outline-none focus-visible:ring-2 focus-visible:ring-input-focused disabled:cursor-not-allowed disabled:text-body-disabled data-[state=checked]:text-body-secondary',
+  `size-[1rem] cursor-pointer rounded-full border-1 border-input-default
+  text-body-primary outline-none focus-visible:ring-2
+  focus-visible:ring-input-focused disabled:cursor-not-allowed
+  disabled:text-body-disabled data-[state=checked]:text-body-secondary`,
   {
     variants: {
       disabled: {
-        true: 'cursor-not-allowed border-transparent bg-input-disabled text-body-disabled',
-        false:
-          'hover:bg-interactive-plain-hover data-[state=checked]:border-input-selected',
+        true: `cursor-not-allowed border-transparent bg-input-disabled
+        text-body-disabled`,
+        false: '', // Correct hover state currently missing in Figma.
       },
       invalid: {
         true: 'border-input-alert text-body-alert',
@@ -72,11 +75,16 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         )}
         {...props}
       >
-        <RadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-xs after:rounded-full after:bg-input-selected" />
+        <RadioGroup.Indicator
+          className="relative flex size-full items-center justify-center
+            after:block after:size-xs after:rounded-full
+            after:bg-input-selected"
+        />
       </RadioGroup.Item>
       <label
         htmlFor={usedId}
-        className="flex cursor-pointer items-center gap-xs text-inherit select-none"
+        className="flex cursor-pointer items-center gap-xs text-inherit
+          select-none"
       >
         {label}
         {children}

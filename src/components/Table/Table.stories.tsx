@@ -39,7 +39,7 @@ const data: DataEntry[] = [
     companyName: '福田商事株式会社',
     creation: '2023/03/21',
     status: '分析中',
-    statusColor: ColorBackgroundTokens.StatusInProgress,
+    statusColor: ColorBackgroundTokens.StatusInprogress,
   },
   {
     sdsName: 'SDS-Thorium_2022.pdf',
@@ -105,8 +105,11 @@ const Template: StoryFn = () => (
           <TableCell>
             <div className="inline-flex items-center gap-2">
               <div className="flex items-center gap-1">
-                <div className="inline-flex aspect-auto rounded bg-shape-secondary p-0.5">
-                  <IconPdf size={16} className="text-shape-inverse" />
+                <div
+                  className="inline-flex aspect-auto rounded
+                    bg-shape-accent-gray-pale p-0.5"
+                >
+                  <IconPdf size={16} className="text-shape-primary" />
                 </div>
                 {row.sdsName}
               </div>
@@ -116,7 +119,10 @@ const Template: StoryFn = () => (
             </div>
           </TableCell>
           <TableCell>
-            <div className="inline-flex rounded bg-surface-secondary px-xs py-xxs uppercase">
+            <div
+              className="inline-flex rounded bg-surface-secondary px-xs py-xxs
+                uppercase"
+            >
               {row.productName}
             </div>
           </TableCell>

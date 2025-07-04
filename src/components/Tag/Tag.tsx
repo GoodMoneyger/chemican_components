@@ -22,7 +22,8 @@ export const Tag: React.FC<TagProps> = ({
     <div
       className={twMerge(
         classNames(
-          'text-black my-1 inline-flex items-center gap-xxs rounded-full p-xs text-sm text-accent-gray-strong',
+          `my-1 inline-flex items-center gap-xxs rounded-full p-xs text-sm
+          text-accent-gray-strong`,
           className
         )
       )}
@@ -34,13 +35,14 @@ export const Tag: React.FC<TagProps> = ({
       {Boolean(onRemove) && (
         <button
           className={twMerge(
-            'flex h-3 w-3 items-center justify-center rounded-full bg-interactive-secondary-default'
+            `bg-interactive-secondary-default flex h-3 w-3 items-center
+            justify-center rounded-full`
           )}
           onClick={onRemove}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-2 w-2 text-shape-tertiary"
+            className="h-2 w-2 text-shape-primary"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

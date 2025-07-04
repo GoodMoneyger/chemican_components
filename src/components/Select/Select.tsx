@@ -6,7 +6,11 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
 const selectVariants = cva(
-  'inline-flex h-[3rem] w-full cursor-pointer justify-between rounded border border-input-default bg-surface-primary py-sm pr-sm pl-md text-body-primary hover:bg-surface-secondary focus:border-input-focused focus:border-transparent focus:ring-3 focus:ring-input-focused focus:outline-0 disabled:border-input-disabled disabled:bg-surface-disabled disabled:text-body-disabled',
+  `inline-flex h-[3rem] w-full cursor-pointer justify-between rounded border
+  border-input-default bg-surface-primary py-sm pr-sm pl-md text-body-primary
+  hover:bg-surface-secondary focus:border-input-focused focus:outline-0
+  disabled:border-input-disabled disabled:bg-surface-disabled
+  disabled:text-body-disabled`,
   {
     variants: {
       invalid: {
@@ -15,6 +19,14 @@ const selectVariants = cva(
       },
     },
   }
+);
+
+const itemClasses = classNames(
+  `flex h-[2.75rem] cursor-pointer items-center gap-xs border-0 px-md
+  text-body-primary ring-0 hover:bg-interactive-neutral-hover
+  focus:bg-interactive-neutral-hover focus:outline-0
+  active:bg-interactive-neutral-active disabled:bg-surface-disabled
+  disabled:text-interactive-disabled`
 );
 
 export interface SelectProps
@@ -61,7 +73,8 @@ export const Select: React.FC<SelectProps> = ({
         <RadixSelect.Content
           position="popper"
           className={classNames(
-            'text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 shadow-md relative z-50 max-h-96 w-full min-w-[8rem] overflow-hidden rounded border border-input-default bg-surface-primary py-xxs',
+            `relative z-50 max-h-96 w-full min-w-[8rem] overflow-hidden rounded
+            border border-input-default bg-surface-primary py-xxs`,
             className
           )}
         >
@@ -87,7 +100,7 @@ export const Select: React.FC<SelectProps> = ({
                     <RadixSelect.Item
                       key={index}
                       value={option.value}
-                      className="flex h-[2.75rem] items-center gap-xs border-0 px-md text-body-primary ring-0 hover:bg-interactive-plain-hover focus:bg-interactive-plain-hover focus:text-interactive-hover focus:outline-0 active:bg-interactive-plain-active active:text-interactive-active disabled:bg-surface-disabled disabled:text-body-disabled"
+                      className={itemClasses}
                     >
                       {option.icon && (
                         <option.icon className="-ml-xxs h-lg w-lg" />

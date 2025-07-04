@@ -15,12 +15,12 @@ export const Chip: React.FC<ChipProps> = ({
   className,
   accentColor,
 }) => {
-  console.log(accentColor);
   return (
     <div
       className={twMerge(
         classNames(
-          'inline-flex items-center rounded-full bg-status-neutral px-xs py-xxs font-medium text-body-inverse',
+          `inline-flex items-center rounded-full bg-status-neutral px-xs py-xxs
+          font-medium text-accent-gray-soft`,
           className
         )
       )}

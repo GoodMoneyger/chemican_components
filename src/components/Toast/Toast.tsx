@@ -29,27 +29,34 @@ export const Toast: React.FC<ToastProps> = ({
       <RadixToast.Root
         open={isOpen}
         onOpenChange={onClose}
-        className="shadow-high w-96 rounded border-1 border-surface-default bg-surface-primary p-md text-body-primary"
+        className="w-96 rounded border-1 border-surface-default
+          bg-surface-primary p-md text-body-primary shadow-high"
       >
         <div className="flex items-start justify-between gap-xs">
           <div className="flex items-start gap-xs">
             <div>
               {level === 'success' && (
-                <IconCircleCheckFilled className="h-md w-md text-shape-status-success" />
+                <IconCircleCheckFilled
+                  className="h-md w-md text-shape-status-success"
+                />
               )}
               {level === 'error' && (
                 <IconCircleXFilled className="h-md w-md text-shape-status-alert" />
               )}
               {level === 'warning' && (
-                <IconExclamationCircleFilled className="h-md w-md text-shape-status-warning" />
+                <IconExclamationCircleFilled
+                  className="h-md w-md text-shape-status-warning"
+                />
               )}
               {level === 'info' && (
-                <IconInfoCircleFilled className="h-md w-md text-shape-status-info" />
+                <IconInfoCircleFilled
+                  className="h-md w-md text-shape-status-info"
+                />
               )}
             </div>
             <div>
               <RadixToast.Title className="font-bold text-body-primary">
-                <h5 className="text-medium mb-xxs leading-none">{title}</h5>
+                <h5 className="mb-xxs text-md leading-none">{title}</h5>
               </RadixToast.Title>
               <RadixToast.Description>
                 <p className="text-md">{message}</p>

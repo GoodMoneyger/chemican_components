@@ -7,18 +7,29 @@ import { twMerge } from 'tailwind-merge';
 
 // Define button styles with CVA
 const buttonVariants = cva(
-  'inline-flex cursor-pointer items-center justify-center gap-xxs rounded-sm border border-transparent font-medium decoration-1 hover:underline focus-visible:ring-2 focus-visible:ring-interactive-light focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:no-underline',
+  `inline-flex cursor-pointer items-center justify-center gap-xxs rounded-sm
+  border border-transparent font-medium decoration-1 focus-visible:ring-2
+  focus-visible:ring-interactive-light focus-visible:ring-offset-2
+  focus-visible:outline-none disabled:cursor-not-allowed disabled:no-underline`,
   {
     variants: {
       intent: {
-        primary:
-          'bg-interactive-primary-default text-interactive-primary-default hover:bg-interactive-primary-hover active:bg-interactive-primary-active disabled:bg-interactive-primary-disabled disabled:text-interactive-primary-disabled',
-        secondary:
-          'border bg-interactive-secondary-default text-interactive-secondary-default hover:bg-interactive-secondary-hover active:bg-interactive-secondary-active enabled:border-interactive-light disabled:bg-interactive-secondary-disabled disabled:text-interactive-secondary-disabled',
-        tertiary:
-          'border border-interactive-muted bg-interactive-tertiary-default text-interactive-tertiary-default hover:bg-interactive-tertiary-hover active:bg-interactive-tertiary-active disabled:bg-interactive-tertiary-disabled',
-        ghost:
-          'text-interactive-default underline hover:bg-interactive-plain-hover hover:text-interactive-hover active:bg-interactive-plain-active active:text-interactive-active disabled:text-interactive-disabled',
+        primary: `bg-interactive-primary-default text-interactive-inverse
+        hover:bg-interactive-primary-hover active:bg-interactive-primary-active
+        disabled:bg-interactive-disabled disabled:text-interactive-disabled`,
+        secondary: `border bg-interactive-neutral-default
+        text-interactive-primary-default hover:bg-interactive-neutral-hover
+        active:bg-interactive-neutral-active enabled:border-interactive-light
+        disabled:bg-interactive-disabled disabled:text-interactive-disabled`,
+        tertiary: `border border-interactive-muted
+        bg-interactive-neutral-default text-interactive-heavy
+        hover:bg-interactive-neutral-hover active:bg-interactive-neutral-active
+        enabled:border-interactive-light disabled:bg-interactive-disabled`,
+        ghost: `text-interactive-primary-default underline
+        hover:text-interactive-primary-hover
+        active:bg-interactive-neutral-active
+        active:text-interactive-primary-active
+        disabled:text-interactive-disabled`,
       },
       size: {
         xs: 'h-8 min-w-15 px-xs text-sm',
@@ -37,7 +48,7 @@ const buttonVariants = cva(
       {
         iconOnly: true,
         intent: 'ghost',
-        class: 'text-shape-interactive-default',
+        class: 'text-shape-interactive-primary-default',
       },
       { textOnly: true, size: 'md', class: 'px-xl' },
       { textOnly: true, size: 'lg', class: 'px-md' },

@@ -29,22 +29,24 @@ export function Colors() {
 
       Object.entries(categories as Record<string, TokenCategory>).forEach(
         ([category, toks]: [string, TokenCategory]) => {
-          if (category.includes('color')) {
+          if (category.includes('color') && themes[theme]) {
             themes[theme][category] = [];
 
             Object.entries(toks as Record<string, string>).forEach(
               ([name, value]: [string, string]) => {
-                // extract the value within var() if it exists
-                const match = value.match(/var\(([^)]+)\)/);
-                const rawValue = (match ? match[1] : value) as string;
-                const primitiveValue =
-                  tokens.Primitives?.other?.[rawValue] || rawValue;
+                if (themes[theme] && themes[theme][category]) {
+                  // extract the value within var() if it exists
+                  const match = value.match(/var\(([^)]+)\)/);
+                  const rawValue = (match ? match[1] : value) as string;
+                  const primitiveValue =
+                    tokens.Primitives?.other?.[rawValue] || rawValue;
 
-                themes[theme][category].push({
-                  name,
-                  value: rawValue,
-                  primitiveValue,
-                });
+                  themes[theme][category].push({
+                    name,
+                    value: rawValue,
+                    primitiveValue,
+                  });
+                }
               }
             );
           }
@@ -59,7 +61,10 @@ export function Colors() {
     <div className="p-4">
       {Object.entries(themeTokens).map(([theme, categories]) => (
         <div key={theme} className="mb-12">
-          <h2 className="text-2xl mb-6 border-b border-divider-default pb-2 font-bold">
+          <h2
+            className="mb-6 border-b border-divider-default pb-2 text-xxl
+              font-bold"
+          >
             {kebabToTitle(theme)} Theme
           </h2>
 
@@ -81,7 +86,11 @@ export function Colors() {
                   {tokens.map(({ name, value, primitiveValue }) => (
                     <tr key={name}>
                       <td className="py-1">
-                        <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                        <pre
+                          className="sb-unstyled inline rounded
+                            bg-surface-secondary px-2 py-1 text-sm
+                            whitespace-pre-wrap"
+                        >
                           {name}
                         </pre>
                       </td>
@@ -92,12 +101,20 @@ export function Colors() {
                         />
                       </td>
                       <td className="py-1">
-                        <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                        <pre
+                          className="sb-unstyled inline rounded
+                            bg-surface-secondary px-2 py-1 text-sm
+                            whitespace-pre-wrap"
+                        >
                           {value}
                         </pre>
                       </td>
                       <td className="py-1">
-                        <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                        <pre
+                          className="sb-unstyled inline rounded
+                            bg-surface-secondary px-2 py-1 text-sm
+                            whitespace-pre-wrap"
+                        >
                           {primitiveValue}
                         </pre>
                       </td>
@@ -131,7 +148,10 @@ export function Colors() {
             ([name, value]) => (
               <tr key={name}>
                 <td className="py-1">
-                  <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                  <pre
+                    className="sb-unstyled inline rounded bg-surface-secondary
+                      px-2 py-1 text-sm whitespace-pre-wrap"
+                  >
                     {name}
                   </pre>
                 </td>
@@ -142,7 +162,10 @@ export function Colors() {
                   />
                 </td>
                 <td className="py-1">
-                  <pre className="sb-unstyled inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                  <pre
+                    className="sb-unstyled inline rounded bg-surface-secondary
+                      px-2 py-1 text-sm whitespace-pre-wrap"
+                  >
                     {value}
                   </pre>
                 </td>

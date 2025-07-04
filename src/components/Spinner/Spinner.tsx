@@ -63,21 +63,21 @@ export const Spinner: React.FC<SpinnerProps> = ({
         xmlns="http://www.w3.org/2000/svg"
         className={classNames(
           sizeClasses[size],
-          'dark:text-gray-600 fill-blue-600 animate-spin text-transparent'
+          'animate-spin text-transparent'
         )}
       >
         <circle
           cx="50"
           cy="50"
           r={radii[size]}
-          stroke="var(--token-color-background-surface-disabled)"
+          stroke="var(--token-color-shape-accent-gray-pale)"
           stroke-width={strokeWidths[size]}
         />
         <circle
           cx="50"
           cy="50"
           r={radii[size]}
-          stroke="var(--token-color-text-interactive-default)"
+          stroke="var(--token-color-shape-accent-green-strong)"
           stroke-width={strokeWidths[size]}
           strokeLinecap="round"
           strokeDasharray="141.37 282.74"
