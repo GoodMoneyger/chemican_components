@@ -1,6 +1,6 @@
-import { addons, types } from '@storybook/manager-api';
+import { addons, types } from 'storybook/manager-api';
 import React from 'react';
-import { useParameter } from '@storybook/manager-api';
+import { useParameter } from 'storybook/manager-api';
 
 const ADDON_ID = 'radix-docs';
 const PANEL_ID = `${ADDON_ID}/panel`;
