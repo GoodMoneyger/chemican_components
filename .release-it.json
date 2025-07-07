@@ -10,5 +10,8 @@
   },
   "npm": {
     "publish": false
+  },
+  "hooks": {
+    "after:bump": "node tools/update-version-refs.js ${version}"
   }
 }

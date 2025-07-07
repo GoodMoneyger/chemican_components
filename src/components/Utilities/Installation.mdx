@@ -6,7 +6,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## Prerequisites
 
-- Start by making sure your project uses Tailwind v4, use the [official Tailwind documentation](https://tailwindcss.com/docs/installation/using-vite) to set it up
+- **React v19 or higher** is required
+- Start by making sure your project uses **Tailwind v4**, use the [official Tailwind documentation](https://tailwindcss.com/docs/installation/using-vite) to set it up
 - To streamline the development process, it is highly recommended to use `vite` to bundle your frontend project (though not strictly required)
 
 ## Installation
@@ -14,7 +15,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 Install the design library via npm
 
 ```sh
-npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-1.0.0
+npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-0.0.13
 ```
 > Note: Since this is a private repository, you will need to be authenticated to run this command. In CI, this means that the right SSH keys need to be available.
 
@@ -26,6 +27,7 @@ npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/ch
 @import "tailwindcss"
 
 @import "@chemican/components/tailwind-preset.css"
+@import "@chemican/components/components.css" /* Only required if you are using the components */
 ```
 
 This will add the Chemican theme variables to your project and you can use utility classes like `.bg-interactive-primary-default`.
