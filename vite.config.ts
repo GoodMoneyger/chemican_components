@@ -19,7 +19,17 @@ export default defineConfig({
           react: 'React',
           'react-dom': 'ReactDOM',
         },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.match(/\.(woff2?|ttf|eot|otf)$/)) {
+            return 'fonts/[name][extname]';
+          }
+          if (assetInfo.name?.endsWith('.css')) {
+            return '[name][extname]';
+          }
+          return 'assets/[name][extname]';
+        },
       },
     },
+    assetsInlineLimit: 0, // Disable inlining of assets
   },
 });
