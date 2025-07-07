@@ -13,10 +13,21 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "development": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
-    "./tailwind-preset.css": "./src/tailwind-preset.css"
+    "./tailwind-preset.css": {
+      "development": "./src/tailwind-preset.css",
+      "default": "./src/tailwind-preset.css"
+    },
+    "./components.css": {
+      "development": "./src/components.css",
+      "default": "./dist/components.css"
+    }
   },
   "scripts": {
     "dev": "vite",
