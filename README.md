@@ -12,7 +12,7 @@ Since this library is private, install it directly from GitHub:
 
 ```json
 "dependencies": {
-  "@chemican/components": "git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-0.0.13"
+  "@chemican/components": "git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-0.0.15"
 }
 ```
 
