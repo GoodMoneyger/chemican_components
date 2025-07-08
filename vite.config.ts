@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), dts(), tailwindcss()],
   build: {
     lib: {
-      entry: './src/index.ts', // Entry point for the library
+      entry: './src/bundle.ts', // Entry point for the library
       name: 'ChemicanComponents',
       formats: ['es', 'cjs'], // Output both ESM and CommonJS
       fileName: (format) => `index.${format}.js`,
