@@ -13,11 +13,11 @@ Our **React component library** built with **Radix UI, TailwindCSS, and TypeScri
 Since this library is private, install it directly from GitHub:
 
 ```sh
-npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-0.0.15
+npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-0.0.16
 ```
 
 > [!NOTE]
-> `#release-0.0.15` points to the latest version. You should set versions manually to avoid breaking changes.
+> `#release-0.0.16` points to the latest version. You should set versions manually to avoid breaking changes.
 
 ---
 
