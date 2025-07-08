@@ -1,4 +1,4 @@
-@import './styles/fonts.less';
+@import './styles/fonts.css';
 @import './styles/variables.css';
 @import './styles/shadows.css';
-@import './styles/animations.less';
+@import './styles/animations.css';
