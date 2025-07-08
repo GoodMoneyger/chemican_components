@@ -12,8 +12,6 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## Installation
 
-Install the design library via npm
-
 ```sh
 npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-0.0.15
 ```
@@ -21,16 +19,22 @@ npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/ch
 
 > Note: Ensure you are using a fixed release tag `#release-x.x.x`, that you have to keep updated manually. This is to avoid automatically introducing breaking changes.
 
+### Recommended method: Import source files
+
+Install the design library via npm
+
+
 **Include the Chemican preset in your CSS:**
 
 ```css
 @import "tailwindcss"
-
 @import "@chemican/components/tailwind-preset.css"
-@import "@chemican/components/components.css" /* Only required if you are using the components */
+@source "../node_modules/@chemican/components";
 ```
 
 This will add the Chemican theme variables to your project and you can use utility classes like `.bg-interactive-primary-default`.
+
+> Note: The `@source` line is a tailwind directive that ensures tailwind classes of the Chemican components are detected by your Tailwind setup.
 
 **Include Components in your project:**
 ```jsx
@@ -39,3 +43,17 @@ import { Button } from '@chemican/components';
 const MyComp = () => <div><Button>Chemican Button</Button></div>
 
 ```
+
+### Alternative method: Import pre-built CSS
+
+For simple, one-off projects that do not use Tailwind themselves, you can also use the pre-built CSS file.
+
+In this case, you can download the bundled CSS file from the repository (use the release branch) and include it directly in your HTML:
+
+```html
+<link rel="stylesheet" href="/assets/chemican-components.css">
+```
+
+Additionally, you will need to expose the font files in your project under `/fonts/*`, as the pre-built CSS does not include them. You can find the font files in the `assets/fonts` directory of the repository.
+
+This will include all tokens as CSS variables into your project, but you will not be able to use any components or utility classes.

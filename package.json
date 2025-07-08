@@ -23,7 +23,7 @@
     },
     "./tailwind-preset.css": "./src/tailwind-preset.css",
     "./dist/components.css": "./dist/components.css",
-    "./fonts/*": "./src/assets/fonts/*",
+    "./src/assets/fonts/*": "./src/assets/fonts/*",
     "./dist/fonts/*": "./dist/fonts/*"
   },
   "scripts": {
