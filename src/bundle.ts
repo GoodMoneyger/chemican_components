@@ -3,7 +3,6 @@
 // This way the component library can be used as a standalone package
 // for projects that do not use Tailwind CSS directly.
 
-import './index.css';
-import './tailwind-preset.css';
+import './bundle.css';
 
 export * from './components';
