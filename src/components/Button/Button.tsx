@@ -1,15 +1,14 @@
 import React from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
-import classNames from 'classnames';
 import { TablerIcon } from '@tabler/icons-react';
 import { Slot } from '@radix-ui/react-slot';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../lib/utils';
 
 // Define button styles with CVA
 const buttonVariants = cva(
-  `inline-flex cursor-pointer items-center justify-center gap-xxs rounded-sm
-  border border-transparent font-medium decoration-1 focus-visible:ring-2
-  focus-visible:ring-interactive-light focus-visible:ring-offset-2
+  `gap-xxs focus-visible:ring-interactive-light inline-flex cursor-pointer
+  items-center justify-center rounded-sm border border-transparent font-medium
+  decoration-1 focus-visible:ring-2 focus-visible:ring-offset-2
   focus-visible:outline-none disabled:cursor-not-allowed disabled:no-underline`,
   {
     variants: {
@@ -17,23 +16,24 @@ const buttonVariants = cva(
         primary: `bg-interactive-primary-default text-interactive-inverse
         hover:bg-interactive-primary-hover active:bg-interactive-primary-active
         disabled:bg-interactive-disabled disabled:text-interactive-disabled`,
-        secondary: `border bg-interactive-neutral-default
+        secondary: `bg-interactive-neutral-default
         text-interactive-primary-default hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active enabled:border-interactive-light
-        disabled:bg-interactive-disabled disabled:text-interactive-disabled`,
-        tertiary: `border border-interactive-muted
-        bg-interactive-neutral-default text-interactive-heavy
-        hover:bg-interactive-neutral-hover active:bg-interactive-neutral-active
-        enabled:border-interactive-light disabled:bg-interactive-disabled`,
-        ghost: `text-interactive-primary-default underline
+        disabled:bg-interactive-disabled disabled:text-interactive-disabled
+        border`,
+        tertiary: `border-interactive-muted bg-interactive-neutral-default
+        text-interactive-heavy hover:bg-interactive-neutral-hover
+        active:bg-interactive-neutral-active enabled:border-interactive-light
+        disabled:bg-interactive-disabled border`,
+        ghost: `text-interactive-primary-default
         hover:text-interactive-primary-hover
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
-        disabled:text-interactive-disabled`,
+        disabled:text-interactive-disabled underline`,
       },
       size: {
-        xs: 'h-8 min-w-15 px-xs text-sm',
-        sm: 'h-10 min-w-20 px-lg',
+        xs: 'px-xs h-8 min-w-15 text-sm',
+        sm: 'px-lg h-10 min-w-20',
         md: 'h-[2.875rem] min-w-1.5',
         lg: 'h-14 min-w-36 text-lg',
       },
@@ -107,21 +107,20 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     const iconOnly = Boolean(icon && !children);
     const textOnly = Boolean(children && !icon);
+
     if (icon) {
       const Icon = icon;
       return (
         <Comp
           ref={ref}
-          className={twMerge(
-            classNames(
-              buttonVariants({ intent, size, iconOnly, textOnly }),
-              className
-            )
+          className={cn(
+            buttonVariants({ intent, size, iconOnly, textOnly }),
+            className
           )}
           {...props}
         >
           <Icon
-            className={twMerge(
+            className={cn(
               iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
             )}
           />
@@ -132,9 +131,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         ref={ref}
-        className={twMerge(
-          classNames(buttonVariants({ intent, size, textOnly }), className)
-        )}
+        className={cn(buttonVariants({ intent, size, textOnly }), className)}
         children={children}
         {...props}
       />

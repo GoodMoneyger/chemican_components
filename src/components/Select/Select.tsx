@@ -6,11 +6,11 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
 const selectVariants = cva(
-  `inline-flex h-[3rem] w-full cursor-pointer justify-between rounded border
-  border-input-default bg-surface-primary py-sm pr-sm pl-md text-body-primary
-  hover:bg-surface-secondary focus:border-input-focused focus:outline-0
+  `border-input-default bg-surface-primary py-sm pr-sm pl-md text-body-primary
+  hover:bg-surface-secondary focus:border-input-focused
   disabled:border-input-disabled disabled:bg-surface-disabled
-  disabled:text-body-disabled`,
+  disabled:text-body-disabled inline-flex h-[3rem] w-full cursor-pointer
+  justify-between rounded border focus:outline-0`,
   {
     variants: {
       invalid: {
@@ -22,11 +22,10 @@ const selectVariants = cva(
 );
 
 const itemClasses = classNames(
-  `flex h-[2.75rem] cursor-pointer items-center gap-xs border-0 px-md
-  text-body-primary ring-0 hover:bg-interactive-neutral-hover
-  focus:bg-interactive-neutral-hover focus:outline-0
-  active:bg-interactive-neutral-active disabled:bg-surface-disabled
-  disabled:text-interactive-disabled`
+  `gap-xs px-md text-body-primary hover:bg-interactive-neutral-hover
+  focus:bg-interactive-neutral-hover active:bg-interactive-neutral-active
+  disabled:bg-surface-disabled disabled:text-interactive-disabled flex
+  h-[2.75rem] cursor-pointer items-center border-0 ring-0 focus:outline-0`
 );
 
 export interface SelectProps
@@ -40,6 +39,7 @@ export interface SelectProps
   }[];
   placeholder?: string;
   className?: string;
+  icon?: TablerIcon;
   invalid?: boolean;
 }
 
@@ -47,21 +47,25 @@ export const Select: React.FC<SelectProps> = ({
   options,
   placeholder,
   className,
+  icon: Icon,
   invalid = false,
   ...props
 }) => {
   return (
     <RadixSelect.Root {...props}>
       <RadixSelect.Trigger
-        className={classNames(twMerge(selectVariants({ invalid })), className)}
+        className={twMerge(classNames(selectVariants({ invalid })), className)}
       >
-        <RadixSelect.Value
-          placeholder={placeholder || 'Select an option'}
-          className="text-body-primary"
-        />
+        <div className="inline-flex">
+          {Icon && <Icon className="mr-xxs h-lg text-body-primary w-lg" />}
+          <RadixSelect.Value
+            placeholder={placeholder || 'Select an option'}
+            className="text-body-primary"
+          />
+        </div>
         <RadixSelect.Icon
           className={twMerge(
-            classNames('h-md w-md text-body-primary', {
+            classNames('h-md text-body-primary w-md', {
               'text-body-disabled': props.disabled,
             })
           )}
@@ -73,8 +77,8 @@ export const Select: React.FC<SelectProps> = ({
         <RadixSelect.Content
           position="popper"
           className={classNames(
-            `relative z-50 max-h-96 w-full min-w-[8rem] overflow-hidden rounded
-            border border-input-default bg-surface-primary py-xxs`,
+            `border-input-default bg-surface-primary py-xxs relative z-50
+            max-h-96 w-full min-w-[8rem] overflow-hidden rounded border`,
             className
           )}
         >
@@ -92,7 +96,7 @@ export const Select: React.FC<SelectProps> = ({
                   return (
                     <RadixSelect.Separator
                       key={index}
-                      className="m-[5px] h-px border-b border-divider-default"
+                      className="border-divider-default m-[5px] h-px border-b"
                     />
                   );
                 default:
