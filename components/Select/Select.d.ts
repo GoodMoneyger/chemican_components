@@ -14,6 +14,7 @@ export interface SelectProps extends VariantProps<typeof selectVariants>, React.
     }[];
     placeholder?: string;
     className?: string;
+    icon?: TablerIcon;
     invalid?: boolean;
 }
 export declare const Select: React.FC<SelectProps>;
