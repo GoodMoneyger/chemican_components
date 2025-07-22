@@ -9,13 +9,13 @@ function Switch({ className, ...props }: SwitchProps) {
     <SwitchPrimitive.Root
       data-slot="switch"
       className={classNames(
-        `peer inline-flex h-6 w-10 shrink-0 items-center rounded-full
-        transition-all outline-none focus-visible:border-interactive-light
-        focus-visible:ring-[3px]
+        `peer focus-visible:border-interactive-light
         focus-visible:ring-shape-interactive-primary-default/50
-        disabled:cursor-not-allowed disabled:opacity-50
         data-[state=checked]:bg-status-success
-        data-[state=unchecked]:bg-shape-accent-gray-soft`,
+        data-[state=unchecked]:bg-shape-accent-gray-soft inline-flex h-6 w-10
+        shrink-0 items-center rounded-full transition-all outline-none
+        focus-visible:ring-[3px] disabled:cursor-not-allowed
+        disabled:opacity-50`,
         className
       )}
       {...props}
@@ -23,8 +23,8 @@ function Switch({ className, ...props }: SwitchProps) {
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
         className={classNames(
-          `pointer-events-none block size-4 rounded-full
-          bg-shape-interactive-inverse ring-0 transition-transform
+          `bg-shape-interactive-inverse pointer-events-none block size-4
+          rounded-full ring-0 transition-transform
           data-[state=checked]:translate-x-5
           data-[state=unchecked]:translate-x-1`
         )}

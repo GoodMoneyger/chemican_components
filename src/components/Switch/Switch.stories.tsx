@@ -27,8 +27,8 @@ const meta: Meta<typeof Switch> = {
     },
     radixDocs: {
       primitive: 'Switch',
-      url: 'https://www.radix-ui.com/primitives/docs/components/switch'
-    }
+      url: 'https://www.radix-ui.com/primitives/docs/components/switch',
+    },
   },
 };
 
@@ -36,10 +36,10 @@ export default meta;
 
 const Template: StoryFn<typeof Switch> = (args) => {
   const [checked, setChecked] = React.useState(args.defaultChecked || false);
-  
+
   return (
-    <Switch 
-      {...args} 
+    <Switch
+      {...args}
       checked={checked}
       onCheckedChange={(newChecked) => {
         setChecked(newChecked);
