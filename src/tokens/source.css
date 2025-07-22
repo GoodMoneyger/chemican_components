@@ -150,7 +150,7 @@ before committing them to the repository.
   --color-shape-interactive-primary-selected: var(--chemican-green-800);
 }
 
-[data-theme="Blue Mode"] {
+[data-theme='Blue Mode'] {
   --color-background-input-default: var(--neutral-0);
   --color-background-input-disabled: var(--neutral-100);
   --color-background-input-selected: var(--sea-500);

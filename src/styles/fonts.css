@@ -73,7 +73,8 @@
     local('NotoSans-MediumItalic'),
     url('../assets/fonts/NotoSans-MediumItalic.woff2?no-inline') format('woff2'),
     url('../assets/fonts/NotoSans-MediumItalic.otf?no-inline') format('otf'),
-    url('../assets/fonts/NotoSans-MediumItalic.ttf?no-inline') format('truetype');
+    url('../assets/fonts/NotoSans-MediumItalic.ttf?no-inline')
+      format('truetype');
 }
 
 @font-face {
@@ -97,9 +98,11 @@
   src:
     local('NotoSans Semibold Italic'),
     local('NotoSans-SemiboldItalic'),
-    url('../assets/fonts/NotoSans-SemiboldItalic.woff2?no-inline') format('woff2'),
+    url('../assets/fonts/NotoSans-SemiboldItalic.woff2?no-inline')
+      format('woff2'),
     url('../assets/fonts/NotoSans-SemiboldItalic.otf?no-inline') format('otf'),
-    url('../assets/fonts/NotoSans-SemiboldItalic.ttf?no-inline') format('truetype');
+    url('../assets/fonts/NotoSans-SemiboldItalic.ttf?no-inline')
+      format('truetype');
 }
 
 @font-face {
