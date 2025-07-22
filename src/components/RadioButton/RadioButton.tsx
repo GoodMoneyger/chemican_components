@@ -18,25 +18,25 @@ export interface RadioButtonGroupProps
   className?: string;
 }
 
-const containerVariants = cva('flex w-fit cursor-pointer items-center gap-xs', {
+const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
   variants: {
     disabled: {
-      true: 'cursor-not-allowed text-body-disabled',
-      false: 'cursor-pointer text-body-primary',
+      true: 'text-body-disabled cursor-not-allowed',
+      false: 'text-body-primary cursor-pointer',
     },
   },
 });
 
 const radioButtonVariants = cva(
-  `size-[1rem] cursor-pointer rounded-full border-1 border-input-default
-  text-body-primary outline-none focus-visible:ring-2
-  focus-visible:ring-input-focused disabled:cursor-not-allowed
-  disabled:text-body-disabled data-[state=checked]:text-body-secondary`,
+  `border-input-default text-body-primary focus-visible:ring-input-focused
+  disabled:text-body-disabled data-[state=checked]:text-body-secondary
+  size-[1rem] cursor-pointer rounded-full border-1 outline-none
+  focus-visible:ring-2 disabled:cursor-not-allowed`,
   {
     variants: {
       disabled: {
-        true: `cursor-not-allowed border-transparent bg-input-disabled
-        text-body-disabled`,
+        true: `bg-input-disabled text-body-disabled cursor-not-allowed
+        border-transparent`,
         false: '', // Correct hover state currently missing in Figma.
       },
       invalid: {
@@ -76,14 +76,14 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         {...props}
       >
         <RadioGroup.Indicator
-          className="relative flex size-full items-center justify-center
-            after:block after:size-xs after:rounded-full
-            after:bg-input-selected"
+          className="after:size-xs after:bg-input-selected relative flex
+            size-full items-center justify-center after:block
+            after:rounded-full"
         />
       </RadioGroup.Item>
       <label
         htmlFor={usedId}
-        className="flex cursor-pointer items-center gap-xs text-inherit
+        className="gap-xs flex cursor-pointer items-center text-inherit
           select-none"
       >
         {label}

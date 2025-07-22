@@ -19,8 +19,8 @@ export const Chip: React.FC<ChipProps> = ({
     <div
       className={twMerge(
         classNames(
-          `inline-flex items-center rounded-full bg-status-neutral px-xs py-xxs
-          font-medium text-accent-gray-soft`,
+          `bg-status-neutral px-xs py-xxs text-accent-gray-soft inline-flex
+          items-center rounded-full font-medium`,
           className
         )
       )}

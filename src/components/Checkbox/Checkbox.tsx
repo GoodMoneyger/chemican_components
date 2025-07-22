@@ -19,25 +19,24 @@ export interface CheckboxGroupProps {
   className?: string;
 }
 
-const containerVariants = cva('flex w-fit cursor-pointer items-center gap-xs', {
+const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
   variants: {
     disabled: {
-      true: 'cursor-not-allowed text-body-disabled',
-      false: 'cursor-pointer text-body-primary',
+      true: 'text-body-disabled cursor-not-allowed',
+      false: 'text-body-primary cursor-pointer',
     },
   },
 });
 
 const checkboxVariants = cva(
-  `size-[1rem] cursor-[inherit] rounded-xs border-[1.5px] border-input-default
-  text-body-primary outline-none focus-visible:border-input-focused
-  focus-visible:ring-2 focus-visible:ring-input-focused
-  data-[state=checked]:border-input-selected
-  data-[state=checked]:bg-input-selected`,
+  `border-input-default text-body-primary focus-visible:border-input-focused
+  focus-visible:ring-input-focused data-[state=checked]:border-input-selected
+  data-[state=checked]:bg-input-selected size-[1rem] cursor-[inherit] rounded-xs
+  border-[1.5px] outline-none focus-visible:ring-2`,
   {
     variants: {
       disabled: {
-        true: 'border-transparent bg-input-disabled',
+        true: 'bg-input-disabled border-transparent',
         false: '', // Correct hover state currently missing in Figma.
       },
       invalid: {
@@ -72,8 +71,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         {...props}
       >
         <CheckboxPrimitive.Indicator
-          className={`relative flex size-full cursor-[inherit] items-center
-            justify-center bg-inherit text-interactive-inverse`}
+          className={`text-interactive-inverse relative flex size-full
+            cursor-[inherit] items-center justify-center bg-inherit`}
         >
           <IconCheck style={{ strokeWidth: 3 }} />
         </CheckboxPrimitive.Indicator>
@@ -81,7 +80,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       {(label || children) && (
         <label
           htmlFor={usedId}
-          className={`flex cursor-[inherit] items-center gap-xs text-inherit
+          className={`gap-xs flex cursor-[inherit] items-center text-inherit
           select-none`}
         >
           {label}

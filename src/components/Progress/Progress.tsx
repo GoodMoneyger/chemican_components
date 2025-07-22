@@ -20,7 +20,7 @@ export const Progress: React.FC<ProgressProps> = ({
   return (
     <RadixProgress.Root
       className={classNames(
-        'relative h-1 w-full overflow-hidden rounded bg-surface-disabled',
+        'bg-surface-disabled relative h-1 w-full overflow-hidden rounded',
         className
       )}
       value={value}
@@ -29,7 +29,7 @@ export const Progress: React.FC<ProgressProps> = ({
     >
       <RadixProgress.Indicator
         className={classNames(
-          'h-full bg-interactive-primary-default transition-transform',
+          'bg-interactive-primary-default h-full transition-transform',
           {
             'animate-indeterminate': indeterminate,
           }

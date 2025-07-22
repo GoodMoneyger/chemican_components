@@ -11,8 +11,8 @@ export default {
   parameters: {
     radixDocs: {
       primitive: 'Toast',
-      url: 'https://www.radix-ui.com/primitives/docs/components/toast'
-    }
+      url: 'https://www.radix-ui.com/primitives/docs/components/toast',
+    },
   },
 } as Meta;
 

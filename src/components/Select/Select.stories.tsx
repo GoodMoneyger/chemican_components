@@ -21,9 +21,9 @@ const meta: Meta<typeof Select> = {
   parameters: {
     radixDocs: {
       primitive: 'Select',
-      url: 'https://www.radix-ui.com/primitives/docs/components/select'
-    }
-  }
+      url: 'https://www.radix-ui.com/primitives/docs/components/select',
+    },
+  },
 };
 
 export default meta;

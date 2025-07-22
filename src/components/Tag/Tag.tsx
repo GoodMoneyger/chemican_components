@@ -22,8 +22,8 @@ export const Tag: React.FC<TagProps> = ({
     <div
       className={twMerge(
         classNames(
-          `my-1 inline-flex items-center gap-xxs rounded-full p-xs text-sm
-          text-accent-gray-strong`,
+          `gap-xxs p-xs text-accent-gray-strong my-1 inline-flex items-center
+          rounded-full text-sm`,
           className
         )
       )}
@@ -42,7 +42,7 @@ export const Tag: React.FC<TagProps> = ({
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-2 w-2 text-shape-primary"
+            className="text-shape-primary h-2 w-2"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

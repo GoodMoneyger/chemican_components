@@ -106,8 +106,8 @@ const Template: StoryFn = () => (
             <div className="inline-flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <div
-                  className="inline-flex aspect-auto rounded
-                    bg-shape-accent-gray-pale p-0.5"
+                  className="bg-shape-accent-gray-pale inline-flex aspect-auto
+                    rounded p-0.5"
                 >
                   <IconPdf size={16} className="text-shape-primary" />
                 </div>
@@ -120,7 +120,7 @@ const Template: StoryFn = () => (
           </TableCell>
           <TableCell>
             <div
-              className="inline-flex rounded bg-surface-secondary px-xs py-xxs
+              className="bg-surface-secondary px-xs py-xxs inline-flex rounded
                 uppercase"
             >
               {row.productName}

@@ -23,8 +23,8 @@ const meta: Meta<typeof Progress> = {
   parameters: {
     radixDocs: {
       primitive: 'Progress',
-      url: 'https://www.radix-ui.com/primitives/docs/components/progress'
-    }
+      url: 'https://www.radix-ui.com/primitives/docs/components/progress',
+    },
   },
 };
 

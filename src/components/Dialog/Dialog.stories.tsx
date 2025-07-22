@@ -11,8 +11,8 @@ export default {
   parameters: {
     radixDocs: {
       primitive: 'Dialog',
-      url: 'https://www.radix-ui.com/primitives/docs/components/dialog'
-    }
+      url: 'https://www.radix-ui.com/primitives/docs/components/dialog',
+    },
   },
 } as Meta;
 

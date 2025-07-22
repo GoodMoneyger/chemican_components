@@ -4,10 +4,10 @@ import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
 
 const inputVariants = cva(
-  `h-12 w-full rounded border border-input-default bg-surface-primary px-md
-  py-sm hover:bg-surface-secondary focus:border-input-focused focus:outline-0
+  `border-input-default bg-surface-primary px-md py-sm
+  hover:bg-surface-secondary focus:border-input-focused
   disabled:border-input-disabled disabled:bg-surface-disabled
-  disabled:text-body-disabled`,
+  disabled:text-body-disabled h-12 w-full rounded border focus:outline-0`,
   {
     variants: {
       invalid: {

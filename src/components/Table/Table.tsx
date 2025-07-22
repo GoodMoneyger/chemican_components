@@ -5,7 +5,7 @@ const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto border border-surface-default">
+  <div className="border-surface-default relative w-full overflow-auto border">
     <table
       ref={ref}
       className={classNames('w-full caption-bottom text-sm', className)}
@@ -22,7 +22,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={classNames(
-      'h-10 bg-surface-secondary [&_tr]:border-b',
+      'bg-surface-secondary h-10 [&_tr]:border-b',
       className
     )}
     {...props}
@@ -49,7 +49,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={classNames(
-      'border-t bg-surface-secondary font-medium [&>tr]:last:border-b-0',
+      'bg-surface-secondary border-t font-medium [&>tr]:last:border-b-0',
       className
     )}
     {...props}
@@ -64,9 +64,9 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={classNames(
-      `border-b border-surface-default transition-colors
-      hover:bg-interactive-neutral-hover
-      data-[state=selected]:bg-interactive-neutral-selected`,
+      `border-surface-default hover:bg-interactive-neutral-hover
+      data-[state=selected]:bg-interactive-neutral-selected border-b
+      transition-colors`,
       className
     )}
     {...props}
@@ -81,7 +81,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={classNames(
-      `px-4 text-left align-middle font-medium text-body-primary
+      `text-body-primary px-4 text-left align-middle font-medium
       [&:has([role=checkbox])]:w-4 [&:has([role=checkbox])]:pr-0`,
       className
     )}
@@ -111,7 +111,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={classNames('mt-4 text-sm text-body-primary', className)}
+    className={classNames('text-body-primary mt-4 text-sm', className)}
     {...props}
   />
 ));

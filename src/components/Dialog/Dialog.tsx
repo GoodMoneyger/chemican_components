@@ -25,33 +25,31 @@ export const Dialog: React.FC<DialogProps> = ({
   return (
     <RadixDialog.Root open={isOpen} onOpenChange={onClose}>
       <RadixDialog.Overlay
-        className="fixed top-0 left-0 h-full w-full bg-surface-scrimmed
+        className="bg-surface-scrimmed fixed top-0 left-0 h-full w-full
           opacity-85"
       />
       <RadixDialog.Content
-        className="fixed top-1/2 left-1/2 w-2/3 max-w-[40rem] min-w-[25rem]
-          -translate-x-1/2 -translate-y-1/2 transform rounded-lg
-          bg-surface-primary"
+        className="bg-surface-primary fixed top-1/2 left-1/2 w-2/3 max-w-[40rem]
+          min-w-[25rem] -translate-x-1/2 -translate-y-1/2 transform rounded-lg"
       >
         <div className="flex flex-col">
-          <div className="flex flex-grow justify-between px-xl py-lg">
+          <div className="px-xl py-lg flex flex-grow justify-between">
             <div>
               {title && <h2 className="text-xxl text-body-primary">{title}</h2>}
             </div>
             <RadixDialog.Close asChild>
               <button className="cursor-pointer">
-                <IconX className="h-xl w-xl text-body-primary" />
+                <IconX className="h-xl text-body-primary w-xl" />
               </button>
             </RadixDialog.Close>
           </div>
           <div
-            className="flex min-h-40 flex-grow-0 border-y-1
-              border-divider-default bg-surface-secondary px-xl py-lg
-              text-body-primary"
+            className="border-divider-default bg-surface-secondary px-xl py-lg
+              text-body-primary flex min-h-40 flex-grow-0 border-y-1"
           >
             {children}
           </div>
-          <div className="flex flex-grow gap-xs px-md py-lg">
+          <div className="gap-xs px-md py-lg flex flex-grow">
             <RadixDialog.Close asChild>
               <Button intent="secondary">{cancelButtonLabel}</Button>
             </RadixDialog.Close>

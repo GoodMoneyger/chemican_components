@@ -9,8 +9,8 @@ export default {
   parameters: {
     radixDocs: {
       primitive: 'Radio Group',
-      url: 'https://www.radix-ui.com/primitives/docs/components/radio-group'
-    }
+      url: 'https://www.radix-ui.com/primitives/docs/components/radio-group',
+    },
   },
 } as Meta;
 

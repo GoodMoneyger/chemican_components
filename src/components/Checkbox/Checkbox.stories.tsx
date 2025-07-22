@@ -9,9 +9,9 @@ const meta: Meta<typeof CheckboxGroup> = {
   parameters: {
     radixDocs: {
       primitive: 'Checkbox',
-      url: 'https://www.radix-ui.com/primitives/docs/components/checkbox'
-    }
-  }
+      url: 'https://www.radix-ui.com/primitives/docs/components/checkbox',
+    },
+  },
 };
 
 export default meta;
