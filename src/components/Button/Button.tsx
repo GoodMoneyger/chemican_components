@@ -2,7 +2,9 @@ import React from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
 import { TablerIcon } from '@tabler/icons-react';
 import { Slot } from '@radix-ui/react-slot';
+
 import { cn } from '../../lib/utils';
+import { Spinner } from '../Spinner';
 
 // Define button styles with CVA
 const buttonVariants = cva(
@@ -97,16 +99,60 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   icon?: TablerIcon | React.ComponentType<{ className: string }>;
+  loading?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { intent, size, className, icon, asChild = false, children, ...props },
+    {
+      intent,
+      size,
+      className,
+      icon,
+      asChild = false,
+      loading = false,
+      children,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : 'button';
     const iconOnly = Boolean(icon && !children);
     const textOnly = Boolean(children && !icon);
+    const isDisabled = loading || props.disabled;
+
+    if (loading) {
+      return (
+        <Comp
+          ref={ref}
+          className={cn(
+            buttonVariants({ intent, size, iconOnly, textOnly }),
+            'relative',
+            className
+          )}
+          {...props}
+          disabled={isDisabled}
+        >
+          <span className="gap-xxs invisible flex items-center">
+            {icon &&
+              (() => {
+                const Icon = icon;
+                return (
+                  <Icon
+                    className={cn(
+                      iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+                    )}
+                  />
+                );
+              })()}
+            {children}
+          </span>
+          <span className="absolute inset-0 flex items-center justify-center">
+            <Spinner size="sm" layout="row" />
+          </span>
+        </Comp>
+      );
+    }
 
     if (icon) {
       const Icon = icon;
@@ -118,6 +164,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             className
           )}
           {...props}
+          disabled={isDisabled}
         >
           <Icon
             className={cn(
@@ -134,6 +181,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ intent, size, textOnly }), className)}
         children={children}
         {...props}
+        disabled={isDisabled}
       />
     );
   }

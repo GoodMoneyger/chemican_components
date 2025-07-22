@@ -36,6 +36,9 @@ const meta: Meta<typeof Button> = {
     disabled: {
       control: { type: 'boolean' },
     },
+    loading: {
+      control: { type: 'boolean' },
+    },
     icon: {
       control: { type: 'select' },
       options: [
@@ -69,8 +72,8 @@ const meta: Meta<typeof Button> = {
     },
     radixDocs: {
       primitive: 'Slot',
-      url: 'https://www.radix-ui.com/primitives/docs/utilities/slot'
-    }
+      url: 'https://www.radix-ui.com/primitives/docs/utilities/slot',
+    },
   },
 };
 
@@ -93,6 +96,7 @@ Primary.args = {
   intent: 'primary',
   size: 'md',
   disabled: false,
+  loading: false,
   icon: undefined,
   asChild: false,
   children: 'ラベル',
