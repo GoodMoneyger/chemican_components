@@ -63,7 +63,7 @@ export function Spacing() {
           </h4>
           <table className="min-w-full table-auto">
             <thead>
-              <tr className="border-b border-divider-default">
+              <tr className="border-divider-default border-b">
                 <th className="w-4/12 py-2 text-left">Token</th>
                 <th className="w-3/12 py-2 text-left">Spacing Value</th>
                 <th className="w-2/12 py-2 text-left">Visual</th>
@@ -74,23 +74,32 @@ export function Spacing() {
               {tokens.map(({ name, value }) => (
                 <tr key={name}>
                   <td className="py-1">
-                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                    <pre
+                      className="bg-surface-secondary inline rounded px-2 py-1
+                        text-sm whitespace-pre-wrap"
+                    >
                       {name}
                     </pre>
                   </td>
                   <td className="py-1">
-                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                    <pre
+                      className="bg-surface-secondary inline rounded px-2 py-1
+                        text-sm whitespace-pre-wrap"
+                    >
                       {value}
                     </pre>
                   </td>
                   <td className="py-1">
-                    <pre className="inline rounded bg-surface-secondary px-2 py-1 text-sm whitespace-pre-wrap">
+                    <pre
+                      className="bg-surface-secondary inline rounded px-2 py-1
+                        text-sm whitespace-pre-wrap"
+                    >
                       {parseFloat(value) * 16}px
                     </pre>
                   </td>
                   <td className="py-1">
                     <div
-                      className="inline-block bg-surface-secondary"
+                      className="bg-surface-secondary inline-block"
                       style={{ width: value, height: '1rem' }}
                     />
                   </td>

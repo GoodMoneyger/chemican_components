@@ -92,12 +92,12 @@ const Tooltip = ({
       {children}
       {show && (
         <div
-          className="absolute bottom-full left-1/2 z-10 mb-xxs -translate-x-1/2
+          className="mb-xxs absolute bottom-full left-1/2 z-10 -translate-x-1/2
             transform"
         >
           <div
-            className="sb-unstyled rounded bg-surface-scrimmed px-xxs py-xxxs
-              text-sm whitespace-nowrap text-body-inverse opacity-80"
+            className="sb-unstyled bg-surface-scrimmed px-xxs py-xxxs
+              text-body-inverse rounded text-sm whitespace-nowrap opacity-80"
           >
             {content}
             <div
@@ -163,8 +163,8 @@ const CopyableValue = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={twMerge(
-          `cursor-pointer rounded-xs px-xs py-xxxs text-left transition-colors
-          hover:bg-surface-secondary ${className}`
+          `px-xs py-xxxs hover:bg-surface-secondary cursor-pointer rounded-xs
+          text-left transition-colors ${className}`
         )}
       >
         <code className="break-all">{text}</code>
@@ -211,8 +211,8 @@ const TailwindClass = ({ className }: { className: string }) => {
         onClick={handleCopy}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="cursor-pointer rounded-xs px-xs py-xxxs text-left text-sm
-          text-body-secondary transition-colors hover:bg-surface-secondary"
+        className="px-xs py-xxxs text-body-secondary hover:bg-surface-secondary
+          cursor-pointer rounded-xs text-left text-sm transition-colors"
       >
         .<code>{className}</code>
       </button>
@@ -236,12 +236,12 @@ const TokenRow = ({
 
   return (
     <div
-      className="grid grid-cols-[auto_2fr_1fr_1fr] items-center gap-md border-b
-        border-divider-default py-sm last:border-b-0"
+      className="gap-md border-divider-default py-sm grid
+        grid-cols-[auto_2fr_1fr_1fr] items-center border-b last:border-b-0"
     >
       <div
         className={`h-8 w-8 flex-shrink-0 rounded-sm
-          ${showBorder ? 'border border-divider-default' : ''}`}
+          ${showBorder ? 'border-divider-default border' : ''}`}
         style={{ backgroundColor: `var(${value})` }}
       />
 
@@ -250,11 +250,11 @@ const TokenRow = ({
           <CopyableValue
             text={name}
             tooltip="token name"
-            className="w-fit text-sm font-medium text-body-primary"
+            className="text-body-primary w-fit text-sm font-medium"
           />
         </div>
         {tailwindClasses.length > 0 && (
-          <div className="flex flex-wrap gap-xs">
+          <div className="gap-xs flex flex-wrap">
             {tailwindClasses.map((className, index) => (
               <TailwindClass key={index} className={className} />
             ))}
@@ -267,7 +267,7 @@ const TokenRow = ({
           <CopyableValue
             text={value}
             tooltip="CSS variable"
-            className="w-fit text-sm text-body-secondary"
+            className="text-body-secondary w-fit text-sm"
           />
         </div>
       ) : (
@@ -278,7 +278,7 @@ const TokenRow = ({
         <CopyableValue
           text={primitiveValue}
           tooltip="hex value"
-          className="w-fit text-sm text-body-secondary"
+          className="text-body-secondary w-fit text-sm"
         />
       </div>
     </div>
@@ -335,12 +335,12 @@ export function Colors() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-7xl p-md">
+    <div className="p-md mx-auto max-w-7xl">
       {Object.entries(themeTokens).map(([theme, categories]) => (
         <div key={theme} className="mb-xxxl">
           <h2
-            className="sb-unstyled mt-10 mb-lg border-b border-divider-default
-              pb-sm text-xxl font-bold"
+            className="sb-unstyled mb-lg border-divider-default pb-sm text-xxl
+              mt-10 border-b font-bold"
           >
             {kebabToTitle(theme)} Theme
           </h2>
@@ -348,32 +348,32 @@ export function Colors() {
           {Object.entries(categories).map(([category, tokens]) => (
             <div key={category} className="mb-xl">
               <h3
-                className="sb-unstyled mt-10 mb-md text-xl font-semibold
-                  text-body-primary"
+                className="sb-unstyled mb-md text-body-primary mt-10 text-xl
+                  font-semibold"
               >
                 {kebabToTitle(category)}
               </h3>
 
               <div
-                className="overflow-hidden rounded-md border
-                  border-divider-default bg-surface-primary"
+                className="border-divider-default bg-surface-primary
+                  overflow-hidden rounded-md border"
               >
                 {/* Header */}
                 <div
-                  className="sb-unstyled grid grid-cols-[auto_2fr_1fr_1fr]
-                    items-center gap-md border-b border-divider-default
-                    bg-surface-secondary px-md py-sm"
+                  className="sb-unstyled gap-md border-divider-default
+                    bg-surface-secondary px-md py-sm grid
+                    grid-cols-[auto_2fr_1fr_1fr] items-center border-b"
                 >
-                  <div className="text-sm font-medium text-body-secondary">
+                  <div className="text-body-secondary text-sm font-medium">
                     Swatch
                   </div>
-                  <div className="text-sm font-medium text-body-secondary">
+                  <div className="text-body-secondary text-sm font-medium">
                     Token Name and Tailwind Classes
                   </div>
-                  <div className="text-sm font-medium text-body-secondary">
+                  <div className="text-body-secondary text-sm font-medium">
                     CSS Variable
                   </div>
-                  <div className="text-sm font-medium text-body-secondary">
+                  <div className="text-body-secondary text-sm font-medium">
                     Hex Value
                   </div>
                 </div>
@@ -406,22 +406,22 @@ export function Colors() {
         </p>
 
         <div
-          className="overflow-hidden rounded-md border border-divider-default
-            bg-surface-primary"
+          className="border-divider-default bg-surface-primary overflow-hidden
+            rounded-md border"
         >
           {/* Header */}
           <div
-            className="grid grid-cols-[auto_2fr_1fr_1fr] items-center gap-md
-              border-b border-divider-default bg-surface-secondary px-md py-sm"
+            className="gap-md border-divider-default bg-surface-secondary px-md
+              py-sm grid grid-cols-[auto_2fr_1fr_1fr] items-center border-b"
           >
-            <div className="text-xs font-medium text-body-secondary">
+            <div className="text-body-secondary text-xs font-medium">
               Swatch
             </div>
-            <div className="text-xs font-medium text-body-secondary">
+            <div className="text-body-secondary text-xs font-medium">
               Token Name
             </div>
-            <div className="text-xs font-medium text-body-secondary"></div>
-            <div className="text-xs font-medium text-body-secondary">
+            <div className="text-body-secondary text-xs font-medium"></div>
+            <div className="text-body-secondary text-xs font-medium">
               Hex Value
             </div>
           </div>
