@@ -1,3 +1,35 @@
+import { readdirSync } from 'fs';
+import { join } from 'path';
+
+// Dynamically get component names from src/components directory
+function getComponentTopics() {
+  // Directories to exclude from component topics (utility/documentation directories)
+  const excludeList = [
+    'utilities',
+    // Add more directories to exclude here if needed
+  ];
+  
+  try {
+    const componentsDir = join(process.cwd(), 'src', 'components');
+    const entries = readdirSync(componentsDir, { withFileTypes: true });
+    
+    return entries
+      .filter(entry => entry.isDirectory())
+      .map(entry => entry.name.toLowerCase())
+      .filter(name => !excludeList.includes(name));
+  } catch (error) {
+    console.warn('Could not read components directory, falling back to static list');
+    // Fallback to static list if directory reading fails
+    return [
+      'button', 'callout', 'checkbox', 'chip', 'dialog', 'formfield',
+      'input', 'progress', 'radiobutton', 'select', 'spinner', 'switch',
+      'table', 'tag', 'textarea', 'toast'
+    ];
+  }
+}
+
+const componentTopics = getComponentTopics();
+
 export default {
   extends: ['@commitlint/config-conventional'],
   // Custom parser to handle multiple topics
@@ -16,11 +48,9 @@ export default {
           if (!type) return [false, 'Type is required'];
           
           const validTopics = [
-            // Components
-            'button', 'callout', 'checkbox', 'chip', 'dialog', 'formfield',
-            'input', 'progress', 'radiobutton', 'select', 'spinner', 'switch',
-            'table', 'tag', 'textarea', 'toast',
-            // General
+            // Dynamic component topics
+            ...componentTopics,
+            // General categories
             'multiple', 'tokens', 'dev', 'doc', 'config', 'ci', 'deps', 'release'
           ];
           
