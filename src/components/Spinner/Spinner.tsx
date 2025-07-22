@@ -31,7 +31,7 @@ const sizeClasses = {
 };
 
 const strokeWidths = {
-  sm: 16,
+  sm: 12,
   md: 10,
 };
 
