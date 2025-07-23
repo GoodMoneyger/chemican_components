@@ -62,7 +62,6 @@ export default tseslint.config(
     settings: {
       'better-tailwindcss': {
         entryPoint: 'src/bundle.css',
-        callees: ['classNames'],
       },
     },
   },
