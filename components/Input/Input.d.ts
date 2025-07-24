@@ -1,10 +1,14 @@
 import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
-declare const inputVariants: (props?: ({
+import { IconProp } from '../../lib/utils';
+declare const inputWrapperVariants: (props?: ({
     invalid?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>, VariantProps<typeof inputVariants> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'>, VariantProps<typeof inputWrapperVariants> {
     invalid?: boolean;
+    prefixIcon?: IconProp;
+    trailingIcon?: IconProp;
+    onTrailingIconClick?: () => void;
 }
 export declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
 export {};

@@ -1,8 +1,9 @@
 import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
-import { TablerIcon } from '@tabler/icons-react';
+import { TablerIcon } from '../../../@tabler/icons-react/dist/esm/icons/index.mjs';
 declare const buttonVariants: (props?: ({
     intent?: "primary" | "secondary" | "tertiary" | "ghost" | null | undefined;
+    danger?: boolean | null | undefined;
     size?: "xs" | "sm" | "md" | "lg" | null | undefined;
     iconOnly?: boolean | null | undefined;
     textOnly?: boolean | null | undefined;
@@ -13,6 +14,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
         className: string;
     }>;
     loading?: boolean;
+    danger?: boolean;
 }
 export declare const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
 export {};

@@ -7,6 +7,7 @@ export * from './Input';
 export * from './Progress';
 export * from './RadioButton';
 export * from './Select';
+export * from './SideNavigation';
 export * from './Spinner';
 export * from './Switch';
 export * from './Table';
