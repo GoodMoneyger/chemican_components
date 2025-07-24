@@ -33,7 +33,7 @@ const checkboxVariants = cva(
   data-[state=checked]:border-input-selected
   data-[state=checked]:bg-input-selected focus-visible:ring-interactive-focused
   hover:border-interactive-hover
-  data-[state=checked]:hover:bg-interactive-primary-hover! size-[1.125rem]
+  data-[state=checked]:hover:bg-interactive-primary-hover! size-[17px]
   cursor-[inherit] rounded-xs border-[1.5px] outline-none focus-visible:ring-4
   data-[state=checked]:hover:border-transparent`,
   {
