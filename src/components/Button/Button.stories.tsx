@@ -39,6 +39,9 @@ const meta: Meta<typeof Button> = {
     loading: {
       control: { type: 'boolean' },
     },
+    danger: {
+      control: { type: 'boolean' },
+    },
     icon: {
       control: { type: 'select' },
       options: [

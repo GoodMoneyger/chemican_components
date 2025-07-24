@@ -8,39 +8,43 @@ import { Spinner } from '../Spinner';
 
 // Define button styles with CVA
 const buttonVariants = cva(
-  `gap-xxs focus-visible:ring-interactive-light inline-flex cursor-pointer
-  items-center justify-center rounded-sm border border-transparent font-medium
-  decoration-1 focus-visible:ring-2 focus-visible:ring-offset-2
-  focus-visible:outline-none disabled:cursor-not-allowed disabled:no-underline`,
+  `gap-xxs box-border inline-flex cursor-pointer items-center justify-center
+  rounded-sm border border-transparent font-medium decoration-1
+  focus-visible:ring-4 focus-visible:outline-none disabled:cursor-not-allowed
+  disabled:no-underline`,
   {
     variants: {
       intent: {
         primary: `bg-interactive-primary-default text-interactive-inverse
         hover:bg-interactive-primary-hover active:bg-interactive-primary-active
-        disabled:bg-interactive-disabled disabled:text-interactive-disabled`,
+        disabled:text-interactive-disabled disabled:bg-interactive-disabled`,
         secondary: `bg-interactive-neutral-default
         text-interactive-primary-default hover:bg-interactive-neutral-hover
-        active:bg-interactive-neutral-active enabled:border-interactive-light
-        disabled:bg-interactive-disabled disabled:text-interactive-disabled
-        border`,
-        tertiary: `border-interactive-muted bg-interactive-neutral-default
-        text-interactive-heavy hover:bg-interactive-neutral-hover
-        active:bg-interactive-neutral-active enabled:border-interactive-light
-        disabled:bg-interactive-disabled border`,
+        active:bg-interactive-neutral-active disabled:bg-interactive-disabled
+        disabled:text-interactive-disabled border
+        enabled:border-[var(--chemican-green-800)]`,
+        tertiary: `bg-interactive-neutral-default text-interactive-heavy
+        hover:bg-interactive-neutral-hover active:bg-interactive-neutral-active
+        enabled:border-interactive-default disabled:bg-interactive-disabled
+        disabled:text-interactive-disabled border`,
         ghost: `text-interactive-primary-default
-        hover:text-interactive-primary-hover
+        hover:text-interactive-primary-hover hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
         disabled:text-interactive-disabled underline`,
       },
+      danger: {
+        true: 'focus-visible:ring-interactive-alert-focused',
+        false: 'focus-visible:ring-interactive-focused',
+      },
       size: {
         xs: 'px-xs h-8 min-w-15 text-sm',
         sm: 'px-lg h-10 min-w-20',
-        md: 'h-[2.875rem] min-w-1.5',
-        lg: 'h-14 min-w-36 text-lg',
+        md: 'h-[2.875rem] min-w-24',
+        lg: 'h-14 min-w-34 text-lg',
       },
       iconOnly: {
-        true: 'aspect-square h-auto min-w-auto',
+        true: 'aspect-square h-auto min-w-0 p-0!',
       },
       textOnly: {
         true: '',
@@ -60,6 +64,36 @@ const buttonVariants = cva(
       { iconOnly: true, size: 'sm', class: 'px-xs' },
       { iconOnly: true, size: 'md', class: 'px-sm' },
       { iconOnly: true, size: 'lg', class: 'px-md' },
+      {
+        intent: 'primary',
+        danger: true,
+        class: `bg-interactive-danger-default hover:bg-interactive-danger-hover
+        active:bg-interactive-danger-active`,
+      },
+      {
+        intent: 'secondary',
+        danger: true,
+        class: `bg-interactive-neutral-default text-interactive-danger-default
+        hover:bg-interactive-neutral-danger-active
+        active:bg-interactive-neutral-danger-active
+        enabled:border-interactive-alert-default`,
+      },
+      {
+        intent: 'tertiary',
+        danger: true,
+        class: `text-interactive-danger-default
+        hover:bg-interactive-neutral-danger-hover
+        active:bg-interactive-neutral-danger-active border-none`,
+      },
+      {
+        intent: 'ghost',
+        danger: true,
+        class: `text-interactive-danger-default
+        hover:text-interactive-danger-hover
+        hover:bg-interactive-neutral-danger-hover
+        active:bg-interactive-neutral-danger-active
+        active:text-interactive-danger-active`,
+      },
     ],
     defaultVariants: {
       intent: 'primary',
@@ -77,18 +111,12 @@ const iconStyles = cva('', {
       true: '',
     },
     size: {
-      xs: 'size-[0.875rem]',
-      sm: 'size-[0.875rem]',
-      md: 'size-[0.875rem]',
-      lg: 'size-4',
+      xs: 'size-4',
+      sm: 'size-5',
+      md: 'size-5',
+      lg: 'size-6',
     },
   },
-  compoundVariants: [
-    { iconOnly: true, size: 'xs', ghost: true, class: 'size-4' },
-    { iconOnly: true, size: 'sm', ghost: true, class: 'size-4' },
-    { iconOnly: true, size: 'md', ghost: true, class: 'size-4' },
-    { iconOnly: true, size: 'lg', ghost: true, class: 'size-6' },
-  ],
   defaultVariants: {
     size: 'md',
   },
@@ -100,6 +128,7 @@ export interface ButtonProps
   asChild?: boolean;
   icon?: TablerIcon | React.ComponentType<{ className: string }>;
   loading?: boolean;
+  danger?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -111,6 +140,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon,
       asChild = false,
       loading = false,
+      danger = false,
       children,
       ...props
     },
@@ -126,7 +156,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Comp
           ref={ref}
           className={cn(
-            buttonVariants({ intent, size, iconOnly, textOnly }),
+            buttonVariants({ intent, size, iconOnly, textOnly, danger }),
             'relative',
             className
           )}
@@ -160,7 +190,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Comp
           ref={ref}
           className={cn(
-            buttonVariants({ intent, size, iconOnly, textOnly }),
+            buttonVariants({ intent, size, iconOnly, textOnly, danger }),
             className
           )}
           {...props}
@@ -178,7 +208,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         ref={ref}
-        className={cn(buttonVariants({ intent, size, textOnly }), className)}
+        className={cn(
+          buttonVariants({ intent, size, textOnly, danger }),
+          className
+        )}
         children={children}
         {...props}
         disabled={isDisabled}
