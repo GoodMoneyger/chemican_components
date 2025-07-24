@@ -1,8 +1,0 @@
-import{j as e}from"./jsx-runtime-D_zvdyIk.js";import{useMDXComponents as o}from"./index-CW8tso3z.js";import{M as a}from"./blocks-Cs4L2Cxs.js";import{S as i}from"./Spacing-CGwBxev2.js";import"./iframe-CTljiQij.js";import"./index-DHgvIAkZ.js";import"./index-DZuHaoNQ.js";import"./tokens-D9FuHI_y.js";function t(s){const n={code:"code",h1:"h1",h2:"h2",p:"p",...o(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(a,{title:"Design System/Tokens/Spacing",component:i}),`
-`,e.jsx(n.h1,{id:"spacing-tokens",children:"Spacing Tokens"}),`
-`,e.jsx(n.p,{children:"This document provides an overview of the spacing tokens used in our design system. The spacing tokens are based on a base unit of 4px, which is derived from the base font size of 16px divided by 4."}),`
-`,e.jsx(n.h2,{id:"tailwind-and-base-unit",children:"Tailwind and Base Unit"}),`
-`,e.jsxs(n.p,{children:["In Tailwind CSS, the base unit of 4px is used to define spacing classes such as ",e.jsx(n.code,{children:"w-20"}),". For example, ",e.jsx(n.code,{children:"w-20"})," corresponds to a width of 80px, which is calculated as 20 times the base unit of 4px."]}),`
-`,e.jsx(n.h2,{id:"named-spacings",children:"Named spacings"}),`
-`,e.jsxs(n.p,{children:["Based on the design tokens passed to Tailwind, there are the following named spacings ",e.jsx(n.code,{children:"xxxs"})," - ",e.jsx(n.code,{children:"xxxl"})," which can be used in all utitlity classes that use spacings. For example padding, margin, sizes, etc:"]}),`
-`,e.jsx(i,{})]})}function u(s={}){const{wrapper:n}={...o(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(t,{...s})}):t(s)}export{u as default};
