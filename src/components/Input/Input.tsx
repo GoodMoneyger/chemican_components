@@ -3,35 +3,128 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
 
-const inputVariants = cva(
-  `border-input-default bg-surface-primary px-md py-sm
-  hover:bg-surface-secondary focus:border-input-focused
-  disabled:border-input-disabled disabled:bg-surface-disabled
-  disabled:text-body-disabled h-12 w-full rounded border focus:outline-0`,
+import { IconProp, renderIcon } from '../../lib/utils';
+
+const inputWrapperVariants = cva(
+  `border-interactive-default bg-surface-primary hover:border-interactive-hover
+  has-[:disabled]:border-interactive-disabled
+  has-[:disabled]:bg-surface-disabled has-[:focus]:ring-interactive-focused
+  relative flex h-12 w-full items-center rounded border
+  has-[:focus]:border-[var(--chemican-green-800)] has-[:focus]:ring-4
+  has-[:focus]:outline-0`,
   {
     variants: {
       invalid: {
-        false: 'text-body-primary focus:border-input-focused',
-        true: 'border-input-alert focus:border-input-alert',
+        false: '',
+        true: `border-interactive-alert-default!
+        has-[:focus]:ring-interactive-alert-focused`,
+      },
+    },
+  }
+);
+
+const inputVariants = cva(
+  `px-md py-sm text-body-primary placeholder:text-body-secondary
+  disabled:text-body-disabled flex-1 bg-transparent outline-none`,
+  {
+    variants: {
+      hasPrefix: {
+        true: 'pl-0',
+        false: '',
+      },
+      hasTrailing: {
+        true: 'pr-0',
+        false: '',
+      },
+    },
+  }
+);
+
+const iconVariants = cva(
+  'text-body-secondary flex items-center justify-center',
+  {
+    variants: {
+      position: {
+        prefix: 'pl-md pr-xs',
+        trailing: 'px-md h-full',
+      },
+      interactive: {
+        true: 'hover:text-body-primary cursor-pointer transition-colors',
+        false: '',
       },
     },
   }
 );
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
-    VariantProps<typeof inputVariants> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'>,
+    VariantProps<typeof inputWrapperVariants> {
   invalid?: boolean;
+  prefixIcon?: IconProp;
+  trailingIcon?: IconProp;
+  onTrailingIconClick?: () => void;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ invalid, className, ...props }, ref) => {
+  (
+    {
+      invalid,
+      prefixIcon,
+      trailingIcon,
+      onTrailingIconClick,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const hasPrefix = !!prefixIcon;
+    const hasTrailing = !!trailingIcon;
+    const isTrailingInteractive = !!onTrailingIconClick;
+
     return (
-      <input
-        ref={ref}
-        className={twMerge(classNames(inputVariants({ invalid }), className))}
-        {...props}
-      />
+      <div
+        className={twMerge(
+          classNames(inputWrapperVariants({ invalid }), className)
+        )}
+      >
+        {prefixIcon && (
+          <div
+            className={iconVariants({ position: 'prefix', interactive: false })}
+          >
+            {renderIcon(prefixIcon)}
+          </div>
+        )}
+        <input
+          ref={ref}
+          className={inputVariants({ hasPrefix, hasTrailing })}
+          {...props}
+        />
+        {trailingIcon && (
+          <>
+            {isTrailingInteractive ? (
+              <button
+                type="button"
+                className={iconVariants({
+                  position: 'trailing',
+                  interactive: true,
+                })}
+                onClick={onTrailingIconClick}
+              >
+                {renderIcon(trailingIcon)}
+              </button>
+            ) : (
+              <div
+                className={iconVariants({
+                  position: 'trailing',
+                  interactive: false,
+                })}
+              >
+                {renderIcon(trailingIcon)}
+              </div>
+            )}
+          </>
+        )}
+      </div>
     );
   }
 );
