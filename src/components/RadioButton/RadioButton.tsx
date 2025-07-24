@@ -28,10 +28,11 @@ const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
 });
 
 const radioButtonVariants = cva(
-  `border-input-default text-body-primary focus-visible:ring-input-focused
-  disabled:text-body-disabled data-[state=checked]:text-body-secondary
+  `border-input-default text-body-primary disabled:text-body-disabled
+  data-[state=checked]:text-body-secondary
+  focus-visible:ring-interactive-focused hover:border-interactive-hover
   size-[1rem] cursor-pointer rounded-full border-1 outline-none
-  focus-visible:ring-2 disabled:cursor-not-allowed`,
+  focus-visible:ring-4 disabled:cursor-not-allowed`,
   {
     variants: {
       disabled: {
@@ -40,7 +41,10 @@ const radioButtonVariants = cva(
         false: '', // Correct hover state currently missing in Figma.
       },
       invalid: {
-        true: 'border-input-alert text-body-alert',
+        true: `border-input-alert! text-body-alert
+        data-[state=checked]:border-interactive-danger
+        data-[state=checked]:bg-status-alert
+        focus-visible:ring-interactive-alert-focused`,
       },
     },
     defaultVariants: {

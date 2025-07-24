@@ -19,4 +19,5 @@ export const Default = Template.bind({});
 Default.args = {
   placeholder: 'Placeholder',
   characterLimit: 0,
+  invalid: false,
 };

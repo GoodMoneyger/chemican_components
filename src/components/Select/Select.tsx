@@ -7,15 +7,15 @@ import { twMerge } from 'tailwind-merge';
 
 const selectVariants = cva(
   `border-input-default bg-surface-primary py-sm pr-sm pl-md text-body-primary
-  hover:bg-surface-secondary focus:border-input-focused
   disabled:border-input-disabled disabled:bg-surface-disabled
-  disabled:text-body-disabled inline-flex h-[3rem] w-full cursor-pointer
-  justify-between rounded border focus:outline-0`,
+  disabled:text-body-disabled hover:border-interactive-hover inline-flex
+  h-[3rem] w-full justify-between rounded border focus:ring-4 focus:outline-0
+  enabled:cursor-pointer`,
   {
     variants: {
       invalid: {
-        false: 'text-body-primary focus:ring-input-focused',
-        true: 'border-input-alert focus:ring-input-alert',
+        false: 'text-body-primary focus:ring-interactive-focused',
+        true: 'border-input-alert focus:ring-interactive-alert-focused',
       },
     },
   }

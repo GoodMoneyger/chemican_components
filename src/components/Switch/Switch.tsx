@@ -15,7 +15,7 @@ function Switch({ className, ...props }: SwitchProps) {
         data-[state=unchecked]:bg-shape-accent-gray-soft inline-flex h-6 w-10
         shrink-0 items-center rounded-full transition-all outline-none
         focus-visible:ring-[3px] disabled:cursor-not-allowed
-        disabled:opacity-50`,
+        disabled:opacity-20`,
         className
       )}
       {...props}

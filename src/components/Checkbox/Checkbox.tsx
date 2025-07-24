@@ -30,9 +30,10 @@ const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
 
 const checkboxVariants = cva(
   `border-input-default text-body-primary focus-visible:border-input-focused
-  focus-visible:ring-input-focused data-[state=checked]:border-input-selected
-  data-[state=checked]:bg-input-selected size-[1rem] cursor-[inherit] rounded-xs
-  border-[1.5px] outline-none focus-visible:ring-2`,
+  data-[state=checked]:border-input-selected
+  data-[state=checked]:bg-input-selected focus-visible:ring-interactive-focused
+  hover:border-interactive-hover size-[1rem] cursor-[inherit] rounded-xs
+  border-[1.5px] outline-none focus-visible:ring-4`,
   {
     variants: {
       disabled: {
@@ -40,9 +41,10 @@ const checkboxVariants = cva(
         false: '', // Correct hover state currently missing in Figma.
       },
       invalid: {
-        true: `border-input-alert text-body-alert
+        true: `border-input-alert! text-body-alert
         data-[state=checked]:border-interactive-danger
-        data-[state=checked]:bg-status-alert`,
+        data-[state=checked]:bg-status-alert
+        focus-visible:ring-interactive-alert-focused`,
       },
     },
     defaultVariants: {

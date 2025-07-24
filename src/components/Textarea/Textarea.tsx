@@ -5,15 +5,15 @@ import classNames from 'classnames';
 
 const textareaVariants = cva(
   `border-input-default bg-surface-primary px-md py-sm
-  hover:bg-surface-secondary focus:border-input-focused
-  disabled:border-input-disabled disabled:bg-surface-disabled
-  disabled:text-body-disabled h-12 min-h-30 w-full rounded border
-  focus:outline-0`,
+  focus:border-input-focused disabled:border-input-disabled
+  disabled:bg-surface-disabled disabled:text-body-disabled
+  hover:border-interactive-hover h-12 min-h-30 w-full rounded border
+  focus:ring-4 focus:outline-0`,
   {
     variants: {
       invalid: {
-        false: 'text-body-primary focus:ring-input-focused',
-        true: 'border-input-alert focus:ring-input-alert',
+        false: 'text-body-primary focus:ring-interactive-focused',
+        true: 'border-interactive-danger! focus:ring-interactive-alert-focused',
       },
     },
   }
