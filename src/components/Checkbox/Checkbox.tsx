@@ -19,7 +19,7 @@ export interface CheckboxGroupProps {
   className?: string;
 }
 
-const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
+const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
   variants: {
     disabled: {
       true: 'text-body-disabled cursor-not-allowed',
@@ -32,8 +32,10 @@ const checkboxVariants = cva(
   `border-input-default text-body-primary focus-visible:border-input-focused
   data-[state=checked]:border-input-selected
   data-[state=checked]:bg-input-selected focus-visible:ring-interactive-focused
-  hover:border-interactive-hover size-[1rem] cursor-[inherit] rounded-xs
-  border-[1.5px] outline-none focus-visible:ring-4`,
+  hover:border-interactive-hover
+  data-[state=checked]:hover:bg-interactive-primary-hover! size-[1.125rem]
+  cursor-[inherit] rounded-xs border-[1.5px] outline-none focus-visible:ring-4
+  data-[state=checked]:hover:border-transparent`,
   {
     variants: {
       disabled: {
@@ -44,7 +46,8 @@ const checkboxVariants = cva(
         true: `border-input-alert! text-body-alert
         data-[state=checked]:border-interactive-danger
         data-[state=checked]:bg-status-alert
-        focus-visible:ring-interactive-alert-focused`,
+        focus-visible:ring-interactive-alert-focused
+        data-[state=checked]:hover:bg-interactive-danger-hover!`,
       },
     },
     defaultVariants: {
@@ -97,5 +100,9 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   children,
   className,
 }) => {
-  return <div className={twMerge(classNames(className))}>{children}</div>;
+  return (
+    <div className={twMerge(classNames('gap-xs flex flex-col', className))}>
+      {children}
+    </div>
+  );
 };

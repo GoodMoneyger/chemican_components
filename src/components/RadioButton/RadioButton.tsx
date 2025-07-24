@@ -4,6 +4,8 @@ import * as RadioGroup from '@radix-ui/react-radio-group';
 import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
 
+import { cn } from '../../lib/utils';
+
 export interface RadioButtonProps
   extends React.ComponentProps<typeof RadioGroup.Item> {
   value: string;
@@ -18,7 +20,7 @@ export interface RadioButtonGroupProps
   className?: string;
 }
 
-const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
+const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
   variants: {
     disabled: {
       true: 'text-body-disabled cursor-not-allowed',
@@ -28,10 +30,10 @@ const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
 });
 
 const radioButtonVariants = cva(
-  `border-input-default text-body-primary disabled:text-body-disabled
-  data-[state=checked]:text-body-secondary
-  focus-visible:ring-interactive-focused hover:border-interactive-hover
-  size-[1rem] cursor-pointer rounded-full border-1 outline-none
+  `border-input-default focus:border-input-focused text-body-primary
+  disabled:text-body-disabled data-[state=checked]:text-body-secondary
+  focus-visible:ring-interactive-focused hover:border-interactive-light group
+  size-[1.25rem] cursor-pointer rounded-full border-[1.5px] outline-none
   focus-visible:ring-4 disabled:cursor-not-allowed`,
   {
     variants: {
@@ -43,13 +45,27 @@ const radioButtonVariants = cva(
       invalid: {
         true: `border-input-alert! text-body-alert
         data-[state=checked]:border-interactive-danger
-        data-[state=checked]:bg-status-alert
         focus-visible:ring-interactive-alert-focused`,
+        false: 'data-[state=checked]:hover:border-[#115A53]',
       },
     },
     defaultVariants: {
       disabled: false,
       invalid: false,
+    },
+  }
+);
+
+const indicatorVariants = cva(
+  `group-hover:after:bg-interactive-primary-hover relative flex size-full
+  items-center justify-center after:block after:size-[.5rem] after:rounded-full`,
+  {
+    variants: {
+      invalid: {
+        true: `after:bg-interactive-danger-default
+        group-hover:after:bg-interactive-danger-hover!`,
+        false: 'after:bg-shape-interactive-primary-default',
+      },
     },
   }
 );
@@ -80,9 +96,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         {...props}
       >
         <RadioGroup.Indicator
-          className="after:size-xs after:bg-input-selected relative flex
-            size-full items-center justify-center after:block
-            after:rounded-full"
+          className={twMerge(indicatorVariants({ invalid: props.invalid }))}
         />
       </RadioGroup.Item>
       <label
@@ -102,7 +116,7 @@ export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   className,
 }) => {
   return (
-    <RadioGroup.Root className={twMerge(classNames(className))}>
+    <RadioGroup.Root className={cn('gap-xs flex flex-col', className)}>
       {children}
     </RadioGroup.Root>
   );

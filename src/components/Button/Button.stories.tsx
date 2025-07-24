@@ -103,4 +103,5 @@ Primary.args = {
   icon: undefined,
   asChild: false,
   children: 'ラベル',
+  danger: false,
 };

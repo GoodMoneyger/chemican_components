@@ -1,9 +1,9 @@
 import React from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
 import {
-  IconInfoCircle,
-  IconCheck,
-  IconAlertTriangle,
+  IconInfoCircleFilled,
+  IconCircleCheckFilled,
+  IconAlertTriangleFilled,
   IconX,
   TablerIcon,
 } from '@tabler/icons-react';
@@ -28,7 +28,7 @@ const calloutVariants = cva(
     },
     defaultVariants: {
       intent: 'info',
-      size: 'large',
+      size: 'default',
     },
   }
 );
@@ -48,18 +48,18 @@ const iconVariants = cva('shrink-0', {
   },
   defaultVariants: {
     intent: 'info',
-    size: 'large',
+    size: 'default',
   },
 });
 
-const titleVariants = cva('text-text-body-primary font-medium');
+const titleVariants = cva('text-body-primary font-medium');
 
-const descriptionVariants = cva('text-text-body-primary');
+const descriptionVariants = cva('text-body-primary');
 
 const intentIcons: Record<string, TablerIcon> = {
-  info: IconInfoCircle,
-  success: IconCheck,
-  warning: IconAlertTriangle,
+  info: IconInfoCircleFilled,
+  success: IconCircleCheckFilled,
+  warning: IconAlertTriangleFilled,
   alert: IconX,
 };
 
@@ -68,7 +68,7 @@ export interface CalloutProps
     VariantProps<typeof calloutVariants> {
   title?: string;
   description?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   action?: {
     label: string;
     onClick?: () => void;
@@ -104,15 +104,17 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
 
         <div className="min-w-0 flex-1">
           {title && <div className={cn(titleVariants())}>{title}</div>}
-          <div className={cn(descriptionVariants())}>{children}</div>
+          {children && (
+            <div className={cn(descriptionVariants())}>{children}</div>
+          )}
         </div>
 
         {action && (
-          <div className="relative shrink-0">
+          <div className="relative shrink-0 self-start">
             <Button
               onClick={action.onClick}
               intent="ghost"
-              style={{ top: '-2px', right: '-2px' }}
+              style={{ top: '-5px', right: '-.5rem' }}
               className="absolute"
               size="xs"
             >

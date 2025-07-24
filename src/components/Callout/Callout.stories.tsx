@@ -1,9 +1,9 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 import {
-  IconInfoCircle,
-  IconCheck,
-  IconAlertTriangle,
+  IconInfoCircleFilled,
+  IconCircleCheckFilled,
+  IconAlertTriangleFilled,
   IconX,
 } from '@tabler/icons-react';
 
@@ -15,9 +15,9 @@ interface StoryArgs extends Omit<CalloutProps, 'action'> {
 }
 
 const iconMap = {
-  IconInfoCircle,
-  IconCheck,
-  IconAlertTriangle,
+  IconInfoCircleFilled,
+  IconCircleCheckFilled,
+  IconAlertTriangleFilled,
   IconX,
   None: undefined,
 };
@@ -41,7 +41,7 @@ const meta: Meta<StoryArgs> = {
     },
     size: {
       control: { type: 'select' },
-      options: ['small', 'large'],
+      options: ['default', 'large'],
       table: { category: 'Appearance' },
     },
     icon: {
@@ -87,7 +87,7 @@ export const Default: StoryFn<StoryArgs> = (args) => {
 Default.args = {
   title: '見出しテキスト',
   intent: 'info',
-  size: 'large',
+  size: 'default',
   showAction: false,
   actionLabel: 'ラベル',
 };
@@ -101,7 +101,7 @@ WithDescription.args = {
   description:
     'ファイル形式はPDF(.pdf)です。Excel, Word, PNG, ZIP, docx等のファイル形式は正常に登録できません。アップロードできるファイル容量は、1ファイルあたり最大10MBです。',
   intent: 'info',
-  size: 'large',
+  size: 'default',
 };
 
 export const WithAction: StoryFn<typeof Callout> = (args) => (
@@ -115,7 +115,7 @@ WithAction.args = {
     onClick: () => alert('Action clicked!'),
   },
   intent: 'info',
-  size: 'small',
+  size: 'default',
 };
 
 export const WithDescriptionAndAction: StoryFn<typeof Callout> = (args) => (
@@ -131,7 +131,7 @@ WithDescriptionAndAction.args = {
     onClick: () => alert('Action clicked!'),
   },
   intent: 'info',
-  size: 'large',
+  size: 'default',
 };
 
 export const Success: StoryFn<typeof Callout> = (args) => <Callout {...args} />;
@@ -140,7 +140,7 @@ Success.args = {
   title: '成功しました',
   description: 'ファイルのアップロードが完了しました。',
   intent: 'success',
-  size: 'large',
+  size: 'default',
 };
 
 export const Warning: StoryFn<typeof Callout> = (args) => <Callout {...args} />;
@@ -150,7 +150,7 @@ Warning.args = {
   description:
     'こちらの設定を変更すると、既存のデータに影響を与える可能性があります。',
   intent: 'warning',
-  size: 'large',
+  size: 'default',
 };
 
 export const Alert: StoryFn<typeof Callout> = (args) => <Callout {...args} />;
@@ -160,17 +160,7 @@ Alert.args = {
   description:
     'システムエラーが発生しました。しばらくしてから再度お試しください。',
   intent: 'alert',
-  size: 'large',
-};
-
-export const SmallSize: StoryFn<typeof Callout> = (args) => (
-  <Callout {...args} />
-);
-
-SmallSize.args = {
-  title: '見出しテキスト',
-  intent: 'info',
-  size: 'small',
+  size: 'default',
 };
 
 export const AllVariants: StoryFn<typeof Callout> = () => (
@@ -179,7 +169,7 @@ export const AllVariants: StoryFn<typeof Callout> = () => (
     <Callout title="Success Callout" intent="success" size="large" />
     <Callout title="Warning Callout" intent="warning" size="large" />
     <Callout title="Alert Callout" intent="alert" size="large" />
-    <Callout title="Small Info Callout" intent="info" size="small" />
+    <Callout title="Large Info Callout" intent="info" size="large" />
     <Callout
       title="With Action"
       intent="info"

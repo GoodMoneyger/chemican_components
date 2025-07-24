@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Input } from '../Input/Input';
+
 import { FormField } from './FormField';
 
 const meta: Meta<typeof FormField> = {
@@ -37,13 +39,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const MockInput = ({ hasError = false }: { hasError?: boolean }) => (
-  <input
-    type="text"
-    className={`bg-surface-primary text-body-primary focus:ring-input-focused
-      h-12 w-full rounded border px-4 py-3 text-sm outline-none focus:ring-2 ${
-        hasError ? 'border-input-alert' : 'border-input-default'
-      }`}
-    placeholder="Enter value"
+  <Input
+    placeholder="Placeholder"
+    invalid={hasError}
+    prefixIcon={undefined}
+    trailingIcon={undefined}
+    disabled={false}
+    onTrailingIconClick={() => {}}
   />
 );
 

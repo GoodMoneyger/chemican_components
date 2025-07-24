@@ -17,7 +17,6 @@ export const Tag: React.FC<TagProps> = ({
   className,
   onRemove,
 }) => {
-  console.log('TagProps:', accentColor);
   return (
     <div
       className={twMerge(
@@ -35,8 +34,8 @@ export const Tag: React.FC<TagProps> = ({
       {Boolean(onRemove) && (
         <button
           className={twMerge(
-            `bg-interactive-secondary-default flex h-3 w-3 items-center
-            justify-center rounded-full`
+            `bg-interactive-neutral-default flex h-3 w-3 cursor-pointer
+            items-center justify-center rounded-full`
           )}
           onClick={onRemove}
         >
