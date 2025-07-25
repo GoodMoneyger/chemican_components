@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
-import { IconCheck } from '@tabler/icons-react';
+import { IconCheck, IconMinus } from '@tabler/icons-react';
 
 export interface CheckboxProps
   extends React.ComponentProps<typeof CheckboxPrimitive.Root> {
@@ -11,6 +11,7 @@ export interface CheckboxProps
   id?: string;
   invalid?: boolean;
   disabled?: boolean;
+  indeterminate?: boolean;
   children?: React.ReactNode;
 }
 
@@ -29,27 +30,41 @@ const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
 });
 
 const checkboxVariants = cva(
-  `border-input-default text-body-primary focus-visible:border-input-focused
-  data-[state=checked]:border-input-selected
-  data-[state=checked]:bg-input-selected focus-visible:ring-interactive-focused
-  hover:border-interactive-hover
-  data-[state=checked]:hover:bg-interactive-primary-hover! size-[17px]
-  cursor-[inherit] rounded-xs border-[1.5px] outline-none focus-visible:ring-4
-  data-[state=checked]:hover:border-transparent`,
+  `border-input-default text-body-primary focus-visible:ring-interactive-focused
+  size-[17px] cursor-[inherit] rounded-xs border-[1.5px] outline-none
+  focus-visible:ring-4 data-[state=checked]:hover:border-transparent
+  data-[state=indeterminate]:hover:border-transparent`,
   {
     variants: {
-      disabled: {
-        true: 'bg-input-disabled border-transparent',
-        false: '', // Correct hover state currently missing in Figma.
-      },
-      invalid: {
-        true: `border-input-alert! text-body-alert
+      disabled: { true: 'bg-interactive-disabled border-transparent' },
+      invalid: { true: '' },
+    },
+    compoundVariants: [
+      {
+        disabled: false,
+        invalid: true,
+        class: `border-input-alert text-body-alert
         data-[state=checked]:border-interactive-danger
         data-[state=checked]:bg-status-alert
+        data-[state=indeterminate]:border-interactive-danger
+        data-[state=indeterminate]:bg-status-alert
         focus-visible:ring-interactive-alert-focused
-        data-[state=checked]:hover:bg-interactive-danger-hover!`,
+        data-[state=checked]:hover:bg-interactive-danger-hover
+        data-[state=indeterminate]:hover:bg-interactive-danger-hover`,
       },
-    },
+      {
+        disabled: false,
+        invalid: false,
+        class: `hover:enabled:border-interactive-hover
+        focus-visible:border-input-focused
+        data-[state=checked]:bg-input-selected
+        data-[state=checked]:border-input-selected
+        data-[state=checked]:hover:bg-interactive-primary-hover
+        data-[state=indeterminate]:hover:bg-interactive-primary-hover
+        data-[state=indeterminate]:border-input-selected
+        data-[state=indeterminate]:bg-input-selected`,
+      },
+    ],
     defaultVariants: {
       disabled: false,
       invalid: false,
@@ -60,6 +75,7 @@ const checkboxVariants = cva(
 export const Checkbox: React.FC<CheckboxProps> = ({
   disabled,
   invalid,
+  indeterminate,
   label,
   id,
   children,
@@ -74,12 +90,17 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         className={twMerge(checkboxVariants({ disabled, invalid }))}
         disabled={disabled}
         {...props}
+        {...(indeterminate && { checked: 'indeterminate' as const })}
       >
         <CheckboxPrimitive.Indicator
           className={`text-interactive-inverse relative flex size-full
             cursor-[inherit] items-center justify-center bg-inherit`}
         >
-          <IconCheck style={{ strokeWidth: 3 }} />
+          {indeterminate ? (
+            <IconMinus style={{ strokeWidth: 3 }} />
+          ) : (
+            <IconCheck style={{ strokeWidth: 3 }} />
+          )}
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
       {(label || children) && (
