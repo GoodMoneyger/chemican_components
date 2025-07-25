@@ -20,7 +20,7 @@ export interface RadioButtonGroupProps
   className?: string;
 }
 
-const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
+const containerVariants = cva('gap-sm flex w-fit items-center', {
   variants: {
     disabled: {
       true: 'text-body-disabled cursor-not-allowed',
@@ -31,24 +31,35 @@ const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
 
 const radioButtonVariants = cva(
   `border-input-default focus:border-input-focused text-body-primary
-  disabled:text-body-disabled data-[state=checked]:text-body-secondary
-  focus-visible:ring-interactive-focused hover:border-interactive-light group
-  size-[19px] cursor-pointer rounded-full border-[1.5px] outline-none
-  focus-visible:ring-4 disabled:cursor-not-allowed`,
+  data-[state=checked]:text-body-secondary
+  focus-visible:ring-interactive-focused group size-[19px] cursor-[inherit]
+  rounded-full border-[1.5px] outline-none focus-visible:ring-4`,
   {
     variants: {
       disabled: {
-        true: `bg-input-disabled text-body-disabled cursor-not-allowed
-        border-transparent`,
-        false: '', // Correct hover state currently missing in Figma.
+        true: `bg-input-disabled
+        data-[state=checked]:bg-shape-interactive-inverse
+        data-[state=checked]:disabled:border-interactive-disabled
+        text-body-disabled border-transparent`,
       },
-      invalid: {
-        true: `border-input-alert! text-body-alert
+      invalid: { true: '' },
+    },
+    compoundVariants: [
+      {
+        disabled: false,
+        invalid: true,
+        class: `border-input-alert text-body-alert
         data-[state=checked]:border-interactive-danger
         focus-visible:ring-interactive-alert-focused`,
-        false: 'data-[state=checked]:hover:border-[#115A53]',
       },
-    },
+      {
+        disabled: false,
+        invalid: false,
+        class: `data-[state=checked]:border-interactive-selected
+        hover:border-interactive-light
+        data-[state=checked]:hover:border-[#115A53]`,
+      },
+    ],
     defaultVariants: {
       disabled: false,
       invalid: false,
@@ -57,14 +68,15 @@ const radioButtonVariants = cva(
 );
 
 const indicatorVariants = cva(
-  `group-hover:after:bg-interactive-primary-hover relative flex size-full
-  items-center justify-center after:block after:size-[.5rem] after:rounded-full`,
+  `group-disabled:after:bg-interactive-disabled relative flex size-full
+  cursor-[inherit] items-center justify-center after:block after:size-[.5rem]
+  after:rounded-full`,
   {
     variants: {
       invalid: {
-        true: `after:bg-interactive-danger-default
-        group-hover:after:bg-interactive-danger-hover!`,
-        false: 'after:bg-shape-interactive-primary-default',
+        true: 'after:bg-interactive-danger-default',
+        false: `after:bg-shape-interactive-primary-selected
+        group-hover:after:bg-interactive-primary-hover`,
       },
     },
   }
@@ -75,33 +87,33 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   label,
   id,
   children,
+  disabled = false,
+  invalid = false,
   ...props
 }) => {
   const usedId = id || `radio-${value}`;
   return (
-    <div
-      className={classNames(
-        twMerge(containerVariants({ disabled: props.disabled }))
-      )}
-    >
+    <div className={classNames(twMerge(containerVariants({ disabled })))}>
       <RadioGroup.Item
         id={usedId}
         value={value}
+        disabled={disabled}
+        aria-invalid={invalid}
         className={twMerge(
           radioButtonVariants({
-            disabled: props.disabled,
-            invalid: props.invalid,
+            disabled,
+            invalid,
           })
         )}
         {...props}
       >
         <RadioGroup.Indicator
-          className={twMerge(indicatorVariants({ invalid: props.invalid }))}
+          className={twMerge(indicatorVariants({ invalid }))}
         />
       </RadioGroup.Item>
       <label
         htmlFor={usedId}
-        className="gap-xs flex cursor-pointer items-center text-inherit
+        className="gap-xs flex cursor-[inherit] items-center text-inherit
           select-none"
       >
         {label}
