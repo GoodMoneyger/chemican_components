@@ -5,6 +5,7 @@ export interface CheckboxProps extends React.ComponentProps<typeof CheckboxPrimi
     id?: string;
     invalid?: boolean;
     disabled?: boolean;
+    indeterminate?: boolean;
     children?: React.ReactNode;
 }
 export interface CheckboxGroupProps {
