@@ -11,11 +11,12 @@ function Switch({ className, ...props }: SwitchProps) {
       className={classNames(
         `peer focus-visible:border-interactive-light
         focus-visible:ring-shape-interactive-primary-default/50
-        data-[state=checked]:bg-status-success
-        data-[state=unchecked]:bg-shape-accent-gray-soft inline-flex h-6 w-10
-        shrink-0 items-center rounded-full transition-all outline-none
-        focus-visible:ring-[3px] disabled:cursor-not-allowed
-        disabled:opacity-20`,
+        data-[state=checked]:enabled:bg-status-success
+        data-[state=unchecked]:enabled:bg-shape-accent-gray-strong
+        data-[state=checked]:disabled:bg-shape-accent-green-soft
+        data-[state=unchecked]:disabled:bg-shape-accent-gray-soft inline-flex
+        h-6 w-10 shrink-0 items-center rounded-full transition-all outline-none
+        focus-visible:ring-[3px] disabled:cursor-not-allowed`,
         className
       )}
       {...props}
