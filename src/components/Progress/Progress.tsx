@@ -29,7 +29,7 @@ export const Progress: React.FC<ProgressProps> = ({
     >
       <RadixProgress.Indicator
         className={classNames(
-          'bg-interactive-primary-default h-full transition-transform',
+          'bg-shape-accent-green-strong h-full transition-transform',
           {
             'animate-indeterminate': indeterminate,
           }
