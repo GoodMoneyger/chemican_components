@@ -7,4 +7,9 @@ declare const TableRow: React.ForwardRefExoticComponent<React.HTMLAttributes<HTM
 declare const TableHead: React.ForwardRefExoticComponent<React.ThHTMLAttributes<HTMLTableCellElement> & React.RefAttributes<HTMLTableCellElement>>;
 declare const TableCell: React.ForwardRefExoticComponent<React.TdHTMLAttributes<HTMLTableCellElement> & React.RefAttributes<HTMLTableCellElement>>;
 declare const TableCaption: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableCaptionElement> & React.RefAttributes<HTMLTableCaptionElement>>;
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption, };
+type TableHeadSortButtonProps = {
+    sortOrder: 'asc' | 'desc' | undefined;
+    className?: string;
+};
+declare const TableHeadSortButton: React.ForwardRefExoticComponent<React.ButtonHTMLAttributes<HTMLButtonElement> & TableHeadSortButtonProps & React.RefAttributes<HTMLButtonElement>>;
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption, TableHeadSortButton, };
