@@ -5,19 +5,6 @@ before committing them to the repository.
 */
 
 [data-theme='Green Mode [Default]'] {
-  /* Legacy tokens currently supported for backwards compatibility */
-  --color-border-input-default: var(--raspberry-leaf-300);
-  --color-border-input-focused: var(--chemican-green-800);
-  --color-border-input-selected: var(--chemican-green-800);
-  --color-border-input-alert: var(--sun-600);
-  --color-border-input-disabled: var(--raspberry-leaf-400);
-  --color-border-divider-default: var(--raspberry-leaf-200);
-  --color-border-interactive-muted: var(--raspberry-leaf-300);
-  --color-border-interactive-light: var(--chemican-green-800);
-  --color-border-surface-default: var(--raspberry-leaf-200);
-  --color-border-interactive-danger: var(--sun-600);
-  /* End of legacy tokens */
-
   --color-background-input-default: var(--neutral-0);
   --color-background-input-disabled: var(--neutral-100);
   --color-background-input-selected: var(--chemican-green-800);
@@ -56,10 +43,12 @@ before committing them to the repository.
   --color-border-divider-default: var(--raspberry-leaf-200);
   --color-border-interactive-alert-default: var(--sun-600);
   --color-border-interactive-alert-focused: var(--sun-100);
+  --color-border-interactive-alert-hover: var(--sun-800);
   --color-border-interactive-default: var(--raspberry-leaf-300);
   --color-border-interactive-disabled: var(--raspberry-leaf-400);
   --color-border-interactive-focused: var(--chemican-green-100);
   --color-border-interactive-hover: var(--chemican-green-800);
+  --color-border-interactive-inverse: var(--neutral-0);
   --color-border-interactive-selected: var(--chemican-green-800);
   --color-border-surface-alert: var(--sun-500);
   --color-border-surface-default: var(--raspberry-leaf-200);
@@ -99,6 +88,9 @@ before committing them to the repository.
   --color-shape-interactive-disabled: var(--neutral-400);
   --color-shape-interactive-heavy: var(--raspberry-leaf-900);
   --color-shape-interactive-inverse: var(--neutral-0);
+  --color-shape-interactive-neutral-default: var(--neutral-300);
+  --color-shape-interactive-neutral-disabled: var(--neutral-200);
+  --color-shape-interactive-neutral-hover: var(--neutral-400);
   --color-shape-interactive-primary-active: var(--chemican-green-900);
   --color-shape-interactive-primary-default: var(--chemican-green-700);
   --color-shape-interactive-primary-hover: var(--chemican-green-900);
@@ -143,27 +135,27 @@ before committing them to the repository.
   --color-text-interactive-primary-active: var(--chemican-green-900);
   --color-text-interactive-primary-default: var(--chemican-green-700);
   --color-text-interactive-primary-hover: var(--chemican-green-900);
-  --radius-lg: 8px;
-  --radius-max: 999px;
-  --radius-md: 6px;
-  --radius-sm: 4px;
-  --radius-xs: 2px;
-  --spacing-lg: 20px;
-  --spacing-md: 16px;
-  --spacing-sm: 12px;
-  --spacing-xl: 24px;
-  --spacing-xs: 8px;
-  --spacing-xxl: 32px;
-  --spacing-xxs: 4px;
-  --spacing-xxxl: 40px;
-  --spacing-xxxs: 2px;
-  --text-size-lg: 16px;
-  --text-size-md: 14px;
-  --text-size-sm: 12px;
-  --text-size-xl: 20px;
-  --text-size-xs: 10px;
-  --text-size-xxl: 24px;
-  --text-size-xxxl: 32px;
+  --radius-lg: 0.5rem;
+  --radius-max: 62.4375rem;
+  --radius-md: 0.375rem;
+  --radius-sm: 0.25rem;
+  --radius-xs: 0.125rem;
+  --spacing-lg: 1.25rem;
+  --spacing-md: 1rem;
+  --spacing-sm: 0.75rem;
+  --spacing-xl: 1.5rem;
+  --spacing-xs: 0.5rem;
+  --spacing-xxl: 2rem;
+  --spacing-xxs: 0.25rem;
+  --spacing-xxxl: 2.5rem;
+  --spacing-xxxs: 0.125rem;
+  --text-size-lg: 1rem;
+  --text-size-md: 0.875rem;
+  --text-size-sm: 0.75rem;
+  --text-size-xl: 1.25rem;
+  --text-size-xs: 0.625rem;
+  --text-size-xxl: 1.5rem;
+  --text-size-xxxl: 2rem;
 }
 
 [data-theme='Blue Mode'] {
@@ -203,10 +195,12 @@ before committing them to the repository.
   --color-border-divider-default: var(--cerulean-gray-200);
   --color-border-interactive-alert-default: var(--sun-600);
   --color-border-interactive-alert-focused: var(--sun-100);
+  --color-border-interactive-alert-hover: var(--sun-800);
   --color-border-interactive-default: var(--cerulean-gray-300);
   --color-border-interactive-disabled: var(--cerulean-gray-500);
   --color-border-interactive-focused: var(--sea-100);
   --color-border-interactive-hover: var(--sea-500);
+  --color-border-interactive-inverse: var(--neutral-0);
   --color-border-interactive-selected: var(--sea-500);
   --color-border-surface-alert: var(--sun-500);
   --color-border-surface-default: var(--cerulean-gray-200);
@@ -246,6 +240,9 @@ before committing them to the repository.
   --color-shape-interactive-disabled: var(--neutral-400);
   --color-shape-interactive-heavy: var(--cerulean-gray-1100);
   --color-shape-interactive-inverse: var(--neutral-0);
+  --color-shape-interactive-neutral-default: var(--neutral-300);
+  --color-shape-interactive-neutral-disabled: var(--neutral-200);
+  --color-shape-interactive-neutral-hover: var(--neutral-400);
   --color-shape-interactive-primary-active: var(--sea-700);
   --color-shape-interactive-primary-default: var(--sea-500);
   --color-shape-interactive-primary-hover: var(--sea-700);
@@ -290,27 +287,27 @@ before committing them to the repository.
   --color-text-interactive-primary-active: var(--sea-700);
   --color-text-interactive-primary-default: var(--sea-500);
   --color-text-interactive-primary-hover: var(--sea-700);
-  --radius-lg: 8px;
-  --radius-max: 999px;
-  --radius-md: 6px;
-  --radius-sm: 4px;
-  --radius-xs: 2px;
-  --spacing-lg: 20px;
-  --spacing-md: 16px;
-  --spacing-sm: 12px;
-  --spacing-xl: 24px;
-  --spacing-xs: 8px;
-  --spacing-xxl: 32px;
-  --spacing-xxs: 4px;
-  --spacing-xxxl: 40px;
-  --spacing-xxxs: 2px;
-  --text-size-lg: 16px;
-  --text-size-md: 14px;
-  --text-size-sm: 12px;
-  --text-size-xl: 20px;
-  --text-size-xs: 10px;
-  --text-size-xxl: 24px;
-  --text-size-xxxl: 32px;
+  --radius-lg: 0.5rem;
+  --radius-max: 62.4375rem;
+  --radius-md: 0.375rem;
+  --radius-sm: 0.25rem;
+  --radius-xs: 0.125rem;
+  --spacing-lg: 1.25rem;
+  --spacing-md: 1rem;
+  --spacing-sm: 0.75rem;
+  --spacing-xl: 1.5rem;
+  --spacing-xs: 0.5rem;
+  --spacing-xxl: 2rem;
+  --spacing-xxs: 0.25rem;
+  --spacing-xxxl: 2.5rem;
+  --spacing-xxxs: 0.125rem;
+  --text-size-lg: 1rem;
+  --text-size-md: 0.875rem;
+  --text-size-sm: 0.75rem;
+  --text-size-xl: 1.25rem;
+  --text-size-xs: 0.625rem;
+  --text-size-xxl: 1.5rem;
+  --text-size-xxxl: 2rem;
 }
 
 [data-theme='Primitive'] {

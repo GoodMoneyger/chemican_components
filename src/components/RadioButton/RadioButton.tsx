@@ -29,7 +29,8 @@ const containerVariants = cva('gap-sm flex w-fit items-center', {
 });
 
 const radioButtonVariants = cva(
-  `border-input-default focus:border-input-focused text-body-primary
+  `border-shape-interactive-neutral-default
+  focus:border-shape-interactive-primary-hover text-body-primary
   data-[state=checked]:text-body-secondary
   focus-visible:ring-interactive-focused group size-[19px] cursor-[inherit]
   rounded-full border-[1.5px] outline-none focus-visible:ring-4`,
@@ -47,15 +48,17 @@ const radioButtonVariants = cva(
       {
         disabled: false,
         invalid: true,
-        class: `border-input-alert text-body-alert
-        data-[state=checked]:border-interactive-danger
+        class: `border-shape-interactive-danger-default text-body-alert
+        hover:border-shape-interactive-danger-hover
+        data-[state=checked]:border-shape-interactive-danger-default
+        data-[state=checked]:hover:border-shape-interactive-danger-hover
         focus-visible:ring-interactive-alert-focused`,
       },
       {
         disabled: false,
         invalid: false,
         class: `data-[state=checked]:border-interactive-selected
-        hover:border-interactive-light
+        hover:border-shape-interactive-primary-hover
         data-[state=checked]:hover:border-[#115A53]`,
       },
     ],
@@ -73,7 +76,8 @@ const indicatorVariants = cva(
   {
     variants: {
       invalid: {
-        true: 'after:bg-interactive-danger-default',
+        true: `after:bg-interactive-danger-default
+        group-hover:after:bg-interactive-danger-hover`,
         false: `after:bg-shape-interactive-primary-selected
         group-hover:after:bg-interactive-primary-hover`,
       },

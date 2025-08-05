@@ -1,6 +1,5 @@
 import React from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
 
 import { cn } from '../../utils';
 
@@ -51,7 +50,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
   return (
     <div
       role="status"
-      className={twMerge(cn(spinnerVariants({ size, layout }), className))}
+      className={cn(spinnerVariants({ size, layout }), className)}
       {...props}
     >
       <svg

@@ -8,9 +8,9 @@ import { cn } from '../../lib/utils';
 import { useSideNavigation } from './SideNavigationContext';
 
 const sideNavigationItemVariants = cva(
-  `gap-xs px-xs py-xs focus-visible:ring-interactive-light mb-0 box-border flex
-  w-full items-center rounded-sm font-medium transition-colors
-  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`,
+  `gap-xs px-xs py-xs focus-visible:ring-interactive-focused mb-0 box-border
+  flex w-full items-center rounded-sm font-medium transition-colors
+  focus:outline-none focus-visible:ring-2`,
   {
     variants: {
       variant: {

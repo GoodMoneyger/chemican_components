@@ -1,11 +1,11 @@
 import React from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
-import classNames from 'classnames';
+
+import { cn } from '../../utils';
 
 const textareaVariants = cva(
-  `border-input-default bg-surface-primary px-md py-sm
-  focus:border-input-focused disabled:border-input-disabled
+  `border-interactive-default bg-surface-primary px-md py-sm
+  focus:border-interactive-focused disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
   hover:border-interactive-hover h-12 min-h-30 w-full rounded border
   focus:ring-4 focus:outline-0`,
@@ -13,7 +13,8 @@ const textareaVariants = cva(
     variants: {
       invalid: {
         false: 'text-body-primary focus:ring-interactive-focused',
-        true: 'border-interactive-danger! focus:ring-interactive-alert-focused',
+        true: `border-shape-interactive-danger-default!
+        focus:ring-interactive-alert-focused`,
       },
     },
   }

@@ -6,16 +6,17 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { cn } from '../../utils';
 
 const selectVariants = cva(
-  `border-input-default bg-surface-primary py-sm pr-sm pl-md text-body-primary
-  disabled:border-input-disabled disabled:bg-surface-disabled
-  disabled:text-body-disabled hover:border-interactive-hover inline-flex
-  h-[3rem] w-full justify-between rounded border focus:ring-4 focus:outline-0
-  enabled:cursor-pointer`,
+  `border-interactive-default bg-surface-primary py-sm pr-sm pl-md
+  text-body-primary disabled:border-interactive-disabled
+  disabled:bg-surface-disabled disabled:text-body-disabled
+  hover:border-interactive-hover inline-flex h-[3rem] w-full justify-between
+  rounded border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
   {
     variants: {
       invalid: {
         false: 'text-body-primary focus:ring-interactive-focused',
-        true: 'border-input-alert focus:ring-interactive-alert-focused',
+        true: `border-interactive-alert-default
+        focus:ring-interactive-alert-focused`,
       },
     },
   }

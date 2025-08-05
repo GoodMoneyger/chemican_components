@@ -31,9 +31,10 @@ const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
 });
 
 const checkboxVariants = cva(
-  `border-input-default text-body-primary focus-visible:ring-interactive-focused
-  size-[17px] cursor-[inherit] rounded-xs border-[1.5px] outline-none
-  focus-visible:ring-4 data-[state=checked]:hover:border-transparent
+  `border-interactive-default text-body-primary
+  focus-visible:ring-interactive-focused size-[17px] cursor-[inherit] rounded-xs
+  border-[1.5px] outline-none focus-visible:ring-4
+  data-[state=checked]:hover:border-transparent
   data-[state=indeterminate]:hover:border-transparent`,
   {
     variants: {
@@ -44,10 +45,8 @@ const checkboxVariants = cva(
       {
         disabled: false,
         invalid: true,
-        class: `border-input-alert text-body-alert
-        data-[state=checked]:border-interactive-danger
+        class: `border-interactive-alert-default text-body-alert
         data-[state=checked]:bg-status-alert
-        data-[state=indeterminate]:border-interactive-danger
         data-[state=indeterminate]:bg-status-alert
         focus-visible:ring-interactive-alert-focused
         data-[state=checked]:hover:bg-interactive-danger-hover
@@ -57,12 +56,11 @@ const checkboxVariants = cva(
         disabled: false,
         invalid: false,
         class: `hover:enabled:border-interactive-hover
-        focus-visible:border-input-focused
+        focus-visible:border-interactive-default
         data-[state=checked]:bg-input-selected
-        data-[state=checked]:border-input-selected
+        data-[state=checked]:border-interactive-selected
         data-[state=checked]:hover:bg-interactive-primary-hover
         data-[state=indeterminate]:hover:bg-interactive-primary-hover
-        data-[state=indeterminate]:border-input-selected
         data-[state=indeterminate]:bg-input-selected`,
       },
     ],
