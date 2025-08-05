@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 import { IconPdf, IconExternalLink } from '@tabler/icons-react';
 
-import { Chip } from '../Chip/Chip';
+import { Status } from '../Status/Status';
 import { ColorBackgroundTokens } from '../../tokens';
 import { Checkbox } from '../Checkbox/Checkbox';
 
@@ -138,7 +138,7 @@ const Template: StoryFn = () => (
           <TableCell>{row.companyName}</TableCell>
           <TableCell>{row.creation}</TableCell>
           <TableCell>
-            <Chip accentColor={row.statusColor}>{row.status}</Chip>
+            <Status accentColor={row.statusColor}>{row.status}</Status>
           </TableCell>
         </TableRow>
       ))}
