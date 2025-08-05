@@ -8,10 +8,11 @@ declare const sideNavigationItemVariants: (props?: ({
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface SideNavigationItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof sideNavigationItemVariants> {
     asChild?: boolean;
+    component?: React.ElementType;
     icon?: TablerIcon | React.ComponentType<{
         className: string;
     }>;
-    label?: string;
+    label?: React.ReactNode;
 }
 export declare const SideNavigationItem: React.ForwardRefExoticComponent<SideNavigationItemProps & React.RefAttributes<HTMLButtonElement>>;
 export {};
