@@ -16,3 +16,4 @@ export * from './Textarea';
 export * from './Toast';
 export * from './FormField';
 export * from './Dropdown';
+export * from './Stepper';
