@@ -20,7 +20,7 @@ const uploadVariants = cva(
     variants: {
       size: {
         small: 'p-md min-h-[80px]',
-        large: 'pt-xl pb-xxl px-xl',
+        large: 'pt-xxl pb-xxxl px-xl',
       },
       state: {
         default: `border-interactive-default bg-surface-primary

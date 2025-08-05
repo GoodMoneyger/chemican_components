@@ -15,5 +15,6 @@ export * from './Tag';
 export * from './Textarea';
 export * from './Toast';
 export * from './FormField';
+export * from './Upload';
 export * from './Dropdown';
 export * from './Stepper';
