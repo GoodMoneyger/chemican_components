@@ -52,7 +52,7 @@ export default tseslint.config(
       'better-tailwindcss/no-unregistered-classes': [
         'error',
         {
-          ignore: ['sb-unstyled'],
+          ignore: ['sb-unstyled', 'animate-indeterminate'],
         },
       ],
     },

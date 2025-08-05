@@ -1,9 +1,7 @@
 import React from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
-import classNames from 'classnames';
 
-import { IconProp, renderIcon } from '../../lib/utils';
+import { cn, IconProp, renderIcon } from '../../lib/utils';
 
 const inputWrapperVariants = cva(
   `border-interactive-default bg-surface-primary hover:border-interactive-hover
@@ -82,11 +80,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isTrailingInteractive = !!onTrailingIconClick;
 
     return (
-      <div
-        className={twMerge(
-          classNames(inputWrapperVariants({ invalid }), className)
-        )}
-      >
+      <div className={cn(inputWrapperVariants({ invalid }), className)}>
         {prefixIcon && (
           <div
             className={iconVariants({ position: 'prefix', interactive: false })}

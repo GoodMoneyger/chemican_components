@@ -1,7 +1,8 @@
 import React from 'react';
-import classNames from 'classnames';
 import { VariantProps, cva } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
+
+import { cn } from '../../utils';
 
 const spinnerVariants = cva('flex items-center', {
   variants: {
@@ -50,9 +51,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
   return (
     <div
       role="status"
-      className={twMerge(
-        classNames(spinnerVariants({ size, layout }), className)
-      )}
+      className={twMerge(cn(spinnerVariants({ size, layout }), className))}
       {...props}
     >
       <svg
@@ -61,10 +60,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
         viewBox="0 0 100 100"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
-        className={classNames(
-          sizeClasses[size],
-          'animate-spin text-transparent'
-        )}
+        className={cn(sizeClasses[size], 'animate-spin text-transparent')}
       >
         <circle
           cx="50"

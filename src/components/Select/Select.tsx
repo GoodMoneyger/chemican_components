@@ -1,9 +1,9 @@
 import React from 'react';
 import * as RadixSelect from '@radix-ui/react-select';
-import classNames from 'classnames';
 import { IconChevronDown, TablerIcon } from '@tabler/icons-react';
 import { VariantProps, cva } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
+
+import { cn } from '../../utils';
 
 const selectVariants = cva(
   `border-input-default bg-surface-primary py-sm pr-sm pl-md text-body-primary
@@ -21,7 +21,7 @@ const selectVariants = cva(
   }
 );
 
-const itemClasses = classNames(
+const itemClasses = cn(
   `gap-xs px-md text-body-primary hover:bg-interactive-neutral-hover
   focus:bg-interactive-neutral-hover active:bg-interactive-neutral-active
   disabled:bg-surface-disabled disabled:text-interactive-disabled flex
@@ -54,7 +54,7 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <RadixSelect.Root {...props}>
       <RadixSelect.Trigger
-        className={twMerge(classNames(selectVariants({ invalid })), className)}
+        className={cn(selectVariants({ invalid }), className)}
       >
         <div className="inline-flex">
           {Icon && <Icon className="mr-xxs h-lg text-body-primary w-lg" />}
@@ -64,11 +64,9 @@ export const Select: React.FC<SelectProps> = ({
           />
         </div>
         <RadixSelect.Icon
-          className={twMerge(
-            classNames('h-md text-body-primary w-md', {
-              'text-body-disabled': props.disabled,
-            })
-          )}
+          className={cn('h-md text-body-primary w-md', {
+            'text-body-disabled': props.disabled,
+          })}
         >
           <IconChevronDown className="w-full" />
         </RadixSelect.Icon>
@@ -76,8 +74,8 @@ export const Select: React.FC<SelectProps> = ({
       <RadixSelect.Portal>
         <RadixSelect.Content
           position="popper"
-          className={classNames(
-            `border-input-default bg-surface-primary py-xxs relative z-50
+          className={cn(
+            `border-interactive-default bg-surface-primary py-xxs relative z-50
             max-h-96 w-full min-w-[8rem] overflow-hidden rounded border`,
             className
           )}

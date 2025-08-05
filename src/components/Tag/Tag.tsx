@@ -1,8 +1,7 @@
 import React from 'react';
-import classNames from 'classnames';
-import { twMerge } from 'tailwind-merge';
 
 import { ColorShapeTokens } from '../../tokens';
+import { cn } from '../../utils';
 
 export interface TagProps {
   className?: string;
@@ -19,12 +18,10 @@ export const Tag: React.FC<TagProps> = ({
 }) => {
   return (
     <div
-      className={twMerge(
-        classNames(
-          `gap-xxs p-xs text-accent-gray-strong my-1 inline-flex items-center
-          rounded-full text-sm`,
-          className
-        )
+      className={cn(
+        `gap-xxs p-xs text-accent-gray-strong my-1 inline-flex items-center
+        rounded-full text-sm`,
+        className
       )}
       style={{
         backgroundColor: `var(${accentColor})`,
@@ -33,7 +30,7 @@ export const Tag: React.FC<TagProps> = ({
       {children}
       {Boolean(onRemove) && (
         <button
-          className={twMerge(
+          className={cn(
             `bg-interactive-neutral-default flex h-3 w-3 cursor-pointer
             items-center justify-center rounded-full`
           )}

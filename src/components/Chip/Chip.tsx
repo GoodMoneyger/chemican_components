@@ -1,7 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
-import { twMerge } from 'tailwind-merge';
 
+import { cn } from '../../utils';
 import { ColorShapeTokens, ColorBackgroundTokens } from '../../tokens';
 
 export interface ChipProps {
@@ -17,12 +16,10 @@ export const Chip: React.FC<ChipProps> = ({
 }) => {
   return (
     <div
-      className={twMerge(
-        classNames(
-          `bg-status-neutral px-xs py-xxs text-accent-gray-soft inline-flex
-          items-center rounded-full font-medium`,
-          className
-        )
+      className={cn(
+        `bg-status-neutral px-xs py-xxs text-accent-gray-soft inline-flex
+        items-center rounded-full font-medium`,
+        className
       )}
       style={{
         backgroundColor: `var(${accentColor})`,

@@ -2,7 +2,6 @@ import React from 'react';
 import { cva } from 'class-variance-authority';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { twMerge } from 'tailwind-merge';
-import classNames from 'classnames';
 
 import { cn } from '../../lib/utils';
 
@@ -93,7 +92,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
 }) => {
   const usedId = id || `radio-${value}`;
   return (
-    <div className={classNames(twMerge(containerVariants({ disabled })))}>
+    <div className={cn(containerVariants({ disabled }))}>
       <RadioGroup.Item
         id={usedId}
         value={value}

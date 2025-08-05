@@ -55,9 +55,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className="relative">
         <textarea
           ref={ref}
-          className={classNames(
-            twMerge(textareaVariants({ invalid }), className)
-          )}
+          className={cn((textareaVariants({ invalid }), className))}
           {...props}
           value={value}
           onChange={handleChange}

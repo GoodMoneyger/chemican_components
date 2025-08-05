@@ -1,6 +1,7 @@
 import React from 'react';
 import * as RadixProgress from '@radix-ui/react-progress';
-import classNames from 'classnames';
+
+import { cn } from '../../utils';
 
 export interface ProgressProps
   extends React.ComponentProps<typeof RadixProgress.Root> {
@@ -19,7 +20,7 @@ export const Progress: React.FC<ProgressProps> = ({
 }) => {
   return (
     <RadixProgress.Root
-      className={classNames(
+      className={cn(
         'bg-surface-disabled relative h-1 w-full overflow-hidden rounded',
         className
       )}
@@ -28,7 +29,7 @@ export const Progress: React.FC<ProgressProps> = ({
       {...props}
     >
       <RadixProgress.Indicator
-        className={classNames(
+        className={cn(
           'bg-shape-accent-green-strong h-full transition-transform',
           {
             'animate-indeterminate': indeterminate,
