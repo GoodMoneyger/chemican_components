@@ -28,10 +28,11 @@ const sideNavigationSectionVariants = cva('flex flex-col', {
 });
 
 export interface SideNavigationSectionProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof sideNavigationSectionVariants> {
-  title?: string;
+  extends VariantProps<typeof sideNavigationSectionVariants> {
+  title?: React.ReactNode;
   isLast?: boolean;
+  children: React.ReactNode;
+  className?: string;
 }
 
 export const SideNavigationSection = React.forwardRef<
@@ -51,7 +52,7 @@ export const SideNavigationSection = React.forwardRef<
     >
       {title && !isCollapsed && (
         <div
-          className="text-body-secondary px-xxs py-xxs mb-xxs text-sm
+          className="text-body-secondary px-xxs py-xxs mb-xxs text-xs
             leading-none font-medium"
         >
           {title}

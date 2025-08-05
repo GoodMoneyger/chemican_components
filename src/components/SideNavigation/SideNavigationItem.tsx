@@ -35,27 +35,13 @@ const sideNavigationItemVariants = cva(
   }
 );
 
-const iconVariants = cva('flex-shrink-0', {
-  variants: {
-    size: {
-      sm: 'size-4',
-      md: 'size-5',
-    },
-    collapsed: {
-      true: '',
-    },
-  },
-  defaultVariants: {
-    size: 'md',
-  },
-});
-
 export interface SideNavigationItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof sideNavigationItemVariants> {
   asChild?: boolean;
+  component?: React.ElementType;
   icon?: TablerIcon | React.ComponentType<{ className: string }>;
-  label?: string;
+  label?: React.ReactNode;
 }
 
 export const SideNavigationItem = React.forwardRef<
@@ -68,7 +54,6 @@ export const SideNavigationItem = React.forwardRef<
       variant,
       size,
       asChild = false,
-      icon,
       label,
       children,
       disabled,
@@ -94,17 +79,7 @@ export const SideNavigationItem = React.forwardRef<
         disabled={disabled}
         {...props}
       >
-        {icon &&
-          (() => {
-            const Icon = icon;
-            return (
-              <Icon
-                strokeWidth={2}
-                className={cn(iconVariants({ size, collapsed: isCollapsed }))}
-              />
-            );
-          })()}
-        {!isCollapsed && (children || label)}
+        {children || label}
       </Comp>
     );
   }
