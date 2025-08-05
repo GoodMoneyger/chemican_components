@@ -8,22 +8,37 @@ function getComponentTopics() {
     'utilities',
     // Add more directories to exclude here if needed
   ];
-  
+
   try {
     const componentsDir = join(process.cwd(), 'src', 'components');
     const entries = readdirSync(componentsDir, { withFileTypes: true });
-    
+
     return entries
-      .filter(entry => entry.isDirectory())
-      .map(entry => entry.name.toLowerCase())
-      .filter(name => !excludeList.includes(name));
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name.toLowerCase())
+      .filter((name) => !excludeList.includes(name));
   } catch (error) {
-    console.warn('Could not read components directory, falling back to static list');
+    console.warn(
+      'Could not read components directory, falling back to static list'
+    );
     // Fallback to static list if directory reading fails
     return [
-      'button', 'callout', 'checkbox', 'chip', 'dialog', 'formfield',
-      'input', 'progress', 'radiobutton', 'select', 'spinner', 'switch',
-      'table', 'tag', 'textarea', 'toast'
+      'button',
+      'callout',
+      'checkbox',
+      'chip',
+      'dialog',
+      'formfield',
+      'input',
+      'progress',
+      'radiobutton',
+      'select',
+      'spinner',
+      'switch',
+      'table',
+      'tag',
+      'textarea',
+      'toast',
     ];
   }
 }
@@ -46,39 +61,55 @@ export default {
         'multiple-topic-enum': (parsed) => {
           const { type } = parsed;
           if (!type) return [false, 'Type is required'];
-          
+
           const validTopics = [
             // Dynamic component topics
             ...componentTopics,
             // General categories
-            'multiple', 'tokens', 'dev', 'doc', 'config', 'ci', 'deps', 'release'
+            'multiple',
+            'tokens',
+            'dev',
+            'doc',
+            'config',
+            'ci',
+            'deps',
+            'release',
+            'util',
           ];
-          
-          const topics = type.split(',').map(t => t.trim());
-          const invalidTopics = topics.filter(topic => !validTopics.includes(topic));
-          
+
+          const topics = type.split(',').map((t) => t.trim());
+          const invalidTopics = topics.filter(
+            (topic) => !validTopics.includes(topic)
+          );
+
           if (invalidTopics.length > 0) {
-            return [false, `Invalid topic(s): ${invalidTopics.join(', ')}. Valid topics: ${validTopics.join(', ')}`];
+            return [
+              false,
+              `Invalid topic(s): ${invalidTopics.join(', ')}. Valid topics: ${validTopics.join(', ')}`,
+            ];
           }
-          
+
           return [true];
         },
         'subject-capitalization': (parsed) => {
           const { subject } = parsed;
           if (!subject) return [false, 'Subject is required'];
-          
+
           const firstChar = subject.charAt(0);
-          
+
           // Allow special characters (non-letters) to pass through
           if (!/[a-zA-Z]/.test(firstChar)) {
             return [true];
           }
-          
+
           // Check if first letter is capitalized
           if (firstChar !== firstChar.toUpperCase()) {
-            return [false, 'Subject must start with a capital letter (unless it starts with a special character)'];
+            return [
+              false,
+              'Subject must start with a capital letter (unless it starts with a special character)',
+            ];
           }
-          
+
           return [true];
         },
       },
@@ -95,3 +126,4 @@ export default {
     'subject-capitalization': [2, 'always'],
   },
 };
+

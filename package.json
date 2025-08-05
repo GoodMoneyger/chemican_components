@@ -16,6 +16,16 @@
       "import": "./src/index.ts",
       "require": "./src/index.ts"
     },
+    "./utils": {
+      "types": "./src/utils.ts",
+      "import": "./src/utils.ts",
+      "require": "./src/utils.ts"
+    },
+    "./tabler-icons": {
+      "types": "./src/tabler-icons.ts",
+      "import": "./src/tabler-icons.ts",
+      "require": "./src/tabler-icons.ts"
+    },
     "./dist": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
