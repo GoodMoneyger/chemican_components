@@ -1,4 +1,5 @@
 import React from 'react';
+import { cva } from 'class-variance-authority';
 
 import { ColorShapeTokens } from '../../tokens';
 import { cn } from '../../utils';
@@ -8,21 +9,35 @@ export interface TagProps {
   children?: React.ReactNode;
   onRemove?: () => void;
   accentColor: ColorShapeTokens;
+  size?: 'sm' | 'md';
 }
+
+const tagVariants = cva(
+  `gap-xxs text-accent-gray-strong py-xxs px-xs my-1 inline-flex items-center
+  rounded-full font-medium`,
+  {
+    variants: {
+      size: {
+        sm: 'text-sm',
+        md: '',
+      },
+    },
+    defaultVariants: {
+      size: 'sm',
+    },
+  }
+);
 
 export const Tag: React.FC<TagProps> = ({
   accentColor,
   children,
   className,
   onRemove,
+  size = 'sm',
 }) => {
   return (
     <div
-      className={cn(
-        `gap-xxs p-xs text-accent-gray-strong my-1 inline-flex items-center
-        rounded-full text-sm`,
-        className
-      )}
+      className={cn(tagVariants({ size }), className)}
       style={{
         backgroundColor: `var(${accentColor})`,
       }}

@@ -24,6 +24,10 @@ DefaultTag.argTypes = {
     control: 'select',
     options: ColorShapeTokens,
   },
+  size: {
+    control: 'select',
+    options: ['sm', 'md'],
+  },
   onRemove: {
     control: 'boolean',
     defaultValue: false,
@@ -37,4 +41,19 @@ DefaultTag.argTypes = {
       false: undefined,
     },
   },
+};
+
+export const MediumSize = TagTemplate.bind({});
+MediumSize.args = {
+  children: 'メディアムサイズのタグ',
+  size: 'md',
+  accentColor: ColorShapeTokens.AccentGreenSoft,
+};
+
+export const WithRemoveButton = TagTemplate.bind({});
+WithRemoveButton.args = {
+  children: '削除可能なタグ',
+  size: 'sm',
+  accentColor: ColorShapeTokens.AccentRedSoft,
+  onRemove: () => alert('Tag removed!'),
 };
