@@ -15,3 +15,4 @@ export * from './Tag';
 export * from './Textarea';
 export * from './Toast';
 export * from './FormField';
+export * from './Dropdown';
