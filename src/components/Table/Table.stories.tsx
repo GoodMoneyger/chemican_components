@@ -13,6 +13,7 @@ import {
   TableHead,
   TableBody,
   TableCell,
+  TableHeadSortButton,
 } from './Table';
 
 type DataEntry = {
@@ -89,9 +90,17 @@ const Template: StoryFn = () => (
         <TableHead>
           <Checkbox label="" />
         </TableHead>
-        <TableHead>SDS名</TableHead>
-        <TableHead>製品名</TableHead>
-        <TableHead>会社名</TableHead>
+        <TableHead>
+          SDS名 <TableHeadSortButton sortOrder="asc" />
+        </TableHead>
+        <TableHead>
+          製品名
+          <TableHeadSortButton sortOrder="asc" />
+        </TableHead>
+        <TableHead>
+          会社名
+          <TableHeadSortButton sortOrder="asc" />
+        </TableHead>
         <TableHead>作成日 / 改訂日</TableHead>
         <TableHead>ステータス</TableHead>
       </TableRow>

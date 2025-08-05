@@ -38,7 +38,10 @@ const checkboxVariants = cva(
   data-[state=indeterminate]:hover:border-transparent`,
   {
     variants: {
-      disabled: { true: 'bg-interactive-disabled border-transparent' },
+      disabled: {
+        true: 'bg-interactive-disabled border-transparent',
+        false: 'bg-shape-interactive-inverse',
+      },
       invalid: { true: '' },
     },
     compoundVariants: [

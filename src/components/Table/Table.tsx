@@ -1,4 +1,9 @@
 import React from 'react';
+import {
+  IconArrowNarrowDown,
+  IconArrowNarrowUp,
+  IconArrowsSort,
+} from '@tabler/icons-react';
 
 import { cn } from '../../utils';
 
@@ -22,7 +27,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn('bg-surface-secondary h-10 [&_tr]:border-b', className)}
+    className={cn('bg-surface-tertiary h-10 [&_tr]:border-b', className)}
     {...props}
   />
 ));
@@ -75,16 +80,18 @@ TableRow.displayName = 'TableRow';
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      `text-body-primary px-4 text-left align-middle font-medium
+      `text-body-secondary px-4 text-left font-medium
       [&:has([role=checkbox])]:w-4 [&:has([role=checkbox])]:pr-0`,
       className
     )}
     {...props}
-  />
+  >
+    <div className="gap-xxs flex items-center">{children}</div>
+  </th>
 ));
 TableHead.displayName = 'TableHead';
 
@@ -115,6 +122,36 @@ const TableCaption = React.forwardRef<
 ));
 TableCaption.displayName = 'TableCaption';
 
+type TableHeadSortButtonProps = {
+  sortOrder: 'asc' | 'desc' | undefined;
+  className?: string;
+};
+
+const TableHeadSortButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement> & TableHeadSortButtonProps
+>(({ sortOrder, className, ...props }, ref) => (
+  <button
+    ref={ref}
+    className={cn(
+      `text-body-secondary bg-interactive-neutral-default
+      border-interactive-default inline-flex size-6 cursor-pointer items-center
+      justify-center border focus:outline-none`,
+      className
+    )}
+    {...props}
+  >
+    <span className="sr-only">Sort</span>
+    {sortOrder === 'asc' ? (
+      <IconArrowNarrowUp className="h-4 w-4" />
+    ) : sortOrder === 'desc' ? (
+      <IconArrowNarrowDown className="h-4 w-4" />
+    ) : (
+      <IconArrowsSort className="h-4 w-4" />
+    )}
+  </button>
+));
+
 export {
   Table,
   TableHeader,
@@ -124,4 +161,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableHeadSortButton,
 };
