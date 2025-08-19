@@ -23,7 +23,8 @@ const inputWrapperVariants = cva(
 
 const inputVariants = cva(
   `px-md py-sm text-body-primary placeholder:text-body-secondary
-  disabled:text-body-disabled flex-1 bg-transparent outline-none`,
+  disabled:text-body-disabled w-full flex-1 bg-transparent [text-align:inherit]
+  outline-none`,
   {
     variants: {
       hasPrefix: {
