@@ -1,7 +1,8 @@
 import { extendTailwindMerge } from 'tailwind-merge';
-import classNames, { ArgumentArray } from 'classnames';
+import type { ArgumentArray } from 'classnames';
+import classNames from 'classnames';
 import React from 'react';
-import { TablerIcon } from '@tabler/icons-react';
+import type { TablerIcon } from '@tabler/icons-react';
 
 const twMerge = extendTailwindMerge({
   extend: {

@@ -1,7 +1,8 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
-import { RadioButtonGroup, RadioButton, RadioButtonProps } from './RadioButton';
+import type { RadioButtonProps } from './RadioButton';
+import { RadioButtonGroup, RadioButton } from './RadioButton';
 
 export default {
   title: 'Components/RadioButton',

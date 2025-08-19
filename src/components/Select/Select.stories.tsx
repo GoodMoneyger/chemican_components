@@ -2,7 +2,8 @@ import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 import { IconRocket } from '@tabler/icons-react';
 
-import { Select, SelectProps } from './Select';
+import type { SelectProps } from './Select';
+import { Select } from './Select';
 
 const meta: Meta<typeof Select> = {
   title: 'Components/Select',

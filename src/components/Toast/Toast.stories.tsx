@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Meta, StoryFn } from 'storybook/react-vite';
+import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { Button } from '../Button';
 
-import { Toast, ToastProps } from './Toast';
+import type { ToastProps } from './Toast';
+import { Toast } from './Toast';
 
 export default {
   title: 'Components/Toast',

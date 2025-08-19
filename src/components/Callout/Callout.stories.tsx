@@ -7,7 +7,8 @@ import {
   IconX,
 } from '@tabler/icons-react';
 
-import { Callout, CalloutProps } from './Callout';
+import type { CalloutProps } from './Callout';
+import { Callout } from './Callout';
 
 interface StoryArgs extends Omit<CalloutProps, 'action'> {
   showAction?: boolean;

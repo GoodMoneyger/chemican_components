@@ -2,7 +2,7 @@ import React from 'react';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '../../utils';
-import { ColorShapeTokens, ColorBackgroundTokens } from '../../tokens';
+import type { ColorShapeTokens, ColorBackgroundTokens } from '../../tokens';
 
 export interface StatusProps {
   className?: string;

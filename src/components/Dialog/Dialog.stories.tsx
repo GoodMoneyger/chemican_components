@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Meta, StoryFn } from 'storybook/react-vite';
+import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { Button } from '../Button';
 
-import { Dialog, DialogProps } from './Dialog';
+import type { DialogProps } from './Dialog';
+import { Dialog } from './Dialog';
 
 export default {
   title: 'Components/Dialog',

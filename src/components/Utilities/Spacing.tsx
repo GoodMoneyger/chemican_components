@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { tokens, TokenCategory } from '../../tokens';
+import type { TokenCategory } from '../../tokens';
+import { tokens } from '../../tokens';
 
 const kebabToTitle = (str: string) =>
   str

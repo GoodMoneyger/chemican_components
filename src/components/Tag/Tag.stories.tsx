@@ -1,9 +1,10 @@
 import React from 'react';
-import { Meta, StoryFn } from 'storybook/react-vite';
+import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { ColorShapeTokens } from '../../tokens';
 
-import { Tag, TagProps } from './Tag';
+import type { TagProps } from './Tag';
+import { Tag } from './Tag';
 
 export default {
   title: 'Components/Tag',

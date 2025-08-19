@@ -1,7 +1,8 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
-import { Spinner, SpinnerProps } from './Spinner';
+import type { SpinnerProps } from './Spinner';
+import { Spinner } from './Spinner';
 
 const meta: Meta<typeof Spinner> = {
   title: 'Components/Spinner',

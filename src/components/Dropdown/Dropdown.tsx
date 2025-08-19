@@ -1,9 +1,11 @@
 import React from 'react';
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
-import { VariantProps, cva } from 'class-variance-authority';
+import type { VariantProps} from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
-import { IconProp, renderIcon, cn } from '../../lib/utils';
+import type { IconProp} from '../../lib/utils';
+import { renderIcon, cn } from '../../lib/utils';
 
 const dropdownContentVariants = cva(
   `bg-surface-primary border-divider-default shadow-overlay text-body-primary

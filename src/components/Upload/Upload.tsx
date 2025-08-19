@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { VariantProps, cva } from 'class-variance-authority';
+import type { VariantProps} from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 import {
   IconCloudUp,
   IconCircleCheck,

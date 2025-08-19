@@ -1,7 +1,9 @@
 import React from 'react';
-import { VariantProps, cva } from 'class-variance-authority';
+import type { VariantProps} from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 
-import { cn, IconProp, renderIcon } from '../../lib/utils';
+import type { IconProp} from '../../lib/utils';
+import { cn, renderIcon } from '../../lib/utils';
 
 const inputWrapperVariants = cva(
   `border-interactive-default bg-surface-primary hover:border-interactive-hover

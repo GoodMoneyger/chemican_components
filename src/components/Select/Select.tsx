@@ -1,7 +1,9 @@
 import React from 'react';
 import * as RadixSelect from '@radix-ui/react-select';
-import { IconChevronDown, TablerIcon } from '@tabler/icons-react';
-import { VariantProps, cva } from 'class-variance-authority';
+import type { TablerIcon } from '@tabler/icons-react';
+import { IconChevronDown } from '@tabler/icons-react';
+import type { VariantProps} from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 
 import { cn } from '../../utils';
 

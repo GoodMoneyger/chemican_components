@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva } from 'class-variance-authority';
 
-import { ColorShapeTokens } from '../../tokens';
+import type { ColorShapeTokens } from '../../tokens';
 import { cn } from '../../utils';
 
 export interface TagProps {

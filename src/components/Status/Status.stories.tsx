@@ -1,9 +1,10 @@
 import React from 'react';
-import { Meta, StoryFn } from 'storybook/react-vite';
+import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { ColorShapeTokens, ColorBackgroundTokens } from '../../tokens';
 
-import { Status, StatusProps } from './Status';
+import type { StatusProps } from './Status';
+import { Status } from './Status';
 
 export default {
   title: 'Components/Status',
