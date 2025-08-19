@@ -1,6 +1,5 @@
 import React from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
-import { TablerIcon } from '@tabler/icons-react';
 import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '../../lib/utils';
@@ -8,8 +7,10 @@ import { cn } from '../../lib/utils';
 import { useSideNavigation } from './SideNavigationContext';
 
 const sideNavigationItemVariants = cva(
-  `gap-xs px-xs py-xs focus-visible:ring-interactive-focused mb-0 box-border
-  flex w-full items-center rounded-sm font-medium transition-colors
+  `gap-xs px-xs py-xs focus-visible:ring-interactive-focused
+  aria-[current="page"]:bg-interactive-neutral-selected
+  aria-[current="page"]:text-interactive-primary-active mb-0 box-border flex
+  w-full items-center rounded-sm font-medium transition-colors
   focus:outline-none focus-visible:ring-2`,
   {
     variants: {
@@ -40,7 +41,6 @@ export interface SideNavigationItemProps
     VariantProps<typeof sideNavigationItemVariants> {
   asChild?: boolean;
   component?: React.ElementType;
-  icon?: TablerIcon | React.ComponentType<{ className: string }>;
   label?: React.ReactNode;
 }
 

@@ -73,9 +73,10 @@ const SideNavigationContent = React.forwardRef<
         ref={ref}
         className={cn(
           sideNavigationVariants({ width: effectiveWidth }),
-          'relative',
+          'group relative',
           className
         )}
+        data-collapsed={isCollapsed}
         {...props}
       >
         {header && (
