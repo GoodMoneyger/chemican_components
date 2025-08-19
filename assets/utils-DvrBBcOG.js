@@ -1,0 +1,7 @@
+import{e as l}from"./bundle-mjs-DAWI7bSt.js";import{g as u,e as f}from"./iframe-CR8JmiHQ.js";var c={exports:{}};/*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/var p;function d(){return p||(p=1,(function(t){(function(){var i={}.hasOwnProperty;function r(){for(var e="",n=0;n<arguments.length;n++){var o=arguments[n];o&&(e=s(e,a(o)))}return e}function a(e){if(typeof e=="string"||typeof e=="number")return e;if(typeof e!="object")return"";if(Array.isArray(e))return r.apply(null,e);if(e.toString!==Object.prototype.toString&&!e.toString.toString().includes("[native code]"))return e.toString();var n="";for(var o in e)i.call(e,o)&&e[o]&&(n=s(n,o));return n}function s(e,n){return n?e?e+" "+n:e+n:e}t.exports?(r.default=r,t.exports=r):window.classNames=r})()})(c)),c.exports}var m=d();const x=u(m),y=l({extend:{theme:{spacing:["xxs","xs","sm","md","lg","xl","xxxl"]}}}),v=(...t)=>y(x(t)),h=(t,i={})=>{if(!t)return null;const{size:r=16,className:a}=i;if(typeof t=="function"){const s=t;return f.createElement(s,{size:r,className:a})}if(typeof t=="object"&&t&&"$$typeof"in t&&"render"in t&&typeof t.render=="function"){const s=t;return f.createElement(s,{size:r,className:a})}return t};h.__docgenInfo={description:`Renders an icon that can be either a React node or a TablerIcon component.
+If a TablerIcon component is passed, it will be rendered with the specified size.
+If a React node is passed, it will be rendered as-is.`,methods:[],displayName:"renderIcon"};export{v as c,h as r};
