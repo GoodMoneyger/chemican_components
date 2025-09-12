@@ -1,6 +1,5 @@
 import { extendTailwindMerge } from 'tailwind-merge';
-import type { ArgumentArray } from 'classnames';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import React from 'react';
 import type { ClassArray } from 'clsx';
 import type { TablerIcon } from '@tabler/icons-react';
@@ -13,8 +12,8 @@ const twMerge = extendTailwindMerge({
   },
 });
 
-export const cn = (...inputs: ArgumentArray) => {
-  return twMerge(classNames(inputs));
+export const cn = (...inputs: ClassArray) => {
+  return twMerge(clsx(inputs));
 };
 
 // Icon utility types and functions
