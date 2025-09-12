@@ -14,7 +14,7 @@ const Table = React.forwardRef<
   <div className="border-surface-default relative w-full overflow-auto border">
     <table
       ref={ref}
-      className={cn('w-full caption-bottom text-sm', className)}
+      className={cn('text-sm w-full caption-bottom', className)}
       {...props}
     />
   </div>
@@ -52,7 +52,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      'bg-surface-secondary border-t font-medium [&>tr]:last:border-b-0',
+      'bg-surface-secondary font-medium border-t [&>tr]:last:border-b-0',
       className
     )}
     {...props}
@@ -84,8 +84,8 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      `text-body-secondary px-4 text-left font-medium
-      [&:has([role=checkbox])]:w-4 [&:has([role=checkbox])]:pr-0`,
+      `text-body-secondary px-4 font-medium [&:has([role=checkbox])]:w-4
+      [&:has([role=checkbox])]:pr-0 text-left`,
       className
     )}
     {...props}
@@ -102,7 +102,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'h-12 w-fit px-4 py-4 align-middle [&:has([role=checkbox])]:pr-0',
+      'h-12 px-4 py-4 [&:has([role=checkbox])]:pr-0 w-fit align-middle',
       className
     )}
     {...props}
@@ -135,7 +135,7 @@ const TableHeadSortButton = React.forwardRef<
     ref={ref}
     className={cn(
       `text-body-secondary bg-interactive-neutral-default
-      border-interactive-default inline-flex size-6 cursor-pointer items-center
+      border-interactive-default size-6 inline-flex cursor-pointer items-center
       justify-center border focus:outline-none`,
       className
     )}

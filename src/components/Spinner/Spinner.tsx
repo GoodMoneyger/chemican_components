@@ -1,5 +1,5 @@
 import React from 'react';
-import type { VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '../../utils';
@@ -67,14 +67,14 @@ export const Spinner: React.FC<SpinnerProps> = ({
           cy="50"
           r={radii[size]}
           stroke="var(--token-color-shape-accent-gray-pale)"
-          stroke-width={strokeWidths[size]}
+          strokeWidth={strokeWidths[size]}
         />
         <circle
           cx="50"
           cy="50"
           r={radii[size]}
           stroke="var(--token-color-shape-accent-green-strong)"
-          stroke-width={strokeWidths[size]}
+          strokeWidth={strokeWidths[size]}
           strokeLinecap="round"
           strokeDasharray="141.37 282.74"
           strokeDashoffset="0"

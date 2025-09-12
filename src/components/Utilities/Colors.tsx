@@ -102,7 +102,7 @@ const Tooltip = ({
           >
             {content}
             <div
-              className="absolute top-full left-1/2 h-0 w-0 -translate-x-1/2
+              className="h-0 w-0 absolute top-full left-1/2 -translate-x-1/2
                 transform border-t-[3px] border-r-[3px] border-l-[3px]
                 border-transparent"
               style={{
@@ -164,7 +164,7 @@ const CopyableValue = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={twMerge(
-          `px-xs py-xxxs hover:bg-surface-secondary cursor-pointer rounded-xs
+          `px-xs py-xxxs hover:bg-surface-secondary rounded-xs cursor-pointer
           text-left transition-colors ${className}`
         )}
       >
@@ -213,7 +213,7 @@ const TailwindClass = ({ className }: { className: string }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className="px-xs py-xxxs text-body-secondary hover:bg-surface-secondary
-          cursor-pointer rounded-xs text-left text-sm transition-colors"
+          rounded-xs text-sm cursor-pointer text-left transition-colors"
       >
         .<code>{className}</code>
       </button>
@@ -241,7 +241,7 @@ const TokenRow = ({
         grid-cols-[auto_2fr_1fr_1fr] items-center border-b last:border-b-0"
     >
       <div
-        className={`h-8 w-8 flex-shrink-0 rounded-sm
+        className={`h-8 w-8 rounded-sm flex-shrink-0
           ${showBorder ? 'border-divider-default border' : ''}`}
         style={{ backgroundColor: `var(${value})` }}
       />
@@ -251,7 +251,7 @@ const TokenRow = ({
           <CopyableValue
             text={name}
             tooltip="token name"
-            className="text-body-primary w-fit text-sm font-medium"
+            className="text-body-primary text-sm font-medium w-fit"
           />
         </div>
         {tailwindClasses.length > 0 && (
@@ -268,7 +268,7 @@ const TokenRow = ({
           <CopyableValue
             text={value}
             tooltip="CSS variable"
-            className="text-body-secondary w-fit text-sm"
+            className="text-body-secondary text-sm w-fit"
           />
         </div>
       ) : (
@@ -279,7 +279,7 @@ const TokenRow = ({
         <CopyableValue
           text={primitiveValue}
           tooltip="hex value"
-          className="text-body-secondary w-fit text-sm"
+          className="text-body-secondary text-sm w-fit"
         />
       </div>
     </div>
@@ -336,12 +336,12 @@ export function Colors() {
   }, []);
 
   return (
-    <div className="p-md mx-auto max-w-7xl">
+    <div className="p-md max-w-7xl mx-auto">
       {Object.entries(themeTokens).map(([theme, categories]) => (
         <div key={theme} className="mb-xxxl">
           <h2
             className="sb-unstyled mb-lg border-divider-default pb-sm text-xxl
-              mt-10 border-b font-bold"
+              mt-10 font-bold border-b"
           >
             {kebabToTitle(theme)} Theme
           </h2>
@@ -356,8 +356,8 @@ export function Colors() {
               </h3>
 
               <div
-                className="border-divider-default bg-surface-primary
-                  overflow-hidden rounded-md border"
+                className="border-divider-default bg-surface-primary rounded-md
+                  overflow-hidden border"
               >
                 {/* Header */}
                 <div
@@ -407,8 +407,8 @@ export function Colors() {
         </p>
 
         <div
-          className="border-divider-default bg-surface-primary overflow-hidden
-            rounded-md border"
+          className="border-divider-default bg-surface-primary rounded-md
+            overflow-hidden border"
         >
           {/* Header */}
           <div

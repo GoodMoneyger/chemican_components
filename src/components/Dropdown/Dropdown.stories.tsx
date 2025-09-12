@@ -92,7 +92,7 @@ export const WithLabels: StoryFn<typeof Dropdown> = () => (
 );
 
 export const States: StoryFn<typeof Dropdown> = () => (
-  <div className="flex gap-4">
+  <div className="gap-4 flex">
     <Dropdown>
       <DropdownTrigger asChild>
         <Button intent="secondary">Default</Button>
@@ -116,7 +116,7 @@ export const States: StoryFn<typeof Dropdown> = () => (
 );
 
 export const Sizes: StoryFn<typeof Dropdown> = () => (
-  <div className="flex gap-4">
+  <div className="gap-4 flex">
     <Dropdown>
       <DropdownTrigger asChild>
         <Button intent="secondary">Small</Button>

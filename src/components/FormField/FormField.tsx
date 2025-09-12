@@ -27,8 +27,8 @@ export const FormField: React.FC<FormFieldProps> = ({
         <label
           htmlFor={name}
           className={cn(
-            `text-body-secondary flex items-center gap-1 pb-2 text-xs
-            leading-none font-normal`,
+            `text-body-secondary gap-1 pb-2 text-xs font-normal flex
+            items-center leading-none`,
             className
           )}
         >
@@ -39,14 +39,14 @@ export const FormField: React.FC<FormFieldProps> = ({
       {children}
       {error && (
         <div className="pt-1">
-          <p className="text-body-alert text-xs leading-[1.5] font-normal">
+          <p className="text-body-alert text-xs font-normal leading-[1.5]">
             {error}
           </p>
         </div>
       )}
       {description && (
         <div className="pt-1">
-          <p className="text-body-secondary text-xs leading-[1.5] font-normal">
+          <p className="text-body-secondary text-xs font-normal leading-[1.5]">
             {description}
           </p>
         </div>

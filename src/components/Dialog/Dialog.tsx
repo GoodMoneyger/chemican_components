@@ -25,12 +25,13 @@ export const Dialog: React.FC<DialogProps> = ({
   return (
     <RadixDialog.Root open={isOpen} onOpenChange={onClose}>
       <RadixDialog.Overlay
-        className="bg-surface-scrimmed fixed top-0 left-0 h-full w-full
+        className="bg-surface-scrimmed top-0 left-0 fixed h-full w-full
           opacity-85"
       />
       <RadixDialog.Content
-        className="bg-surface-primary fixed top-1/2 left-1/2 w-2/3 max-w-[40rem]
-          min-w-[25rem] -translate-x-1/2 -translate-y-1/2 transform rounded-lg"
+        className="bg-surface-primary rounded-lg fixed top-1/2 left-1/2 w-2/3
+          max-w-[40rem] min-w-[25rem] -translate-x-1/2 -translate-y-1/2
+          transform"
       >
         <div className="flex flex-col">
           <div className="px-xl py-lg flex flex-grow justify-between">
@@ -45,7 +46,7 @@ export const Dialog: React.FC<DialogProps> = ({
           </div>
           <div
             className="border-divider-default bg-surface-secondary px-xl py-lg
-              text-body-primary flex min-h-40 flex-grow-0 border-y-1"
+              text-body-primary min-h-40 flex flex-grow-0 border-y-1"
           >
             {children}
           </div>

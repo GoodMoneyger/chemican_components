@@ -14,8 +14,8 @@ export interface StatusProps {
 }
 
 const statusVariants = cva(
-  `px-xs py-xxs text-interactive-inverse inline-flex items-center rounded-full
-  font-medium`,
+  `px-xs py-xxs text-interactive-inverse font-medium inline-flex items-center
+  rounded-full`,
   {
     variants: {
       size: {
@@ -90,7 +90,7 @@ export const Status: React.FC<StatusProps> = ({
       {Boolean(onRemove) && (
         <button
           className={cn(
-            `bg-interactive-neutral-default flex h-3 w-3 cursor-pointer
+            `bg-interactive-neutral-default h-3 w-3 flex cursor-pointer
             items-center justify-center rounded-full`
           )}
           onClick={onRemove}

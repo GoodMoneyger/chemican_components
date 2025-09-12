@@ -9,8 +9,8 @@ import { Spinner } from '../Spinner';
 
 // Define button styles with CVA
 const buttonVariants = cva(
-  `gap-xxs box-border inline-flex cursor-pointer items-center justify-center
-  rounded-sm border border-transparent font-medium decoration-1
+  `gap-xxs rounded font-medium box-border inline-flex cursor-pointer
+  items-center justify-center border border-transparent decoration-1
   focus-visible:ring-4 focus-visible:outline-none disabled:cursor-not-allowed
   disabled:no-underline`,
   {
@@ -41,11 +41,11 @@ const buttonVariants = cva(
       size: {
         xs: 'px-xs h-8 min-w-15 text-sm',
         sm: 'px-lg h-10 min-w-20',
-        md: 'h-[2.875rem] min-w-24',
+        md: 'min-w-24 h-[2.875rem]',
         lg: 'h-14 min-w-34 text-lg',
       },
       iconOnly: {
-        true: 'aspect-square h-auto min-w-0 p-0!',
+        true: 'min-w-0 p-0! aspect-square h-auto',
       },
       textOnly: {
         true: '',
@@ -178,7 +178,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               })()}
             {children}
           </span>
-          <span className="absolute inset-0 flex items-center justify-center">
+          <span className="inset-0 absolute flex items-center justify-center">
             <Spinner size="sm" layout="row" />
           </span>
         </Comp>

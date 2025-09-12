@@ -65,10 +65,10 @@ export function Spacing() {
           <table className="min-w-full table-auto">
             <thead>
               <tr className="border-divider-default border-b">
-                <th className="w-4/12 py-2 text-left">Token</th>
-                <th className="w-3/12 py-2 text-left">Spacing Value</th>
-                <th className="w-2/12 py-2 text-left">Visual</th>
-                <th className="w-2/12 py-2 text-left">Pixels</th>
+                <th className="py-2 w-4/12 text-left">Token</th>
+                <th className="py-2 w-3/12 text-left">Spacing Value</th>
+                <th className="py-2 w-2/12 text-left">Visual</th>
+                <th className="py-2 w-2/12 text-left">Pixels</th>
               </tr>
             </thead>
             <tbody>
@@ -76,24 +76,24 @@ export function Spacing() {
                 <tr key={name}>
                   <td className="py-1">
                     <pre
-                      className="bg-surface-secondary inline rounded px-2 py-1
-                        text-sm whitespace-pre-wrap"
+                      className="bg-surface-secondary rounded px-2 py-1 text-sm
+                        inline whitespace-pre-wrap"
                     >
                       {name}
                     </pre>
                   </td>
                   <td className="py-1">
                     <pre
-                      className="bg-surface-secondary inline rounded px-2 py-1
-                        text-sm whitespace-pre-wrap"
+                      className="bg-surface-secondary rounded px-2 py-1 text-sm
+                        inline whitespace-pre-wrap"
                     >
                       {value}
                     </pre>
                   </td>
                   <td className="py-1">
                     <pre
-                      className="bg-surface-secondary inline rounded px-2 py-1
-                        text-sm whitespace-pre-wrap"
+                      className="bg-surface-secondary rounded px-2 py-1 text-sm
+                        inline whitespace-pre-wrap"
                     >
                       {parseFloat(value) * 16}px
                     </pre>

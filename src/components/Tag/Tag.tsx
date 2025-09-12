@@ -13,8 +13,8 @@ export interface TagProps {
 }
 
 const tagVariants = cva(
-  `gap-xxs text-accent-gray-strong py-xxs px-xs my-1 inline-flex items-center
-  rounded-full font-medium`,
+  `gap-xxs text-accent-gray-strong py-xxs px-xs my-1 font-medium inline-flex
+  items-center rounded-full`,
   {
     variants: {
       size: {
@@ -46,7 +46,7 @@ export const Tag: React.FC<TagProps> = ({
       {Boolean(onRemove) && (
         <button
           className={cn(
-            `bg-interactive-neutral-default flex h-3 w-3 cursor-pointer
+            `bg-interactive-neutral-default h-3 w-3 flex cursor-pointer
             items-center justify-center rounded-full`
           )}
           onClick={onRemove}

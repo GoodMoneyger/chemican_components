@@ -112,11 +112,11 @@ const Template: StoryFn = () => (
             <Checkbox label="" />
           </TableCell>
           <TableCell>
-            <div className="inline-flex items-center gap-2">
-              <div className="flex items-center gap-1">
+            <div className="gap-2 inline-flex items-center">
+              <div className="gap-1 flex items-center">
                 <div
-                  className="bg-shape-accent-gray-pale inline-flex aspect-auto
-                    rounded p-0.5"
+                  className="bg-shape-accent-gray-pale rounded p-0.5 inline-flex
+                    aspect-auto"
                 >
                   <IconPdf size={16} className="text-shape-primary" />
                 </div>
@@ -129,7 +129,7 @@ const Template: StoryFn = () => (
           </TableCell>
           <TableCell>
             <div
-              className="bg-surface-secondary px-xs py-xxs inline-flex rounded
+              className="bg-surface-secondary px-xs py-xxs rounded inline-flex
                 uppercase"
             >
               {row.productName}

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '../../lib/utils';
@@ -54,7 +54,7 @@ export const SideNavigationSection = React.forwardRef<
       {title && !isCollapsed && (
         <div
           className="text-body-secondary px-xxs py-xxs mb-xxs text-xs
-            leading-none font-medium"
+            font-medium leading-none"
         >
           {title}
         </div>

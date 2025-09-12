@@ -2,7 +2,7 @@ import React from 'react';
 import { Select as RadixSelect } from 'radix-ui';
 import type { TablerIcon } from '@tabler/icons-react';
 import { IconChevronDown } from '@tabler/icons-react';
-import type { VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '../../utils';
@@ -11,8 +11,8 @@ const selectVariants = cva(
   `border-interactive-default bg-surface-primary py-sm pr-sm pl-md
   text-body-primary disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
-  hover:border-interactive-hover inline-flex h-[3rem] w-full justify-between
-  rounded border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
+  hover:border-interactive-hover rounded inline-flex h-[3rem] w-full
+  justify-between border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
   {
     variants: {
       invalid: {
@@ -78,8 +78,8 @@ export const Select: React.FC<SelectProps> = ({
         <RadixSelect.Content
           position="popper"
           className={cn(
-            `border-interactive-default bg-surface-primary py-xxs relative z-50
-            max-h-96 w-full min-w-[8rem] overflow-hidden rounded border`,
+            `border-interactive-default bg-surface-primary py-xxs max-h-96
+            rounded relative z-50 w-full min-w-[8rem] overflow-hidden border`,
             className
           )}
         >

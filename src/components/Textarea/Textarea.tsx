@@ -1,5 +1,5 @@
 import React from 'react';
-import type { VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '../../utils';
@@ -8,7 +8,7 @@ const textareaVariants = cva(
   `border-interactive-default bg-surface-primary px-md py-sm
   focus:border-interactive-focused disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
-  hover:border-interactive-hover h-12 min-h-30 w-full rounded border
+  hover:border-interactive-hover h-12 min-h-30 rounded w-full border
   focus:ring-4 focus:outline-0`,
   {
     variants: {
@@ -63,7 +63,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           onChange={handleChange}
         />
         {Boolean(characterLimit && showCharacterLimit) && (
-          <div className="text-body-secondary text-right text-sm">
+          <div className="text-body-secondary text-sm text-right">
             {value.toString().length}/{characterLimit}
           </div>
         )}

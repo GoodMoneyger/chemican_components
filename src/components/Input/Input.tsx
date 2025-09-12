@@ -1,15 +1,15 @@
 import React from 'react';
-import type { VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
-import type { IconProp} from '../../lib/utils';
+import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const inputWrapperVariants = cva(
   `border-interactive-default bg-surface-primary hover:border-interactive-hover
   has-[:disabled]:border-interactive-disabled
-  has-[:disabled]:bg-surface-disabled has-[:focus]:ring-interactive-focused
-  relative flex h-12 w-full items-center rounded border
+  has-[:disabled]:bg-surface-disabled has-[:focus]:ring-interactive-focused h-12
+  rounded relative flex w-full items-center border
   has-[:focus]:border-[var(--chemican-green-800)] has-[:focus]:ring-4
   has-[:focus]:outline-0`,
   {

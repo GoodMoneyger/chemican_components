@@ -9,7 +9,7 @@ import { renderIcon, cn } from '../../lib/utils';
 
 const dropdownContentVariants = cva(
   `bg-surface-primary border-divider-default shadow-overlay text-body-primary
-  py-xxs z-50 min-w-[8rem] overflow-hidden rounded`,
+  py-xxs rounded-md z-50 min-w-[8rem] overflow-hidden`,
   {
     variants: {
       size: {
@@ -25,8 +25,8 @@ const dropdownContentVariants = cva(
 );
 
 const dropdownItemVariants = cva(
-  `focus:bg-interactive-neutral-hover px-md relative flex h-10 cursor-pointer
-  items-center py-1.5 transition-colors outline-none select-none
+  `focus:bg-interactive-neutral-hover px-md h-10 py-1.5 relative flex
+  cursor-pointer items-center transition-colors outline-none select-none
   data-[disabled]:pointer-events-none data-[disabled]:opacity-50`,
   {
     variants: {
@@ -163,10 +163,13 @@ export interface DropdownProps {
   modal?: boolean;
 }
 
-export const Dropdown = React.forwardRef<
-  React.ElementRef<typeof RadixDropdownMenu.Root>,
-  DropdownProps
->(({ children, open, onOpenChange, modal = true, ...props }) => {
+export const Dropdown = ({
+  children,
+  open,
+  onOpenChange,
+  modal = true,
+  ...props
+}: DropdownProps) => {
   const rootProps: React.ComponentPropsWithoutRef<
     typeof RadixDropdownMenu.Root
   > = {
@@ -185,7 +188,7 @@ export const Dropdown = React.forwardRef<
   return (
     <RadixDropdownMenu.Root {...rootProps}>{children}</RadixDropdownMenu.Root>
   );
-});
+};
 
 Dropdown.displayName = 'Dropdown';
 

@@ -32,7 +32,7 @@ const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
 
 const checkboxVariants = cva(
   `border-interactive-default text-body-primary
-  focus-visible:ring-interactive-focused size-[17px] cursor-[inherit] rounded-xs
+  focus-visible:ring-interactive-focused rounded-xs size-[17px] cursor-[inherit]
   border-[1.5px] outline-none focus-visible:ring-4
   data-[state=checked]:hover:border-transparent
   data-[state=indeterminate]:hover:border-transparent`,

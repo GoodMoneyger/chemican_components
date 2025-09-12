@@ -35,7 +35,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     }, [steps, currentStep]);
 
     return (
-      <div ref={ref} className={cn('w-full px-8', className)} {...props}>
+      <div ref={ref} className={cn('px-8 w-full', className)} {...props}>
         {/* Step indicators */}
         <div className="gap-sm flex items-center">
           {processedSteps.map((step, index) => (
@@ -43,7 +43,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
               {/* Step dot */}
               <div className="relative flex flex-col items-center">
                 <div
-                  className="flex size-8 flex-col items-center justify-center"
+                  className="size-8 flex flex-col items-center justify-center"
                 >
                   <div
                     className={cn(
@@ -78,7 +78,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
                 {showLabels && (
                   <div
                     className={cn(
-                      `mt-xs absolute top-full max-w-20 min-w-max text-center
+                      `mt-xs max-w-20 absolute top-full min-w-max text-center
                       break-words transition-colors`,
                       step.status === 'completed' || step.status === 'active'
                         ? 'text-body-primary font-medium'

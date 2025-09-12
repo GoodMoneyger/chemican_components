@@ -1,20 +1,19 @@
 import React from 'react';
-import type { VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import type {
-  TablerIcon} from '@tabler/icons-react';
+import type { TablerIcon } from '@tabler/icons-react';
 import {
   IconInfoCircleFilled,
   IconCircleCheckFilled,
   IconAlertTriangleFilled,
-  IconX
+  IconX,
 } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
 import { Button } from '../Button';
 
 const calloutVariants = cva(
-  'gap-xs flex items-center overflow-hidden rounded-sm border',
+  'gap-xs rounded-sm flex items-center overflow-hidden border',
   {
     variants: {
       intent: {

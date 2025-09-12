@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import type { VariantProps} from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import {
   IconCloudUp,
@@ -14,7 +14,7 @@ import { Progress } from '../Progress';
 import { Button } from '../Button';
 
 const uploadVariants = cva(
-  `focus-visible:ring-interactive-focused relative cursor-pointer rounded-lg
+  `focus-visible:ring-interactive-focused rounded-lg relative cursor-pointer
   border-1 border-dashed transition-colors focus-visible:ring-4
   focus-visible:outline-none`,
   {

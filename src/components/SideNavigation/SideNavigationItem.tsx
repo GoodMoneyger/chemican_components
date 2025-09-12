@@ -10,9 +10,9 @@ import { useSideNavigation } from './SideNavigationContext';
 const sideNavigationItemVariants = cva(
   `gap-xs px-xs py-xs focus-visible:ring-interactive-focused
   aria-[current="page"]:bg-interactive-neutral-selected
-  aria-[current="page"]:text-interactive-primary-active mb-0 box-border flex
-  w-full items-center rounded-sm font-medium transition-colors
-  focus:outline-none focus-visible:ring-2`,
+  aria-[current="page"]:text-interactive-primary-active mb-0 rounded-sm
+  box-border flex w-full items-center transition-colors focus:outline-none
+  focus-visible:ring-2`,
   {
     variants: {
       variant: {
