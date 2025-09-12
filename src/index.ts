@@ -3,6 +3,8 @@
 // intended to be included separately so that consuming projects can
 // integrate it into their own Tailwind setup.
 
+'use client';
+
 import './index.css';
 
 export * from './components';
