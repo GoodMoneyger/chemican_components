@@ -1,19 +1,25 @@
-@keyframes indeterminate {
-  0% {
-    transform: translateX(0) scaleX(0);
-  }
-  25% {
-    transform: translateX(0) scaleX(0.6);
-  }
-  60% {
-    transform: translateX(100%) scaleX(0.5);
-  }
-  100% {
-    transform: translateX(100%) scaleX(0.5);
-  }
-}
+@theme inline {
+  --animate-indeterminate: indeterminate 2s infinite linear;
 
-.animate-indeterminate {
-  animation: indeterminate 2s infinite linear;
-  transform-origin: 0% 50%;
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(0) scaleX(0);
+      transform-origin: 0% 50%;
+    }
+
+    25% {
+      transform: translateX(0) scaleX(0.6);
+      transform-origin: 0% 50%;
+    }
+
+    60% {
+      transform: translateX(100%) scaleX(0.5);
+      transform-origin: 0% 50%;
+    }
+
+    100% {
+      transform: translateX(100%) scaleX(0.5);
+      transform-origin: 0% 50%;
+    }
+  }
 }
