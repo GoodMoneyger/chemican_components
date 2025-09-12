@@ -43,6 +43,13 @@ export default tseslint.config(
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling'],
         },
       ],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: false,
+        },
+      ],
       // enable all recommended rules to report a warning
       ...eslintPluginBetterTailwindcss.configs['recommended-warn'].rules,
       // enable all recommended rules to report an error
