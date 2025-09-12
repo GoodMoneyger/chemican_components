@@ -1,7 +1,7 @@
 import { default as React } from '../../../node_modules/react';
+import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
-import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 declare const dropdownContentVariants: (props?: ({
     size?: "sm" | "md" | "lg" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
@@ -33,7 +33,10 @@ export interface DropdownProps {
     onOpenChange?: (open: boolean) => void;
     modal?: boolean;
 }
-export declare const Dropdown: React.ForwardRefExoticComponent<DropdownProps & React.RefAttributes<never>>;
+export declare const Dropdown: {
+    ({ children, open, onOpenChange, modal, ...props }: DropdownProps): import("react/jsx-runtime").JSX.Element;
+    displayName: string;
+};
 export interface DropdownTriggerProps extends React.ComponentPropsWithoutRef<typeof RadixDropdownMenu.Trigger> {
     asChild?: boolean;
     className?: string;

@@ -1,5 +1,5 @@
 import { default as React } from '../../../node_modules/react';
-import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
+import { Checkbox as CheckboxPrimitive } from 'radix-ui';
 export interface CheckboxProps extends React.ComponentProps<typeof CheckboxPrimitive.Root> {
     label: string;
     id?: string;

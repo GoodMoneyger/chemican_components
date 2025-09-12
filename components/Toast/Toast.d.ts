@@ -1,5 +1,5 @@
 import { default as React } from '../../../node_modules/react';
-import * as RadixToast from '@radix-ui/react-toast';
+import { Toast as RadixToast } from 'radix-ui';
 export interface ToastProps extends React.ComponentProps<typeof RadixToast.Root> {
     message: string;
     title: string;

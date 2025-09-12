@@ -1,7 +1,7 @@
-import { ArgumentArray } from 'classnames';
 import { default as React } from '../../node_modules/react';
+import { ClassArray } from 'clsx';
 import { TablerIcon } from '../../@tabler/icons-react/dist/esm/icons/index.mjs';
-export declare const cn: (...inputs: ArgumentArray) => string;
+export declare const cn: (...inputs: ClassArray) => string;
 export type IconProp = React.ReactNode | TablerIcon;
 export interface IconRenderOptions {
     size?: number;

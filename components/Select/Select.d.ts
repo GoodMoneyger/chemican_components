@@ -1,7 +1,7 @@
 import { default as React } from '../../../node_modules/react';
+import { Select as RadixSelect } from 'radix-ui';
 import { TablerIcon } from '../../../@tabler/icons-react/dist/esm/icons/index.mjs';
 import { VariantProps } from 'class-variance-authority';
-import * as RadixSelect from '@radix-ui/react-select';
 declare const selectVariants: (props?: ({
     invalid?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
