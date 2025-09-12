@@ -75,6 +75,8 @@ export default {
             'deps',
             'release',
             'util',
+            'assets',
+            'refactor',
           ];
 
           const topics = type.split(',').map((t) => t.trim());
@@ -126,4 +128,3 @@ export default {
     'subject-capitalization': [2, 'always'],
   },
 };
-
