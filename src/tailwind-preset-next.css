@@ -1,0 +1,6 @@
+@import './tailwind-preset-base.css';
+
+/*
+ * NOTE: NextJS uses a different font loading strategy, so we don't need to include the font definitions here.
+ * Instead, the font files are loaded via the `next/font` package in the consuming projects root layout file.
+*/
