@@ -74,7 +74,7 @@ Use semantic design tokens instead of hardcoded colors:
 ```css
 /* Correct: Use design tokens */
 .bg-surface-primary          /* background-color: var(--color-surface-primary) */
-.text-text-body-primary      /* color: var(--color-text-body-primary) */
+.text-body-primary      /* color: var(--color-text-body-primary) */
 
 /* Incorrect: Don't use hardcoded colors */
 .bg-[#ffffff]
