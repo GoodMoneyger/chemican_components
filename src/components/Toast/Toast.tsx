@@ -1,5 +1,5 @@
 import React from 'react';
-import * as RadixToast from '@radix-ui/react-toast';
+import { Toast as RadixToast } from 'radix-ui';
 import {
   IconX,
   IconCircleCheckFilled,

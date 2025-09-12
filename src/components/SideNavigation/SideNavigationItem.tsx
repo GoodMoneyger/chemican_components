@@ -1,7 +1,7 @@
 import React from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from 'radix-ui';
 
 import { cn } from '../../lib/utils';
 
@@ -63,7 +63,7 @@ export const SideNavigationItem = React.forwardRef<
     ref
   ) => {
     const { isCollapsed } = useSideNavigation();
-    const Comp = asChild ? Slot : 'button';
+    const Comp = asChild ? Slot.Root : 'button';
     const finalVariant = disabled ? 'disabled' : variant;
 
     return (

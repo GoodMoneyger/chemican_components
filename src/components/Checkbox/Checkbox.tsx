@@ -1,6 +1,6 @@
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
+import { Checkbox as CheckboxPrimitive } from 'radix-ui';
 import { twMerge } from 'tailwind-merge';
 import { IconCheck, IconMinus } from '@tabler/icons-react';
 

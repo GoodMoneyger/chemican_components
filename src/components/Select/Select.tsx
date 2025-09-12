@@ -1,5 +1,5 @@
 import React from 'react';
-import * as RadixSelect from '@radix-ui/react-select';
+import { Select as RadixSelect } from 'radix-ui';
 import type { TablerIcon } from '@tabler/icons-react';
 import { IconChevronDown } from '@tabler/icons-react';
 import type { VariantProps} from 'class-variance-authority';

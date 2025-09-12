@@ -1,5 +1,5 @@
 import React from 'react';
-import * as RadixProgress from '@radix-ui/react-progress';
+import { Progress as RadixProgress } from 'radix-ui';
 
 import { cn } from '../../utils';
 

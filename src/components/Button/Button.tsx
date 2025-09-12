@@ -2,7 +2,7 @@ import React from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import type { TablerIcon } from '@tabler/icons-react';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from 'radix-ui';
 
 import { cn } from '../../lib/utils';
 import { Spinner } from '../Spinner';
@@ -147,7 +147,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : 'button';
+    const Comp = asChild ? Slot.Slot : 'button';
     const iconOnly = Boolean(icon && !children);
     const textOnly = Boolean(children && !icon);
     const isDisabled = loading || props.disabled;

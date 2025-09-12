@@ -1,6 +1,6 @@
 import React from 'react';
 import { cva } from 'class-variance-authority';
-import * as RadioGroup from '@radix-ui/react-radio-group';
+import { RadioGroup } from 'radix-ui';
 import { twMerge } from 'tailwind-merge';
 
 import { cn } from '../../lib/utils';

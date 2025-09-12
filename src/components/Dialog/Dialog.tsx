@@ -1,5 +1,5 @@
 import React from 'react';
-import * as RadixDialog from '@radix-ui/react-dialog';
+import { Dialog as RadixDialog } from 'radix-ui';
 import { IconX } from '@tabler/icons-react';
 
 import { Button } from '../Button';
