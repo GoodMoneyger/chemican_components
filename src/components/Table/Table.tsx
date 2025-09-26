@@ -11,10 +11,12 @@ const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <div className="border-surface-default relative w-full overflow-auto border">
+  <div
+    className="border-surface-default bg-surface-primary relative w-full border"
+  >
     <table
       ref={ref}
-      className={cn('text-sm w-full caption-bottom', className)}
+      className={cn('w-full caption-bottom', className)}
       {...props}
     />
   </div>
@@ -27,7 +29,10 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn('bg-surface-tertiary h-10 [&_tr]:border-b', className)}
+    className={cn(
+      'text-sm bg-surface-tertiary h-10 top-0 sticky [&_tr]:border-b',
+      className
+    )}
     {...props}
   />
 ));
@@ -85,7 +90,7 @@ const TableHead = React.forwardRef<
     ref={ref}
     className={cn(
       `text-body-secondary px-4 font-medium [&:has([role=checkbox])]:w-4
-      [&:has([role=checkbox])]:pr-0 text-left`,
+      [&:has([role=checkbox])]:pr-0 h-10 text-left`,
       className
     )}
     {...props}
@@ -102,7 +107,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'h-12 px-4 py-4 [&:has([role=checkbox])]:pr-0 w-fit align-middle',
+      'px-md py-sm [&:has([role=checkbox])]:pr-0 min-h-12 w-fit align-middle',
       className
     )}
     {...props}
