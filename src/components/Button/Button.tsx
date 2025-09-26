@@ -45,7 +45,7 @@ const buttonVariants = cva(
         lg: 'h-14 min-w-34 text-lg',
       },
       iconOnly: {
-        true: 'min-w-0 p-0! aspect-square h-auto',
+        true: 'min-w-0 aspect-square h-auto',
       },
       textOnly: {
         true: '',
@@ -61,10 +61,10 @@ const buttonVariants = cva(
       { textOnly: true, size: 'lg', class: 'px-md' },
       { iconOnly: false, size: 'md', class: 'px-xl' },
       { iconOnly: false, size: 'lg', class: 'px-md' },
-      { iconOnly: true, size: 'xs', class: 'px-xxs' },
-      { iconOnly: true, size: 'sm', class: 'px-xs' },
-      { iconOnly: true, size: 'md', class: 'px-sm' },
-      { iconOnly: true, size: 'lg', class: 'px-md' },
+      { iconOnly: true, size: 'xs', class: 'p-0' },
+      { iconOnly: true, size: 'sm', class: 'size-6 p-0!' },
+      { iconOnly: true, size: 'md', class: 'size-10' },
+      { iconOnly: true, size: 'lg', class: 'size-12' },
       {
         intent: 'primary',
         danger: true,
