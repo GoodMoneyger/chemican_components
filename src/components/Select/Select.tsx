@@ -8,35 +8,94 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../utils';
 
 const selectVariants = cva(
-  `border-interactive-default bg-surface-primary py-sm pr-sm pl-md
-  text-body-primary disabled:border-interactive-disabled
-  disabled:bg-surface-disabled disabled:text-body-disabled
-  hover:border-interactive-hover rounded inline-flex h-[3rem] w-full
-  justify-between border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
+  `bg-surface-primary text-body-primary disabled:border-interactive-disabled
+  disabled:bg-surface-disabled disabled:text-body-disabled inline-flex
+  items-center justify-between border focus:ring-4 focus:outline-0
+  enabled:cursor-pointer`,
   {
     variants: {
+      variant: {
+        default: `border-interactive-default py-sm pr-sm pl-md
+        hover:border-interactive-hover rounded gap-md h-[3rem] w-full`,
+        compact: `py-1 px-xs rounded-sm gap-xxs
+        hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
+      },
+      intent: {
+        primary: '',
+        secondary: '',
+      },
       invalid: {
-        false: 'text-body-primary focus:ring-interactive-focused',
+        false: 'focus:ring-interactive-focused',
         true: `border-interactive-alert-default
         focus:ring-interactive-alert-focused`,
       },
     },
+    compoundVariants: [
+      {
+        intent: 'secondary',
+        class: 'bg-surface-tertiary',
+      },
+    ],
+    defaultVariants: {
+      variant: 'default',
+      intent: 'primary',
+    },
   }
 );
 
-const itemClasses = cn(
-  `gap-xs px-md text-body-primary hover:bg-interactive-neutral-hover
-  focus:bg-interactive-neutral-hover active:bg-interactive-neutral-active
-  disabled:bg-surface-disabled disabled:text-interactive-disabled flex
-  h-[2.75rem] cursor-pointer items-center border-0 ring-0 focus:outline-0`
+const selectContentVariants = cva(
+  'bg-surface-primary relative z-50 w-full min-w-[8rem] overflow-hidden border',
+  {
+    variants: {
+      variant: {
+        default: 'border-interactive-default py-xxs max-h-96 rounded',
+        compact: `border-divider-default rounded-sm
+        shadow-[0px_5px_9px_0px_rgba(0,0,0,0.16)]`,
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+const selectItemVariants = cva(
+  `disabled:bg-surface-disabled disabled:text-interactive-disabled flex
+  cursor-pointer items-center border-0 ring-0 focus:outline-0`,
+  {
+    variants: {
+      variant: {
+        default: `gap-xs px-md text-body-primary
+        hover:bg-interactive-neutral-hover focus:bg-interactive-neutral-hover
+        active:bg-interactive-neutral-active h-[2.75rem]`,
+        compact: `px-md text-body-primary hover:bg-interactive-neutral-hover
+        focus:bg-interactive-neutral-hover h-10`,
+      },
+      isSelected: {
+        false: '',
+        true: '',
+      },
+    },
+    compoundVariants: [
+      {
+        variant: 'compact',
+        isSelected: true,
+        class: 'bg-interactive-neutral-selected text-body-secondary',
+      },
+    ],
+    defaultVariants: {
+      variant: 'default',
+      isSelected: false,
+    },
+  }
 );
 
 export interface SelectProps
   extends VariantProps<typeof selectVariants>,
-    React.ComponentProps<typeof RadixSelect.Root> {
+    Omit<React.ComponentProps<typeof RadixSelect.Root>, 'value'> {
   options: {
     value: string;
-    label: string;
+    label: string | React.ReactNode;
     icon?: TablerIcon;
     type?: 'Option' | 'Group' | 'Separator';
   }[];
@@ -44,6 +103,8 @@ export interface SelectProps
   className?: string;
   icon?: TablerIcon;
   invalid?: boolean;
+  value?: string;
+  intent?: 'primary' | 'secondary';
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -52,36 +113,53 @@ export const Select: React.FC<SelectProps> = ({
   className,
   icon: Icon,
   invalid = false,
+  variant = 'default',
+  intent = 'primary',
+  value,
   ...props
 }) => {
+  const rootProps: React.ComponentProps<typeof RadixSelect.Root> = {
+    ...props,
+  };
+  if (value !== undefined) {
+    rootProps.value = value;
+  }
+
   return (
-    <RadixSelect.Root {...props}>
+    <RadixSelect.Root {...rootProps}>
       <RadixSelect.Trigger
-        className={cn(selectVariants({ invalid }), className)}
+        className={cn(selectVariants({ variant, intent, invalid }), className)}
       >
-        <div className="inline-flex">
-          {Icon && <Icon className="mr-xxs h-lg text-body-primary w-lg" />}
+        <div className="inline-flex items-center">
+          {Icon && (
+            <Icon
+              className={cn('text-body-primary', {
+                'mr-xxs h-lg w-lg': variant === 'default',
+                'mr-xxs h-4 w-4': variant === 'compact',
+              })}
+            />
+          )}
           <RadixSelect.Value
             placeholder={placeholder || 'Select an option'}
-            className="text-body-primary"
+            className={cn('text-body-primary', {
+              'text-sm': variant === 'compact',
+            })}
           />
         </div>
         <RadixSelect.Icon
-          className={cn('h-md text-body-primary w-md', {
+          className={cn('text-body-primary', {
+            'h-md w-md': variant === 'default',
+            'h-4 w-4': variant === 'compact',
             'text-body-disabled': props.disabled,
           })}
         >
-          <IconChevronDown className="w-full" />
+          <IconChevronDown className="top-0.5 relative h-full w-full" />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
         <RadixSelect.Content
           position="popper"
-          className={cn(
-            `border-interactive-default bg-surface-primary py-xxs max-h-96
-            rounded relative z-50 w-full min-w-[8rem] overflow-hidden border`,
-            className
-          )}
+          className={cn(selectContentVariants({ variant }), className)}
         >
           <RadixSelect.ScrollUpButton />
           <RadixSelect.Viewport className="min-w-[var(--radix-select-trigger-width)]">
@@ -105,10 +183,18 @@ export const Select: React.FC<SelectProps> = ({
                     <RadixSelect.Item
                       key={index}
                       value={option.value}
-                      className={itemClasses}
+                      className={selectItemVariants({
+                        variant,
+                        isSelected: value === option.value,
+                      })}
                     >
                       {option.icon && (
-                        <option.icon className="-ml-xxs h-lg w-lg" />
+                        <option.icon
+                          className={cn({
+                            '-ml-xxs h-lg w-lg': variant === 'default',
+                            'mr-xxs h-4 w-4': variant === 'compact',
+                          })}
+                        />
                       )}
                       <RadixSelect.ItemText>
                         {option.label}
