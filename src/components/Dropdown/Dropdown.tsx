@@ -32,8 +32,8 @@ const dropdownItemVariants = cva(
     variants: {
       intent: {
         default: 'text-body-primary hover:bg-interactive-neutral-hover',
-        danger: `text-interactive-danger-default
-        hover:bg-interactive-neutral-danger-hover`,
+        danger: `text-interactive-alert-default
+        hover:bg-interactive-neutral-alert-hover`,
       },
     },
     defaultVariants: {

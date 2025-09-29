@@ -14,7 +14,7 @@ const textareaVariants = cva(
     variants: {
       invalid: {
         false: 'text-body-primary focus:ring-interactive-focused',
-        true: `border-shape-interactive-danger-default!
+        true: `border-shape-interactive-alert-default!
         focus:ring-interactive-alert-focused`,
       },
     },

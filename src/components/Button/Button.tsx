@@ -68,32 +68,32 @@ const buttonVariants = cva(
       {
         intent: 'primary',
         danger: true,
-        class: `bg-interactive-danger-default hover:bg-interactive-danger-hover
-        active:bg-interactive-danger-active`,
+        class: `bg-interactive-alert-default hover:bg-interactive-alert-hover
+        active:bg-interactive-alert-active`,
       },
       {
         intent: 'secondary',
         danger: true,
-        class: `bg-interactive-neutral-default text-interactive-danger-default
-        hover:bg-interactive-neutral-danger-active
-        active:bg-interactive-neutral-danger-active
+        class: `bg-interactive-neutral-default text-interactive-alert-default
+        hover:bg-interactive-neutral-alert-active
+        active:bg-interactive-neutral-alert-active
         enabled:border-interactive-alert-default`,
       },
       {
         intent: 'tertiary',
         danger: true,
-        class: `text-interactive-danger-default
-        hover:bg-interactive-neutral-danger-hover
-        active:bg-interactive-neutral-danger-active border-none`,
+        class: `text-interactive-alert-default
+        hover:bg-interactive-neutral-alert-hover
+        active:bg-interactive-neutral-alert-active border-none`,
       },
       {
         intent: 'ghost',
         danger: true,
-        class: `text-interactive-danger-default
-        hover:text-interactive-danger-hover
-        hover:bg-interactive-neutral-danger-hover
-        active:bg-interactive-neutral-danger-active
-        active:text-interactive-danger-active`,
+        class: `text-interactive-alert-default
+        hover:text-interactive-alert-hover
+        hover:bg-interactive-neutral-alert-hover
+        active:bg-interactive-neutral-alert-active
+        active:text-interactive-alert-active`,
       },
     ],
     defaultVariants: {

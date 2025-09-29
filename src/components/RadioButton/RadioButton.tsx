@@ -48,10 +48,10 @@ const radioButtonVariants = cva(
       {
         disabled: false,
         invalid: true,
-        class: `border-shape-interactive-danger-default text-body-alert
-        hover:border-shape-interactive-danger-hover
-        data-[state=checked]:border-shape-interactive-danger-default
-        data-[state=checked]:hover:border-shape-interactive-danger-hover
+        class: `border-shape-interactive-alert-default text-body-alert
+        hover:border-shape-interactive-alert-hover
+        data-[state=checked]:border-shape-interactive-alert-default
+        data-[state=checked]:hover:border-shape-interactive-alert-hover
         focus-visible:ring-interactive-alert-focused`,
       },
       {
@@ -76,8 +76,8 @@ const indicatorVariants = cva(
   {
     variants: {
       invalid: {
-        true: `after:bg-interactive-danger-default
-        group-hover:after:bg-interactive-danger-hover`,
+        true: `after:bg-interactive-alert-default
+        group-hover:after:bg-interactive-alert-hover`,
         false: `after:bg-shape-interactive-primary-selected
         group-hover:after:bg-interactive-primary-hover`,
       },
