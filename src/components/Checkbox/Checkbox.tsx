@@ -21,7 +21,7 @@ export interface CheckboxGroupProps {
   className?: string;
 }
 
-const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
+const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
   variants: {
     disabled: {
       true: 'text-body-disabled cursor-not-allowed',

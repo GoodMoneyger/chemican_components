@@ -19,7 +19,7 @@ export interface RadioButtonGroupProps
   className?: string;
 }
 
-const containerVariants = cva('gap-sm flex w-fit items-center', {
+const containerVariants = cva('gap-xs flex w-fit items-center', {
   variants: {
     disabled: {
       true: 'text-body-disabled cursor-not-allowed',
@@ -37,9 +37,9 @@ const radioButtonVariants = cva(
   {
     variants: {
       disabled: {
-        true: `bg-input-disabled
+        true: `bg-interactive-disabled
         data-[state=checked]:bg-shape-interactive-inverse
-        data-[state=checked]:disabled:border-interactive-disabled
+        data-[state=checked]:disabled:border-shape-interactive-neutral-disabled
         text-body-disabled border-transparent`,
       },
       invalid: { true: '' },
