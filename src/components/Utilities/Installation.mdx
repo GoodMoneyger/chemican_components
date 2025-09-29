@@ -28,13 +28,47 @@ Install the design library via npm
 
 ```css
 @import "tailwindcss"
-@import "@chemican/components/tailwind-preset.css"
+@import "@chemican/components/tailwind-preset-next.css"
+// @import "@chemican/components/tailwind-preset.css" // Use this for non-Next.js projects instead
 @source "../node_modules/@chemican/components";
 ```
 
 This will add the Chemican theme variables to your project and you can use utility classes like `.bg-interactive-primary-default`.
 
 > Note: The `@source` line is a tailwind directive that ensures tailwind classes of the Chemican components are detected by your Tailwind setup.
+
+> Note: The `tailwind-preset-next.css` file is optimized for Next.js projects in that it does not include font-face declarations, as Next.js has built-in support for fonts. If you are not using Next.js, use `tailwind-preset.css` instead.
+
+**Include the font files (Next.js only):**
+```tsx
+const notoJp = localFont({
+  src: [
+    {
+      path: '../node_modules/@chemican/components/src/assets/fonts/NotoSansJP-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../node_modules/@chemican/components/src/assets/fonts/NotoSansJP-Medium.ttf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../node_modules/@chemican/components/src/assets/fonts/NotoSansJP-Bold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+});
+
+export default function App({ children }: { children: React.ReactNode }) {
+  return (
+    <main className={notoJp.className}>
+      {children}
+    </main>
+  );
+}
+```
 
 **Include Components in your project:**
 ```jsx
