@@ -4,7 +4,7 @@ import { TablerIcon } from '../../../@tabler/icons-react/dist/esm/icons/index.mj
 declare const buttonVariants: (props?: ({
     intent?: "primary" | "secondary" | "tertiary" | "ghost" | null | undefined;
     danger?: boolean | null | undefined;
-    size?: "xs" | "sm" | "md" | "lg" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
     iconOnly?: boolean | null | undefined;
     textOnly?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
