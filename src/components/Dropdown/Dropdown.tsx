@@ -2,7 +2,6 @@ import React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
 
 import type { IconProp } from '../../lib/utils';
 import { renderIcon, cn } from '../../lib/utils';
@@ -147,7 +146,7 @@ export const DropdownContent = React.forwardRef<
   <RadixDropdownMenu.Portal>
     <RadixDropdownMenu.Content
       ref={ref}
-      className={twMerge(dropdownContentVariants({ size }), className)}
+      className={cn(dropdownContentVariants({ size }), className)}
       sideOffset={sideOffset}
       {...props}
     />

@@ -208,3 +208,5 @@ export const Select: React.FC<SelectProps> = ({
     </RadixSelect.Root>
   );
 };
+
+Select.displayName = 'Select';

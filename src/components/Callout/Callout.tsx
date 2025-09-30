@@ -9,9 +9,9 @@ import {
 } from '@tabler/icons-react';
 import type { TablerIcon } from '@tabler/icons-react';
 
+import { Button } from '../Button';
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
-import { Button } from '../Button';
 
 const calloutVariants = cva(
   'gap-xs rounded-sm flex items-center overflow-hidden border',

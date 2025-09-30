@@ -1,7 +1,6 @@
 import React from 'react';
 import { cva } from 'class-variance-authority';
 import { Checkbox as CheckboxPrimitive } from 'radix-ui';
-import { twMerge } from 'tailwind-merge';
 import { IconCheck, IconMinus } from '@tabler/icons-react';
 
 import { cn } from '../../utils';
@@ -89,7 +88,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     <div className={cn(containerVariants({ disabled }))}>
       <CheckboxPrimitive.Root
         id={usedId}
-        className={twMerge(checkboxVariants({ disabled, invalid }))}
+        className={cn(checkboxVariants({ disabled, invalid }))}
         disabled={disabled}
         {...props}
         {...(indeterminate && { checked: 'indeterminate' as const })}
@@ -119,6 +118,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   );
 };
 
+Checkbox.displayName = 'Checkbox';
+
 export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   children,
   className,
@@ -127,3 +128,5 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     <div className={cn('gap-xs flex flex-col', className)}>{children}</div>
   );
 };
+
+CheckboxGroup.displayName = 'CheckboxGroup';

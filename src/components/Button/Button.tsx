@@ -3,9 +3,9 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 
+import { Spinner } from '../Spinner';
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
-import { Spinner } from '../Spinner';
 
 // Define button styles with CVA
 const buttonVariants = cva(

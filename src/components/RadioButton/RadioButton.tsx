@@ -1,9 +1,8 @@
 import React from 'react';
 import { cva } from 'class-variance-authority';
 import { RadioGroup } from 'radix-ui';
-import { twMerge } from 'tailwind-merge';
 
-import { cn } from '../../lib/utils';
+import { cn } from '../../utils';
 
 export interface RadioButtonProps
   extends React.ComponentProps<typeof RadioGroup.Item> {
@@ -59,7 +58,7 @@ const radioButtonVariants = cva(
         invalid: false,
         class: `data-[state=checked]:border-interactive-selected
         hover:border-shape-interactive-primary-hover
-        data-[state=checked]:hover:border-[#115A53]`,
+        data-[state=checked]:hover:border-interactive-hover`,
       },
     ],
     defaultVariants: {
@@ -102,7 +101,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         value={value}
         disabled={disabled}
         aria-invalid={invalid}
-        className={twMerge(
+        className={cn(
           radioButtonVariants({
             disabled,
             invalid,
@@ -110,9 +109,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         )}
         {...props}
       >
-        <RadioGroup.Indicator
-          className={twMerge(indicatorVariants({ invalid }))}
-        />
+        <RadioGroup.Indicator className={cn(indicatorVariants({ invalid }))} />
       </RadioGroup.Item>
       <label
         htmlFor={usedId}

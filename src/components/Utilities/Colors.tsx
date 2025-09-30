@@ -1,6 +1,6 @@
 import React from 'react';
-import { twMerge } from 'tailwind-merge';
 
+import { cn } from '../../utils';
 import type { TokenCategory } from '../../tokens';
 import { tokens } from '../../tokens';
 
@@ -163,7 +163,7 @@ const CopyableValue = ({
         onClick={handleCopy}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={twMerge(
+        className={cn(
           `px-xs py-xxxs hover:bg-surface-secondary rounded-xs cursor-pointer
           text-left transition-colors ${className}`
         )}
