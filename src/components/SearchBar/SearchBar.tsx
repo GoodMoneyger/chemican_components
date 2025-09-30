@@ -6,14 +6,14 @@ import { IconSearch, IconX } from '@tabler/icons-react';
 import { cn } from '../../lib/utils';
 
 const searchBarWrapperVariants = cva(
-  `rounded-sm bg-white min-h-8 focus-within:border-interactive-hover
+  `rounded-sm bg-surface-primary min-h-8 focus-within:border-interactive-hover
   hover:border-interactive-hover flex w-auto max-w-full items-center
   justify-between border focus-within:shadow-[0_0_0_4px_#C9E8E5]`,
   {
     variants: {
       size: {
         sm: 'h-8 text-sm',
-        md: 'h-10 text-base',
+        md: 'h-10 text-md',
         lg: 'h-12 text-lg',
       },
       state: {
@@ -287,7 +287,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                   tabIndex={-1}
                   aria-label="Remove keyword"
                   disabled={disabled} // Disable chip remove button
-                  style={{ backgroundColor: '#ffffff' }}
+                  style={{
+                    backgroundColor: 'var(--background-color-surface-primary)',
+                  }}
                 >
                   <IconX size={8} />
                 </button>
