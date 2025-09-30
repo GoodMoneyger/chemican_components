@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
+
 import { SearchBar } from './SearchBar';
 
 const meta: Meta<typeof SearchBar> = {
   title: 'Components/SearchBar',
   component: SearchBar,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'A search input component with keyword chip functionality and natural hover/focus states using Tailwind CSS.',
+      },
+    },
+  },
   argTypes: {
     size: {
       control: { type: 'select' },
@@ -15,7 +24,7 @@ const meta: Meta<typeof SearchBar> = {
     },
     state: {
       control: { type: 'radio' },
-      options: ['default', 'hover', 'focus', 'filled', 'disabled'],
+      options: ['default', 'filled', 'disabled'],
     },
     value: {
       table: { disable: true }, // Hide from controls
@@ -50,11 +59,25 @@ const Template: StoryFn<typeof SearchBar> = (args) => {
   );
 };
 
-export const Default = Template.bind({});
-Default.args = {
+const defaultArgs = {
   placeholder: 'SDS ID/SDSファイル名/製品名/化学物質名/CAS番号/法令名/細則名',
   supportText:
     'Enterキーを押して、キーワードを確定してください。キーワードは複数入力することができます。',
-  size: 'md',
-  state: 'default', // <-- set initial state
+  size: 'md' as const,
+  state: 'default' as const,
 };
+
+export const Default = Template.bind({});
+Default.args = defaultArgs;
+
+export const Small = Template.bind({});
+Small.args = { ...defaultArgs, size: 'sm' };
+
+export const Large = Template.bind({});
+Large.args = { ...defaultArgs, size: 'lg' };
+
+export const Filled = Template.bind({});
+Filled.args = { ...defaultArgs, state: 'filled' };
+
+export const Disabled = Template.bind({});
+Disabled.args = { ...defaultArgs, state: 'disabled' };
