@@ -1,20 +1,45 @@
 import React from 'react';
 import { cva } from 'class-variance-authority';
 
-import type { ColorShapeTokens } from '../../tokens';
+import { ColorShapeTokens } from '../../tokens';
 import { cn } from '../../utils';
+
+// Mapping the color codes for user defined tag colors to our design tokens
+// Reference: https://docs.google.com/spreadsheets/d/14r5PJTfzfESsKypY2cJlR65I2-DkO4RvODa04x_s1dA
+const colorCodeToTokenMap = {
+  0: ColorShapeTokens.AccentGreenPale, // Fallback: Green Pale
+  1: ColorShapeTokens.AccentRedSoft,
+  2: ColorShapeTokens.AccentRedSoft,
+  3: ColorShapeTokens.AccentPurpleSoft,
+  4: ColorShapeTokens.AccentPurpleSoft,
+  5: ColorShapeTokens.AccentBlueSoft,
+  6: ColorShapeTokens.AccentBlueSoft,
+  7: ColorShapeTokens.AccentCyanSoft,
+  8: ColorShapeTokens.AccentCyanSoft,
+  9: ColorShapeTokens.AccentGreenSoft,
+  10: ColorShapeTokens.AccentGreenSoft,
+  11: ColorShapeTokens.AccentLimeSoft,
+  12: ColorShapeTokens.AccentLimeSoft,
+  13: ColorShapeTokens.AccentYellowSoft,
+  14: ColorShapeTokens.AccentYellowSoft,
+  15: ColorShapeTokens.AccentOrangeSoft,
+  16: ColorShapeTokens.AccentOrangeSoft,
+  17: ColorShapeTokens.AccentGraySoft,
+  18: ColorShapeTokens.AccentGraySoft,
+} as const;
 
 export interface TagProps {
   className?: string;
   children?: React.ReactNode;
   onRemove?: () => void;
-  accentColor: ColorShapeTokens;
+  accentColor?: ColorShapeTokens;
+  colorCode?: keyof typeof colorCodeToTokenMap;
   size?: 'sm' | 'md';
 }
 
 const tagVariants = cva(
-  `gap-xxs text-accent-gray-strong py-xxs px-xs my-1 font-medium inline-flex
-  items-center rounded-full`,
+  `gap-xxs text-accent-gray-strong py-xxs px-xs inline-flex items-center
+  rounded-full leading-none`,
   {
     variants: {
       size: {
@@ -23,23 +48,39 @@ const tagVariants = cva(
       },
     },
     defaultVariants: {
-      size: 'sm',
+      size: 'md',
     },
   }
 );
 
 export const Tag: React.FC<TagProps> = ({
-  accentColor,
+  accentColor = ColorShapeTokens.AccentGrayPale,
+  colorCode,
   children,
   className,
   onRemove,
-  size = 'sm',
+  size = 'md',
 }) => {
+  // Warning when both props are provided
+  React.useEffect(() => {
+    if (colorCode && accentColor !== ColorShapeTokens.AccentGrayPale) {
+      console.warn(
+        'Tag component: Both colorCode and accentColor props are provided. colorCode takes precedence over accentColor.'
+      );
+    }
+  }, [colorCode, accentColor]);
+
+  // colorCode takes precedence over accentColor
+  const effectiveColor =
+    typeof colorCode === 'number'
+      ? colorCodeToTokenMap[colorCode]
+      : accentColor;
+
   return (
     <div
       className={cn(tagVariants({ size }), className)}
       style={{
-        backgroundColor: `var(${accentColor})`,
+        backgroundColor: `var(${effectiveColor})`,
       }}
     >
       {children}
@@ -47,7 +88,7 @@ export const Tag: React.FC<TagProps> = ({
         <button
           className={cn(
             `bg-interactive-neutral-default h-3 w-3 flex cursor-pointer
-            items-center justify-center rounded-full`
+            items-center justify-center rounded-full leading-none`
           )}
           onClick={onRemove}
         >

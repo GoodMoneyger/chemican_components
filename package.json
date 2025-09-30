@@ -26,6 +26,11 @@
       "import": "./src/tabler-icons.ts",
       "require": "./src/tabler-icons.ts"
     },
+    "./tokens": {
+      "types": "./src/tokens.ts",
+      "import": "./src/tokens.ts",
+      "require": "./src/tokens.ts"
+    },
     "./dist": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",

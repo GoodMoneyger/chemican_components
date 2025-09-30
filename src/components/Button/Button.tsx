@@ -22,8 +22,8 @@ const buttonVariants = cva(
         secondary: `bg-interactive-neutral-default
         text-interactive-primary-default hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active disabled:bg-interactive-disabled
-        disabled:text-interactive-disabled border
-        enabled:border-[var(--chemican-green-800)]`,
+        disabled:text-interactive-disabled
+        enabled:border-interactive-primary-default border`,
         tertiary: `bg-interactive-neutral-default text-interactive-heavy
         hover:bg-interactive-neutral-hover active:bg-interactive-neutral-active
         enabled:border-interactive-default disabled:bg-interactive-disabled
@@ -32,20 +32,21 @@ const buttonVariants = cva(
         hover:text-interactive-primary-hover hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
-        disabled:text-interactive-disabled underline`,
+        disabled:text-interactive-disabled`,
       },
       danger: {
         true: 'focus-visible:ring-interactive-alert-focused',
         false: 'focus-visible:ring-interactive-focused',
       },
       size: {
-        xs: 'px-xs h-8 min-w-15 text-sm',
-        sm: 'px-lg h-10 min-w-20',
+        xs: 'px-sm h-8 min-w-15 text-sm',
+        sm: 'px-md h-10 min-w-20',
         md: 'min-w-24 h-[2.875rem]',
         lg: 'h-14 min-w-34 text-lg',
+        xl: 'h-17 min-w-43 text-xl',
       },
       iconOnly: {
-        true: 'min-w-0 p-0! aspect-square h-auto',
+        true: 'min-w-0 aspect-square h-auto',
       },
       textOnly: {
         true: '',
@@ -57,43 +58,43 @@ const buttonVariants = cva(
         intent: 'ghost',
         class: 'text-shape-interactive-primary-default',
       },
-      { textOnly: true, size: 'md', class: 'px-xl' },
-      { textOnly: true, size: 'lg', class: 'px-md' },
-      { iconOnly: false, size: 'md', class: 'px-xl' },
-      { iconOnly: false, size: 'lg', class: 'px-md' },
-      { iconOnly: true, size: 'xs', class: 'px-xxs' },
-      { iconOnly: true, size: 'sm', class: 'px-xs' },
-      { iconOnly: true, size: 'md', class: 'px-sm' },
-      { iconOnly: true, size: 'lg', class: 'px-md' },
+      { textOnly: true, size: 'md', class: 'px-lg' },
+      { textOnly: true, size: 'lg', class: 'px-xl' },
+      { iconOnly: false, size: 'md', class: 'px-lg' },
+      { iconOnly: false, size: 'lg', class: 'px-xl' },
+      { iconOnly: true, size: 'xs', class: 'p-0' },
+      { iconOnly: true, size: 'sm', class: 'size-6 p-0!' },
+      { iconOnly: true, size: 'md', class: 'size-10' },
+      { iconOnly: true, size: 'lg', class: 'size-12' },
       {
         intent: 'primary',
         danger: true,
-        class: `bg-interactive-danger-default hover:bg-interactive-danger-hover
-        active:bg-interactive-danger-active`,
+        class: `bg-interactive-alert-default hover:bg-interactive-alert-hover
+        active:bg-interactive-alert-active`,
       },
       {
         intent: 'secondary',
         danger: true,
-        class: `bg-interactive-neutral-default text-interactive-danger-default
-        hover:bg-interactive-neutral-danger-active
-        active:bg-interactive-neutral-danger-active
+        class: `bg-interactive-neutral-default text-interactive-alert-default
+        hover:bg-interactive-neutral-alert-active
+        active:bg-interactive-neutral-alert-active
         enabled:border-interactive-alert-default`,
       },
       {
         intent: 'tertiary',
         danger: true,
-        class: `text-interactive-danger-default
-        hover:bg-interactive-neutral-danger-hover
-        active:bg-interactive-neutral-danger-active border-none`,
+        class: `text-interactive-alert-default
+        hover:bg-interactive-neutral-alert-hover
+        active:bg-interactive-neutral-alert-active border-none`,
       },
       {
         intent: 'ghost',
         danger: true,
-        class: `text-interactive-danger-default
-        hover:text-interactive-danger-hover
-        hover:bg-interactive-neutral-danger-hover
-        active:bg-interactive-neutral-danger-active
-        active:text-interactive-danger-active`,
+        class: `text-interactive-alert-default
+        hover:text-interactive-alert-hover
+        hover:bg-interactive-neutral-alert-hover
+        active:bg-interactive-neutral-alert-active
+        active:text-interactive-alert-active`,
       },
     ],
     defaultVariants: {
@@ -116,6 +117,7 @@ const iconStyles = cva('', {
       sm: 'size-5',
       md: 'size-5',
       lg: 'size-6',
+      xl: 'size-7',
     },
   },
   defaultVariants: {

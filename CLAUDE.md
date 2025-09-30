@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository. **However, the guidelines are applicable to all developers working on this project.**
 
 ## Project Overview
 
@@ -95,6 +95,8 @@ Use semantic design tokens instead of hardcoded colors:
 - Consistent variant props: `intent`, `size`, etc.
 - Icon support via `@tabler/icons-react`
 - Proper TypeScript interfaces extending HTML element props
+- Any prop that is used as label should use a `React.Node` type, as consuming projects will need to pass i18n components.
+- Any prop that specifies an Icon should use the `IconProp` type from `@/lib/utils`.
 
 ## Important Files
 

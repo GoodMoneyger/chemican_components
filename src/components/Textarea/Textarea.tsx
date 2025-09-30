@@ -6,7 +6,7 @@ import { cn } from '../../utils';
 
 const textareaVariants = cva(
   `border-interactive-default bg-surface-primary px-md py-sm
-  focus:border-interactive-focused disabled:border-interactive-disabled
+  focus:border-interactive-selected disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
   hover:border-interactive-hover h-12 min-h-30 rounded w-full border
   focus:ring-4 focus:outline-0`,
@@ -14,7 +14,7 @@ const textareaVariants = cva(
     variants: {
       invalid: {
         false: 'text-body-primary focus:ring-interactive-focused',
-        true: `border-shape-interactive-danger-default!
+        true: `border-shape-interactive-alert-default!
         focus:ring-interactive-alert-focused`,
       },
     },
@@ -57,7 +57,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className="relative">
         <textarea
           ref={ref}
-          className={cn((textareaVariants({ invalid }), className))}
+          className={cn(textareaVariants({ invalid }), className)}
           {...props}
           value={value}
           onChange={handleChange}

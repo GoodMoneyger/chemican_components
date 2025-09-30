@@ -8,7 +8,7 @@ import { cn } from '../../utils';
 
 export interface CheckboxProps
   extends React.ComponentProps<typeof CheckboxPrimitive.Root> {
-  label: string;
+  label?: string;
   id?: string;
   invalid?: boolean;
   disabled?: boolean;
@@ -21,7 +21,7 @@ export interface CheckboxGroupProps {
   className?: string;
 }
 
-const containerVariants = cva('gap-sm flex w-fit cursor-pointer items-center', {
+const containerVariants = cva('gap-xs flex w-fit cursor-pointer items-center', {
   variants: {
     disabled: {
       true: 'text-body-disabled cursor-not-allowed',
@@ -52,8 +52,8 @@ const checkboxVariants = cva(
         data-[state=checked]:bg-status-alert
         data-[state=indeterminate]:bg-status-alert
         focus-visible:ring-interactive-alert-focused
-        data-[state=checked]:hover:bg-interactive-danger-hover
-        data-[state=indeterminate]:hover:bg-interactive-danger-hover`,
+        data-[state=checked]:hover:bg-interactive-alert-hover
+        data-[state=indeterminate]:hover:bg-interactive-alert-hover`,
       },
       {
         disabled: false,

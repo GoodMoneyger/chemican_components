@@ -14,13 +14,12 @@ export interface StatusProps {
 }
 
 const statusVariants = cva(
-  `px-xs py-xxs text-interactive-inverse font-medium inline-flex items-center
-  rounded-full`,
+  'px-xs py-xxs text-interactive-inverse inline-flex items-center rounded-full',
   {
     variants: {
       size: {
-        sm: 'text-sm',
-        md: '',
+        sm: 'text-sm leading-none',
+        md: 'leading-none',
       },
       hasRemove: {
         true: 'gap-xxs',
@@ -37,7 +36,7 @@ const statusVariants = cva(
       },
     },
     defaultVariants: {
-      size: 'sm',
+      size: 'md',
       hasRemove: false,
       hasIndicator: false,
       indicator: undefined,

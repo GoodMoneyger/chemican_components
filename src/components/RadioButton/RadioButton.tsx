@@ -19,7 +19,7 @@ export interface RadioButtonGroupProps
   className?: string;
 }
 
-const containerVariants = cva('gap-sm flex w-fit items-center', {
+const containerVariants = cva('gap-xs flex w-fit items-center', {
   variants: {
     disabled: {
       true: 'text-body-disabled cursor-not-allowed',
@@ -37,9 +37,9 @@ const radioButtonVariants = cva(
   {
     variants: {
       disabled: {
-        true: `bg-input-disabled
+        true: `bg-interactive-disabled
         data-[state=checked]:bg-shape-interactive-inverse
-        data-[state=checked]:disabled:border-interactive-disabled
+        data-[state=checked]:disabled:border-shape-interactive-neutral-disabled
         text-body-disabled border-transparent`,
       },
       invalid: { true: '' },
@@ -48,10 +48,10 @@ const radioButtonVariants = cva(
       {
         disabled: false,
         invalid: true,
-        class: `border-shape-interactive-danger-default text-body-alert
-        hover:border-shape-interactive-danger-hover
-        data-[state=checked]:border-shape-interactive-danger-default
-        data-[state=checked]:hover:border-shape-interactive-danger-hover
+        class: `border-shape-interactive-alert-default text-body-alert
+        hover:border-shape-interactive-alert-hover
+        data-[state=checked]:border-shape-interactive-alert-default
+        data-[state=checked]:hover:border-shape-interactive-alert-hover
         focus-visible:ring-interactive-alert-focused`,
       },
       {
@@ -76,8 +76,8 @@ const indicatorVariants = cva(
   {
     variants: {
       invalid: {
-        true: `after:bg-interactive-danger-default
-        group-hover:after:bg-interactive-danger-hover`,
+        true: `after:bg-interactive-alert-default
+        group-hover:after:bg-interactive-alert-hover`,
         false: `after:bg-shape-interactive-primary-selected
         group-hover:after:bg-interactive-primary-hover`,
       },

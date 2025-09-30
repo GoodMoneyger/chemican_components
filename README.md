@@ -31,7 +31,8 @@ Include the Chemican Tailwind preset in your CSS:
 
 ```css
 @import "tailwindcss"
-@import "@chemican/components/tailwind-preset.css"
+@import "@chemican/components/tailwind-preset-next.css"
+// @import "@chemican/components/tailwind-preset.css" // Use this for non-Next.js projects instead
 @source "../node_modules/@chemican/components";
 ```
 
@@ -89,6 +90,19 @@ This will allow you to make changes to the library and see them reflected in the
 
 ---
 
+### Development Guidelines
+
+Please refer to the [CLAUDE.md](./CLAUDE.md) file for detailed development guidelines, including project structure, coding standards, and best practices. Even though written for Claude Code, these guidelines are applicable to all developers working on this project.
+
+### Vibe coding
+
+This project is setup to work well in AI assisted workflows, specifically using Claude Code. This is achieved as follows:
+
+- The project uses [CLAUDE.md](./CLAUDE.md) to provide context and guidelines for Claude Code.
+- The project uses Tailwind which allows AI agents to easily define styles without needing to write complex CSS.
+- The corresponding [Chemican Design Master Figma file](https://www.figma.com/design/f46iSbgpNKClOOIDRfG7AB/Master-v2.0-SDS%E7%AE%A1%E7%90%86%EF%BC%88JP_Products%EF%BC%89?node-id=16862-15964&m=dev) is setup to work well with Figma MCP server.
+- The project uses convetional React and TypeScript as much as possible.
+
 ## **🔄 Release Process**
 
 This library follows **Semantic Versioning**.
@@ -106,11 +120,3 @@ This will:
 - **Create a `release-X.X.X` tag for installing**
 
 ---
-
-## **📌 Features**
-
-✅ **Flexible & Accessible** – Powered by Radix UI  
-✅ **TailwindCSS Styling** – Shared Tailwind preset  
-✅ **TypeScript Support** – Fully typed components  
-✅ **Storybook Integration** – Interactive documentation  
-✅ **Optimized with Vite** – Fast builds

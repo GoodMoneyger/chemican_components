@@ -11,7 +11,8 @@ import {
 import { SideNavigationCollapseButton } from './SideNavigationCollapseButton';
 
 const sideNavigationVariants = cva(
-  'bg-surface-primary shadow-overlay flex flex-col overflow-visible',
+  `bg-surface-primary shadow-overlay top-0 fixed z-50 flex h-full flex-col
+  overflow-visible`,
   {
     variants: {
       width: {
@@ -74,7 +75,7 @@ const SideNavigationContent = React.forwardRef<
         ref={ref}
         className={cn(
           sideNavigationVariants({ width: effectiveWidth }),
-          'group relative',
+          'group',
           className
         )}
         data-collapsed={isCollapsed}
