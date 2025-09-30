@@ -1,15 +1,16 @@
 import React from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import type { TablerIcon } from '@tabler/icons-react';
 import {
   IconInfoCircleFilled,
   IconCircleCheckFilled,
   IconAlertTriangleFilled,
   IconX,
 } from '@tabler/icons-react';
+import type { TablerIcon } from '@tabler/icons-react';
 
-import { cn } from '../../lib/utils';
+import type { IconProp } from '../../lib/utils';
+import { cn, renderIcon } from '../../lib/utils';
 import { Button } from '../Button';
 
 const calloutVariants = cva(
@@ -74,7 +75,7 @@ export interface CalloutProps
     label: string;
     onClick?: () => void;
   };
-  icon?: TablerIcon;
+  icon?: IconProp;
 }
 
 export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
@@ -100,7 +101,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
         {...props}
       >
         <div className={cn(iconVariants({ intent, size }))}>
-          {IconComponent && <IconComponent className="size-full" />}
+          {renderIcon(IconComponent, { className: 'size-full' })}
         </div>
 
         <div className="min-w-0 flex-1">

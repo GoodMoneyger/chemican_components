@@ -1,10 +1,10 @@
 import React from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import type { TablerIcon } from '@tabler/icons-react';
 import { Slot } from 'radix-ui';
 
-import { cn } from '../../lib/utils';
+import type { IconProp } from '../../lib/utils';
+import { cn, renderIcon } from '../../lib/utils';
 import { Spinner } from '../Spinner';
 
 // Define button styles with CVA
@@ -129,7 +129,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  icon?: TablerIcon | React.ComponentType<{ className: string }>;
+  icon?: IconProp;
   loading?: boolean;
   danger?: boolean;
 }
@@ -167,17 +167,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           disabled={isDisabled}
         >
           <span className="gap-xxs invisible flex items-center">
-            {icon &&
-              (() => {
-                const Icon = icon;
-                return (
-                  <Icon
-                    className={cn(
-                      iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
-                    )}
-                  />
-                );
-              })()}
+            {renderIcon(icon, {
+              className: cn(
+                iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+              ),
+            })}
             {children}
           </span>
           <span className="inset-0 absolute flex items-center justify-center">
@@ -188,7 +182,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     if (icon) {
-      const Icon = icon;
       return (
         <Comp
           ref={ref}
@@ -199,11 +192,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           disabled={isDisabled}
         >
-          <Icon
-            className={cn(
+          {renderIcon(icon, {
+            className: cn(
               iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
-            )}
-          />
+            ),
+          })}
           {children}
         </Comp>
       );

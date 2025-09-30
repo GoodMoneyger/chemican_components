@@ -1,11 +1,11 @@
 import React from 'react';
 import { Select as RadixSelect } from 'radix-ui';
-import type { TablerIcon } from '@tabler/icons-react';
 import { IconChevronDown } from '@tabler/icons-react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
-import { cn } from '../../utils';
+import type { IconProp } from '../../lib/utils';
+import { cn, renderIcon } from '../../lib/utils';
 
 const selectVariants = cva(
   `bg-surface-primary text-body-primary disabled:border-interactive-disabled
@@ -96,12 +96,12 @@ export interface SelectProps
   options: {
     value: string;
     label: string | React.ReactNode;
-    icon?: TablerIcon;
+    icon?: IconProp;
     type?: 'Option' | 'Group' | 'Separator';
   }[];
   placeholder?: string;
   className?: string;
-  icon?: TablerIcon;
+  icon?: IconProp;
   invalid?: boolean;
   value?: string;
   intent?: 'primary' | 'secondary';
@@ -131,14 +131,12 @@ export const Select: React.FC<SelectProps> = ({
         className={cn(selectVariants({ variant, intent, invalid }), className)}
       >
         <div className="inline-flex items-center">
-          {Icon && (
-            <Icon
-              className={cn('text-body-primary', {
-                'mr-xxs h-lg w-lg': variant === 'default',
-                'mr-xxs h-4 w-4': variant === 'compact',
-              })}
-            />
-          )}
+          {renderIcon(Icon, {
+            className: cn('text-body-primary', {
+              'mr-xxs h-lg w-lg': variant === 'default',
+              'mr-xxs h-4 w-4': variant === 'compact',
+            }),
+          })}
           <RadixSelect.Value
             placeholder={placeholder || 'Select an option'}
             className={cn('text-body-primary', {
@@ -188,14 +186,12 @@ export const Select: React.FC<SelectProps> = ({
                         isSelected: value === option.value,
                       })}
                     >
-                      {option.icon && (
-                        <option.icon
-                          className={cn({
-                            '-ml-xxs h-lg w-lg': variant === 'default',
-                            'mr-xxs h-4 w-4': variant === 'compact',
-                          })}
-                        />
-                      )}
+                      {renderIcon(option.icon, {
+                        className: cn({
+                          '-ml-xxs h-lg w-lg': variant === 'default',
+                          'mr-xxs h-4 w-4': variant === 'compact',
+                        }),
+                      })}
                       <RadixSelect.ItemText>
                         {option.label}
                       </RadixSelect.ItemText>

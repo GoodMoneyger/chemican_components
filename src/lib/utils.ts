@@ -1,5 +1,5 @@
 import { extendTailwindMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import type { ClassArray } from 'clsx';
 import type { TablerIcon } from '@tabler/icons-react';
