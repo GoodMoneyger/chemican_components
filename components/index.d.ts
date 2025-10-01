@@ -8,6 +8,7 @@ export * from './Input';
 export * from './Pagination';
 export * from './Progress';
 export * from './RadioButton';
+export * from './SearchBar';
 export * from './Select';
 export * from './SideNavigation';
 export * from './Spinner';
