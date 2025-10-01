@@ -6,14 +6,10 @@ import { IconSearch, IconX } from '@tabler/icons-react';
 import { cn } from '../../lib/utils';
 
 const searchBarWrapperVariants = cva(
-  `rounded-sm bg-surface-primary min-h-8 border-t-interactive-default
-  border-b-interactive-default border-l-interactive-default
-  hover:border-t-interactive-hover hover:border-b-interactive-hover
-  hover:border-l-interactive-hover focus-within:border-t-interactive-hover
-  focus-within:border-b-interactive-hover
-  focus-within:border-l-interactive-hover focus-within:ring-interactive-focused
-  flex w-auto max-w-full items-center justify-between border-t border-b border-l
-  focus-within:ring-4`,
+  `rounded-sm bg-surface-primary min-h-8 border-interactive-default
+  hover:border-interactive-hover focus-within:border-interactive-hover
+  focus-within:ring-interactive-focused flex w-auto max-w-full items-center
+  justify-between overflow-hidden border focus-within:ring-4`,
   {
     variants: {
       size: {
@@ -24,9 +20,8 @@ const searchBarWrapperVariants = cva(
       state: {
         default: '',
         filled: '',
-        disabled: `!border-t-interactive-default !border-b-interactive-default
-        !border-l-interactive-default bg-input-disabled text-body-disabled
-        pointer-events-none cursor-not-allowed`,
+        disabled: `!border-interactive-default bg-input-disabled
+        text-body-disabled pointer-events-none cursor-not-allowed`,
       },
     },
     defaultVariants: {
@@ -36,14 +31,11 @@ const searchBarWrapperVariants = cva(
   }
 );
 
-const inputWrapperVariants = cva(
-  'gap-xxs px-sm disabled:bg-input-disabled flex flex-1 items-center'
-);
+const inputWrapperClasses =
+  'gap-xxs px-sm disabled:bg-input-disabled flex h-full flex-1 items-center';
 
-const inputGroupVariants = cva(
-  `rounded-l-sm gap-1 disabled:bg-input-disabled flex h-full flex-1 flex-row
-  flex-nowrap items-center justify-between`
-);
+const inputGroupClasses = `rounded-l-sm gap-1 disabled:bg-input-disabled flex h-full flex-1 flex-row
+  flex-nowrap items-center justify-between`;
 
 const searchIconVariants = cva(
   `text-shape-primary disabled:text-shape-interactive-disabled flex
@@ -62,42 +54,27 @@ const searchIconVariants = cva(
   }
 );
 
-const inputVariants = cva(
-  `text-md text-body-primary disabled:bg-input-disabled
+const inputClasses = `text-md text-body-primary disabled:bg-input-disabled
   disabled:text-body-disabled placeholder:text-body-disabled flex-1
   bg-transparent leading-[100%] tracking-[0%] outline-none
-  focus:placeholder-transparent disabled:cursor-not-allowed`
-);
+  focus:placeholder-transparent disabled:cursor-not-allowed`;
 
 const buttonVariants = cva(
-  `rounded-r-sm bg-shape-accent-gray-pale px-sm py-xs text-md text-shape-primary
-  gap-xxs border-l-interactive-default border-t-interactive-default
-  border-r-interactive-default border-b-interactive-default
-  hover:bg-shape-accent-gray-pale hover:text-interactive-primary-hover
-  hover:border-t-interactive-hover hover:border-r-interactive-hover
-  hover:border-b-interactive-hover focus:bg-shape-accent-gray-pale
-  focus:text-interactive-primary-hover focus:border-t-interactive-hover
-  focus:border-r-interactive-hover focus:border-b-interactive-hover
+  `bg-shape-accent-gray-pale px-sm py-xs text-md text-shape-primary gap-xxs
+  border-l-interactive-default hover:bg-interactive-neutral-hover
+  hover:text-interactive-primary-hover focus:bg-shape-accent-gray-pale
+  focus:text-interactive-primary-hover
   group-hover/wrapper:bg-shape-accent-gray-pale
-  group-hover/wrapper:text-interactive-primary-hover
-  group-hover/wrapper:border-t-interactive-hover
-  group-hover/wrapper:border-r-interactive-hover
-  group-hover/wrapper:border-b-interactive-hover
-  group-focus-within/wrapper:border-t-interactive-hover
-  group-focus-within/wrapper:border-r-interactive-hover
-  group-focus-within/wrapper:border-b-interactive-hover
   disabled:bg-shape-accent-gray-pale disabled:text-body-disabled
-  disabled:border-t-interactive-default disabled:border-r-interactive-default
-  disabled:border-b-interactive-default disabled:hover:bg-shape-accent-gray-pale
-  disabled:hover:text-body-disabled flex cursor-pointer flex-row items-center
-  justify-center border-t border-r border-b border-l text-center
-  disabled:cursor-not-allowed`,
+  disabled:hover:bg-shape-accent-gray-pale disabled:hover:text-body-disabled
+  flex h-full cursor-pointer flex-row items-center justify-center border-l
+  text-center disabled:cursor-not-allowed`,
   {
     variants: {
       size: {
-        sm: 'h-8 text-sm',
-        md: 'h-10 text-md',
-        lg: 'h-12 text-lg',
+        sm: 'text-sm',
+        md: 'text-md',
+        lg: 'text-lg',
       },
     },
     defaultVariants: {
@@ -105,7 +82,7 @@ const buttonVariants = cva(
     },
   }
 );
-const supportTextVariants = cva('gap-2 text-sm text-body-secondary flex-row');
+const supportTextClasses = 'gap-2 text-sm text-body-secondary flex-row';
 const chipVariants = cva(
   `gap-1 bg-shape-accent-gray-pale px-xs py-xxs text-md text-accent-gray-strong
   flex items-center rounded-full`,
@@ -122,13 +99,12 @@ const chipVariants = cva(
     },
   }
 );
-const chipRemoveButtonVariants = cva(
-  `h-3 w-3 text-shape-primary flex items-center justify-center rounded-full
-  disabled:cursor-not-allowed disabled:opacity-50`
-);
-const chipContainerVariants = cva(
-  'gap-2 flex min-h-full flex-1 flex-row flex-nowrap items-center'
-);
+const chipRemoveButtonClasses = `h-3 w-3 text-shape-primary flex items-center justify-center rounded-full
+  disabled:cursor-not-allowed disabled:opacity-50`;
+
+const chipContainerClasses =
+  'gap-2 flex min-h-full flex-1 flex-row flex-nowrap items-center';
+
 export interface SearchBarProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
     VariantProps<typeof searchBarWrapperVariants> {
@@ -247,8 +223,8 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
           )}
         >
           {/* Chips + Input area */}
-          <div className={cn(inputWrapperVariants())}>
-            <div className={cn(chipContainerVariants(), inputGroupVariants())}>
+          <div className={cn(inputWrapperClasses)}>
+            <div className={cn(chipContainerClasses, inputGroupClasses)}>
               <span className={cn(searchIconVariants({ size }))}>
                 <IconSearch size={iconSizeMap[size]} />
               </span>
@@ -259,8 +235,8 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                   <button
                     type="button"
                     className={cn(
-                      chipRemoveButtonVariants(),
-                      'bg-surface-primary'
+                      chipRemoveButtonClasses,
+                      'bg-surface-primary cursor-pointer'
                     )}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent event bubbling
@@ -280,7 +256,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
               ))}
               <input
                 ref={ref}
-                className={cn(inputVariants())}
+                className={cn(inputClasses)}
                 type="text"
                 value={value}
                 onChange={handleInputChange}
@@ -298,7 +274,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
               <button
                 type="button"
                 aria-label="Clear"
-                className="text-shape-primary"
+                className="text-shape-primary cursor-pointer"
                 onClick={() => {
                   // Clear both input text and keywords
                   if (onChange) {
@@ -333,7 +309,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
         {supportText && (
           <div
             className={cn(
-              supportTextVariants(),
+              supportTextClasses,
               'hidden group-focus-within:flex',
               resolvedState === 'filled' && 'flex'
             )}
