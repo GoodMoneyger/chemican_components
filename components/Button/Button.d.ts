@@ -1,6 +1,6 @@
 import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
-import { TablerIcon } from '../../../@tabler/icons-react/dist/esm/icons/index.mjs';
+import { IconProp } from '../../lib/utils';
 declare const buttonVariants: (props?: ({
     intent?: "primary" | "secondary" | "tertiary" | "ghost" | null | undefined;
     danger?: boolean | null | undefined;
@@ -10,9 +10,7 @@ declare const buttonVariants: (props?: ({
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
     asChild?: boolean;
-    icon?: TablerIcon | React.ComponentType<{
-        className: string;
-    }>;
+    icon?: IconProp;
     loading?: boolean;
     danger?: boolean;
 }

@@ -1,6 +1,6 @@
 import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
-import { TablerIcon } from '../../../@tabler/icons-react/dist/esm/icons/index.mjs';
+import { IconProp } from '../../lib/utils';
 declare const calloutVariants: (props?: ({
     intent?: "alert" | "info" | "success" | "warning" | null | undefined;
     size?: "default" | "large" | null | undefined;
@@ -13,7 +13,7 @@ export interface CalloutProps extends React.HTMLAttributes<HTMLDivElement>, Vari
         label: string;
         onClick?: () => void;
     };
-    icon?: TablerIcon;
+    icon?: IconProp;
 }
 export declare const Callout: React.ForwardRefExoticComponent<CalloutProps & React.RefAttributes<HTMLDivElement>>;
 export {};
