@@ -2,6 +2,7 @@ export * from './Breadcrumbs';
 export * from './Button';
 export * from './Callout';
 export * from './Checkbox';
+export * from './DatePicker';
 export * from './Status';
 export * from './Dialog';
 export * from './Input';
