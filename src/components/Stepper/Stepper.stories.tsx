@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Meta, StoryFn } from 'storybook/react-vite';
+import type { Meta, StoryFn } from '@storybook/react';
 
 import { Stepper } from './Stepper';
 import type { Step } from './Stepper';
@@ -10,10 +10,51 @@ const sampleSteps: Step[] = [
   { id: '3', label: '登録完了', status: 'upcoming' },
 ];
 
+const radialSteps: Step[] = [
+  {
+    id: '1',
+    label: 'ステップ',
+    status: 'completed',
+    title: 'アップロード',
+    description:
+      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+  },
+  {
+    id: '2',
+    label: 'ステップ',
+    status: 'completed',
+    title: 'データ確認',
+    description:
+      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+  },
+  {
+    id: '3',
+    label: 'ステップ',
+    status: 'active',
+    title: 'ステップ名が入ります',
+    description:
+      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+  },
+  {
+    id: '4',
+    label: 'ステップ',
+    status: 'upcoming',
+    title: '登録完了',
+    description:
+      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+  },
+];
+
 const meta: Meta<typeof Stepper> = {
   title: 'Components/Stepper',
   component: Stepper,
   argTypes: {
+    variant: {
+      control: { type: 'select' },
+      options: ['linear', 'radial'],
+      description:
+        'Stepper variant - linear for horizontal steps, radial for circular progress with linear steps below',
+    },
     showLabels: {
       control: { type: 'boolean' },
     },
@@ -41,7 +82,6 @@ const Template: StoryFn<typeof Stepper> = (args) => {
 export const Default = Template.bind({});
 Default.args = {
   steps: sampleSteps,
-  size: 'sm',
   showLabels: true,
 };
 
@@ -55,6 +95,24 @@ ManySteps.args = {
     { id: '5', label: 'ステップ5', status: 'upcoming' },
     { id: '6', label: '完了', status: 'upcoming' },
   ],
-  size: 'sm',
+  showLabels: true,
+};
+
+export const RadialProgress = Template.bind({});
+RadialProgress.args = {
+  steps: radialSteps,
+  variant: 'radial',
+  currentStep: 2, // 0-based, so this makes step 3 active (shows 3/4)
+  showLabels: true,
+};
+
+export const RadialProgressComplete = Template.bind({});
+RadialProgressComplete.args = {
+  steps: radialSteps.map((step, index) => ({
+    ...step,
+    status: index < 3 ? 'completed' : index === 3 ? 'active' : 'upcoming',
+  })),
+  variant: 'radial',
+  currentStep: 3, // Shows 4/4 - final step
   showLabels: true,
 };
