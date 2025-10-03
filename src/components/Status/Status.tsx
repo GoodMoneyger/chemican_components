@@ -85,7 +85,7 @@ export const Status: React.FC<StatusProps> = ({
       {hasIndicator && indicator && (
         <div className={indicatorDotVariants({ indicator })} />
       )}
-      {children}
+      <div className="truncate">{children}</div>
       {Boolean(onRemove) && (
         <button
           className={cn(
