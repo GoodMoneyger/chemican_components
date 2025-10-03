@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import * as React from 'react';
+import React from 'react';
 
 import { DatePicker } from './DatePicker';
 
@@ -45,11 +45,6 @@ const meta: Meta<typeof DatePicker> = {
       description: 'Error message to display',
       if: { arg: 'error', eq: true },
     },
-    optional: {
-      control: 'boolean',
-      description: 'Whether the field is optional',
-      if: { arg: 'disabled', neq: true },
-    },
     formatDate: {
       control: false,
       description: 'Custom formatting function for the selected date',
@@ -69,7 +64,7 @@ type Story = StoryObj<typeof DatePicker>;
 // Default story - with integrated FormField
 export const Default: Story = {
   args: {
-    label: 'Default',
+    label: 'ラベル (任意)',
     name: 'default',
     description: 'サポートテキストが入ります。',
     placeholder: '選択してください',
@@ -78,40 +73,72 @@ export const Default: Story = {
   },
 };
 
-// States - using integrated FormField
+// States - using integrated FormField to match design specifications
 export const States: Story = {
   render: () => (
-    <div className="gap-md flex flex-col">
-      <DatePicker
-        label="Default"
-        name="default"
-        description="サポートテキストが入ります。"
-        placeholder="選択してください"
-      />
+    <div className="space-y-6">
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Default</h3>
+          <h4 className="text-sm text-body-secondary">デフォルト</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker
+            label="ラベル (任意)"
+            name="default"
+            description="サポートテキストが入ります。"
+            placeholder="選択してください"
+          />
+        </div>
+      </div>
 
-      <DatePicker
-        label="With Value"
-        name="with-value"
-        description="サポートテキストが入ります。"
-        defaultValue={new Date()}
-      />
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Filled</h3>
+          <h4 className="text-sm text-body-secondary">入力済</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker
+            label="ラベル (任意)"
+            name="filled"
+            description="サポートテキストが入ります。"
+            defaultValue={new Date()}
+          />
+        </div>
+      </div>
 
-      <DatePicker
-        label="Disabled"
-        name="disabled"
-        description="サポートテキストが入ります。"
-        disabled
-        placeholder="選択してください"
-      />
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Error</h3>
+          <h4 className="text-sm text-body-secondary">エラー時</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker
+            label="ラベル (任意)"
+            name="error"
+            description="サポートテキストが入ります。"
+            error
+            errorMessage="エラーテキストが入ります。"
+            placeholder="誤った内容"
+          />
+        </div>
+      </div>
 
-      <DatePicker
-        label="Error"
-        name="error"
-        description="サポートテキストが入ります。"
-        error
-        errorMessage="エラーテキストが入ります。"
-        placeholder="選択してください"
-      />
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Disabled</h3>
+          <h4 className="text-sm text-body-secondary">利用不可時</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker
+            label="ラベル (任意)"
+            name="disabled"
+            description="サポートテキストが入ります。"
+            disabled
+            placeholder="選択してください"
+          />
+        </div>
+      </div>
     </div>
   ),
 };
