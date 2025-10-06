@@ -6,48 +6,94 @@ import {
 } from '@tabler/icons-react';
 
 import { cn } from '../../utils';
+import { Progress } from '../Progress';
 
-const Table = React.forwardRef<
-  HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div
-    className="border-surface-default bg-surface-primary relative w-full border"
-  >
-    <table
-      ref={ref}
-      className={cn('w-full caption-bottom', className)}
-      {...props}
-    />
-  </div>
-));
+interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+  loading?: boolean;
+  loadingText?: React.ReactNode;
+}
+
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, children, ...props }, ref) => (
+    <div className="border-surface-default bg-surface-primary relative border">
+      <table
+        ref={ref}
+        className={cn('w-full caption-bottom', className)}
+        {...props}
+      >
+        {children}
+      </table>
+    </div>
+  )
+);
 Table.displayName = 'Table';
 
-const TableHeader = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <thead
-    ref={ref}
-    className={cn(
-      'text-sm bg-surface-tertiary h-10 top-0 sticky [&_tr]:border-b',
-      className
-    )}
-    {...props}
-  />
-));
+interface TableHeaderProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {
+  loading?: boolean;
+}
+
+const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
+  ({ className, loading = false, children, ...props }, ref) => (
+    <thead
+      ref={ref}
+      className={cn(
+        'text-sm bg-surface-tertiary h-10 top-0 leading-tight sticky',
+        className
+      )}
+      {...props}
+    >
+      {children}
+      {loading && (
+        <tr>
+          <td colSpan={100} className="p-0 h-0">
+            <Progress
+              indeterminate
+              className="bg-surface-primary border-b-divider-default box-content
+                border-b"
+            />
+          </td>
+        </tr>
+      )}
+    </thead>
+  )
+);
 TableHeader.displayName = 'TableHeader';
 
-const TableBody = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <tbody
-    ref={ref}
-    className={cn('[&_tr:last-child]:border-0', className)}
-    {...props}
-  />
-));
+interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  loading?: boolean;
+  loadingText?: React.ReactNode;
+  colSpan?: number;
+}
+
+const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
+  (
+    {
+      className,
+      loading = false,
+      loadingText = 'ローディング中…',
+      colSpan = 1,
+      children,
+      ...props
+    },
+    ref
+  ) => (
+    <tbody ref={ref} className={className} {...props}>
+      {loading ? (
+        <tr>
+          <td
+            colSpan={colSpan}
+            className="py-sm min-h-12 px-[1.44rem] text-center align-middle"
+          >
+            {loadingText}
+          </td>
+        </tr>
+      ) : (
+        children
+      )}
+    </tbody>
+  )
+);
 TableBody.displayName = 'TableBody';
 
 const TableFooter = React.forwardRef<
@@ -56,10 +102,7 @@ const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     ref={ref}
-    className={cn(
-      'bg-surface-secondary font-medium border-t [&>tr]:last:border-b-0',
-      className
-    )}
+    className={cn('bg-surface-secondary font-medium border-t', className)}
     {...props}
   />
 ));
@@ -89,8 +132,8 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      `text-body-secondary px-4 font-medium [&:has([role=checkbox])]:w-4
-      [&:has([role=checkbox])]:pr-0 h-10 text-left`,
+      `text-body-secondary font-medium [&:has([role=checkbox])]:w-8
+      [&:has([role=checkbox])]:pr-0 h-10 px-[1.44rem] text-left`,
       className
     )}
     {...props}
@@ -107,7 +150,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'px-md py-sm [&:has([role=checkbox])]:pr-0 min-h-12 w-fit align-middle',
+      'py-sm [&:has([role=checkbox])]:pr-0 min-h-12 px-[1.44rem] align-middle',
       className
     )}
     {...props}

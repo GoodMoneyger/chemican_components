@@ -150,3 +150,31 @@ export const Default = Template.bind({});
 Default.args = {
   data,
 };
+
+const LoadingTemplate: StoryFn = () => (
+  <Table loading>
+    <TableHeader loading>
+      <TableRow>
+        <TableHead>
+          <Checkbox label="" />
+        </TableHead>
+        <TableHead>
+          SDS名 <TableHeadSortButton sortOrder="asc" />
+        </TableHead>
+        <TableHead>
+          製品名
+          <TableHeadSortButton sortOrder="asc" />
+        </TableHead>
+        <TableHead>
+          会社名
+          <TableHeadSortButton sortOrder="asc" />
+        </TableHead>
+        <TableHead>作成日 / 改訂日</TableHead>
+        <TableHead>ステータス</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody loading colSpan={6} />
+  </Table>
+);
+
+export const Loading = LoadingTemplate.bind({});
