@@ -6,6 +6,7 @@ declare const searchBarWrapperVariants: (props?: ({
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>, VariantProps<typeof searchBarWrapperVariants> {
     value?: string;
+    classname?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSearch?: () => void;
     placeholder?: string;

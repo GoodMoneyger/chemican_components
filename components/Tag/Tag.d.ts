@@ -28,6 +28,7 @@ export interface TagProps {
     accentColor?: ColorShapeTokens;
     colorCode?: keyof typeof colorCodeToTokenMap;
     size?: 'sm' | 'md';
+    style?: React.CSSProperties;
 }
 export declare const Tag: React.FC<TagProps>;
 export {};
