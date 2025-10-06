@@ -144,7 +144,6 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
             <Button
               intent="ghost"
               size="sm"
-              iconOnly
               icon={IconChevronLeft}
               onClick={handlePreviousPage}
               disabled={currentPage <= 1}
@@ -153,7 +152,6 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
             <Button
               intent="ghost"
               size="sm"
-              iconOnly
               icon={IconChevronRight}
               onClick={handleNextPage}
               disabled={currentPage >= totalPages}
