@@ -32,7 +32,7 @@ const buttonVariants = cva(
         hover:text-interactive-primary-hover hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
-        disabled:text-interactive-disabled`,
+        disabled:text-interactive-disabled disabled:bg-transparent`,
       },
       danger: {
         true: 'focus-visible:ring-interactive-alert-focused',
