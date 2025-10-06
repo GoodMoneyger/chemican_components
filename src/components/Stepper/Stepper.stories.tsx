@@ -17,7 +17,7 @@ const radialSteps: Step[] = [
     status: 'completed',
     title: 'アップロード',
     description:
-      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+      'アップロードが完了しました。ファイルが正常にシステムに取り込まれ、次のステップに進む準備が整いました。',
   },
   {
     id: '2',
@@ -25,7 +25,7 @@ const radialSteps: Step[] = [
     status: 'completed',
     title: 'データ確認',
     description:
-      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+      'データの確認が完了しました。アップロードされた内容を検証し、問題がないことを確認いたしました。',
   },
   {
     id: '3',
@@ -33,7 +33,7 @@ const radialSteps: Step[] = [
     status: 'active',
     title: 'ステップ名が入ります',
     description:
-      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+      '現在このステップを実行中です。処理が進行していますので、しばらくお待ちください。完了まで数分かかる場合があります。',
   },
   {
     id: '4',
@@ -41,7 +41,7 @@ const radialSteps: Step[] = [
     status: 'upcoming',
     title: '登録完了',
     description:
-      '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。',
+      'このステップは待機中です。前のステップが完了次第、自動的に処理が開始されます。もうしばらくお待ちください。',
   },
 ];
 
@@ -88,12 +88,42 @@ Default.args = {
 export const ManySteps = Template.bind({});
 ManySteps.args = {
   steps: [
-    { id: '1', label: 'ステップ1', status: 'completed' },
-    { id: '2', label: 'ステップ2', status: 'completed' },
-    { id: '3', label: 'ステップ3', status: 'active' },
-    { id: '4', label: 'ステップ4', status: 'upcoming' },
-    { id: '5', label: 'ステップ5', status: 'upcoming' },
-    { id: '6', label: '完了', status: 'upcoming' },
+    {
+      id: '1',
+      label: 'ステップ1',
+      status: 'completed',
+      description: 'このステップは完了しました。',
+    },
+    {
+      id: '2',
+      label: 'ステップ2',
+      status: 'completed',
+      description: 'このステップも完了しました。',
+    },
+    {
+      id: '3',
+      label: 'ステップ3',
+      status: 'active',
+      description: '現在このステップを実行中です。',
+    },
+    {
+      id: '4',
+      label: 'ステップ4',
+      status: 'upcoming',
+      description: 'このステップは待機中です。',
+    },
+    {
+      id: '5',
+      label: 'ステップ5',
+      status: 'upcoming',
+      description: 'このステップも待機中です。',
+    },
+    {
+      id: '6',
+      label: '完了',
+      status: 'upcoming',
+      description: '最終ステップで完了予定です。',
+    },
   ],
   showLabels: true,
 };

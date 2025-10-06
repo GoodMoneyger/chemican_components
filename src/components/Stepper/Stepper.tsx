@@ -13,10 +13,6 @@ export interface Step {
   description?: string; // For radial variant - step description
 }
 
-// Default description text
-const DEFAULT_DESCRIPTION =
-  '説明文がはいります。説明文がはいります。説明文がはいります。説明文がはいります。';
-
 export interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   steps: Step[];
   currentStep?: number;
@@ -90,8 +86,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
                           ring-4`
                         : undefined,
                       step.status === 'upcoming'
-                        ? `bg-shape-accent-gray-soft text-body-secondary
-                          size-2.5`
+                        ? 'bg-status-neutral text-body-primary size-2.5'
                         : undefined
                     )}
                   >
@@ -152,7 +147,7 @@ const RadialStepper = React.forwardRef<
     currentStep?: number | undefined;
     showLabels?: boolean | undefined;
   } & React.HTMLAttributes<HTMLDivElement>
->(({ className, steps, currentStep, showLabels = true, ...props }, ref) => {
+>(({ className, steps, currentStep, ...props }, ref) => {
   // Calculate progress based on current step position
   const totalSteps = steps.length;
   const currentStepIndex =
@@ -171,7 +166,7 @@ const RadialStepper = React.forwardRef<
   // Progress shows current step completion (e.g., step 3 of 4 = 75%)
   const progressPercentage =
     totalSteps > 0 ? ((safeCurrentIndex + 1) / totalSteps) * 100 : 0;
-  const circumference = 2 * Math.PI * 22; // radius = 22 for a 52x52 SVG with stroke-width 4
+  const circumference = 2 * Math.PI * 24; // radius = 24 for a 56x56 SVG with stroke-width 4
   const strokeDasharray = circumference;
   const strokeDashoffset =
     circumference - (progressPercentage / 100) * circumference;
@@ -184,24 +179,24 @@ const RadialStepper = React.forwardRef<
         <div className="h-13 w-13 flex flex-shrink-0">
           <div className="relative h-full w-full">
             <svg
-              width="52"
-              height="52"
-              viewBox="0 0 52 52"
+              width="56"
+              height="56"
+              viewBox="0 0 56 56"
               className="-rotate-90 transform"
             >
               {/* Background circle */}
               <circle
-                cx="26"
-                cy="26"
-                r="22"
+                cx="28"
+                cy="28"
+                r="24"
                 fill="none"
-                className="stroke-shape-accent-gray-soft stroke-[4]"
+                className="stroke-shape-accent-gray-pale stroke-[4]"
               />
               {/* Progress circle */}
               <circle
-                cx="26"
-                cy="26"
-                r="22"
+                cx="28"
+                cy="28"
+                r="24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="4"
@@ -215,48 +210,46 @@ const RadialStepper = React.forwardRef<
 
             {/* Center content - step counter */}
             <div className="inset-0 absolute flex items-center justify-center">
-              <div className="text-center">
-                <div className="flex items-center justify-center">
-                  <svg
-                    width="24"
-                    height="20"
-                    viewBox="0 0 24 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+              <div className="flex items-center justify-center">
+                <svg
+                  width="24"
+                  height="20"
+                  viewBox="0 0 24 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Dynamic current step number */}
+                  <text
+                    x="5"
+                    y="9"
+                    fill="currentColor"
+                    dominantBaseline="central"
+                    textAnchor="middle"
+                    className="text-interactive-primary-default text-lg
+                      font-bold"
                   >
-                    {/* Dynamic current step number */}
-                    <text
-                      x="5"
-                      y="9"
-                      fill="currentColor"
-                      dominantBaseline="central"
-                      textAnchor="middle"
-                      className="text-interactive-primary-default text-lg
-                        font-bold"
-                    >
-                      {safeCurrentIndex + 1}
-                    </text>
+                    {safeCurrentIndex + 1}
+                  </text>
 
-                    {/* Static diagonal slash separator*/}
-                    <path
-                      d="M17.5 6.5L11 18"
-                      stroke="currentColor"
-                      className="text-shape-accent-gray-soft stroke-1"
-                    />
+                  {/* Static diagonal slash separator*/}
+                  <path
+                    d="M17.5 6.5L11 18"
+                    stroke="currentColor"
+                    className="text-shape-accent-gray-soft stroke-1"
+                  />
 
-                    {/* Dynamic total steps number*/}
-                    <text
-                      x="19.5"
-                      y="14"
-                      fill="currentColor"
-                      dominantBaseline="central"
-                      textAnchor="middle"
-                      className="text-body-secondary text-xs font-normal"
-                    >
-                      {totalSteps}
-                    </text>
-                  </svg>
-                </div>
+                  {/* Dynamic total steps number*/}
+                  <text
+                    x="19.5"
+                    y="14"
+                    fill="currentColor"
+                    dominantBaseline="central"
+                    textAnchor="middle"
+                    className="text-body-secondary text-sm font-normal"
+                  >
+                    {totalSteps}
+                  </text>
+                </svg>
               </div>
             </div>
           </div>
@@ -273,90 +266,18 @@ const RadialStepper = React.forwardRef<
               >
                 {activeStep.title || activeStep.label}
               </span>
-              <p className="text-sm font-normal text-body-primary leading-[1.5]">
-                {activeStep.description || DEFAULT_DESCRIPTION}
-              </p>
+              {activeStep.description && (
+                <p
+                  className="text-md font-normal text-body-primary
+                    leading-[1.5]"
+                >
+                  {activeStep.description}
+                </p>
+              )}
             </>
           )}
         </div>
       </div>
-
-      {/* Linear Stepper Below */}
-      {showLabels && (
-        <div className="px-8 w-full">
-          <div className="gap-sm flex items-center">
-            {steps.map((step, index) => (
-              <React.Fragment key={step.id}>
-                {/* Step dot */}
-                <div className="relative flex flex-col items-center">
-                  <div
-                    className="size-8 flex flex-col items-center justify-center"
-                  >
-                    <div
-                      className={cn(
-                        `relative box-content flex items-center justify-center
-                        rounded-full transition-colors`,
-                        step.status === 'completed'
-                          ? `bg-shape-interactive-primary-default
-                            text-interactive-inverse size-4.5`
-                          : undefined,
-                        step.status === 'active'
-                          ? `bg-interactive-primary-default
-                            text-interactive-inverse
-                            ring-shape-interactive-primary-active/20 size-2.5
-                            ring-4`
-                          : undefined,
-                        step.status === 'upcoming'
-                          ? `bg-shape-accent-gray-soft text-body-secondary
-                            size-2.5`
-                          : undefined
-                      )}
-                    >
-                      {/* Render a checkmark icon for done items */}
-                      {step.status === 'completed' && (
-                        <IconCheck
-                          className="text-interactive-inverse h-2.5 w-2.5"
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Step label */}
-                  <div
-                    className={cn(
-                      `mt-xs max-w-20 absolute top-full min-w-max text-center
-                      break-words transition-colors`,
-                      step.status === 'completed' || step.status === 'active'
-                        ? 'text-body-primary font-medium'
-                        : undefined,
-                      step.status === 'upcoming'
-                        ? 'text-body-secondary'
-                        : undefined
-                    )}
-                  >
-                    {step.label}
-                  </div>
-                </div>
-
-                {/* Connector line */}
-                {index < steps.length - 1 && (
-                  <div
-                    className={cn(
-                      'h-0.25 flex-1 transition-colors',
-                      step.status === 'completed'
-                        ? 'bg-interactive-primary-default'
-                        : 'bg-shape-accent-gray-soft'
-                    )}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-
-          {/* Add spacing for labels */}
-          <div className="h-8" />
-        </div>
-      )}
     </div>
   );
 });
