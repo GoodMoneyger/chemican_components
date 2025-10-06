@@ -252,6 +252,12 @@ interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
      * Optional, defaults to false.
      */
     closeOnSelect?: boolean;
+    /**
+     * If true, filters options by both value and label when searching.
+     * If false, only filters by label.
+     * Optional, defaults to false.
+     */
+    filterByValueAndLabel?: boolean;
 }
 /**
  * Imperative methods exposed through ref
