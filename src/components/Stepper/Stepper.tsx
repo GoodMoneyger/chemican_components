@@ -166,7 +166,7 @@ const RadialStepper = React.forwardRef<
   // Progress shows current step completion (e.g., step 3 of 4 = 75%)
   const progressPercentage =
     totalSteps > 0 ? ((safeCurrentIndex + 1) / totalSteps) * 100 : 0;
-  const circumference = 2 * Math.PI * 24; // radius = 24 for a 56x56 SVG with stroke-width 4
+  const circumference = 2 * Math.PI * 24; // radius = 24 for a 52x52 SVG with stroke-width 4
   const strokeDasharray = circumference;
   const strokeDashoffset =
     circumference - (progressPercentage / 100) * circumference;
@@ -179,23 +179,23 @@ const RadialStepper = React.forwardRef<
         <div className="h-13 w-13 flex flex-shrink-0">
           <div className="relative h-full w-full">
             <svg
-              width="56"
-              height="56"
-              viewBox="0 0 56 56"
+              width="52"
+              height="52"
+              viewBox="0 0 52 52"
               className="-rotate-90 transform"
             >
               {/* Background circle */}
               <circle
-                cx="28"
-                cy="28"
+                cx="26"
+                cy="26"
                 r="24"
                 fill="none"
-                className="stroke-shape-accent-gray-pale stroke-[4]"
+                className="stroke-shape-accent-gray-soft stroke-[4]"
               />
               {/* Progress circle */}
               <circle
-                cx="28"
-                cy="28"
+                cx="26"
+                cy="26"
                 r="24"
                 fill="none"
                 stroke="currentColor"
