@@ -334,6 +334,13 @@ interface MultiSelectProps
    * Optional, defaults to false.
    */
   closeOnSelect?: boolean;
+
+  /**
+   * If true, filters options by both value and label when searching.
+   * If false, only filters by label.
+   * Optional, defaults to false.
+   */
+  filterByValueAndLabel?: boolean;
 }
 
 /**
@@ -369,19 +376,19 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       onValueChange,
       variant,
       defaultValue = [],
-      placeholder = 'Select options',
-      placeholderAriaLabel = 'Select options',
-      triggerDescription = 'Multi-select dropdown. Use arrow keys to navigate, Enter to select, and Escape to close.',
-      noSelectionLabel = 'No options selected',
-      searchHelpText = 'Type to filter options. Use arrow keys to navigate results.',
-      searchAriaLabel = 'Search through available options',
-      optionsListAriaLabel = 'Available options',
-      selectAllLabel = 'Select All',
-      selectAllCountLabel = 'options',
-      clearAllLabel = 'Clear All',
-      applyLabel = 'Apply',
-      moreSelectedLabel = 'more',
-      searchPlaceholder = 'Search options...',
+      placeholder = '選択してください',
+      placeholderAriaLabel = '選択してください',
+      triggerDescription = 'マルチセレクトドロップダウン。矢印キーでナビゲート、Enterで選択、Escapeで閉じます。',
+      noSelectionLabel = 'オプションが選択されていません',
+      searchHelpText = '入力してオプションをフィルタリング。矢印キーで結果をナビゲート。',
+      searchAriaLabel = '利用可能なオプションを検索',
+      optionsListAriaLabel = '利用可能なオプション',
+      selectAllLabel = 'すべて選択',
+      selectAllCountLabel = 'オプション',
+      clearAllLabel = 'すべてクリア',
+      applyLabel = '適用',
+      moreSelectedLabel = 'その他',
+      searchPlaceholder = 'オプションを検索...',
       animation = 0,
       animationConfig,
       maxCount = 10,
@@ -389,7 +396,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       className,
       hideSelectAll = false,
       searchable = true,
-      emptyIndicator = 'No results found.',
+      emptyIndicator = '結果が見つかりません。',
       autoSize = false,
       singleLine = false,
       popoverClassName,
@@ -400,6 +407,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       deduplicateOptions = false,
       resetOnDefaultValueChange = true,
       closeOnSelect = false,
+      filterByValueAndLabel = false,
       ...props
     },
     ref
@@ -650,29 +658,30 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       [getAllOptions]
     );
 
-    const filteredOptions = React.useMemo(() => {
-      if (!searchable || !searchValue) return options;
-      if (options.length === 0) return [];
-      if (isGroupedOptions(options)) {
-        return options
-          .map((group) => ({
-            ...group,
-            options: group.options.filter(
-              (option) =>
-                option.label
-                  .toLowerCase()
-                  .includes(searchValue.toLowerCase()) ||
-                option.value.toLowerCase().includes(searchValue.toLowerCase())
-            ),
-          }))
-          .filter((group) => group.options.length > 0);
-      }
-      return options.filter(
-        (option) =>
-          option.label.toLowerCase().includes(searchValue.toLowerCase()) ||
-          option.value.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    }, [options, searchValue, searchable, isGroupedOptions]);
+    const filterItems = React.useCallback(
+      (value: string, search: string) => {
+        const [optionValue, label] = value.split(':');
+
+        if (!filterByValueAndLabel) {
+          // Only filter by label
+          if (label && label.toLowerCase().includes(search.toLowerCase())) {
+            return 1;
+          }
+          return 0;
+        }
+
+        // Filter by both value and label
+        const searchLower = search.toLowerCase();
+        if (
+          (label && label.toLowerCase().includes(searchLower)) ||
+          (optionValue && optionValue.toLowerCase().includes(searchLower))
+        ) {
+          return 1;
+        }
+        return 0;
+      },
+      [filterByValueAndLabel]
+    );
 
     const handleInputKeyDown = (
       event: React.KeyboardEvent<HTMLInputElement>
@@ -839,17 +848,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
         searchValue !== undefined
       ) {
         if (searchValue && isPopoverOpen) {
-          const filteredCount = allOptions.filter(
-            (opt) =>
-              opt.label.toLowerCase().includes(searchValue.toLowerCase()) ||
-              opt.value.toLowerCase().includes(searchValue.toLowerCase())
-          ).length;
-
-          announce(
-            `${filteredCount} option${
-              filteredCount === 1 ? '' : 's'
-            } found for "${searchValue}"`
-          );
+          // Command handles filtering, so we can't easily get the count
+          // Just announce that search is active
+          announce(`Searching for "${searchValue}"`);
         }
         prevSearchValue.current = searchValue;
       }
@@ -924,6 +925,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 {selectedValues.length > 0 && (
                   <>
                     {/*
+                      NOTE: This logic to show count and clear button in the trigger
+                      is disabled for now to simplify the UI. It can be re-enabled
+                      in the future if needed.
+
                   <div className="flex items-center justify-between">
                     <div
                       role="button"
@@ -1051,7 +1056,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
             }}
             align="start"
           >
-            <Command>
+            <Command filter={filterItems}>
               {searchable && (
                 <CommandInput
                   placeholder={searchPlaceholder}
@@ -1111,8 +1116,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     </CommandItem>
                   </CommandGroup>
                 )}
-                {isGroupedOptions(filteredOptions) ? (
-                  filteredOptions.map((group) => (
+                {isGroupedOptions(options) ? (
+                  options.map((group) => (
                     <CommandGroup key={group.heading} heading={group.heading}>
                       {group.options.map((option) => {
                         const isSelected = selectedValues.includes(
@@ -1121,7 +1126,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         return (
                           <CommandItem
                             key={option.value}
-                            value={option.value}
+                            value={`${option.value}:${option.label}`}
                             onSelect={() => toggleOption(option.value)}
                             role="option"
                             aria-selected={isSelected}
@@ -1145,12 +1150,12 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   ))
                 ) : (
                   <CommandGroup>
-                    {filteredOptions.map((option) => {
+                    {options.map((option) => {
                       const isSelected = selectedValues.includes(option.value);
                       return (
                         <CommandItem
                           key={option.value}
-                          value={option.value}
+                          value={`${option.value}:${option.label}`}
                           onSelect={() => toggleOption(option.value)}
                           role="option"
                           aria-selected={isSelected}
