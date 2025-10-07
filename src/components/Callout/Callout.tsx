@@ -4,8 +4,6 @@ import { cva } from 'class-variance-authority';
 import {
   IconInfoCircleFilled,
   IconCircleCheckFilled,
-  IconAlertTriangleFilled,
-  IconX,
 } from '@tabler/icons-react';
 import type { TablerIcon } from '@tabler/icons-react';
 
@@ -14,7 +12,7 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const calloutVariants = cva(
-  'gap-xs rounded-sm flex items-center overflow-hidden border',
+  'rounded-sm gap-1 flex items-start overflow-hidden border',
   {
     variants: {
       intent: {
@@ -24,8 +22,8 @@ const calloutVariants = cva(
         alert: 'bg-surface-alert border-surface-alert',
       },
       size: {
-        default: 'p-xs',
-        large: 'p-md',
+        default: 'pt-xs pr-sm pb-xs pl-xs',
+        large: 'pt-sm pr-lg pb-sm pl-md',
       },
     },
     defaultVariants: {
@@ -54,15 +52,17 @@ const iconVariants = cva('shrink-0', {
   },
 });
 
-const titleVariants = cva('text-body-primary font-medium');
+const titleVariants = cva('text-body-primary font-bold text-md');
 
-const descriptionVariants = cva('text-body-primary');
+const descriptionVariants = cva(
+  'text-body-primary font-normal leading-6 text-md'
+);
 
 const intentIcons: Record<string, TablerIcon> = {
   info: IconInfoCircleFilled,
   success: IconCircleCheckFilled,
-  warning: IconAlertTriangleFilled,
-  alert: IconX,
+  warning: IconInfoCircleFilled,
+  alert: IconInfoCircleFilled,
 };
 
 export interface CalloutProps
@@ -85,6 +85,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
       intent = 'info',
       size = 'default',
       title,
+      description,
       children,
       action,
       icon,
@@ -104,26 +105,29 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
           {renderIcon(IconComponent, { className: 'size-full' })}
         </div>
 
-        <div className="min-w-0 flex-1">
-          {title && <div className={cn(titleVariants())}>{title}</div>}
-          {children && (
-            <div className={cn(descriptionVariants())}>{children}</div>
+        <div className="min-w-0 gap-xxs flex flex-1 flex-col">
+          {title && (
+            <div className="flex items-center justify-between">
+              <div className={cn(titleVariants())}>{title}</div>
+              {action && (
+                <Button
+                  onClick={action.onClick}
+                  intent="ghost"
+                  size="xs"
+                  className="py-0 leading-6 text-md font-normal
+                    text-interactive-primary-default h-auto underline"
+                >
+                  {action.label}
+                </Button>
+              )}
+            </div>
+          )}
+          {(children || description) && (
+            <div className={cn(descriptionVariants())}>
+              {children || description}
+            </div>
           )}
         </div>
-
-        {action && (
-          <div className="relative shrink-0 self-start">
-            <Button
-              onClick={action.onClick}
-              intent="ghost"
-              style={{ top: '-5px', right: '-.5rem' }}
-              className="absolute"
-              size="xs"
-            >
-              {action.label}
-            </Button>
-          </div>
-        )}
       </div>
     );
   }
