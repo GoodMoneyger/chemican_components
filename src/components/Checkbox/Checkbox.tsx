@@ -7,12 +7,13 @@ import { cn } from '../../utils';
 
 export interface CheckboxProps
   extends React.ComponentProps<typeof CheckboxPrimitive.Root> {
-  label?: string;
+  label?: React.ReactNode;
   id?: string;
   invalid?: boolean;
   disabled?: boolean;
   indeterminate?: boolean;
   children?: React.ReactNode;
+  className?: string;
 }
 
 export interface CheckboxGroupProps {
@@ -80,12 +81,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   label,
   id,
   children,
+  className,
   ...props
 }) => {
   const usedId = id || `checkbox-${label}`;
 
   return (
-    <div className={cn(containerVariants({ disabled }))}>
+    <div className={cn(containerVariants({ disabled }), className)}>
       <CheckboxPrimitive.Root
         id={usedId}
         className={cn(checkboxVariants({ disabled, invalid }))}

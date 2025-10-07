@@ -35,6 +35,7 @@ export interface TagProps {
   accentColor?: ColorShapeTokens;
   colorCode?: keyof typeof colorCodeToTokenMap;
   size?: 'sm' | 'md';
+  style?: React.CSSProperties;
 }
 
 const tagVariants = cva(
@@ -60,6 +61,7 @@ export const Tag: React.FC<TagProps> = ({
   className,
   onRemove,
   size = 'md',
+  style,
 }) => {
   // Warning when both props are provided
   React.useEffect(() => {
@@ -81,9 +83,10 @@ export const Tag: React.FC<TagProps> = ({
       className={cn(tagVariants({ size }), className)}
       style={{
         backgroundColor: `var(${effectiveColor})`,
+        ...style,
       }}
     >
-      {children}
+      <div className="truncate">{children}</div>
       {Boolean(onRemove) && (
         <button
           className={cn(

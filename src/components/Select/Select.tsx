@@ -95,11 +95,11 @@ export interface SelectProps
     Omit<React.ComponentProps<typeof RadixSelect.Root>, 'value'> {
   options: {
     value: string;
-    label: string | React.ReactNode;
+    label: React.ReactNode;
     icon?: IconProp;
     type?: 'Option' | 'Group' | 'Separator';
   }[];
-  placeholder?: string;
+  placeholder?: React.ReactNode;
   className?: string;
   icon?: IconProp;
   invalid?: boolean;

@@ -57,7 +57,7 @@ const searchIconVariants = cva(
 const inputClasses = `text-md text-body-primary disabled:bg-input-disabled
   disabled:text-body-disabled placeholder:text-body-disabled flex-1
   bg-transparent leading-[100%] tracking-[0%] outline-none
-  focus:placeholder-transparent disabled:cursor-not-allowed`;
+  focus:placeholder-transparent disabled:cursor-not-allowed h-full`;
 
 const buttonVariants = cva(
   `bg-shape-accent-gray-pale px-sm py-xs text-md text-shape-primary gap-xxs
@@ -109,6 +109,7 @@ export interface SearchBarProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
     VariantProps<typeof searchBarWrapperVariants> {
   value?: string;
+  classname?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSearch?: () => void;
   placeholder?: string;
@@ -131,6 +132,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       size = 'md',
       state,
       value = '',
+      className,
       onChange,
       onSearch,
       placeholder,
@@ -209,7 +211,8 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       <div
         className={cn(
           'gap-1 group flex flex-col',
-          disabled ? 'pointer-events-none' : ''
+          disabled ? 'pointer-events-none' : '',
+          className
         )}
         aria-disabled={disabled ? 'true' : undefined}
       >
