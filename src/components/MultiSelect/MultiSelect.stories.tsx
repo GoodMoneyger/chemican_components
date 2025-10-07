@@ -53,6 +53,10 @@ const meta: Meta<typeof MultiSelect> = {
       control: 'boolean',
       description: 'Whether the component should auto-size to its content',
     },
+    filterByValueAndLabel: {
+      control: 'boolean',
+      description: 'Whether to filter by both value and label when searching',
+    },
   },
 };
 
@@ -60,56 +64,64 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const basicOptions: MultiSelectOption[] = [
-  { label: 'Apple', value: 'apple' },
-  { label: 'Banana', value: 'banana' },
-  { label: 'Cherry', value: 'cherry' },
-  { label: 'Date', value: 'date' },
-  { label: 'Elderberry', value: 'elderberry' },
-  { label: 'Fig', value: 'fig' },
-  { label: 'Grape', value: 'grape' },
-  { label: 'Honeydew', value: 'honeydew' },
+  { label: 'Apple', value: '550e8400-e29b-41d4-a716-446655440001' },
+  { label: 'Banana', value: '550e8400-e29b-41d4-a716-446655440002' },
+  { label: 'Cherry', value: 'cherry-fruit' },
+  { label: 'Date', value: '550e8400-e29b-41d4-a716-446655440003' },
+  { label: 'Elderberry', value: 'elderberry-premium' },
+  { label: 'Fig', value: '550e8400-e29b-41d4-a716-446655440004' },
+  { label: 'Grape', value: 'grape-variety' },
+  { label: 'Honeydew', value: '550e8400-e29b-41d4-a716-446655440005' },
 ];
 
 const optionsWithIcons: MultiSelectOption[] = [
-  { label: 'Users', value: 'users', icon: IconUsers },
-  { label: 'Favorites', value: 'favorites', icon: IconStar },
-  { label: 'Liked', value: 'liked', icon: IconHeart },
-  { label: 'Apple', value: 'apple' },
-  { label: 'Banana', value: 'banana' },
+  {
+    label: 'Users',
+    value: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+    icon: IconUsers,
+  },
+  { label: 'Favorites', value: 'favorites-collection', icon: IconStar },
+  {
+    label: 'Liked',
+    value: '6ba7b811-9dad-11d1-80b4-00c04fd430c8',
+    icon: IconHeart,
+  },
+  { label: 'Apple', value: 'apple-item' },
+  { label: 'Banana', value: '6ba7b812-9dad-11d1-80b4-00c04fd430c8' },
 ];
 
 const groupedOptions: MultiSelectGroup[] = [
   {
     heading: 'Fruits',
     options: [
-      { label: 'Apple', value: 'apple' },
-      { label: 'Banana', value: 'banana' },
-      { label: 'Cherry', value: 'cherry' },
+      { label: 'Apple', value: 'a1b2c3d4-e5f6-4789-a012-123456789abc' },
+      { label: 'Banana', value: 'banana-tropical' },
+      { label: 'Cherry', value: 'b2c3d4e5-f6a7-4890-b123-234567890bcd' },
     ],
   },
   {
     heading: 'Vegetables',
     options: [
-      { label: 'Carrot', value: 'carrot' },
-      { label: 'Broccoli', value: 'broccoli' },
-      { label: 'Spinach', value: 'spinach' },
+      { label: 'Carrot', value: 'carrot-orange' },
+      { label: 'Broccoli', value: 'c3d4e5f6-a7b8-4901-c234-345678901cde' },
+      { label: 'Spinach', value: 'spinach-leafy' },
     ],
   },
   {
     heading: 'Grains',
     options: [
-      { label: 'Rice', value: 'rice' },
-      { label: 'Wheat', value: 'wheat' },
-      { label: 'Oats', value: 'oats' },
+      { label: 'Rice', value: 'd4e5f6a7-b8c9-4012-d345-456789012def' },
+      { label: 'Wheat', value: 'wheat-grain' },
+      { label: 'Oats', value: 'e5f6a7b8-c9d0-4123-e456-567890123efa' },
     ],
   },
 ];
 
 const disabledOptions: MultiSelectOption[] = [
-  { label: 'Available Option', value: 'available' },
-  { label: 'Disabled Option', value: 'disabled', disabled: true },
-  { label: 'Another Available', value: 'another-available' },
-  { label: 'Also Disabled', value: 'also-disabled', disabled: true },
+  { label: 'Available Option', value: 'f6a7b8c9-d0e1-4234-f567-678901234fab' },
+  { label: 'Disabled Option', value: 'disabled-item', disabled: true },
+  { label: 'Another Available', value: 'a7b8c9d0-e1f2-4345-a678-789012345abc' },
+  { label: 'Also Disabled', value: 'also-disabled-slug', disabled: true },
 ];
 
 export const Default: Story = {
@@ -123,7 +135,10 @@ export const Default: Story = {
 export const WithDefaultValues: Story = {
   args: {
     options: basicOptions,
-    defaultValue: ['apple', 'banana'],
+    defaultValue: [
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440002',
+    ],
     placeholder: 'Select fruits...',
     onValueChange: (values) => console.log('Selected values:', values),
   },
@@ -175,7 +190,12 @@ export const MaxCountLimited: Story = {
   args: {
     options: basicOptions,
     maxCount: 2,
-    defaultValue: ['apple', 'banana', 'cherry', 'date'],
+    defaultValue: [
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440002',
+      'cherry-fruit',
+      '550e8400-e29b-41d4-a716-446655440003',
+    ],
     placeholder: 'Max 2 visible...',
     onValueChange: (values) => console.log('Selected values:', values),
   },
@@ -212,7 +232,13 @@ export const SingleLine: Story = {
   args: {
     options: basicOptions,
     singleLine: true,
-    defaultValue: ['apple', 'banana', 'cherry', 'date', 'elderberry'],
+    defaultValue: [
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440002',
+      'cherry-fruit',
+      '550e8400-e29b-41d4-a716-446655440003',
+      'elderberry-premium',
+    ],
     placeholder: 'Single line display...',
     onValueChange: (values) => console.log('Selected values:', values),
   },
@@ -231,7 +257,10 @@ export const Disabled: Story = {
   args: {
     options: basicOptions,
     disabled: true,
-    defaultValue: ['apple', 'banana'],
+    defaultValue: [
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440002',
+    ],
     placeholder: 'Disabled state...',
     onValueChange: (values) => console.log('Selected values:', values),
   },
@@ -255,7 +284,14 @@ export const Responsive: Story = {
   args: {
     options: basicOptions,
     responsive: true,
-    defaultValue: ['apple', 'banana', 'cherry', 'date', 'elderberry', 'fig'],
+    defaultValue: [
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440002',
+      'cherry-fruit',
+      '550e8400-e29b-41d4-a716-446655440003',
+      'elderberry-premium',
+      '550e8400-e29b-41d4-a716-446655440004',
+    ],
     placeholder: 'Responsive behavior...',
     onValueChange: (values) => console.log('Selected values:', values),
   },
@@ -283,5 +319,22 @@ export const CustomEmptyState: Story = {
     ),
     placeholder: 'Custom empty state...',
     onValueChange: (values) => console.log('Selected values:', values),
+  },
+};
+
+export const FilterByValueAndLabel: Story = {
+  args: {
+    options: basicOptions,
+    filterByValueAndLabel: true,
+    placeholder: 'Search by label or value...',
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates filtering by both value and label. Try searching for part of a UUID (e.g., "550e8400") or part of a slug (e.g., "cherry-fruit") to see both value and label matching in action.',
+      },
+    },
   },
 };
