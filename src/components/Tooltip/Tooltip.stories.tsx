@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { IconInfoCircle } from '@tabler/icons-react';
+
+import { Button } from '../Button';
 
 import { Tooltip, TooltipProvider } from './Tooltip';
-import { Button } from '../Button';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',
