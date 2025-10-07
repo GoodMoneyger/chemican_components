@@ -1,17 +1,16 @@
 import React from 'react';
 import * as Popover from '@radix-ui/react-popover';
-import { DayPicker, getDefaultClassNames } from 'react-day-picker';
-import 'react-day-picker/style.css';
 import { IconCalendar } from '@tabler/icons-react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
+import { Calendar } from '../Calendar/Calendar';
 
 // Component variants
 const triggerVariants = cva(
-  `bg-input-default rounded min-h-12 min-w-48 p-md gap-2 text-md inline-flex
+  `bg-input-default rounded min-h-12 min-w-80 p-md gap-2 text-md inline-flex
   cursor-pointer items-center justify-between border transition-colors
   outline-none focus:ring-4 focus:ring-offset-0`,
   {
@@ -37,7 +36,7 @@ const triggerVariants = cva(
 );
 
 // Popover content classes
-const contentClasses = `bg-surface-primary border border-interactive-default rounded-lg p-md z-50 w-auto min-w-80 max-w-none shadow-lg`;
+const contentClasses = `bg-surface-primary rounded-lg z-50 w-auto  max-w-none shadow-lg`;
 
 export interface DatePickerProps
   extends Omit<
@@ -197,7 +196,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       return parsedMinDate <= parsedMaxDate;
     }, [parsedMinDate, parsedMaxDate]);
 
-    const handleDateChange = (date: Date | undefined) => {
+    const handleDateChange = (date: Date | null) => {
       const newDate = date || null;
       if (!isControlled) {
         setInternalValue(newDate);
@@ -255,7 +254,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               description && name ? `${name}-description` : undefined
             }
             aria-labelledby={label && name ? `${name}-label` : undefined}
-            className={cn(triggerVariants({ error, disabled }), className)}
+            className={cn(
+              triggerVariants({ error, disabled }),
+              isOpen && 'shadow-[0px_0px_0px_4px_#C9E8E5]',
+              className
+            )}
             onKeyDown={handleTriggerKeyDown}
             {...props}
           >
@@ -280,11 +283,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
         <Popover.Portal>
           <Popover.Content
             className={cn(contentClasses, contentClassName)}
-            sideOffset={8}
-            align="center"
+            sideOffset={4}
+            align="start"
             alignOffset={0}
             side="bottom"
-            avoidCollisions={true}
+            avoidCollisions={false}
             collisionPadding={16}
             sticky="always"
             onEscapeKeyDown={() => handleOpenChange(false)}
@@ -292,43 +295,16 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             role="dialog"
             aria-label="Date picker calendar"
           >
-            <DayPicker
-              animate
-              mode="single"
-              selected={selectedDate || undefined}
-              onSelect={handleDateChange}
-              disabled={
-                !isValidDateRange
-                  ? [
-                      {
-                        before: new Date('1900-01-01'),
-                        after: new Date('1899-12-31'),
-                      },
-                    ] // Disable all dates if invalid range
-                  : [
-                      ...(parsedMinDate ? [{ before: parsedMinDate }] : []),
-                      ...(parsedMaxDate ? [{ after: parsedMaxDate }] : []),
-                    ]
-              }
-              showOutsideDays
-              fixedWeeks
-              autoFocus={isOpen}
+            <Calendar
+              value={selectedDate}
+              onChange={handleDateChange}
+              {...(parsedMinDate && { minDate: parsedMinDate })}
+              {...(parsedMaxDate && { maxDate: parsedMaxDate })}
+              disabled={!isValidDateRange}
+              showOutsideDays={true}
+              fixedWeeks={true}
+              animate={true}
               defaultMonth={selectedDate || new Date()}
-              classNames={(() => {
-                const defaultClassNames = getDefaultClassNames();
-                return {
-                  today: `border-interactive-primary-default border-2`,
-                  selected: `bg-interactive-primary-default text-interactive-inverse hover:bg-interactive-primary-default hover:text-interactive-inverse`,
-                  root: `${defaultClassNames.root} shadow-lg p-2`,
-                  chevron: `fill-current text-interactive-primary-default`,
-                  day: `${defaultClassNames.day} hover:bg-interactive-neutral-hover transition-colors`,
-                  outside: `text-body-disabled opacity-50`,
-                  disabled: `text-body-disabled opacity-40 cursor-not-allowed`,
-                  caption_label: `text-body-primary font-semibold`,
-                  button_previous: `text-interactive-primary-default hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover transition-colors rounded-md p-1`,
-                  button_next: `text-interactive-primary-default hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover transition-colors rounded-md p-1`,
-                };
-              })()}
             />
           </Popover.Content>
         </Popover.Portal>
@@ -337,7 +313,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 
     // FormField functionality included inline
     return (
-      <div className="min-w-48 flex w-full flex-col">
+      <div className="min-w-80 flex w-full flex-col">
         {label && name && (
           <label
             id={`${name}-label`}
