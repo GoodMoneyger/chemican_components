@@ -28,11 +28,14 @@ const buttonVariants = cva(
         hover:bg-interactive-neutral-hover active:bg-interactive-neutral-active
         enabled:border-interactive-default disabled:bg-interactive-disabled
         disabled:text-interactive-disabled border`,
-        ghost: `text-interactive-primary-default
+        text: `text-interactive-primary-default bg-surface-secondary
         hover:text-interactive-primary-hover hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
-        disabled:text-interactive-disabled`,
+        disabled:text-interactive-disabled disabled:bg-surface-secondary
+        focus-visible:border-interactive-focused
+        focus-visible:bg-surface-secondary focus:border-interactive-focused
+        focus:bg-surface-secondary border focus:border-4 focus-visible:border-4`,
       },
       danger: {
         true: 'focus-visible:ring-interactive-alert-focused',
@@ -55,7 +58,7 @@ const buttonVariants = cva(
     compoundVariants: [
       {
         iconOnly: true,
-        intent: 'ghost',
+        intent: 'text',
         class: 'text-shape-interactive-primary-default',
       },
       { textOnly: true, size: 'md', class: 'px-lg' },
@@ -88,7 +91,7 @@ const buttonVariants = cva(
         active:bg-interactive-neutral-alert-active border-none`,
       },
       {
-        intent: 'ghost',
+        intent: 'text',
         danger: true,
         class: `text-interactive-alert-default
         hover:text-interactive-alert-hover
@@ -106,7 +109,7 @@ const buttonVariants = cva(
 
 const iconStyles = cva('', {
   variants: {
-    ghost: {
+    text: {
       true: '',
     },
     iconOnly: {
@@ -169,7 +172,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <span className="gap-xxs invisible flex items-center">
             {renderIcon(icon, {
               className: cn(
-                iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+                iconStyles({ size, iconOnly, text: intent === 'text' })
               ),
             })}
             {children}
@@ -194,7 +197,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         >
           {renderIcon(icon, {
             className: cn(
-              iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+              iconStyles({ size, iconOnly, text: intent === 'text' })
             ),
           })}
           {children}

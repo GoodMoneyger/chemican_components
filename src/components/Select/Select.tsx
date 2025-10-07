@@ -8,15 +8,15 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const selectVariants = cva(
-  `bg-surface-primary text-body-primary disabled:border-interactive-disabled
+  `bg-surface-primary disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled inline-flex
   items-center justify-between border focus:ring-4 focus:outline-0
   enabled:cursor-pointer`,
   {
     variants: {
       variant: {
-        default: `border-interactive-default py-sm pr-sm pl-md
-        hover:border-interactive-hover rounded gap-md h-[3rem] w-full`,
+        default: `border-interactive-default p-4 hover:border-interactive-hover
+        rounded gap-md h-[3rem] w-full`,
         compact: `py-1 px-xs rounded-sm gap-xxs
         hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
       },
@@ -105,6 +105,8 @@ export interface SelectProps
   invalid?: boolean;
   value?: string;
   intent?: 'primary' | 'secondary';
+  label?: string;
+  supportText?: string;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -116,96 +118,132 @@ export const Select: React.FC<SelectProps> = ({
   variant = 'default',
   intent = 'primary',
   value,
+  label,
+  supportText,
   ...props
 }) => {
+  // Track internal value state for uncontrolled mode
+  const [internalValue, setInternalValue] = React.useState<string | undefined>(
+    value
+  );
+
   const rootProps: React.ComponentProps<typeof RadixSelect.Root> = {
     ...props,
+    onValueChange: (newValue) => {
+      setInternalValue(newValue);
+      props.onValueChange?.(newValue);
+    },
   };
   if (value !== undefined) {
     rootProps.value = value;
   }
 
+  // Use either controlled value or internal value
+  const currentValue = value !== undefined ? value : internalValue;
+
+  // Check if value is selected
+  const hasSelectedValue =
+    currentValue !== undefined && currentValue !== '' && currentValue !== null;
+
   return (
-    <RadixSelect.Root {...rootProps}>
-      <RadixSelect.Trigger
-        className={cn(selectVariants({ variant, intent, invalid }), className)}
-      >
-        <div className="inline-flex items-center">
-          {renderIcon(Icon, {
-            className: cn('text-body-primary', {
-              'mr-xxs h-lg w-lg': variant === 'default',
-              'mr-xxs h-4 w-4': variant === 'compact',
-            }),
-          })}
-          <RadixSelect.Value
-            placeholder={placeholder || 'Select an option'}
+    <div className="w-full">
+      {label && (
+        <div className="h-5 pb-2 text-body-secondary text-sm">{label}</div>
+      )}
+      <RadixSelect.Root {...rootProps}>
+        <RadixSelect.Trigger
+          className={cn(
+            selectVariants({ variant, intent, invalid }),
+            className
+          )}
+        >
+          <div
+            className={cn(
+              'inline-flex items-center',
+              hasSelectedValue ? 'text-body-primary' : 'text-body-placeholder'
+            )}
+          >
+            {renderIcon(Icon, {
+              className: cn('text-body-primary', {
+                'mr-xxs h-lg w-lg': variant === 'default',
+                'mr-xxs h-4 w-4': variant === 'compact',
+              }),
+            })}
+            <RadixSelect.Value
+              placeholder={placeholder || 'Select an option'}
+              className={cn({
+                'text-sm': variant === 'compact',
+              })}
+            />
+          </div>
+          <RadixSelect.Icon
             className={cn('text-body-primary', {
-              'text-sm': variant === 'compact',
+              'h-md w-md': variant === 'default',
+              'h-4 w-4': variant === 'compact',
+              'text-body-disabled': props.disabled,
             })}
-          />
+          >
+            <IconChevronDown className="top-0.5 relative h-full w-full" />
+          </RadixSelect.Icon>
+        </RadixSelect.Trigger>
+        <RadixSelect.Portal>
+          <RadixSelect.Content
+            position="popper"
+            className={cn(selectContentVariants({ variant }), className)}
+          >
+            <RadixSelect.ScrollUpButton />
+            <RadixSelect.Viewport className="min-w-[var(--radix-select-trigger-width)]">
+              {options.map((option, index) => {
+                switch (option.type) {
+                  case 'Group':
+                    return (
+                      <RadixSelect.Group key={index}>
+                        <RadixSelect.Label>{option.label}</RadixSelect.Label>
+                      </RadixSelect.Group>
+                    );
+                  case 'Separator':
+                    return (
+                      <RadixSelect.Separator
+                        key={index}
+                        className="border-divider-default m-[5px] h-px border-b"
+                      />
+                    );
+                  default:
+                    return (
+                      <RadixSelect.Item
+                        key={index}
+                        value={option.value}
+                        className={selectItemVariants({
+                          variant,
+                          isSelected: value === option.value,
+                        })}
+                      >
+                        {renderIcon(option.icon, {
+                          className: cn({
+                            '-ml-xxs h-lg w-lg': variant === 'default',
+                            'mr-xxs h-4 w-4': variant === 'compact',
+                          }),
+                        })}
+                        <RadixSelect.ItemText>
+                          {option.label}
+                        </RadixSelect.ItemText>
+                        <RadixSelect.ItemIndicator />
+                      </RadixSelect.Item>
+                    );
+                }
+              })}
+            </RadixSelect.Viewport>
+            <RadixSelect.ScrollDownButton />
+            <RadixSelect.Arrow />
+          </RadixSelect.Content>
+        </RadixSelect.Portal>
+      </RadixSelect.Root>
+      {supportText && (
+        <div className="pt-1 text-body-secondary text-sm h-[22px]">
+          {supportText}
         </div>
-        <RadixSelect.Icon
-          className={cn('text-body-primary', {
-            'h-md w-md': variant === 'default',
-            'h-4 w-4': variant === 'compact',
-            'text-body-disabled': props.disabled,
-          })}
-        >
-          <IconChevronDown className="top-0.5 relative h-full w-full" />
-        </RadixSelect.Icon>
-      </RadixSelect.Trigger>
-      <RadixSelect.Portal>
-        <RadixSelect.Content
-          position="popper"
-          className={cn(selectContentVariants({ variant }), className)}
-        >
-          <RadixSelect.ScrollUpButton />
-          <RadixSelect.Viewport className="min-w-[var(--radix-select-trigger-width)]">
-            {options.map((option, index) => {
-              switch (option.type) {
-                case 'Group':
-                  return (
-                    <RadixSelect.Group key={index}>
-                      <RadixSelect.Label>{option.label}</RadixSelect.Label>
-                    </RadixSelect.Group>
-                  );
-                case 'Separator':
-                  return (
-                    <RadixSelect.Separator
-                      key={index}
-                      className="border-divider-default m-[5px] h-px border-b"
-                    />
-                  );
-                default:
-                  return (
-                    <RadixSelect.Item
-                      key={index}
-                      value={option.value}
-                      className={selectItemVariants({
-                        variant,
-                        isSelected: value === option.value,
-                      })}
-                    >
-                      {renderIcon(option.icon, {
-                        className: cn({
-                          '-ml-xxs h-lg w-lg': variant === 'default',
-                          'mr-xxs h-4 w-4': variant === 'compact',
-                        }),
-                      })}
-                      <RadixSelect.ItemText>
-                        {option.label}
-                      </RadixSelect.ItemText>
-                      <RadixSelect.ItemIndicator />
-                    </RadixSelect.Item>
-                  );
-              }
-            })}
-          </RadixSelect.Viewport>
-          <RadixSelect.ScrollDownButton />
-          <RadixSelect.Arrow />
-        </RadixSelect.Content>
-      </RadixSelect.Portal>
-    </RadixSelect.Root>
+      )}
+    </div>
   );
 };
 
