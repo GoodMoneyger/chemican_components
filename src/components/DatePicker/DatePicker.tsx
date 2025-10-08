@@ -1,49 +1,20 @@
 import React from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { IconCalendar } from '@tabler/icons-react';
-import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
 
 import type { IconProp } from '../../lib/utils';
-import { cn, renderIcon } from '../../lib/utils';
+import { cn } from '../../lib/utils';
 import { Calendar } from '../Calendar/Calendar';
-
-// Component variants
-const triggerVariants = cva(
-  `bg-input-default rounded min-h-12 min-w-80 p-md gap-2 text-md inline-flex
-  cursor-pointer items-center justify-between border transition-colors
-  outline-none focus:ring-4 focus:ring-offset-0`,
-  {
-    variants: {
-      error: {
-        false: `border-interactive-default hover:border-interactive-hover
-        focus:border-interactive-selected focus:ring-interactive-focused`,
-        true: `border-interactive-alert-default
-        hover:border-interactive-alert-hover
-        focus:ring-interactive-alert-focused`,
-      },
-      disabled: {
-        false: 'cursor-pointer',
-        true: `border-interactive-disabled bg-input-disabled text-body-disabled
-        cursor-not-allowed`,
-      },
-    },
-    defaultVariants: {
-      error: false,
-      disabled: false,
-    },
-  }
-);
+import { Input } from '../Input/Input';
 
 // Popover content classes
 const contentClasses = `bg-surface-primary rounded-lg z-50 w-auto  max-w-none shadow-lg`;
 
 export interface DatePickerProps
   extends Omit<
-      React.ButtonHTMLAttributes<HTMLButtonElement>,
-      'value' | 'onChange' | 'defaultValue'
-    >,
-    VariantProps<typeof triggerVariants> {
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'value' | 'onChange' | 'defaultValue' | 'placeholder'
+  > {
   /**
    * The selected date value. Can be a Date object, string, or null.
    */
@@ -56,10 +27,6 @@ export interface DatePickerProps
    * The default date value for uncontrolled usage.
    */
   defaultValue?: Date | string | null;
-  /**
-   * Placeholder text to display when no date is selected.
-   */
-  placeholder?: string;
   /**
    * The minimum selectable date.
    */
@@ -80,6 +47,14 @@ export interface DatePickerProps
    * Custom icon to display in the trigger button.
    */
   icon?: IconProp;
+  /**
+   * Size of the trailing icon in pixels.
+   */
+  iconSize?: number;
+  /**
+   * Placeholder text to display when no date is selected.
+   */
+  placeholder?: React.ReactNode;
   /**
    * Format function for displaying the selected date.
    */
@@ -104,24 +79,10 @@ export interface DatePickerProps
    * Callback function called when the popover open state changes.
    */
   onOpenChange?: (open: boolean) => void;
-
-  // FormField integration props
   /**
-   * Label text for the form field
+   * Which side to display the calendar relative to the input.
    */
-  label?: string;
-  /**
-   * Name attribute for the form field
-   */
-  name?: string;
-  /**
-   * Description text to show below the field
-   */
-  description?: string;
-  /**
-   * Error message to display
-   */
-  errorMessage?: string;
+  side?: 'top' | 'right' | 'bottom' | 'left';
 }
 
 // Utility functions
@@ -142,30 +103,62 @@ const formatDateDefault = (date: Date): string => {
   });
 };
 
-export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
+// Convert ReactNode to string for HTML input placeholder
+const reactNodeToString = (reactNode: React.ReactNode): string => {
+  let string = '';
+  if (typeof reactNode === 'string') {
+    string = reactNode;
+  } else if (typeof reactNode === 'number') {
+    string = reactNode.toString();
+  } else if (reactNode instanceof Array) {
+    reactNode.forEach((child) => {
+      string += reactNodeToString(child);
+    });
+  } else if (React.isValidElement(reactNode)) {
+    // Check if it's a FormattedMessage component
+    const elementType = reactNode.type as unknown;
+    if (
+      elementType &&
+      ((typeof elementType === 'function' &&
+        (elementType as { name?: string }).name === 'FormattedMessage') ||
+        (typeof elementType === 'object' &&
+          (elementType as { displayName?: string }).displayName ===
+            'FormattedMessage') ||
+        (reactNode.props &&
+          'id' in reactNode.props &&
+          'defaultMessage' in reactNode.props))
+    ) {
+      // For FormattedMessage, try to get the defaultMessage or id as fallback
+      const props = reactNode.props as { defaultMessage?: string; id?: string };
+      string += props.defaultMessage || props.id || '[Translation]';
+    } else {
+      // For other React elements, try to extract from children
+      string += reactNodeToString(reactNode.props.children);
+    }
+  }
+  return string;
+};
+
+export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
   (
     {
       value,
       onChange,
       defaultValue,
-      placeholder = '選択してください',
       minDate,
       maxDate,
       disabled = false,
       error = false,
       icon,
+      iconSize = 14,
+      placeholder,
       formatDate = formatDateDefault,
       className,
       contentClassName,
       defaultOpen = false,
       open,
       onOpenChange,
-      // FormField props
-      label,
-      name,
-      description,
-      errorMessage,
-      ...props
+      side = 'bottom',
     },
     ref
   ) => {
@@ -221,7 +214,9 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     };
 
     // Trigger key handler - handles opening and arrow navigation
-    const handleTriggerKeyDown = (event: React.KeyboardEvent) => {
+    const handleTriggerKeyDown = (
+      event: React.KeyboardEvent<HTMLInputElement>
+    ) => {
       switch (event.key) {
         case 'ArrowDown':
         case 'ArrowUp':
@@ -244,40 +239,29 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     const datePickerElement = (
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger asChild>
-          <button
+          <Input
             ref={ref}
-            type="button"
-            disabled={disabled}
-            aria-expanded={isOpen}
-            aria-haspopup="dialog"
-            aria-describedby={
-              description && name ? `${name}-description` : undefined
+            type="text"
+            readOnly
+            placeholder={
+              placeholder ? reactNodeToString(placeholder) : undefined
             }
-            aria-labelledby={label && name ? `${name}-label` : undefined}
+            value={selectedDate ? formatDate(selectedDate) : undefined}
+            disabled={disabled}
+            invalid={error}
+            trailingIcon={icon || IconCalendar}
+            trailingIconSize={iconSize}
+            onTrailingIconClick={() => !disabled && handleOpenChange(!isOpen)}
             className={cn(
-              triggerVariants({ error, disabled }),
-              isOpen && 'shadow-[0px_0px_0px_4px_#C9E8E5]',
+              'pl-0 py-md rounded-sm gap-2 text-md min-h-[46px] cursor-pointer',
+              isOpen && 'ring-interactive-focused ring-4',
               className
             )}
             onKeyDown={handleTriggerKeyDown}
-            {...props}
-          >
-            <span
-              className={cn(
-                'text-body-primary flex-1 text-left',
-                !selectedDate && 'text-body-placeholder'
-              )}
-            >
-              {selectedDate ? formatDate(selectedDate) : placeholder}
-            </span>
-            {renderIcon(icon || IconCalendar, {
-              size: 14,
-              className: cn(
-                'shrink-0',
-                disabled ? 'text-interactive-disabled' : 'text-shape-primary'
-              ),
-            })}
-          </button>
+            onClick={() => !disabled && handleOpenChange(!isOpen)}
+            aria-expanded={isOpen}
+            aria-haspopup="dialog"
+          />
         </Popover.Trigger>
 
         <Popover.Portal>
@@ -286,7 +270,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             sideOffset={4}
             align="start"
             alignOffset={0}
-            side="bottom"
+            side={side}
             avoidCollisions={false}
             collisionPadding={16}
             sticky="always"
@@ -311,43 +295,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       </Popover.Root>
     );
 
-    // FormField functionality included inline
-    return (
-      <div className="min-w-80 flex w-full flex-col">
-        {label && name && (
-          <label
-            id={`${name}-label`}
-            className={cn(
-              'gap-1 pb-2 text-sm font-normal flex items-center leading-none',
-              disabled ? 'text-body-disabled' : 'text-body-secondary'
-            )}
-          >
-            <span>{label}</span>
-          </label>
-        )}
-        {datePickerElement}
-        {errorMessage && (
-          <div className="pt-1">
-            <p className="text-body-alert text-sm font-normal leading-[1.5]">
-              {errorMessage}
-            </p>
-          </div>
-        )}
-        {description && name && (
-          <div className="pt-1" id={`${name}-description`}>
-            <p
-              className={cn(
-                `text-sm font-normal leading-[1.5] break-words
-                whitespace-normal`,
-                disabled ? 'text-body-disabled' : 'text-body-secondary'
-              )}
-            >
-              {description}
-            </p>
-          </div>
-        )}
-      </div>
-    );
+    return datePickerElement;
   }
 );
 

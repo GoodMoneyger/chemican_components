@@ -3,6 +3,15 @@ import React from 'react';
 
 import { DatePicker } from './DatePicker';
 
+// Mock FormattedMessage for demo purposes (simulates react-intl)
+const FormattedMessage = ({
+  id,
+  defaultMessage,
+}: {
+  id: string;
+  defaultMessage: string;
+}) => <span data-testid={`formatted-message-${id}`}>{defaultMessage}</span>;
+
 const meta: Meta<typeof DatePicker> = {
   title: 'Components/DatePicker',
   component: DatePicker,
@@ -26,24 +35,13 @@ const meta: Meta<typeof DatePicker> = {
       description: 'Placeholder text when no date is selected',
       if: { arg: 'disabled', neq: true },
     },
-    // FormField integration props
-    label: {
-      control: 'text',
-      description: 'Label for the form field',
+    minDate: {
+      control: 'date',
+      description: 'The minimum selectable date',
     },
-    name: {
-      control: 'text',
-      description: 'Name attribute for the form field',
-      if: { arg: 'disabled', neq: true },
-    },
-    description: {
-      control: 'text',
-      description: 'Description text below the field',
-    },
-    errorMessage: {
-      control: 'text',
-      description: 'Error message to display',
-      if: { arg: 'error', eq: true },
+    maxDate: {
+      control: 'date',
+      description: 'The maximum selectable date',
     },
     formatDate: {
       control: false,
@@ -54,6 +52,11 @@ const meta: Meta<typeof DatePicker> = {
       description: 'Default selected date for uncontrolled usage',
       if: { arg: 'disabled', neq: true },
     },
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Whether the popover should be open by default',
+      defaultValue: false,
+    },
   },
   tags: [],
 };
@@ -61,19 +64,16 @@ const meta: Meta<typeof DatePicker> = {
 export default meta;
 type Story = StoryObj<typeof DatePicker>;
 
-// Default story - with integrated FormField
+// Default story - standalone DatePicker
 export const Default: Story = {
   args: {
-    label: 'ラベル (任意)',
-    name: 'default',
-    description: 'サポートテキストが入ります。',
     placeholder: '選択してください',
     disabled: false,
     error: false,
   },
 };
 
-// States - using integrated FormField to match design specifications
+// States - standalone DatePicker components
 export const States: Story = {
   render: () => (
     <div className="space-y-6">
@@ -83,12 +83,7 @@ export const States: Story = {
           <h4 className="text-sm text-body-secondary">デフォルト</h4>
         </div>
         <div className="flex-1">
-          <DatePicker
-            label="ラベル (任意)"
-            name="default"
-            description="サポートテキストが入ります。"
-            placeholder="選択してください"
-          />
+          <DatePicker placeholder="選択してください" />
         </div>
       </div>
 
@@ -98,12 +93,7 @@ export const States: Story = {
           <h4 className="text-sm text-body-secondary">入力済</h4>
         </div>
         <div className="flex-1">
-          <DatePicker
-            label="ラベル (任意)"
-            name="filled"
-            description="サポートテキストが入ります。"
-            defaultValue={new Date()}
-          />
+          <DatePicker defaultValue={new Date()} />
         </div>
       </div>
 
@@ -113,14 +103,7 @@ export const States: Story = {
           <h4 className="text-sm text-body-secondary">エラー時</h4>
         </div>
         <div className="flex-1">
-          <DatePicker
-            label="ラベル (任意)"
-            name="error"
-            description="サポートテキストが入ります。"
-            error
-            errorMessage="エラーテキストが入ります。"
-            placeholder="誤った内容"
-          />
+          <DatePicker error placeholder="誤った内容" />
         </div>
       </div>
 
@@ -130,20 +113,14 @@ export const States: Story = {
           <h4 className="text-sm text-body-secondary">利用不可時</h4>
         </div>
         <div className="flex-1">
-          <DatePicker
-            label="ラベル (任意)"
-            name="disabled"
-            description="サポートテキストが入ります。"
-            disabled
-            placeholder="選択してください"
-          />
+          <DatePicker disabled placeholder="選択してください" />
         </div>
       </div>
     </div>
   ),
 };
 
-// Custom formatting - using integrated FormField
+// Custom formatting - standalone DatePicker
 export const CustomFormatting: Story = {
   render: () => {
     const formatJapanese = (date: Date) => {
@@ -160,23 +137,118 @@ export const CustomFormatting: Story = {
     };
 
     return (
-      <div className="gap-md flex flex-col">
-        <DatePicker
-          label="Japanese format"
-          name="japanese-format"
-          description="日本語形式での表示"
-          formatDate={formatJapanese}
-          defaultValue={new Date()}
-        />
+      <div className="gap-md space-y-4 flex flex-col">
+        <div>
+          <h3 className="text-sm font-medium text-body-primary mb-2">
+            Japanese format
+          </h3>
+          <p className="text-xs text-body-secondary mb-2">日本語形式での表示</p>
+          <DatePicker formatDate={formatJapanese} defaultValue={new Date()} />
+        </div>
 
-        <DatePicker
-          label="ISO format"
-          name="iso-format"
-          description="ISO 8601 format (YYYY-MM-DD)"
-          formatDate={formatISO}
-          defaultValue={new Date()}
-        />
+        <div>
+          <h3 className="text-sm font-medium text-body-primary mb-2">
+            ISO format
+          </h3>
+          <p className="text-xs text-body-secondary mb-2">
+            ISO 8601 format (YYYY-MM-DD)
+          </p>
+          <DatePicker formatDate={formatISO} defaultValue={new Date()} />
+        </div>
       </div>
     );
+  },
+};
+
+// ReactNode Placeholder Examples - showcasing the ReactNode conversion functionality
+export const ReactNodePlaceholders: Story = {
+  render: () => (
+    <div className="space-y-6 min-w-[300px]">
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          1. String Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">Direct string usage</p>
+        <DatePicker placeholder="選択してください" />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          2. FormattedMessage Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Extracts defaultMessage for internationalization
+        </p>
+        <DatePicker
+          placeholder={
+            <FormattedMessage id="select" defaultMessage="選択してください" />
+          }
+        />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          3. React Element Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Extracts text from React element children
+        </p>
+        <DatePicker placeholder={<span>Select date</span>} />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          4. Array Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Concatenates array elements
+        </p>
+        <DatePicker placeholder={['Select ', 'date']} />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          5. Complex React Element
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Handles nested React elements
+        </p>
+        <DatePicker
+          placeholder={
+            <span style={{ fontStyle: 'italic' }}>Choose a date...</span>
+          }
+          side="top"
+        />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          6. Number Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Converts number to string
+        </p>
+        <DatePicker placeholder={2024} side="top" />
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: `
+This story demonstrates the ReactNode placeholder conversion functionality that enables internationalization support.
+
+The conversion snippet in the DatePicker component handles various ReactNode types:
+- **String**: Direct usage
+- **Number**: Converted to string
+- **FormattedMessage**: Extracts \`defaultMessage\` prop for i18n libraries
+- **React Elements**: Extracts text from \`children\` prop
+- **Arrays**: Concatenates elements
+- **Complex Elements**: Fallback handling
+
+This enables flexible placeholder usage while maintaining compatibility with HTML input elements that require string placeholders.
+        `,
+      },
+    },
   },
 };

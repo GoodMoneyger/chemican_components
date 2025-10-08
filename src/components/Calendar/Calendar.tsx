@@ -18,8 +18,11 @@ const customLocale = {
 };
 
 // Component styles
-const calendarStyles = `bg-surface-primary border-surface-default rounded-md p-md gap-2.5 flex
-  flex-col border border-surface-default focus-within:shadow-[0px_8px_12px_0px_#00000029] transition-shadow duration-200 flex-shrink-0`;
+const getCalendarStyles = (inline: boolean) =>
+  `bg-surface-primary border-surface-default rounded-md p-md gap-2.5 flex
+  flex-col border border-surface-default transition-shadow duration-200 flex-shrink-0 ${
+    inline ? '' : 'shadow-overlay'
+  }`;
 
 export interface CalendarProps
   extends Omit<
@@ -70,6 +73,11 @@ export interface CalendarProps
    * The month to display by default.
    */
   defaultMonth?: Date;
+  /**
+   * Whether the calendar is rendered inline (true) or as an overlay (false).
+   * When inline=true, no shadow is applied. When inline=false (default), shadow is applied for overlay usage.
+   */
+  inline?: boolean;
 }
 
 // Utility functions
@@ -96,6 +104,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       fixedWeeks = true,
       animate = true,
       defaultMonth,
+      inline = false,
       ...props
     },
     ref
@@ -135,7 +144,11 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
     };
 
     return (
-      <div ref={ref} className={cn(calendarStyles, className)} {...props}>
+      <div
+        ref={ref}
+        className={cn(getCalendarStyles(inline), className)}
+        {...props}
+      >
         <DayPicker
           animate={animate}
           mode="single"
@@ -183,9 +196,9 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
 
               // Day states
               day: `hover:bg-interactive-neutral-hover active:text-interactive-primary-active transition-colors text-body-primary text-md`,
-              day_button: `!w-8 !h-8`,
-              today: `!rounded-sm border-2 border-interactive-primary-default font-bold flex items-center justify-center hover:border-interactive-primary-hover`,
-              selected: `text-interactive-primary-default bg-interactive-primary-subtle`,
+              day_button: `!w-8 !h-8 flex items-center justify-center`,
+              today: `text-interactive-primary-active `,
+              selected: `!rounded-sm border-2 border-interactive-primary-default font-bold flex items-center justify-center hover:border-interactive-primary-hover`,
               outside: `text-body-secondary text-md`,
               disabled: `text-body-disabled text-md leading-none tracking-normal cursor-not-allowed hover:bg-transparent`,
             };

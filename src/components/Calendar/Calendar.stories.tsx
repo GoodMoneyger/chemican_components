@@ -55,6 +55,11 @@ const meta: Meta<typeof Calendar> = {
       control: 'date',
       description: 'The month to display by default',
     },
+    inline: {
+      control: 'boolean',
+      description:
+        'Whether the calendar is rendered inline (true) or as an overlay (false). Controls shadow application.',
+    },
     className: {
       control: 'text',
       description: 'Custom class name for the calendar container',
@@ -93,5 +98,80 @@ export const WithoutFixedWeeks: Story = {
   args: {
     ...Default.args,
     fixedWeeks: false,
+  },
+};
+
+// Inline vs Overlay Display Stories
+export const InlineDisplay: Story = {
+  args: {
+    ...Default.args,
+    inline: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Calendar with inline=true - no shadow applied, suitable for inline usage within forms or pages.',
+      },
+    },
+  },
+};
+
+export const OverlayDisplay: Story = {
+  args: {
+    ...Default.args,
+    inline: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Calendar with inline=false (default) - shadow applied, suitable for overlay usage in popovers or modals.',
+      },
+    },
+  },
+};
+
+export const InlineVsOverlayComparison: Story = {
+  render: () => (
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          Inline Calendar (inline=true)
+        </h3>
+        <p className="text-sm text-body-secondary mb-4">
+          No shadow - suitable for inline usage
+        </p>
+        <Calendar
+          inline={true}
+          showOutsideDays={true}
+          fixedWeeks={true}
+          animate={true}
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          Overlay Calendar (inline=false)
+        </h3>
+        <p className="text-sm text-body-secondary mb-4">
+          With shadow - suitable for popover/modal usage
+        </p>
+        <Calendar
+          inline={false}
+          showOutsideDays={true}
+          fixedWeeks={true}
+          animate={true}
+        />
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Side-by-side comparison showing the visual difference between inline and overlay calendar displays.',
+      },
+    },
   },
 };
