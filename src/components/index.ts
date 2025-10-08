@@ -18,6 +18,7 @@ export * from './Status';
 export * from './Stepper';
 export * from './Switch';
 export * from './Table';
+export * from './TabBar';
 export * from './Tag';
 export * from './Textarea';
 export * from './Toast';
