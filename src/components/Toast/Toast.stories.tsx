@@ -32,7 +32,7 @@ const Template: StoryFn<ToastProps> = (args) => {
 export const Default = Template.bind({});
 Default.args = {
   title: 'Toast Title',
-  message: 'This is a toast message  ',
+  message: 'This is a toast message',
   isOpen: false,
   level: 'info',
 };

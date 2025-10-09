@@ -15,12 +15,6 @@ const meta: Meta<typeof Select> = {
     placeholder: {
       control: { type: 'text' },
     },
-    label: {
-      control: { type: 'text' },
-    },
-    supportText: {
-      control: { type: 'text' },
-    },
     variant: {
       control: { type: 'select' },
       options: ['default', 'compact'],
@@ -53,8 +47,6 @@ const CompactTemplate: StoryFn<SelectProps> = (args) => <Select {...args} />;
 export const Default = Template.bind({});
 Default.args = {
   variant: 'default',
-  label: 'Select Label',
-  supportText: 'Please choose an option from the list below',
   options: [
     { value: 'option1', label: 'Option 1' },
     { value: 'option2', label: 'Option 2' },
@@ -71,7 +63,6 @@ Default.args = {
 export const Compact = CompactTemplate.bind({});
 Compact.args = {
   variant: 'compact',
-  label: 'Company',
   value: 'chemican',
   icon: IconBuilding,
   options: [
@@ -99,8 +90,6 @@ export const UserSelector = CompactTemplate.bind({});
 UserSelector.args = {
   variant: 'compact',
   intent: 'secondary',
-  label: 'ユーザー',
-  supportText: 'アクセス権限のあるユーザーを選択してください',
   value: 'matsumoto',
   icon: IconUser,
   options: [
@@ -110,18 +99,4 @@ UserSelector.args = {
     { value: 'sato', label: '佐藤 次郎' },
   ],
   placeholder: 'ユーザーを選択',
-};
-
-export const WithValidation = Template.bind({});
-WithValidation.args = {
-  variant: 'default',
-  label: 'Required Field',
-  supportText: 'This field is required and must be selected',
-  invalid: true,
-  options: [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-  ],
-  placeholder: 'Please select an option',
 };
