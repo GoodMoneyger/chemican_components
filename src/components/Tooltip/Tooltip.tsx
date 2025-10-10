@@ -8,14 +8,12 @@ import { cn } from '../../lib/utils';
 // Define tooltip content styles with CVA
 const tooltipVariants = cva(
   `px-sm py-xs rounded-sm text-sm font-normal min-w-32 max-w-sm md:max-w-md
-  lg:max-w-lg z-50 leading-[1.5] tracking-[0%] break-all`,
+  lg:max-w-lg z-50 leading-[1.5] tracking-[0] break-all`,
   {
     variants: {
       intent: {
-        normal: `text-body-inverse bg-surface-tooltip-neutral/90
-        shadow-[0px_5px_9px_0px_#00000029]`,
-        accent: `text-body-inverse bg-surface-tooltip-primary/90
-        shadow-[0px_5px_9px_0px_#00000029]`,
+        normal: 'text-body-inverse bg-surface-tooltip-neutral shadow-high',
+        accent: 'text-body-inverse bg-surface-tooltip-primary shadow-high',
       },
     },
     defaultVariants: {
@@ -81,7 +79,6 @@ export const Tooltip = React.forwardRef<
             {...props}
           >
             {content}
-            <TooltipPrimitive.Arrow className="fill-current" />
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>

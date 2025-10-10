@@ -9,6 +9,10 @@ const meta: Meta<typeof Tooltip> = {
   component: Tooltip,
   parameters: {
     layout: 'centered',
+    radixDocs: {
+      primitive: 'Tooltip',
+      url: 'https://www.radix-ui.com/primitives/docs/components/tooltip',
+    },
   },
   argTypes: {
     intent: {

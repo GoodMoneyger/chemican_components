@@ -101,7 +101,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
         className={cn(calloutVariants({ intent, size }), className)}
         {...props}
       >
-        <div className={cn(iconVariants({ intent, size }))}>
+        <div className={cn(iconVariants({ intent, size }), 'top-0.5 relative')}>
           {renderIcon(IconComponent, { className: 'size-full' })}
         </div>
 
@@ -114,7 +114,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
                   onClick={action.onClick}
                   intent="ghost"
                   size="xs"
-                  className="py-0 leading-6 text-md font-normal
+                  className="py-0 text-md font-normal
                     text-interactive-primary-default h-auto underline"
                 >
                   {action.label}

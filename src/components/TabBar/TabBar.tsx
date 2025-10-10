@@ -31,8 +31,8 @@ const tabVariants = cva(
   {
     variants: {
       size: {
-        normal: 'p-4 min-h-12 text-lg',
-        small: 'p-3 min-h-10 text-md',
+        normal: 'p-md min-h-12 text-lg',
+        small: 'p-sm min-h-10 text-md',
       },
     },
     defaultVariants: {
