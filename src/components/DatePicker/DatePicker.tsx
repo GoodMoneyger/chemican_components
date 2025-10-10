@@ -54,7 +54,7 @@ export interface DatePickerProps
   /**
    * Placeholder text to display when no date is selected.
    */
-  placeholder?: React.ReactNode;
+  placeholder?: string;
   /**
    * Format function for displaying the selected date.
    */
@@ -101,42 +101,6 @@ const formatDateDefault = (date: Date): string => {
     month: 'short',
     day: 'numeric',
   });
-};
-
-// Convert ReactNode to string for HTML input placeholder
-const reactNodeToString = (reactNode: React.ReactNode): string => {
-  let string = '';
-  if (typeof reactNode === 'string') {
-    string = reactNode;
-  } else if (typeof reactNode === 'number') {
-    string = reactNode.toString();
-  } else if (reactNode instanceof Array) {
-    reactNode.forEach((child) => {
-      string += reactNodeToString(child);
-    });
-  } else if (React.isValidElement(reactNode)) {
-    // Check if it's a FormattedMessage component
-    const elementType = reactNode.type as unknown;
-    if (
-      elementType &&
-      ((typeof elementType === 'function' &&
-        (elementType as { name?: string }).name === 'FormattedMessage') ||
-        (typeof elementType === 'object' &&
-          (elementType as { displayName?: string }).displayName ===
-            'FormattedMessage') ||
-        (reactNode.props &&
-          'id' in reactNode.props &&
-          'defaultMessage' in reactNode.props))
-    ) {
-      // For FormattedMessage, try to get the defaultMessage or id as fallback
-      const props = reactNode.props as { defaultMessage?: string; id?: string };
-      string += props.defaultMessage || props.id || '[Translation]';
-    } else {
-      // For other React elements, try to extract from children
-      string += reactNodeToString(reactNode.props.children);
-    }
-  }
-  return string;
 };
 
 export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
@@ -243,9 +207,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
             ref={ref}
             type="text"
             readOnly
-            placeholder={
-              placeholder ? reactNodeToString(placeholder) : undefined
-            }
+            placeholder={placeholder}
             value={selectedDate ? formatDate(selectedDate) : undefined}
             disabled={disabled}
             invalid={error}

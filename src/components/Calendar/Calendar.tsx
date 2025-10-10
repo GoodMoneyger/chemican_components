@@ -195,11 +195,11 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               chevron: `fill-current text-interactive-primary-default w-5 h-5`,
 
               // Day states
-              day: `hover:bg-interactive-neutral-hover active:text-interactive-primary-active transition-colors text-body-primary text-md`,
-              day_button: `!w-8 !h-8 flex items-center justify-center`,
-              today: `text-interactive-primary-active `,
-              selected: `!rounded-sm border-2 border-interactive-primary-default font-bold flex items-center justify-center hover:border-interactive-primary-hover`,
-              outside: `text-body-secondary text-md`,
+              day: `    hover:bg-interactive-neutral-hover active:text-interactive-primary-active transition-colors text-body-primary text-md !w-[38px] !h-[38px]`,
+              day_button: `!w-9 !h-9 border border-transparent rounded-sm`,
+              today: `text-interactive-primary-active border-surface-warning [&>button]:!border-interactive-default`,
+              selected: `[&>button]:!bg-input-selected [&>button]:!text-body-inverse [&>button]:!font-bold hover:[&>button]:!bg-input-selected hover:[&>button]:!border-transparent hover:[&>button]:!text-body-inverse`,
+              outside: `text-body-secondary text-md border border-transparent`,
               disabled: `text-body-disabled text-md leading-none tracking-normal cursor-not-allowed hover:bg-transparent`,
             };
           })()}

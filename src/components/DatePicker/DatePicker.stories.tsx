@@ -3,15 +3,6 @@ import React from 'react';
 
 import { DatePicker } from './DatePicker';
 
-// Mock FormattedMessage for demo purposes (simulates react-intl)
-const FormattedMessage = ({
-  id,
-  defaultMessage,
-}: {
-  id: string;
-  defaultMessage: string;
-}) => <span data-testid={`formatted-message-${id}`}>{defaultMessage}</span>;
-
 const meta: Meta<typeof DatePicker> = {
   title: 'Components/DatePicker',
   component: DatePicker,
@@ -161,74 +152,43 @@ export const CustomFormatting: Story = {
 };
 
 // ReactNode Placeholder Examples - showcasing the ReactNode conversion functionality
-export const ReactNodePlaceholders: Story = {
+export const StringPlaceholders: Story = {
   render: () => (
     <div className="space-y-6 min-w-[300px]">
       <div>
         <h3 className="text-sm font-medium text-body-primary mb-2">
-          1. String Placeholder
+          1. English Placeholder
         </h3>
         <p className="text-xs text-body-secondary mb-2">Direct string usage</p>
+        <DatePicker placeholder="Select a date" />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          2. Japanese Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Japanese localization example
+        </p>
         <DatePicker placeholder="選択してください" />
       </div>
 
       <div>
         <h3 className="text-sm font-medium text-body-primary mb-2">
-          2. FormattedMessage Placeholder
+          3. Empty Placeholder
         </h3>
-        <p className="text-xs text-body-secondary mb-2">
-          Extracts defaultMessage for internationalization
-        </p>
-        <DatePicker
-          placeholder={
-            <FormattedMessage id="select" defaultMessage="選択してください" />
-          }
-        />
+        <p className="text-xs text-body-secondary mb-2">No placeholder text</p>
+        <DatePicker />
       </div>
 
       <div>
         <h3 className="text-sm font-medium text-body-primary mb-2">
-          3. React Element Placeholder
+          4. Custom Format with Placeholder
         </h3>
         <p className="text-xs text-body-secondary mb-2">
-          Extracts text from React element children
+          Shows format hint in placeholder
         </p>
-        <DatePicker placeholder={<span>Select date</span>} />
-      </div>
-
-      <div>
-        <h3 className="text-sm font-medium text-body-primary mb-2">
-          4. Array Placeholder
-        </h3>
-        <p className="text-xs text-body-secondary mb-2">
-          Concatenates array elements
-        </p>
-        <DatePicker placeholder={['Select ', 'date']} />
-      </div>
-
-      <div>
-        <h3 className="text-sm font-medium text-body-primary mb-2">
-          5. Complex React Element
-        </h3>
-        <p className="text-xs text-body-secondary mb-2">
-          Handles nested React elements
-        </p>
-        <DatePicker
-          placeholder={
-            <span style={{ fontStyle: 'italic' }}>Choose a date...</span>
-          }
-          side="top"
-        />
-      </div>
-
-      <div>
-        <h3 className="text-sm font-medium text-body-primary mb-2">
-          6. Number Placeholder
-        </h3>
-        <p className="text-xs text-body-secondary mb-2">
-          Converts number to string
-        </p>
-        <DatePicker placeholder={2024} side="top" />
+        <DatePicker placeholder="YYYY-MM-DD" side="top" />
       </div>
     </div>
   ),
@@ -236,17 +196,20 @@ export const ReactNodePlaceholders: Story = {
     docs: {
       description: {
         story: `
-This story demonstrates the ReactNode placeholder conversion functionality that enables internationalization support.
+This story demonstrates different placeholder string examples for the DatePicker component.
 
-The conversion snippet in the DatePicker component handles various ReactNode types:
-- **String**: Direct usage
-- **Number**: Converted to string
-- **FormattedMessage**: Extracts \`defaultMessage\` prop for i18n libraries
-- **React Elements**: Extracts text from \`children\` prop
-- **Arrays**: Concatenates elements
-- **Complex Elements**: Fallback handling
+The placeholder prop now accepts a simple string, making it easier for consuming projects to handle internationalization:
+- **English**: "Select a date"
+- **Japanese**: "選択してください" 
+- **Format hints**: "YYYY-MM-DD"
+- **Empty**: No placeholder
 
-This enables flexible placeholder usage while maintaining compatibility with HTML input elements that require string placeholders.
+For i18n, consuming projects can use their preferred translation library:
+\`\`\`tsx
+<DatePicker placeholder={t('datePicker.placeholder')} />
+// or
+<DatePicker placeholder={formatMessage({id: 'datePicker.placeholder'})} />
+\`\`\`
         `,
       },
     },
