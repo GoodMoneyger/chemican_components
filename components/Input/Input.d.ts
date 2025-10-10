@@ -9,6 +9,14 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
     prefixIcon?: IconProp;
     trailingIcon?: IconProp;
     onTrailingIconClick?: () => void;
+    /**
+     * Size of the trailing icon in pixels
+     */
+    trailingIconSize?: number;
+    /**
+     * Size of the prefix icon in pixels
+     */
+    prefixIconSize?: number;
 }
 export declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
 export {};
