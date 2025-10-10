@@ -33,6 +33,11 @@ const buttonVariants = cva(
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
         disabled:text-interactive-disabled disabled:bg-transparent`,
+        text: `text-interactive-primary-default
+        hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover
+        active:bg-interactive-neutral-active
+        active:text-interactive-primary-active
+        disabled:text-interactive-disabled bg-transparent`,
       },
       danger: {
         true: 'focus-visible:ring-interactive-alert-focused',
@@ -55,7 +60,7 @@ const buttonVariants = cva(
     compoundVariants: [
       {
         iconOnly: true,
-        intent: 'ghost',
+        intent: 'text',
         class: 'text-shape-interactive-primary-default',
       },
       { textOnly: true, size: 'md', class: 'px-lg' },
@@ -88,7 +93,7 @@ const buttonVariants = cva(
         active:bg-interactive-neutral-alert-active border-none`,
       },
       {
-        intent: 'ghost',
+        intent: 'text',
         danger: true,
         class: `text-interactive-alert-default
         hover:text-interactive-alert-hover
@@ -106,7 +111,7 @@ const buttonVariants = cva(
 
 const iconStyles = cva('', {
   variants: {
-    ghost: {
+    text: {
       true: '',
     },
     iconOnly: {
@@ -169,7 +174,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <span className="gap-xxs invisible flex items-center">
             {renderIcon(icon, {
               className: cn(
-                iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+                iconStyles({ size, iconOnly, text: intent === 'text' })
               ),
             })}
             {children}
@@ -194,7 +199,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         >
           {renderIcon(icon, {
             className: cn(
-              iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+              iconStyles({ size, iconOnly, text: intent === 'text' })
             ),
           })}
           {children}

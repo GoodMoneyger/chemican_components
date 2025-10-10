@@ -4,7 +4,6 @@ import {
   IconX,
   IconCircleCheckFilled,
   IconExclamationCircleFilled,
-  IconCircleXFilled,
   IconInfoCircleFilled,
 } from '@tabler/icons-react';
 
@@ -41,7 +40,7 @@ export const Toast: React.FC<ToastProps> = ({
                 />
               )}
               {level === 'error' && (
-                <IconCircleXFilled className="h-md text-shape-status-alert w-md" />
+                <IconExclamationCircleFilled className="h-md text-shape-status-alert w-md" />
               )}
               {level === 'warning' && (
                 <IconExclamationCircleFilled

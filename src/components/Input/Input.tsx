@@ -64,6 +64,14 @@ export interface InputProps
   prefixIcon?: IconProp;
   trailingIcon?: IconProp;
   onTrailingIconClick?: () => void;
+  /**
+   * Size of the trailing icon in pixels
+   */
+  trailingIconSize?: number;
+  /**
+   * Size of the prefix icon in pixels
+   */
+  prefixIconSize?: number;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -73,6 +81,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       prefixIcon,
       trailingIcon,
       onTrailingIconClick,
+      trailingIconSize = 14,
+      prefixIconSize = 14,
       className,
       ...props
     },
@@ -88,7 +98,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <div
             className={iconVariants({ position: 'prefix', interactive: false })}
           >
-            {renderIcon(prefixIcon)}
+            {renderIcon(prefixIcon, { size: prefixIconSize })}
           </div>
         )}
         <input
@@ -107,7 +117,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 })}
                 onClick={onTrailingIconClick}
               >
-                {renderIcon(trailingIcon)}
+                {renderIcon(trailingIcon, { size: trailingIconSize })}
               </button>
             ) : (
               <div
@@ -116,7 +126,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   interactive: false,
                 })}
               >
-                {renderIcon(trailingIcon)}
+                {renderIcon(trailingIcon, { size: trailingIconSize })}
               </div>
             )}
           </>
