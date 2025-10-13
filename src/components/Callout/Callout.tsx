@@ -112,7 +112,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
               {action && (
                 <Button
                   onClick={action.onClick}
-                  intent="ghost"
+                  intent="text"
                   size="xs"
                   className="py-0 text-md font-normal
                     text-interactive-primary-default h-auto underline"

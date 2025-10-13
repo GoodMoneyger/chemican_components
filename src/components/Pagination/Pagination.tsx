@@ -142,7 +142,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
         {showNavigation && (
           <div className="gap-md flex items-center">
             <Button
-              intent="ghost"
+              intent="text"
               size="sm"
               icon={IconChevronLeft}
               onClick={handlePreviousPage}
@@ -150,7 +150,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
               aria-label="Previous page"
             />
             <Button
-              intent="ghost"
+              intent="text"
               size="sm"
               icon={IconChevronRight}
               onClick={handleNextPage}

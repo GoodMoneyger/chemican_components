@@ -62,7 +62,7 @@ Default.args = {};
 export const WithIcon: StoryFn<typeof Dropdown> = () => (
   <Dropdown>
     <DropdownTrigger asChild>
-      <Button intent="ghost" icon={IconDots} />
+      <Button intent="text" icon={IconDots} />
     </DropdownTrigger>
     <DropdownContent>
       <DropdownItem icon={IconEdit}>Edit</DropdownItem>

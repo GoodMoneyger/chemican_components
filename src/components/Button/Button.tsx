@@ -28,16 +28,11 @@ const buttonVariants = cva(
         hover:bg-interactive-neutral-hover active:bg-interactive-neutral-active
         enabled:border-interactive-default disabled:bg-interactive-disabled
         disabled:text-interactive-disabled border`,
-        ghost: `text-interactive-primary-default
+        text: `text-interactive-primary-default
         hover:text-interactive-primary-hover hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
         disabled:text-interactive-disabled disabled:bg-transparent`,
-        text: `text-interactive-primary-default
-        hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover
-        active:bg-interactive-neutral-active
-        active:text-interactive-primary-active
-        disabled:text-interactive-disabled bg-transparent`,
       },
       danger: {
         true: 'focus-visible:ring-interactive-alert-focused',
@@ -184,7 +179,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {children}
             {renderIcon(trailingIcon, {
               className: cn(
-                iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+                iconStyles({ size, iconOnly, text: intent === 'text' })
               ),
             })}
           </span>
@@ -214,7 +209,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {children}
           {renderIcon(trailingIcon, {
             className: cn(
-              iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+              iconStyles({ size, iconOnly, text: intent === 'text' })
             ),
           })}
         </Comp>

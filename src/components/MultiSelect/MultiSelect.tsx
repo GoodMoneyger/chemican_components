@@ -1185,7 +1185,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   >
                     <>
                       <Button
-                        intent="ghost"
+                        intent="text"
                         size="xs"
                         className="min-w-auto"
                         onClick={handleClear}
