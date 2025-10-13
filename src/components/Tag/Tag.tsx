@@ -7,7 +7,7 @@ import { cn } from '../../utils';
 // Mapping the color codes for user defined tag colors to our design tokens
 // Reference: https://docs.google.com/spreadsheets/d/14r5PJTfzfESsKypY2cJlR65I2-DkO4RvODa04x_s1dA
 const colorCodeToTokenMap = {
-  0: ColorShapeTokens.AccentGreenPale, // Fallback: Green Pale
+  0: ColorShapeTokens.AccentGraySoft,
   1: ColorShapeTokens.AccentRedSoft,
   2: ColorShapeTokens.AccentRedSoft,
   3: ColorShapeTokens.AccentPurpleSoft,
