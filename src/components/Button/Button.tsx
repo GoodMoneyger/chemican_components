@@ -135,6 +135,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   icon?: IconProp;
+  trailingIcon?: IconProp;
   loading?: boolean;
   danger?: boolean;
 }
@@ -146,6 +147,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       className,
       icon,
+      trailingIcon,
       asChild = false,
       loading = false,
       danger = false,
@@ -155,8 +157,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot.Slot : 'button';
-    const iconOnly = Boolean(icon && !children);
-    const textOnly = Boolean(children && !icon);
+    const iconOnly = Boolean(
+      (icon || trailingIcon) && !children && !(icon && trailingIcon)
+    );
+    const textOnly = Boolean(children && !icon && !trailingIcon);
     const isDisabled = loading || props.disabled;
 
     if (loading) {
@@ -178,6 +182,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               ),
             })}
             {children}
+            {renderIcon(trailingIcon, {
+              className: cn(
+                iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+              ),
+            })}
           </span>
           <span className="inset-0 absolute flex items-center justify-center">
             <Spinner size="sm" layout="row" />
@@ -186,7 +195,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       );
     }
 
-    if (icon) {
+    if (icon || trailingIcon) {
       return (
         <Comp
           ref={ref}
@@ -203,6 +212,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             ),
           })}
           {children}
+          {renderIcon(trailingIcon, {
+            className: cn(
+              iconStyles({ size, iconOnly, ghost: intent === 'ghost' })
+            ),
+          })}
         </Comp>
       );
     }

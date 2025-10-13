@@ -53,6 +53,17 @@ const meta: Meta<typeof Button> = {
       ],
       mapping: iconMap,
     },
+    trailingIcon: {
+      control: { type: 'select' },
+      options: [
+        'None',
+        'IconArrowLeft',
+        'IconArrowRight',
+        'IconX',
+        'IconCheck',
+      ],
+      mapping: iconMap,
+    },
   },
   parameters: {
     design: {
@@ -101,6 +112,7 @@ Primary.args = {
   disabled: false,
   loading: false,
   icon: undefined,
+  trailingIcon: undefined,
   asChild: false,
   children: 'ラベル',
   danger: false,

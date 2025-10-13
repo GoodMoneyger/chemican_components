@@ -89,7 +89,7 @@ Default.args = {
   title: '見出しテキスト',
   intent: 'info',
   size: 'default',
-  showAction: false,
+  showAction: true,
   actionLabel: 'ラベル',
 };
 

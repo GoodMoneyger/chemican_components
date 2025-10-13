@@ -15,7 +15,7 @@ const searchBarWrapperVariants = cva(
       size: {
         sm: 'h-8 text-sm',
         md: 'h-10 text-md',
-        lg: 'h-12 text-lg',
+        lg: 'h-12 text-md',
       },
       state: {
         default: '',
@@ -74,7 +74,7 @@ const buttonVariants = cva(
       size: {
         sm: 'text-sm',
         md: 'text-md',
-        lg: 'text-lg',
+        lg: 'text-md',
       },
     },
     defaultVariants: {
