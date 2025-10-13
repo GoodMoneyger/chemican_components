@@ -2,7 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const buttonVariants: (props?: ({
-    intent?: "text" | "primary" | "secondary" | "tertiary" | "ghost" | null | undefined;
+    intent?: "text" | "primary" | "secondary" | "tertiary" | null | undefined;
     danger?: boolean | null | undefined;
     size?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
     iconOnly?: boolean | null | undefined;
