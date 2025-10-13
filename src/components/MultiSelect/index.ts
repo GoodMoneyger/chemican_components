@@ -4,4 +4,5 @@ export type {
   MultiSelectOption,
   MultiSelectGroup,
   MultiSelectRef,
+  RenderOptionContext,
 } from './MultiSelect';

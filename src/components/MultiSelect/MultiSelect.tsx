@@ -98,6 +98,20 @@ interface MultiSelectGroup {
 }
 
 /**
+ * Render function context for rendering custom option content
+ */
+export interface RenderOptionContext {
+  /** The option being rendered */
+  option: MultiSelectOption;
+  /** Whether this is rendering in the dropdown list or as a selected badge */
+  location: 'dropdown' | 'badge';
+  /** Whether the option is currently selected (only for dropdown) */
+  isSelected?: boolean;
+  /** Callback to remove the option (only for badge) */
+  onRemove?: () => void;
+}
+
+/**
  * Props for MultiSelect component
  */
 interface MultiSelectProps
@@ -341,6 +355,14 @@ interface MultiSelectProps
    * Optional, defaults to false.
    */
   filterByValueAndLabel?: boolean;
+
+  /**
+   * Custom render function for option content.
+   * Allows customization of how options appear in both the dropdown and as selected badges.
+   * If not provided, uses default rendering with label and optional icon.
+   * Optional, defaults to a function that renders the label with remove button for badges.
+   */
+  renderOption?: (context: RenderOptionContext) => React.ReactNode;
 }
 
 /**
@@ -408,6 +430,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       resetOnDefaultValueChange = true,
       closeOnSelect = false,
       filterByValueAndLabel = false,
+      renderOption,
       ...props
     },
     ref
@@ -771,6 +794,57 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       );
     };
 
+    // Default render function that maintains current behavior
+    const defaultRenderOption = (
+      context: RenderOptionContext
+    ): React.ReactNode => {
+      const { option, location, onRemove } = context;
+
+      if (location === 'badge') {
+        // Render as selected badge with full Tag component styling
+        const customStyle = option.style;
+        const badgeStyle: React.CSSProperties = {
+          animationDuration: `${animation}s`,
+          ...(customStyle?.badgeColor && {
+            backgroundColor: customStyle.badgeColor,
+          }),
+          ...(customStyle?.gradient && {
+            background: customStyle.gradient,
+            color: 'white',
+          }),
+        };
+
+        return (
+          <Tag
+            className={cn(
+              getBadgeAnimationClass(),
+              multiSelectVariants({ variant }),
+              customStyle?.gradient && 'border-transparent',
+              responsiveSettings.compactMode && 'text-xs px-1.5 py-0.5',
+              screenSize === 'mobile' && 'max-w-[120px] truncate',
+              singleLine && 'flex-shrink-0 whitespace-nowrap',
+              '[&>svg]:pointer-events-auto'
+            )}
+            style={badgeStyle}
+            onRemove={onRemove!}
+          >
+            {option.label}
+          </Tag>
+        );
+      }
+
+      // Render in dropdown
+      return (
+        <>
+          {renderOptionIconNode(option)}
+          <span>{option.label}</span>
+        </>
+      );
+    };
+
+    // Use provided renderOption or fall back to default
+    const effectiveRenderOption = renderOption || defaultRenderOption;
+
     React.useEffect(() => {
       if (!resetOnDefaultValueChange) return;
       const prevDefaultValue = prevDefaultValueRef.current;
@@ -980,38 +1054,19 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 .slice(0, responsiveSettings.maxCount)
                 .map((value) => {
                   const option = getOptionByValue(value);
-                  const customStyle = option?.style;
                   if (!option) {
                     return null;
                   }
-                  const badgeStyle: React.CSSProperties = {
-                    animationDuration: `${animation}s`,
-                    ...(customStyle?.badgeColor && {
-                      backgroundColor: customStyle.badgeColor,
-                    }),
-                    ...(customStyle?.gradient && {
-                      background: customStyle.gradient,
-                      color: 'white',
-                    }),
-                  };
+
+                  // Always use the render function (either custom or default)
                   return (
-                    <Tag
-                      key={value}
-                      className={cn(
-                        getBadgeAnimationClass(),
-                        multiSelectVariants({ variant }),
-                        customStyle?.gradient && 'border-transparent',
-                        responsiveSettings.compactMode &&
-                          'text-xs px-1.5 py-0.5',
-                        screenSize === 'mobile' && 'max-w-[120px] truncate',
-                        singleLine && 'flex-shrink-0 whitespace-nowrap',
-                        '[&>svg]:pointer-events-auto'
-                      )}
-                      style={badgeStyle}
-                      onRemove={() => toggleOption(value)}
-                    >
-                      {option.label}
-                    </Tag>
+                    <div key={value}>
+                      {effectiveRenderOption({
+                        option,
+                        location: 'badge',
+                        onRemove: () => toggleOption(value),
+                      })}
+                    </div>
                   );
                 })
                 .filter(Boolean)}
@@ -1141,8 +1196,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             disabled={Boolean(option.disabled)}
                           >
                             <Checkbox className="mr-2" checked={isSelected} />
-                            {renderOptionIconNode(option)}
-                            <span>{option.label}</span>
+                            {effectiveRenderOption({
+                              option,
+                              location: 'dropdown',
+                              isSelected,
+                            })}
                           </CommandItem>
                         );
                       })}
@@ -1170,8 +1228,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           disabled={Boolean(option.disabled)}
                         >
                           <Checkbox className="mr-2" checked={isSelected} />
-                          {renderOptionIconNode(option)}
-                          <span>{option.label}</span>
+                          {effectiveRenderOption({
+                            option,
+                            location: 'dropdown',
+                            isSelected,
+                          })}
                         </CommandItem>
                       );
                     })}

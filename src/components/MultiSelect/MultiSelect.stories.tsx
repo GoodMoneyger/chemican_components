@@ -1,9 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { IconUsers, IconStar, IconHeart } from '@tabler/icons-react';
+import { IconUsers, IconStar, IconHeart, IconX } from '@tabler/icons-react';
 
 import { MultiSelect } from './MultiSelect';
-import type { MultiSelectOption, MultiSelectGroup } from './MultiSelect';
+import type {
+  MultiSelectOption,
+  MultiSelectGroup,
+  RenderOptionContext,
+} from './MultiSelect';
 
 const meta: Meta<typeof MultiSelect> = {
   title: 'Components/MultiSelect',
@@ -334,6 +338,74 @@ export const FilterByValueAndLabel: Story = {
       description: {
         story:
           'This story demonstrates filtering by both value and label. Try searching for part of a UUID (e.g., "550e8400") or part of a slug (e.g., "cherry-fruit") to see both value and label matching in action.',
+      },
+    },
+  },
+};
+
+export const CustomRenderOption: Story = {
+  args: {
+    options: optionsWithIcons,
+    placeholder: 'Custom render...',
+    renderOption: ({
+      option,
+      location,
+      isSelected,
+      onRemove,
+    }: RenderOptionContext) => {
+      if (location === 'badge') {
+        return (
+          <div
+            className="gap-1 px-2 py-1 rounded-md bg-surface-secondary
+              border-divider-default inline-flex items-center border"
+          >
+            {option.icon &&
+              React.createElement(option.icon, { className: 'h-3 w-3' })}
+            <span className="text-sm font-medium">{option.label}</span>
+            {onRemove && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove();
+                }}
+                className="ml-1 hover:bg-interactive-alert-hover rounded p-0.5"
+              >
+                <IconX className="h-3 w-3 text-interactive-alert-default" />
+              </button>
+            )}
+          </div>
+        );
+      }
+
+      // Render in dropdown
+      return (
+        <div className="gap-2 flex items-center">
+          {option.icon &&
+            React.createElement(option.icon, {
+              className: `h-4 w-4 ${isSelected ? 'text-interactive-primary-default' : 'text-body-secondary'}`,
+            })}
+          <span
+            className={
+              isSelected ? 'font-bold text-interactive-primary-default' : ''
+            }
+          >
+            {option.label}
+          </span>
+          {isSelected && (
+            <span className="text-xs text-body-success ml-auto">
+              ✓ Selected
+            </span>
+          )}
+        </div>
+      );
+    },
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates custom rendering of options. The renderOption function allows you to customize how options appear in both the dropdown list and as selected badges. Notice the different styling for selected vs unselected states and the custom remove button.',
       },
     },
   },
