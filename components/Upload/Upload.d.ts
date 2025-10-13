@@ -2,7 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 declare const uploadVariants: (props?: ({
     size?: "small" | "large" | null | undefined;
-    state?: "default" | "success" | "error" | "dragging" | "inProgress" | null | undefined;
+    state?: "default" | "success" | "error" | "inProgress" | "dragging" | null | undefined;
     disabled?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface UploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>, VariantProps<typeof uploadVariants> {

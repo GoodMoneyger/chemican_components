@@ -55,6 +55,19 @@ interface MultiSelectGroup {
     options: MultiSelectOption[];
 }
 /**
+ * Render function context for rendering custom option content
+ */
+export interface RenderOptionContext {
+    /** The option being rendered */
+    option: MultiSelectOption;
+    /** Whether this is rendering in the dropdown list or as a selected badge */
+    location: 'dropdown' | 'badge';
+    /** Whether the option is currently selected (only for dropdown) */
+    isSelected?: boolean;
+    /** Callback to remove the option (only for badge) */
+    onRemove?: () => void;
+}
+/**
  * Props for MultiSelect component
  */
 interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'>, VariantProps<typeof multiSelectVariants> {
@@ -258,6 +271,13 @@ interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
      * Optional, defaults to false.
      */
     filterByValueAndLabel?: boolean;
+    /**
+     * Custom render function for option content.
+     * Allows customization of how options appear in both the dropdown and as selected badges.
+     * If not provided, uses default rendering with label and optional icon.
+     * Optional, defaults to a function that renders the label with remove button for badges.
+     */
+    renderOption?: (context: RenderOptionContext) => React.ReactNode;
 }
 /**
  * Imperative methods exposed through ref
