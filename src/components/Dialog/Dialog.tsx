@@ -1,6 +1,5 @@
 import React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { IconX } from '@tabler/icons-react';
 
 import { Button } from '../Button';
 
@@ -12,6 +11,7 @@ export interface DialogProps
   title: string;
   confirmButtonLabel: string;
   cancelButtonLabel?: string;
+  actionButtonLabel?: string;
 }
 
 export const Dialog: React.FC<DialogProps> = ({
@@ -21,6 +21,7 @@ export const Dialog: React.FC<DialogProps> = ({
   children,
   confirmButtonLabel,
   cancelButtonLabel = 'キャンセル',
+  actionButtonLabel = 'アクションボタン',
 }) => {
   return (
     <RadixDialog.Root open={isOpen} onOpenChange={onClose}>
@@ -34,15 +35,17 @@ export const Dialog: React.FC<DialogProps> = ({
           transform"
       >
         <div className="flex flex-col">
-          <div className="px-xl py-lg flex flex-grow justify-between">
-            <div>
-              {title && <h2 className="text-xxl text-body-primary">{title}</h2>}
-            </div>
-            <RadixDialog.Close asChild>
-              <button className="cursor-pointer">
-                <IconX className="h-xl text-body-primary w-xl" />
-              </button>
-            </RadixDialog.Close>
+          <div
+            className="px-xl py-lg flex flex-grow items-center justify-between"
+          >
+            {title && (
+              <span
+                className="text-xxl text-body-primary font-bold flex h-[18px]
+                  items-center"
+              >
+                {title}
+              </span>
+            )}
           </div>
           <div
             className="border-divider-default bg-surface-secondary px-xl py-lg
@@ -50,13 +53,18 @@ export const Dialog: React.FC<DialogProps> = ({
           >
             {children}
           </div>
-          <div className="gap-xs px-md py-lg flex flex-grow">
+          <div className="px-md py-lg flex justify-between">
             <RadixDialog.Close asChild>
-              <Button intent="secondary">{cancelButtonLabel}</Button>
+              <Button intent="tertiary">{cancelButtonLabel}</Button>
             </RadixDialog.Close>
-            <RadixDialog.Close asChild>
-              <Button intent="primary">{confirmButtonLabel}</Button>
-            </RadixDialog.Close>
+            <div className="gap-xs flex">
+              <RadixDialog.Close asChild>
+                <Button intent="secondary">{actionButtonLabel}</Button>
+              </RadixDialog.Close>
+              <RadixDialog.Close asChild>
+                <Button intent="primary">{confirmButtonLabel}</Button>
+              </RadixDialog.Close>
+            </div>
           </div>
         </div>
       </RadixDialog.Content>
