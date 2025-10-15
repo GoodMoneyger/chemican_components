@@ -22,7 +22,7 @@ export interface TextFieldProps
   /**
    * Description text to display below the input
    */
-  description?: React.ReactNode;
+  description?: string;
   /**
    * Whether the field is optional
    */
