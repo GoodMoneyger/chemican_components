@@ -24,6 +24,9 @@ const meta: Meta<typeof Tag> = {
       control: 'select',
       options: ['sm', 'md'],
     },
+    selected: {
+      control: 'boolean',
+    },
     onRemove: {
       control: 'boolean',
       defaultValue: false,
@@ -66,25 +69,45 @@ WithRemoveButton.args = {
   onRemove: () => alert('Tag removed!'),
 };
 
+export const SelectedTag = TagTemplate.bind({});
+SelectedTag.args = {
+  children: '選択されたタグ',
+  selected: true,
+  accentColor: ColorShapeTokens.AccentBlueSoft,
+};
+
 export const WithColorCode = TagTemplate.bind({});
 WithColorCode.args = {
   children: 'カラーコード1',
   colorCode: 1,
 };
 
-export const ColorCodeShowcase = () => (
+export const ColorCodeShowcase: StoryFn<{ selected?: boolean }> = ({
+  selected = false,
+}) => (
   <div className="gap-2 flex flex-wrap">
     {Array.from({ length: 19 }, (_, i) => i).map((colorCode) => (
       <Tag
         key={colorCode}
         // prettier-ignore
         colorCode={colorCode as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18}
+        selected={selected}
       >
         カラー {colorCode}
       </Tag>
     ))}
   </div>
 );
+
+ColorCodeShowcase.args = {
+  selected: false,
+};
+
+ColorCodeShowcase.argTypes = {
+  selected: {
+    control: 'boolean',
+  },
+};
 
 export const ConflictingProps = TagTemplate.bind({});
 ConflictingProps.args = {
