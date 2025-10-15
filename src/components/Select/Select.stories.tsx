@@ -2,6 +2,8 @@ import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 import { IconRocket, IconBuilding, IconUser } from '@tabler/icons-react';
 
+import { FormField } from '../FormField';
+
 import type { SelectProps } from './Select';
 import { Select } from './Select';
 
@@ -40,7 +42,15 @@ const meta: Meta<typeof Select> = {
 
 export default meta;
 
-const Template: StoryFn<SelectProps> = (args) => <Select {...args} />;
+const Template: StoryFn<SelectProps> = (args) => (
+  <FormField
+    name="select-field"
+    label="ラベル (任意)"
+    description="サポートテキストが入ります。"
+  >
+    <Select {...args} />
+  </FormField>
+);
 
 const CompactTemplate: StoryFn<SelectProps> = (args) => <Select {...args} />;
 

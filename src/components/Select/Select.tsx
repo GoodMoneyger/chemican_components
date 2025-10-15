@@ -9,14 +9,14 @@ import { cn, renderIcon } from '../../lib/utils';
 
 const selectVariants = cva(
   `bg-surface-primary text-body-primary disabled:border-interactive-disabled
-  disabled:bg-surface-disabled disabled:text-body-disabled inline-flex
-  items-center justify-between border focus:ring-4 focus:outline-0
-  enabled:cursor-pointer`,
+  disabled:bg-surface-disabled disabled:text-body-disabled
+  [&[data-placeholder]]:text-body-secondary inline-flex items-center
+  justify-between border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
   {
     variants: {
       variant: {
-        default: `border-interactive-default py-sm pr-sm pl-md
-        hover:border-interactive-hover rounded gap-md h-[3rem] w-full`,
+        default: `border-interactive-default p-4 hover:border-interactive-hover
+        rounded gap-2 h-12 w-full`,
         compact: `py-1 px-xs rounded-sm gap-xxs
         hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
       },
@@ -132,22 +132,17 @@ export const Select: React.FC<SelectProps> = ({
       >
         <div className="inline-flex items-center">
           {renderIcon(Icon, {
-            className: cn('text-body-primary', {
-              'mr-xxs h-lg w-lg': variant === 'default',
-              'mr-xxs h-4 w-4': variant === 'compact',
-            }),
+            className: cn('text-body-secondary mr-xxs h-3.5 w-3.5'),
           })}
           <RadixSelect.Value
             placeholder={placeholder || 'Select an option'}
-            className={cn('text-body-primary', {
+            className={cn({
               'text-sm': variant === 'compact',
             })}
           />
         </div>
         <RadixSelect.Icon
-          className={cn('text-body-primary', {
-            'h-md w-md': variant === 'default',
-            'h-4 w-4': variant === 'compact',
+          className={cn('text-body-primary h-3.5 w-3.5', {
             'text-body-disabled': props.disabled,
           })}
         >
@@ -187,9 +182,9 @@ export const Select: React.FC<SelectProps> = ({
                       })}
                     >
                       {renderIcon(option.icon, {
-                        className: cn({
-                          '-ml-xxs h-lg w-lg': variant === 'default',
-                          'mr-xxs h-4 w-4': variant === 'compact',
+                        className: cn('h-3.5 w-3.5', {
+                          '-ml-xxs': variant === 'default',
+                          'mr-xxs': variant === 'compact',
                         }),
                       })}
                       <RadixSelect.ItemText>
