@@ -23,5 +23,7 @@ export * from './Table';
 export * from './TabBar';
 export * from './Tag';
 export * from './Textarea';
+export * from './TextField';
+export * from './TextLink';
 export * from './Toast';
 export * from './Upload';
