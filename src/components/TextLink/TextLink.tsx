@@ -8,10 +8,11 @@ import { cn, renderIcon } from '../../lib/utils';
 
 const textLinkVariants = cva(
   `font-normal inline-flex items-center justify-center border border-transparent
-  underline decoration-solid decoration-from-font transition-colors`,
+  underline decoration-solid decoration-from-font underline-offset-[3px]
+  transition-colors`,
   {
     variants: {
-      variant: {
+      intent: {
         primary: `text-interactive-primary-default
         hover:text-interactive-primary-hover
         active:text-interactive-primary-active`,
@@ -19,24 +20,24 @@ const textLinkVariants = cva(
         active:text-interactive-primary-active`,
       },
       size: {
-        large: 'gap-1 text-lg min-h-[24px] min-w-[94px]',
-        medium: 'gap-0.5 text-md min-h-[21px] min-w-[80px]',
-        small: 'gap-0.5 text-sm min-h-[18px] min-w-[69px]',
-        xsmall: 'gap-0.5 text-xs min-h-[15px] min-w-[58px]',
+        lg: 'gap-1 text-lg',
+        md: 'gap-0.5 text-md',
+        sm: 'gap-0.5 text-sm',
+        xs: 'gap-0.5 text-xs',
       },
     },
     defaultVariants: {
-      variant: 'primary',
-      size: 'medium',
+      intent: 'primary',
+      size: 'md',
     },
   }
 );
 
 const iconSizeMap = {
-  large: 16,
-  medium: 14,
-  small: 12,
-  xsmall: 10,
+  lg: 16,
+  md: 14,
+  sm: 12,
+  xs: 10,
 } as const;
 
 export interface TextLinkProps
@@ -59,21 +60,21 @@ export interface TextLinkProps
    */
   trailingIcon?: IconProp;
   /**
-   * Link variant
+   * Link intent
    */
-  variant?: 'primary' | 'secondary';
+  intent?: 'primary' | 'secondary';
   /**
    * Link size
    */
-  size?: 'large' | 'medium' | 'small' | 'xsmall';
+  size?: 'lg' | 'md' | 'sm' | 'xs';
 }
 
 export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
   (
     {
       className,
-      variant = 'primary',
-      size = 'medium',
+      intent = 'primary',
+      size = 'md',
       asChild = false,
       leadingIcon,
       trailingIcon,
@@ -105,7 +106,7 @@ export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
     return (
       <Comp
         ref={ref}
-        className={cn(textLinkVariants({ variant, size }), className)}
+        className={cn(textLinkVariants({ intent, size }), className)}
         onClick={onClick}
         {...props}
       >

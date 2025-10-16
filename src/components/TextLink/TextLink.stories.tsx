@@ -18,16 +18,13 @@ const meta: Meta<typeof TextLink> = {
   },
   tags: ['autodocs'],
   argTypes: {
-    variant: {
+    intent: {
       control: 'select',
       options: ['primary', 'secondary'],
     },
     size: {
       control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
-    },
-    disabled: {
-      control: 'boolean',
+      options: ['lg', 'md', 'sm', 'xs'],
     },
     leadingIcon: {
       control: false,
@@ -76,18 +73,18 @@ export const WithBothIcons: Story = {
   },
 };
 
-export const Variants: Story = {
+export const Intents: Story = {
   render: () => (
     <div className="space-y-4">
       <div>
-        <h3 className="text-sm font-medium mb-2">Primary Variant</h3>
-        <TextLink href="#" variant="primary">
+        <h3 className="text-sm font-medium mb-2">Primary Intent</h3>
+        <TextLink href="#" intent="primary">
           Primary Link
         </TextLink>
       </div>
       <div>
-        <h3 className="text-sm font-medium mb-2">Secondary Variant</h3>
-        <TextLink href="#" variant="secondary">
+        <h3 className="text-sm font-medium mb-2">Secondary Intent</h3>
+        <TextLink href="#" intent="secondary">
           Secondary Link
         </TextLink>
       </div>
@@ -100,52 +97,27 @@ export const Sizes: Story = {
     <div className="space-y-4">
       <div>
         <h3 className="text-sm font-medium mb-2">Large (16px icons)</h3>
-        <TextLink href="#" size="large" leadingIcon={IconMail}>
+        <TextLink href="#" size="lg" leadingIcon={IconMail}>
           Large Text Link
         </TextLink>
       </div>
       <div>
         <h3 className="text-sm font-medium mb-2">Medium (14px icons)</h3>
-        <TextLink href="#" size="medium" leadingIcon={IconMail}>
+        <TextLink href="#" size="md" leadingIcon={IconMail}>
           Medium Text Link
         </TextLink>
       </div>
       <div>
         <h3 className="text-sm font-medium mb-2">Small (12px icons)</h3>
-        <TextLink href="#" size="small" leadingIcon={IconMail}>
+        <TextLink href="#" size="sm" leadingIcon={IconMail}>
           Small Text Link
         </TextLink>
       </div>
       <div>
         <h3 className="text-sm font-medium mb-2">XSmall (10px icons)</h3>
-        <TextLink href="#" size="xsmall" leadingIcon={IconMail}>
+        <TextLink href="#" size="xs" leadingIcon={IconMail}>
           XSmall Text Link
         </TextLink>
-      </div>
-    </div>
-  ),
-};
-
-export const States: Story = {
-  render: () => (
-    <div className="space-y-4">
-      <div>
-        <h3 className="text-sm font-medium mb-2">Default State</h3>
-        <TextLink href="#">Default Link</TextLink>
-      </div>
-      <div>
-        <h3 className="text-sm font-medium mb-2">Disabled State</h3>
-        <TextLink href="#" disabled>
-          Disabled Link
-        </TextLink>
-      </div>
-      <div>
-        <h3 className="text-sm font-medium mb-2">Hover/Active States</h3>
-        <p className="text-sm text-body-secondary mb-2">
-          Hover and active states are handled by CSS and will show when
-          interacting with the links.
-        </p>
-        <TextLink href="#">Hover over me</TextLink>
       </div>
     </div>
   ),
@@ -154,21 +126,21 @@ export const States: Story = {
 export const AllCombinations: Story = {
   render: () => (
     <div className="space-y-6">
-      <h2 className="text-lg font-bold">Primary Variant - All Sizes</h2>
+      <h2 className="text-lg font-bold">Primary Intent - All Sizes</h2>
       <div className="gap-4 grid grid-cols-2">
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Default</h3>
           <div className="space-y-2">
-            <TextLink href="#" variant="primary" size="large">
+            <TextLink href="#" intent="primary" size="lg">
               Large Primary
             </TextLink>
-            <TextLink href="#" variant="primary" size="medium">
+            <TextLink href="#" intent="primary" size="md">
               Medium Primary
             </TextLink>
-            <TextLink href="#" variant="primary" size="small">
+            <TextLink href="#" intent="primary" size="sm">
               Small Primary
             </TextLink>
-            <TextLink href="#" variant="primary" size="xsmall">
+            <TextLink href="#" intent="primary" size="xs">
               XSmall Primary
             </TextLink>
           </div>
@@ -178,32 +150,32 @@ export const AllCombinations: Story = {
           <div className="space-y-2">
             <TextLink
               href="#"
-              variant="primary"
-              size="large"
+              intent="primary"
+              size="lg"
               trailingIcon={IconArrowRight}
             >
               Large Primary
             </TextLink>
             <TextLink
               href="#"
-              variant="primary"
-              size="medium"
+              intent="primary"
+              size="md"
               trailingIcon={IconArrowRight}
             >
               Medium Primary
             </TextLink>
             <TextLink
               href="#"
-              variant="primary"
-              size="small"
+              intent="primary"
+              size="sm"
               trailingIcon={IconArrowRight}
             >
               Small Primary
             </TextLink>
             <TextLink
               href="#"
-              variant="primary"
-              size="xsmall"
+              intent="primary"
+              size="xs"
               trailingIcon={IconArrowRight}
             >
               XSmall Primary
@@ -212,21 +184,21 @@ export const AllCombinations: Story = {
         </div>
       </div>
 
-      <h2 className="text-lg font-bold">Secondary Variant - All Sizes</h2>
+      <h2 className="text-lg font-bold">Secondary Intent - All Sizes</h2>
       <div className="gap-4 grid grid-cols-2">
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Default</h3>
           <div className="space-y-2">
-            <TextLink href="#" variant="secondary" size="large">
+            <TextLink href="#" intent="secondary" size="lg">
               Large Secondary
             </TextLink>
-            <TextLink href="#" variant="secondary" size="medium">
+            <TextLink href="#" intent="secondary" size="md">
               Medium Secondary
             </TextLink>
-            <TextLink href="#" variant="secondary" size="small">
+            <TextLink href="#" intent="secondary" size="sm">
               Small Secondary
             </TextLink>
-            <TextLink href="#" variant="secondary" size="xsmall">
+            <TextLink href="#" intent="secondary" size="xs">
               XSmall Secondary
             </TextLink>
           </div>
@@ -236,32 +208,32 @@ export const AllCombinations: Story = {
           <div className="space-y-2">
             <TextLink
               href="#"
-              variant="secondary"
-              size="large"
+              intent="secondary"
+              size="lg"
               leadingIcon={IconPhone}
             >
               Large Secondary
             </TextLink>
             <TextLink
               href="#"
-              variant="secondary"
-              size="medium"
+              intent="secondary"
+              size="md"
               leadingIcon={IconPhone}
             >
               Medium Secondary
             </TextLink>
             <TextLink
               href="#"
-              variant="secondary"
-              size="small"
+              intent="secondary"
+              size="sm"
               leadingIcon={IconPhone}
             >
               Small Secondary
             </TextLink>
             <TextLink
               href="#"
-              variant="secondary"
-              size="xsmall"
+              intent="secondary"
+              size="xs"
               leadingIcon={IconPhone}
             >
               XSmall Secondary
@@ -312,11 +284,11 @@ export const UseCases: Story = {
         <h3 className="text-lg font-medium mb-4">Inline Links in Text</h3>
         <p className="text-body-primary">
           For more information, please{' '}
-          <TextLink href="/contact" size="small">
+          <TextLink href="/contact" size="sm">
             contact us
           </TextLink>{' '}
           or{' '}
-          <TextLink href="/docs" size="small" trailingIcon={IconExternalLink}>
+          <TextLink href="/docs" size="sm" trailingIcon={IconExternalLink}>
             read the documentation
           </TextLink>
           .
