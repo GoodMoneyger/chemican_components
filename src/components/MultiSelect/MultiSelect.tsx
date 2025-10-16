@@ -981,7 +981,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   isPopoverOpen && 'ring-interactive-focused ring-4',
                   responsiveSettings.compactMode && 'min-h-8 text-sm',
                   screenSize === 'mobile' && 'min-h-12',
-                  disabled && 'cursor-not-allowed opacity-50'
+                  disabled && 'text-interactive-disabled cursor-not-allowed'
                 )}
                 style={{
                   ...widthConstraints,
@@ -1191,7 +1191,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             }${option.disabled ? ', disabled' : ''}`}
                             className={cn(
                               'cursor-pointer',
-                              option.disabled && 'cursor-not-allowed opacity-50'
+                              option.disabled &&
+                                `text-interactive-disabled cursor-not-allowed
+                                  opacity-100 data-[disabled=true]:opacity-100`
                             )}
                             disabled={Boolean(option.disabled)}
                           >
@@ -1223,7 +1225,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           }${option.disabled ? ', disabled' : ''}`}
                           className={cn(
                             'cursor-pointer',
-                            option.disabled && 'cursor-not-allowed opacity-50'
+                            option.disabled &&
+                              `text-interactive-disabled cursor-not-allowed
+                                opacity-100 data-[disabled=true]:opacity-100`
                           )}
                           disabled={Boolean(option.disabled)}
                         >

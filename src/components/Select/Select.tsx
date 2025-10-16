@@ -60,8 +60,10 @@ const selectContentVariants = cva(
 );
 
 const selectItemVariants = cva(
-  `disabled:bg-surface-disabled disabled:text-interactive-disabled flex
-  cursor-pointer items-center border-0 ring-0 focus:outline-0`,
+  `disabled:bg-surface-disabled disabled:text-interactive-disabled
+  data-[disabled]:bg-surface-disabled data-[disabled]:text-interactive-disabled
+  flex cursor-pointer items-center border-0 ring-0 focus:outline-0
+  disabled:cursor-not-allowed data-[disabled]:cursor-not-allowed`,
   {
     variants: {
       variant: {
@@ -98,6 +100,7 @@ export interface SelectProps
     label: React.ReactNode;
     icon?: IconProp;
     type?: 'Option' | 'Group' | 'Separator';
+    disabled?: boolean;
   }[];
   placeholder?: React.ReactNode;
   className?: string;
@@ -176,6 +179,7 @@ export const Select: React.FC<SelectProps> = ({
                     <RadixSelect.Item
                       key={index}
                       value={option.value}
+                      disabled={option.disabled ?? false}
                       className={selectItemVariants({
                         variant,
                         isSelected: value === option.value,
@@ -185,9 +189,14 @@ export const Select: React.FC<SelectProps> = ({
                         className: cn('h-3.5 w-3.5', {
                           '-ml-xxs': variant === 'default',
                           'mr-xxs': variant === 'compact',
+                          'text-interactive-disabled': option.disabled,
                         }),
                       })}
-                      <RadixSelect.ItemText>
+                      <RadixSelect.ItemText
+                        className={cn('flex-1', {
+                          'text-interactive-disabled': option.disabled,
+                        })}
+                      >
                         {option.label}
                       </RadixSelect.ItemText>
                       <RadixSelect.ItemIndicator />
