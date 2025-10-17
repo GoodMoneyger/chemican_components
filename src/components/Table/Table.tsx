@@ -14,17 +14,55 @@ interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
 }
 
 const Table = React.forwardRef<HTMLTableElement, TableProps>(
-  ({ className, children, ...props }, ref) => (
-    <div className="border-surface-default bg-surface-primary relative border">
-      <table
-        ref={ref}
-        className={cn('w-full caption-bottom', className)}
-        {...props}
+  (
+    {
+      className,
+      loading = false,
+      loadingText = 'ローディング中…',
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const cloneChild = (child: React.ReactElement) => {
+      if (child.type === TableHeader) {
+        return React.cloneElement(child, { loading });
+      }
+      if (child.type === TableBody) {
+        return React.cloneElement(child, {
+          loading,
+          loadingText,
+          colSpan: 100,
+        });
+      }
+      return child;
+    };
+
+    const clonedChildren = React.Children.map(children, (child) => {
+      if (React.isValidElement(child)) {
+        return cloneChild(child);
+      }
+      return child;
+    });
+
+    return (
+      <div
+        className="border-surface-default bg-surface-primary relative w-fit
+          border"
       >
-        {children}
-      </table>
-    </div>
-  )
+        <table
+          ref={ref}
+          className={cn(
+            'table-fixed caption-bottom border-collapse',
+            className
+          )}
+          {...props}
+        >
+          {clonedChildren}
+        </table>
+      </div>
+    );
+  }
 );
 Table.displayName = 'Table';
 
@@ -45,8 +83,8 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
     >
       {children}
       {loading && (
-        <tr>
-          <td colSpan={100} className="p-0 h-0">
+        <tr className="inset-x-0 top-10 absolute">
+          <td colSpan={100} className="left-0 right-0 absolute">
             <Progress
               indeterminate
               className="bg-surface-primary border-b-divider-default box-content
@@ -77,22 +115,26 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
       ...props
     },
     ref
-  ) => (
-    <tbody ref={ref} className={className} {...props}>
-      {loading ? (
-        <tr>
-          <td
-            colSpan={colSpan}
-            className="py-sm min-h-12 px-[1.44rem] text-center align-middle"
-          >
-            {loadingText}
-          </td>
-        </tr>
-      ) : (
-        children
-      )}
-    </tbody>
-  )
+  ) => {
+    const hasChildren = React.Children.count(children) > 1;
+
+    return (
+      <tbody ref={ref} className={className} {...props}>
+        {loading && !hasChildren ? (
+          <tr>
+            <td
+              colSpan={colSpan}
+              className="py-sm min-h-12 px-[1.44rem] text-center align-middle"
+            >
+              {loadingText}
+            </td>
+          </tr>
+        ) : (
+          children
+        )}
+      </tbody>
+    );
+  }
 );
 TableBody.displayName = 'TableBody';
 
@@ -115,8 +157,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      `border-surface-default hover:bg-interactive-neutral-hover
-      data-[state=selected]:bg-interactive-neutral-selected border-b
+      `border-surface-default hover:bg-interactive-neutral-hover border-b
       transition-colors`,
       className
     )}
