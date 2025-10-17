@@ -40,7 +40,7 @@ export interface TagProps {
 }
 
 const tagVariants = cva(
-  `gap-xxs text-accent-gray-strong py-xxs px-xs inline-flex items-center
+  `gap-xxs text-accent-gray-strong py-xxs px-xs h-5.5 inline-flex items-center
   rounded-full border border-transparent leading-none`,
   {
     variants: {

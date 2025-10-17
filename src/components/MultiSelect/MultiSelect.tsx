@@ -1192,8 +1192,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             className={cn(
                               'cursor-pointer',
                               option.disabled &&
-                                `text-interactive-disabled cursor-not-allowed
-                                  opacity-100 data-[disabled=true]:opacity-100`
+                                'text-interactive-disabled cursor-not-allowed'
                             )}
                             disabled={Boolean(option.disabled)}
                           >
@@ -1226,8 +1225,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           className={cn(
                             'cursor-pointer',
                             option.disabled &&
-                              `text-interactive-disabled cursor-not-allowed
-                                opacity-100 data-[disabled=true]:opacity-100`
+                              'text-interactive-disabled cursor-not-allowed'
                           )}
                           disabled={Boolean(option.disabled)}
                         >

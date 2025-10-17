@@ -186,7 +186,7 @@ export const Select: React.FC<SelectProps> = ({
                       })}
                     >
                       {renderIcon(option.icon, {
-                        className: cn('h-3.5 w-3.5', {
+                        className: cn('h-5 w-5', {
                           '-ml-xxs': variant === 'default',
                           'mr-xxs': variant === 'compact',
                           'text-interactive-disabled': option.disabled,
