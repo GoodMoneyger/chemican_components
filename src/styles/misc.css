@@ -1,0 +1,9 @@
+@theme inline {
+  --z-index-slight: 1;
+  --z-index-navigation: 10;
+  --z-index-drawer: 20;
+  --z-index-dialog: 30;
+  --z-index-dropdown: 40;
+  --z-index-tooltip: 50;
+  --z-index-max: 9999;
+}

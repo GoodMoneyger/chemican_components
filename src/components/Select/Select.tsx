@@ -44,7 +44,8 @@ const selectVariants = cva(
 );
 
 const selectContentVariants = cva(
-  'bg-surface-primary relative z-50 w-full min-w-[8rem] overflow-hidden border',
+  `bg-surface-primary z-dropdown relative w-full min-w-[8rem] overflow-hidden
+  border`,
   {
     variants: {
       variant: {

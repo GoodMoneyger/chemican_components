@@ -19,8 +19,8 @@ export const SideNavigationCollapseButton = React.forwardRef<
       ref={ref}
       className={cn(
         `p-xxs bg-surface-primary text-interactive-primary-default top-2.5
-        right-0 rounded ease-in-out absolute z-10 cursor-pointer transition-all
-        duration-200`,
+        right-0 rounded ease-in-out z-slight absolute cursor-pointer
+        transition-all duration-200`,
         className
       )}
       style={{

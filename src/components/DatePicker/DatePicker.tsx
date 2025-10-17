@@ -8,7 +8,7 @@ import { Calendar } from '../Calendar/Calendar';
 import { Input } from '../Input/Input';
 
 // Popover content classes
-const contentClasses = `bg-surface-primary rounded-lg z-50 w-auto  max-w-none shadow-lg`;
+const contentClasses = `bg-surface-primary rounded-lg z-dropdown w-auto  max-w-none shadow-lg`;
 
 export interface DatePickerProps
   extends Omit<
