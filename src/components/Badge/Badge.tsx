@@ -8,19 +8,19 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const badgeVariants = cva(
-  `px-xxs text-xs font-bold inline-flex min-h-[18px] flex-shrink-0 items-center
-  justify-center leading-none`,
+  `px-xxs text-xs font-bold h-4.5 relative inline-flex flex-shrink-0
+  items-center justify-center leading-none`,
   {
     variants: {
-      variant: {
+      intent: {
         default: 'rounded-sm bg-[#d0f5a2] text-[#197A70]',
         new: 'rounded-sm text-accent-purple-soft bg-[#ECDDFF]',
-        danger: `rounded-sm border-interactive-alert-default gap-xxxs
-        text-body-alert border border-dashed`,
+        danger: `rounded-sm border-interactive-alert-default text-body-alert
+        pl-4.5 border border-dashed`,
       },
     },
     defaultVariants: {
-      variant: 'default',
+      intent: 'default',
     },
   }
 );
@@ -29,12 +29,12 @@ export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {
   /**
-   * The variant of the badge
+   * The intent of the badge
    * @default 'default'
    */
-  variant?: 'default' | 'new' | 'danger';
+  intent?: 'default' | 'new' | 'danger';
   /**
-   * Icon to display (only for danger variant in regular mode)
+   * Icon to display (only for danger intent in regular mode)
    * Note: Icons are not rendered when using asChild mode
    */
   icon?: IconProp;
@@ -50,15 +50,15 @@ export interface BadgeProps
    *
    * @example
    * // Regular badge
-   * <Badge variant="new">New Item</Badge>
+   * <Badge intent="new">New Item</Badge>
    *
    * // AsChild with button
-   * <Badge asChild variant="new">
+   * <Badge asChild intent="new">
    *   <button onClick={handleClick}>Clickable Badge</button>
    * </Badge>
    *
    * // AsChild with link
-   * <Badge asChild variant="default">
+   * <Badge asChild intent="default">
    *   <a href="/path">Link Badge</a>
    * </Badge>
    *
@@ -70,7 +70,7 @@ export interface BadgeProps
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
   (
     {
-      variant = 'default',
+      intent = 'default',
       icon,
       className,
       children,
@@ -79,13 +79,13 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     },
     ref
   ) => {
-    const defaultIcon = variant === 'danger' ? IconAlertCircle : undefined;
+    const defaultIcon = intent === 'danger' ? IconAlertCircle : undefined;
     const displayIcon = icon || defaultIcon;
 
     if (asChild) {
       return (
         <Slot.Slot
-          className={cn(badgeVariants({ variant }), className)}
+          className={cn(badgeVariants({ intent }), className)}
           ref={ref}
           {...props}
         >
@@ -96,14 +96,15 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 
     return (
       <span
-        className={cn(badgeVariants({ variant }), className)}
+        className={cn(badgeVariants({ intent }), className)}
         ref={ref}
         {...props}
       >
-        {variant === 'danger' &&
+        {intent === 'danger' &&
           displayIcon &&
           renderIcon(displayIcon, {
-            className: 'w-3 h-3',
+            className:
+              'w-3 h-3 absolute left-1 top-1/2 transform -translate-y-1/2',
           })}
         {children}
       </span>

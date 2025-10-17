@@ -61,9 +61,9 @@ const selectContentVariants = cva(
 
 const selectItemVariants = cva(
   `disabled:bg-surface-disabled disabled:text-interactive-disabled
-  data-[disabled]:bg-surface-disabled data-[disabled]:text-interactive-disabled
-  flex cursor-pointer items-center border-0 ring-0 focus:outline-0
-  disabled:cursor-not-allowed data-[disabled]:cursor-not-allowed`,
+  data-[disabled]:text-interactive-disabled flex cursor-pointer items-center
+  border-0 ring-0 focus:outline-0 disabled:cursor-not-allowed
+  data-[disabled]:cursor-not-allowed`,
   {
     variants: {
       variant: {
