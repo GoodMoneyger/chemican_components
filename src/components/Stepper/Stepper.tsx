@@ -109,7 +109,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
                         ? 'text-body-primary font-medium'
                         : undefined,
                       step.status === 'upcoming'
-                        ? 'text-body-secondary'
+                        ? 'text-body-primary'
                         : undefined
                     )}
                   >
