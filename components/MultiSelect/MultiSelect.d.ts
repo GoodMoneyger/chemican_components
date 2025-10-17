@@ -212,6 +212,11 @@ interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
      */
     disabled?: boolean;
     /**
+     * If true, displays the component in an error/invalid state with red border.
+     * Optional, defaults to false.
+     */
+    invalid?: boolean;
+    /**
      * Responsive configuration for different screen sizes.
      * Allows customizing maxCount and other properties based on viewport.
      * Can be boolean true for default responsive behavior or an object for custom configuration.
