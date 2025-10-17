@@ -288,6 +288,12 @@ interface MultiSelectProps
   disabled?: boolean;
 
   /**
+   * If true, displays the component in an error/invalid state with red border.
+   * Optional, defaults to false.
+   */
+  invalid?: boolean;
+
+  /**
    * Responsive configuration for different screen sizes.
    * Allows customizing maxCount and other properties based on viewport.
    * Can be boolean true for default responsive behavior or an object for custom configuration.
@@ -423,6 +429,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       singleLine = false,
       popoverClassName,
       disabled = false,
+      invalid = false,
       responsive,
       minWidth,
       maxWidth,
@@ -978,10 +985,18 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   has-[:focus-visible]:border-[var(--chemican-green-800)]
                   has-[:focus-visible]:ring-4 has-[:focus-visible]:outline-0`,
                   autoSize ? 'w-auto' : 'w-full',
-                  isPopoverOpen && 'ring-interactive-focused ring-4',
+                  isPopoverOpen &&
+                    !invalid &&
+                    'ring-interactive-focused ring-4',
+                  isPopoverOpen &&
+                    invalid &&
+                    'ring-interactive-alert-focused ring-4',
                   responsiveSettings.compactMode && 'min-h-8 text-sm',
                   screenSize === 'mobile' && 'min-h-12',
-                  disabled && 'cursor-not-allowed opacity-50'
+                  disabled && 'cursor-not-allowed opacity-50',
+                  invalid &&
+                    `border-interactive-alert-default!
+                    focus:ring-interactive-alert-focused`
                 )}
                 style={{
                   ...widthConstraints,
