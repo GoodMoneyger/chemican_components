@@ -64,7 +64,8 @@ const checkboxVariants = cva(
         data-[state=checked]:border-interactive-selected
         data-[state=checked]:hover:bg-interactive-primary-hover
         data-[state=indeterminate]:hover:bg-interactive-primary-hover
-        data-[state=indeterminate]:bg-input-selected`,
+        data-[state=indeterminate]:bg-input-selected
+        data-[state=indeterminate]:border-interactive-selected`,
       },
     ],
     defaultVariants: {
