@@ -42,7 +42,7 @@ const inputVariants = cva(
 );
 
 const iconVariants = cva(
-  'text-body-secondary flex items-center justify-center',
+  'text-shape-primary flex items-center justify-center',
   {
     variants: {
       position: {
@@ -50,7 +50,7 @@ const iconVariants = cva(
         trailing: 'px-md h-full',
       },
       interactive: {
-        true: 'hover:text-body-primary cursor-pointer transition-colors',
+        true: 'cursor-pointer',
         false: '',
       },
     },
