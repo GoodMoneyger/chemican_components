@@ -27,11 +27,11 @@ const meta: Meta<typeof Button> = {
     },
     intent: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'tertiary', 'ghost'],
+      options: ['primary', 'secondary', 'tertiary', 'text'],
     },
     size: {
       control: { type: 'select' },
-      options: ['xs', 'sm', 'md', 'lg'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     disabled: {
       control: { type: 'boolean' },
