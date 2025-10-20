@@ -7,7 +7,6 @@ import { cn, renderIcon } from '../../lib/utils';
 
 const inputWrapperVariants = cva(
   `border-interactive-default bg-surface-primary hover:border-interactive-hover
-  has-[:disabled]:border-interactive-disabled
   has-[:disabled]:bg-surface-disabled has-[:focus]:ring-interactive-focused h-12
   rounded relative flex w-full items-center border
   has-[:focus]:border-[var(--chemican-green-800)] has-[:focus]:ring-4
