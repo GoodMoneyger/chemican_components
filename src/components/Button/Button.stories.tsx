@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Meta, StoryFn } from 'storybook/react-vite';
+import type { Meta, StoryFn } from '@storybook/react';
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -27,7 +27,9 @@ const meta: Meta<typeof Button> = {
     },
     intent: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'tertiary', 'text'],
+      options: ['primary', 'secondary', 'tertiary', 'text', 'icon'],
+      description:
+        'Button style variant. When "icon" is selected, children text is hidden, trailingIcon is ignored, and only the main icon is shown.',
     },
     size: {
       control: { type: 'select' },
@@ -52,6 +54,8 @@ const meta: Meta<typeof Button> = {
         'IconCheck',
       ],
       mapping: iconMap,
+      description:
+        'Leading icon. Automatically set to IconCheck when intent="icon" is selected. For icon intent, this is the only icon displayed.',
     },
     trailingIcon: {
       control: { type: 'select' },
@@ -63,6 +67,8 @@ const meta: Meta<typeof Button> = {
         'IconCheck',
       ],
       mapping: iconMap,
+      description:
+        'Trailing icon. Automatically ignored when intent="icon" is selected.',
     },
   },
   parameters: {
@@ -95,14 +101,25 @@ export default meta;
 
 const Template: StoryFn<typeof Button> = (args) => {
   const asChild = args.asChild;
+
+  // Auto-configure for icon intent
+  const finalArgs = {
+    ...args,
+    // When intent is "icon", ensure we have an icon, no children, and no trailingIcon
+    ...(args.intent === 'icon' && {
+      icon: args.icon || IconCheck,
+      size: args.size || 'sm',
+    }),
+  };
+
   if (asChild) {
     return (
-      <Button {...args} asChild>
-        <a href="#">{args.children}</a>
+      <Button {...finalArgs} asChild>
+        <a href="#">{finalArgs.children}</a>
       </Button>
     );
   }
-  return <Button {...args}>{args.children}</Button>;
+  return <Button {...finalArgs}>{finalArgs.children}</Button>;
 };
 
 export const Primary = Template.bind({});
@@ -117,3 +134,35 @@ Primary.args = {
   children: 'ラベル',
   danger: false,
 };
+
+// IconButton story for Button with iconbutton intent
+export const IconButton = Template.bind({});
+IconButton.args = {
+  intent: 'icon',
+  size: 'sm',
+  disabled: false,
+  loading: false,
+  icon: IconCheck,
+  trailingIcon: undefined,
+  asChild: false,
+  children: undefined, // No children for icon button
+};
+
+export const IconButtonStates: StoryFn<typeof Button> = () => (
+  <div className="gap-4 flex items-center">
+    <div className="gap-2 flex flex-col items-center">
+      <Button intent="icon" icon={IconCheck} size="sm" aria-label="Default" />
+      <span className="text-xs text-body-primary">Default</span>
+    </div>
+    <div className="gap-2 flex flex-col items-center">
+      <Button
+        intent="icon"
+        icon={IconCheck}
+        size="sm"
+        disabled
+        aria-label="Disabled"
+      />
+      <span className="text-xs text-interactive-disabled">Disabled</span>
+    </div>
+  </div>
+);

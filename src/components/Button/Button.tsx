@@ -33,6 +33,12 @@ const buttonVariants = cva(
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
         disabled:text-interactive-disabled disabled:bg-transparent`,
+        icon: `bg-surface-primary text-interactive-primary-default
+        border-interactive-primary-default hover:bg-interactive-neutral-hover
+        active:bg-interactive-neutral-active focus:bg-surface-primary
+        disabled:text-shape-interactive-disabled
+        disabled:bg-interactive-disabled ease-out border transition-all
+        duration-300 disabled:border-transparent`,
       },
       danger: {
         true: 'focus-visible:ring-interactive-alert-focused',
@@ -66,6 +72,11 @@ const buttonVariants = cva(
       { iconOnly: true, size: 'sm', class: 'size-6 p-0!' },
       { iconOnly: true, size: 'md', class: 'size-10' },
       { iconOnly: true, size: 'lg', class: 'size-12' },
+      {
+        iconOnly: true,
+        intent: 'icon',
+        class: 'size-10 p-0',
+      },
       {
         intent: 'primary',
         danger: true,
@@ -112,6 +123,9 @@ const iconStyles = cva('', {
     iconOnly: {
       true: '',
     },
+    intent: {
+      icon: 'w-5 h-5',
+    },
     size: {
       xs: 'size-4',
       sm: 'size-5',
@@ -152,10 +166,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot.Slot : 'button';
+
+    // For icon intent, force children to undefined and ignore trailingIcon
+    const finalChildren = intent === 'icon' ? undefined : children;
+    const finalIcon = icon;
+    const finalTrailingIcon = intent === 'icon' ? undefined : trailingIcon;
+
+    // Validate that icon intent has an actual icon
+    if (intent === 'icon' && !finalIcon) {
+      console.warn('Button with intent="icon" requires an icon prop');
+    }
+
     const iconOnly = Boolean(
-      (icon || trailingIcon) && !children && !(icon && trailingIcon)
+      (finalIcon || finalTrailingIcon) && !finalChildren
     );
-    const textOnly = Boolean(children && !icon && !trailingIcon);
+    const textOnly = Boolean(finalChildren && !finalIcon && !finalTrailingIcon);
     const isDisabled = loading || props.disabled;
 
     if (loading) {
@@ -171,15 +196,25 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           disabled={isDisabled}
         >
           <span className="gap-xxs invisible flex items-center">
-            {renderIcon(icon, {
+            {renderIcon(finalIcon, {
               className: cn(
-                iconStyles({ size, iconOnly, text: intent === 'text' })
+                iconStyles({
+                  size,
+                  iconOnly,
+                  text: intent === 'text',
+                  intent: intent === 'icon' ? 'icon' : undefined,
+                })
               ),
             })}
-            {children}
-            {renderIcon(trailingIcon, {
+            {finalChildren}
+            {renderIcon(finalTrailingIcon, {
               className: cn(
-                iconStyles({ size, iconOnly, text: intent === 'text' })
+                iconStyles({
+                  size,
+                  iconOnly,
+                  text: intent === 'text',
+                  intent: intent === 'icon' ? 'icon' : undefined,
+                })
               ),
             })}
           </span>
@@ -190,7 +225,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       );
     }
 
-    if (icon || trailingIcon) {
+    if (finalIcon || finalTrailingIcon) {
       return (
         <Comp
           ref={ref}
@@ -201,15 +236,25 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           disabled={isDisabled}
         >
-          {renderIcon(icon, {
+          {renderIcon(finalIcon, {
             className: cn(
-              iconStyles({ size, iconOnly, text: intent === 'text' })
+              iconStyles({
+                size,
+                iconOnly,
+                text: intent === 'text',
+                intent: intent === 'icon' ? 'icon' : undefined,
+              })
             ),
           })}
-          {children}
-          {renderIcon(trailingIcon, {
+          {finalChildren}
+          {renderIcon(finalTrailingIcon, {
             className: cn(
-              iconStyles({ size, iconOnly, text: intent === 'text' })
+              iconStyles({
+                size,
+                iconOnly,
+                text: intent === 'text',
+                intent: intent === 'icon' ? 'icon' : undefined,
+              })
             ),
           })}
         </Comp>
@@ -222,7 +267,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({ intent, size, textOnly, danger }),
           className
         )}
-        children={children}
+        children={finalChildren}
         {...props}
         disabled={isDisabled}
       />
