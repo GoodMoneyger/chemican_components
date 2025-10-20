@@ -1254,34 +1254,32 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     })}
                   </CommandGroup>
                 )}
-                <CommandSeparator />
-                <CommandGroup>
-                  <div
-                    className="border-t-divider-default px-md py-sm flex
-                      items-center justify-between border-t"
-                  >
-                    <>
-                      <Button
-                        intent="text"
-                        size="xs"
-                        className="min-w-auto"
-                        onClick={handleClear}
-                        disabled={selectedValues.length === 0}
-                      >
-                        {clearAllLabel}
-                      </Button>
-                      <Button
-                        intent="primary"
-                        size="xs"
-                        className="min-w-auto"
-                        onClick={() => setIsPopoverOpen(false)}
-                      >
-                        {applyLabel}
-                      </Button>
-                    </>
-                  </div>
-                </CommandGroup>
               </CommandList>
+              <CommandSeparator />
+              <div
+                className="px-md py-sm bg-surface-primary bottom-0 sticky flex
+                  items-center justify-between"
+              >
+                <>
+                  <Button
+                    intent="text"
+                    size="xs"
+                    className="min-w-auto"
+                    onClick={handleClear}
+                    disabled={selectedValues.length === 0}
+                  >
+                    {clearAllLabel}
+                  </Button>
+                  <Button
+                    intent="primary"
+                    size="xs"
+                    className="min-w-auto"
+                    onClick={() => setIsPopoverOpen(false)}
+                  >
+                    {applyLabel}
+                  </Button>
+                </>
+              </div>
             </Command>
           </PopoverContent>
           {animation > 0 && selectedValues.length > 0 && (
