@@ -29,6 +29,7 @@ export interface TagProps {
     colorCode?: keyof typeof colorCodeToTokenMap;
     size?: 'sm' | 'md';
     style?: React.CSSProperties;
+    selected?: boolean;
 }
 export declare const Tag: React.FC<TagProps>;
 export {};

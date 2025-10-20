@@ -1,0 +1,163 @@
+import{j as e}from"./jsx-runtime-D_zvdyIk.js";import{e as o}from"./iframe-DUeER-r2.js";import{R as ee,T as ae,P as te,C as se}from"./index-B3HxilW-.js";import{c as k}from"./utils-y-8FXFCN.js";import{C as re}from"./Calendar-Dz37Ns5O.js";import{I as ne}from"./Input-CpJujy40.js";import{I as ie}from"./IconCalendar-D3ORqDQo.js";import"./preload-helper-Dp1pzeXC.js";import"./index-1VNntUDn.js";import"./index-DR_pXNPA.js";import"./index-CmgY4V_b.js";import"./index-Cf35ZEMe.js";import"./index-ZPWu4muo.js";import"./index-Btqanb8p.js";import"./index-Bo2d5nCa.js";import"./index-C70F8nco.js";import"./index-CDyeknvv.js";import"./index-Dttc7rzO.js";import"./index-CHhMod7w.js";import"./index-CwYopltV.js";import"./index-CAdt5tMP.js";import"./createReactComponent-K2HYF0Jb.js";const le="bg-surface-primary rounded-lg z-50 w-auto  max-w-none shadow-lg",h=t=>{if(!t)return null;if(t instanceof Date)return isNaN(t.getTime())?null:t;const s=new Date(t);return isNaN(s.getTime())?null:s},oe=t=>t.toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"}),a=o.forwardRef(({value:t,onChange:s,defaultValue:d,minDate:v,maxDate:N,disabled:g=!1,error:F=!1,icon:R,iconSize:z=14,placeholder:W,formatDate:L=oe,className:_,contentClassName:K,defaultOpen:U=!1,open:p,onOpenChange:l,side:A="bottom"},B)=>{const[G,H]=o.useState(()=>h(d||null)),[Q,j]=o.useState(U),w=t!==void 0,u=w?h(t):G,n=p!==void 0?p:Q,c=o.useMemo(()=>h(v||null),[v]),m=o.useMemo(()=>h(N||null),[N]),X=o.useMemo(()=>!c||!m?!0:c<=m,[c,m]),Z=r=>{const D=r||null;w||H(D),s==null||s(D),D&&(p===void 0&&j(!1),l==null||l(!1))},i=r=>{p===void 0&&j(r),l==null||l(r)},$=r=>{switch(r.key){case"ArrowDown":case"ArrowUp":case"Enter":case" ":r.preventDefault(),n||i(!0);break;case"Escape":n&&(r.preventDefault(),i(!1));break}};return e.jsxs(ee,{open:n,onOpenChange:i,children:[e.jsx(ae,{asChild:!0,children:e.jsx(ne,{ref:B,type:"text",readOnly:!0,placeholder:W,value:u?L(u):void 0,disabled:g,invalid:F,trailingIcon:R||ie,trailingIconSize:z,onTrailingIconClick:()=>!g&&i(!n),className:k("pl-0 py-md rounded-sm gap-2 text-md min-h-[46px] cursor-pointer",n&&"ring-interactive-focused ring-4",_),onKeyDown:$,onClick:()=>!g&&i(!n),"aria-expanded":n,"aria-haspopup":"dialog"})}),e.jsx(te,{children:e.jsx(se,{className:k(le,K),sideOffset:4,align:"start",alignOffset:0,side:A,avoidCollisions:!1,collisionPadding:16,sticky:"always",onEscapeKeyDown:()=>i(!1),onPointerDownOutside:()=>i(!1),role:"dialog","aria-label":"Date picker calendar",children:e.jsx(re,{value:u,onChange:Z,...c&&{minDate:c},...m&&{maxDate:m},disabled:!X,showOutsideDays:!0,fixedWeeks:!0,animate:!0,defaultMonth:u||new Date})})})]})});a.displayName="DatePicker";a.__docgenInfo={description:"",methods:[],displayName:"DatePicker",props:{value:{required:!1,tsType:{name:"union",raw:"Date | string | null",elements:[{name:"Date"},{name:"string"},{name:"null"}]},description:"The selected date value. Can be a Date object, string, or null."},onChange:{required:!1,tsType:{name:"signature",type:"function",raw:"(date: Date | null) => void",signature:{arguments:[{type:{name:"union",raw:"Date | null",elements:[{name:"Date"},{name:"null"}]},name:"date"}],return:{name:"void"}}},description:"Callback function called when the date selection changes."},defaultValue:{required:!1,tsType:{name:"union",raw:"Date | string | null",elements:[{name:"Date"},{name:"string"},{name:"null"}]},description:"The default date value for uncontrolled usage."},minDate:{required:!1,tsType:{name:"Date"},description:"The minimum selectable date."},maxDate:{required:!1,tsType:{name:"Date"},description:"The maximum selectable date."},disabled:{required:!1,tsType:{name:"boolean"},description:"Whether the date picker is disabled.",defaultValue:{value:"false",computed:!1}},error:{required:!1,tsType:{name:"boolean"},description:"Whether the date picker input is in an error state.",defaultValue:{value:"false",computed:!1}},icon:{required:!1,tsType:{name:"union",raw:"React.ReactNode | TablerIcon",elements:[{name:"ReactReactNode",raw:"React.ReactNode"},{name:"TablerIcon"}]},description:"Custom icon to display in the trigger button."},iconSize:{required:!1,tsType:{name:"number"},description:"Size of the trailing icon in pixels.",defaultValue:{value:"14",computed:!1}},placeholder:{required:!1,tsType:{name:"string"},description:"Placeholder text to display when no date is selected."},formatDate:{required:!1,tsType:{name:"signature",type:"function",raw:"(date: Date) => string",signature:{arguments:[{type:{name:"Date"},name:"date"}],return:{name:"string"}}},description:"Format function for displaying the selected date.",defaultValue:{value:`(date: Date): string => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}`,computed:!1}},className:{required:!1,tsType:{name:"string"},description:"Custom class name for the trigger element."},contentClassName:{required:!1,tsType:{name:"string"},description:"Custom class name for the popover content."},defaultOpen:{required:!1,tsType:{name:"boolean"},description:"Whether the popover should be open by default.",defaultValue:{value:"false",computed:!1}},open:{required:!1,tsType:{name:"boolean"},description:"Controlled open state of the popover."},onOpenChange:{required:!1,tsType:{name:"signature",type:"function",raw:"(open: boolean) => void",signature:{arguments:[{type:{name:"boolean"},name:"open"}],return:{name:"void"}}},description:"Callback function called when the popover open state changes."},side:{required:!1,tsType:{name:"union",raw:"'top' | 'right' | 'bottom' | 'left'",elements:[{name:"literal",value:"'top'"},{name:"literal",value:"'right'"},{name:"literal",value:"'bottom'"},{name:"literal",value:"'left'"}]},description:"Which side to display the calendar relative to the input.",defaultValue:{value:"'bottom'",computed:!1}}},composes:["Omit"]};const Ve={title:"Components/DatePicker",component:a,parameters:{layout:"centered"},argTypes:{disabled:{control:"boolean",description:"Whether the date picker is disabled",defaultValue:!1},error:{control:"boolean",description:"Whether the date picker is in an error state",defaultValue:!1,if:{arg:"disabled",neq:!0}},placeholder:{control:"text",description:"Placeholder text when no date is selected",if:{arg:"disabled",neq:!0}},minDate:{control:"date",description:"The minimum selectable date"},maxDate:{control:"date",description:"The maximum selectable date"},formatDate:{control:!1,description:"Custom formatting function for the selected date"},defaultValue:{control:"date",description:"Default selected date for uncontrolled usage",if:{arg:"disabled",neq:!0}},defaultOpen:{control:"boolean",description:"Whether the popover should be open by default",defaultValue:!1}},tags:[]},x={args:{placeholder:"選択してください",disabled:!1,error:!1}},f={render:()=>e.jsxs("div",{className:"space-y-6",children:[e.jsxs("div",{className:"gap-6 flex items-start",children:[e.jsxs("div",{className:"w-24 flex-shrink-0",children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary",children:"Default"}),e.jsx("h4",{className:"text-sm text-body-secondary",children:"デフォルト"})]}),e.jsx("div",{className:"flex-1",children:e.jsx(a,{placeholder:"選択してください"})})]}),e.jsxs("div",{className:"gap-6 flex items-start",children:[e.jsxs("div",{className:"w-24 flex-shrink-0",children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary",children:"Filled"}),e.jsx("h4",{className:"text-sm text-body-secondary",children:"入力済"})]}),e.jsx("div",{className:"flex-1",children:e.jsx(a,{defaultValue:new Date})})]}),e.jsxs("div",{className:"gap-6 flex items-start",children:[e.jsxs("div",{className:"w-24 flex-shrink-0",children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary",children:"Error"}),e.jsx("h4",{className:"text-sm text-body-secondary",children:"エラー時"})]}),e.jsx("div",{className:"flex-1",children:e.jsx(a,{error:!0,placeholder:"誤った内容"})})]}),e.jsxs("div",{className:"gap-6 flex items-start",children:[e.jsxs("div",{className:"w-24 flex-shrink-0",children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary",children:"Disabled"}),e.jsx("h4",{className:"text-sm text-body-secondary",children:"利用不可時"})]}),e.jsx("div",{className:"flex-1",children:e.jsx(a,{disabled:!0,placeholder:"選択してください"})})]})]})},y={render:()=>{const t=d=>d.toLocaleDateString("ja-JP",{year:"numeric",month:"long",day:"numeric",weekday:"short"}),s=d=>d.toISOString().split("T")[0];return e.jsxs("div",{className:"gap-md space-y-4 flex flex-col",children:[e.jsxs("div",{children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary mb-2",children:"Japanese format"}),e.jsx("p",{className:"text-xs text-body-secondary mb-2",children:"日本語形式での表示"}),e.jsx(a,{formatDate:t,defaultValue:new Date})]}),e.jsxs("div",{children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary mb-2",children:"ISO format"}),e.jsx("p",{className:"text-xs text-body-secondary mb-2",children:"ISO 8601 format (YYYY-MM-DD)"}),e.jsx(a,{formatDate:s,defaultValue:new Date})]})]})}},b={render:()=>e.jsxs("div",{className:"space-y-6 min-w-[300px]",children:[e.jsxs("div",{children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary mb-2",children:"1. English Placeholder"}),e.jsx("p",{className:"text-xs text-body-secondary mb-2",children:"Direct string usage"}),e.jsx(a,{placeholder:"Select a date"})]}),e.jsxs("div",{children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary mb-2",children:"2. Japanese Placeholder"}),e.jsx("p",{className:"text-xs text-body-secondary mb-2",children:"Japanese localization example"}),e.jsx(a,{placeholder:"選択してください"})]}),e.jsxs("div",{children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary mb-2",children:"3. Empty Placeholder"}),e.jsx("p",{className:"text-xs text-body-secondary mb-2",children:"No placeholder text"}),e.jsx(a,{})]}),e.jsxs("div",{children:[e.jsx("h3",{className:"text-sm font-medium text-body-primary mb-2",children:"4. Custom Format with Placeholder"}),e.jsx("p",{className:"text-xs text-body-secondary mb-2",children:"Shows format hint in placeholder"}),e.jsx(a,{placeholder:"YYYY-MM-DD",side:"top"})]})]}),parameters:{docs:{description:{story:`
+This story demonstrates different placeholder string examples for the DatePicker component.
+
+The placeholder prop now accepts a simple string, making it easier for consuming projects to handle internationalization:
+- **English**: "Select a date"
+- **Japanese**: "選択してください" 
+- **Format hints**: "YYYY-MM-DD"
+- **Empty**: No placeholder
+
+For i18n, consuming projects can use their preferred translation library:
+\`\`\`tsx
+<DatePicker placeholder={t('datePicker.placeholder')} />
+// or
+<DatePicker placeholder={formatMessage({id: 'datePicker.placeholder'})} />
+\`\`\`
+        `}}}};var P,T,S;x.parameters={...x.parameters,docs:{...(P=x.parameters)==null?void 0:P.docs,source:{originalSource:`{
+  args: {
+    placeholder: '選択してください',
+    disabled: false,
+    error: false
+  }
+}`,...(S=(T=x.parameters)==null?void 0:T.docs)==null?void 0:S.source}}};var Y,I,q;f.parameters={...f.parameters,docs:{...(Y=f.parameters)==null?void 0:Y.docs,source:{originalSource:`{
+  render: () => <div className="space-y-6">
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Default</h3>
+          <h4 className="text-sm text-body-secondary">デフォルト</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker placeholder="選択してください" />
+        </div>
+      </div>
+
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Filled</h3>
+          <h4 className="text-sm text-body-secondary">入力済</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker defaultValue={new Date()} />
+        </div>
+      </div>
+
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Error</h3>
+          <h4 className="text-sm text-body-secondary">エラー時</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker error placeholder="誤った内容" />
+        </div>
+      </div>
+
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Disabled</h3>
+          <h4 className="text-sm text-body-secondary">利用不可時</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker disabled placeholder="選択してください" />
+        </div>
+      </div>
+    </div>
+}`,...(q=(I=f.parameters)==null?void 0:I.docs)==null?void 0:q.source}}};var M,V,C;y.parameters={...y.parameters,docs:{...(M=y.parameters)==null?void 0:M.docs,source:{originalSource:`{
+  render: () => {
+    const formatJapanese = (date: Date) => {
+      return date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short'
+      });
+    };
+    const formatISO = (date: Date) => {
+      return date.toISOString().split('T')[0];
+    };
+    return <div className="gap-md space-y-4 flex flex-col">
+        <div>
+          <h3 className="text-sm font-medium text-body-primary mb-2">
+            Japanese format
+          </h3>
+          <p className="text-xs text-body-secondary mb-2">日本語形式での表示</p>
+          <DatePicker formatDate={formatJapanese} defaultValue={new Date()} />
+        </div>
+
+        <div>
+          <h3 className="text-sm font-medium text-body-primary mb-2">
+            ISO format
+          </h3>
+          <p className="text-xs text-body-secondary mb-2">
+            ISO 8601 format (YYYY-MM-DD)
+          </p>
+          <DatePicker formatDate={formatISO} defaultValue={new Date()} />
+        </div>
+      </div>;
+  }
+}`,...(C=(V=y.parameters)==null?void 0:V.docs)==null?void 0:C.source}}};var E,O,J;b.parameters={...b.parameters,docs:{...(E=b.parameters)==null?void 0:E.docs,source:{originalSource:`{
+  render: () => <div className="space-y-6 min-w-[300px]">
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          1. English Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">Direct string usage</p>
+        <DatePicker placeholder="Select a date" />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          2. Japanese Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Japanese localization example
+        </p>
+        <DatePicker placeholder="選択してください" />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          3. Empty Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">No placeholder text</p>
+        <DatePicker />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          4. Custom Format with Placeholder
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          Shows format hint in placeholder
+        </p>
+        <DatePicker placeholder="YYYY-MM-DD" side="top" />
+      </div>
+    </div>,
+  parameters: {
+    docs: {
+      description: {
+        story: \`
+This story demonstrates different placeholder string examples for the DatePicker component.
+
+The placeholder prop now accepts a simple string, making it easier for consuming projects to handle internationalization:
+- **English**: "Select a date"
+- **Japanese**: "選択してください" 
+- **Format hints**: "YYYY-MM-DD"
+- **Empty**: No placeholder
+
+For i18n, consuming projects can use their preferred translation library:
+\\\`\\\`\\\`tsx
+<DatePicker placeholder={t('datePicker.placeholder')} />
+// or
+<DatePicker placeholder={formatMessage({id: 'datePicker.placeholder'})} />
+\\\`\\\`\\\`
+        \`
+      }
+    }
+  }
+}`,...(J=(O=b.parameters)==null?void 0:O.docs)==null?void 0:J.source}}};const Ce=["Default","States","CustomFormatting","StringPlaceholders"];export{y as CustomFormatting,x as Default,f as States,b as StringPlaceholders,Ce as __namedExportsOrder,Ve as default};

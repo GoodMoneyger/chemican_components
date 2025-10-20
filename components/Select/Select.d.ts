@@ -13,6 +13,7 @@ export interface SelectProps extends VariantProps<typeof selectVariants>, Omit<R
         label: React.ReactNode;
         icon?: IconProp;
         type?: 'Option' | 'Group' | 'Separator';
+        disabled?: boolean;
     }[];
     placeholder?: React.ReactNode;
     className?: string;

@@ -1,3 +1,4 @@
+export * from './Badge';
 export * from './Breadcrumbs';
 export * from './Button';
 export * from './Calendar';
@@ -23,5 +24,6 @@ export * from './Table';
 export * from './TabBar';
 export * from './Tag';
 export * from './Textarea';
+export * from './TextLink';
 export * from './Toast';
 export * from './Upload';
