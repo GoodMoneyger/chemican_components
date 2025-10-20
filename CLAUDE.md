@@ -112,7 +112,7 @@ Always run `npm run lint` and `npm run prettier` before committing changes.
 ### Component Development
 - Follow existing component patterns in `src/components/`
 - Use design tokens from `src/tokens.ts`
-- Create concise Storybook stories (don't overdo stories for each tiny variant, rather rely on the controls tab)
+- Create comprehensive Storybook stories
 - Ensure accessibility via Radix UI primitives
 
 ### Token Updates

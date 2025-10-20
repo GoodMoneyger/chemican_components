@@ -9,14 +9,14 @@ import { cn, renderIcon } from '../../lib/utils';
 
 const selectVariants = cva(
   `bg-surface-primary text-body-primary disabled:border-interactive-disabled
-  disabled:bg-surface-disabled disabled:text-body-disabled inline-flex
-  items-center justify-between border focus:ring-4 focus:outline-0
-  enabled:cursor-pointer`,
+  disabled:bg-surface-disabled disabled:text-body-disabled
+  [&[data-placeholder]]:text-body-secondary inline-flex items-center
+  justify-between border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
   {
     variants: {
       variant: {
-        default: `border-interactive-default py-sm pr-sm pl-md
-        hover:border-interactive-hover rounded gap-md h-[3rem] w-full`,
+        default: `border-interactive-default p-4 hover:border-interactive-hover
+        rounded gap-2 h-12 w-full`,
         compact: `py-1 px-xs rounded-sm gap-xxs
         hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
       },
@@ -60,8 +60,10 @@ const selectContentVariants = cva(
 );
 
 const selectItemVariants = cva(
-  `disabled:bg-surface-disabled disabled:text-interactive-disabled flex
-  cursor-pointer items-center border-0 ring-0 focus:outline-0`,
+  `disabled:bg-surface-disabled disabled:text-interactive-disabled
+  data-[disabled]:text-interactive-disabled flex cursor-pointer items-center
+  border-0 ring-0 focus:outline-0 disabled:cursor-not-allowed
+  data-[disabled]:cursor-not-allowed`,
   {
     variants: {
       variant: {
@@ -98,6 +100,7 @@ export interface SelectProps
     label: React.ReactNode;
     icon?: IconProp;
     type?: 'Option' | 'Group' | 'Separator';
+    disabled?: boolean;
   }[];
   placeholder?: React.ReactNode;
   className?: string;
@@ -132,22 +135,17 @@ export const Select: React.FC<SelectProps> = ({
       >
         <div className="inline-flex items-center">
           {renderIcon(Icon, {
-            className: cn('text-body-primary', {
-              'mr-xxs h-lg w-lg': variant === 'default',
-              'mr-xxs h-4 w-4': variant === 'compact',
-            }),
+            className: cn('text-body-secondary mr-xxs h-3.5 w-3.5'),
           })}
           <RadixSelect.Value
             placeholder={placeholder || 'Select an option'}
-            className={cn('text-body-primary', {
+            className={cn({
               'text-sm': variant === 'compact',
             })}
           />
         </div>
         <RadixSelect.Icon
-          className={cn('text-body-primary', {
-            'h-md w-md': variant === 'default',
-            'h-4 w-4': variant === 'compact',
+          className={cn('text-body-primary h-3.5 w-3.5', {
             'text-body-disabled': props.disabled,
           })}
         >
@@ -181,18 +179,24 @@ export const Select: React.FC<SelectProps> = ({
                     <RadixSelect.Item
                       key={index}
                       value={option.value}
+                      disabled={option.disabled ?? false}
                       className={selectItemVariants({
                         variant,
                         isSelected: value === option.value,
                       })}
                     >
                       {renderIcon(option.icon, {
-                        className: cn({
-                          '-ml-xxs h-lg w-lg': variant === 'default',
-                          'mr-xxs h-4 w-4': variant === 'compact',
+                        className: cn('h-5 w-5', {
+                          '-ml-xxs': variant === 'default',
+                          'mr-xxs': variant === 'compact',
+                          'text-interactive-disabled': option.disabled,
                         }),
                       })}
-                      <RadixSelect.ItemText>
+                      <RadixSelect.ItemText
+                        className={cn('flex-1', {
+                          'text-interactive-disabled': option.disabled,
+                        })}
+                      >
                         {option.label}
                       </RadixSelect.ItemText>
                       <RadixSelect.ItemIndicator />

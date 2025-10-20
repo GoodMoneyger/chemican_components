@@ -8,8 +8,8 @@ const textareaVariants = cva(
   `border-interactive-default bg-surface-primary px-md py-sm
   focus:border-interactive-selected disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
-  placeholder:text-body-placeholder hover:border-interactive-hover h-12 min-h-30
-  rounded w-full border focus:ring-4 focus:outline-0`,
+  hover:border-interactive-hover h-12 min-h-30 rounded w-full border
+  focus:ring-4 focus:outline-0`,
   {
     variants: {
       invalid: {

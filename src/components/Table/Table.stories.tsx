@@ -153,7 +153,7 @@ Default.args = {
 
 const LoadingTemplate: StoryFn = () => (
   <Table loading>
-    <TableHeader>
+    <TableHeader loading>
       <TableRow>
         <TableHead>
           <Checkbox label="" />
@@ -173,44 +173,7 @@ const LoadingTemplate: StoryFn = () => (
         <TableHead>ステータス</TableHead>
       </TableRow>
     </TableHeader>
-    <TableBody>
-      {data.map((row, index) => (
-        <TableRow key={index}>
-          <TableCell>
-            <Checkbox label="" />
-          </TableCell>
-          <TableCell>
-            <div className="gap-2 inline-flex items-center">
-              <div className="gap-1 flex items-center">
-                <div
-                  className="bg-shape-accent-gray-pale rounded p-0.5 inline-flex
-                    aspect-auto"
-                >
-                  <IconPdf size={16} className="text-shape-primary" />
-                </div>
-                {row.sdsName}
-              </div>
-              <a href="#">
-                <IconExternalLink size={20} className="text-shape-primary" />
-              </a>
-            </div>
-          </TableCell>
-          <TableCell>
-            <div
-              className="bg-surface-secondary px-xs py-xxs rounded inline-flex
-                uppercase"
-            >
-              {row.productName}
-            </div>
-          </TableCell>
-          <TableCell>{row.companyName}</TableCell>
-          <TableCell>{row.creation}</TableCell>
-          <TableCell>
-            <Status accentColor={row.statusColor}>{row.status}</Status>
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
+    <TableBody loading colSpan={6} />
   </Table>
 );
 

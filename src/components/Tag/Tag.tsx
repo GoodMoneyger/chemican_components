@@ -36,20 +36,26 @@ export interface TagProps {
   colorCode?: keyof typeof colorCodeToTokenMap;
   size?: 'sm' | 'md';
   style?: React.CSSProperties;
+  selected?: boolean;
 }
 
 const tagVariants = cva(
-  `gap-xxs text-accent-gray-strong py-xxs px-xs inline-flex items-center
-  rounded-full leading-none`,
+  `gap-xxs text-accent-gray-strong py-xxs px-xs h-5.5 inline-flex items-center
+  rounded-full border border-transparent leading-none`,
   {
     variants: {
       size: {
         sm: 'text-sm',
         md: '',
       },
+      selected: {
+        false: '',
+        true: 'border-interactive-selected',
+      },
     },
     defaultVariants: {
       size: 'md',
+      selected: false,
     },
   }
 );
@@ -62,6 +68,7 @@ export const Tag: React.FC<TagProps> = ({
   onRemove,
   size = 'md',
   style,
+  selected = false,
 }) => {
   // Warning when both props are provided
   React.useEffect(() => {
@@ -80,7 +87,7 @@ export const Tag: React.FC<TagProps> = ({
 
   return (
     <div
-      className={cn(tagVariants({ size }), className)}
+      className={cn(tagVariants({ size, selected }), className)}
       style={{
         backgroundColor: `var(${effectiveColor})`,
         ...style,
