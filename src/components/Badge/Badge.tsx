@@ -13,8 +13,9 @@ const badgeVariants = cva(
   {
     variants: {
       intent: {
-        default: 'rounded-sm bg-[#d0f5a2] text-[#197A70]',
-        new: 'rounded-sm text-accent-purple-soft bg-[#ECDDFF]',
+        default: `rounded-sm bg-shape-accent-lime-pale
+        text-shape-interactive-primary-selected`,
+        new: 'rounded-sm text-accent-purple-soft bg-shape-accent-purple-pale',
         danger: `rounded-sm border-interactive-alert-default text-body-alert
         pl-4.5 border border-dashed`,
       },
