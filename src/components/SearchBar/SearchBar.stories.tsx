@@ -48,14 +48,25 @@ export default meta;
 
 const Template: StoryFn<typeof SearchBar> = (args) => {
   const [value, setValue] = useState('');
+
   return (
-    <SearchBar
-      {...args}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onSearch={() => alert('Search: ' + value)}
-      state={args.state} // <-- pass state prop
-    />
+    <div style={{ width: '500px' }}>
+      <SearchBar
+        {...args}
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+        onKeywordsChange={() => {}} // Empty handler for stories
+        onSearch={(searchValue, searchKeywords) =>
+          alert(
+            'Search Input: ' +
+              searchValue +
+              ' | Keywords: ' +
+              searchKeywords.join(', ')
+          )
+        }
+        state={args.state} // <-- pass state prop
+      />
+    </div>
   );
 };
 
