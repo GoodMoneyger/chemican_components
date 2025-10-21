@@ -66,6 +66,8 @@ export interface RenderOptionContext {
     isSelected?: boolean;
     /** Callback to remove the option (only for badge) */
     onRemove?: () => void;
+    /** Whether the component is disabled */
+    disabled?: boolean;
 }
 /**
  * Props for MultiSelect component
