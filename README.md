@@ -94,6 +94,37 @@ This will allow you to make changes to the library and see them reflected in the
 
 Please refer to the [CLAUDE.md](./CLAUDE.md) file for detailed development guidelines, including project structure, coding standards, and best practices. Even though written for Claude Code, these guidelines are applicable to all developers working on this project.
 
+### Commit Message Rules
+
+This project enforces commit message conventions using [Commitlint](https://commitlint.js.org/) and [Husky](https://typicode.github.io/husky/).
+
+**Format:**
+```
+topic1,topic2: Subject description
+```
+
+**Rules:**
+- **Topics**: One or more comma-separated topics (component names or general categories)
+- **Subject**: Must start with a capital letter
+- **Max length**: 100 characters
+- **No period**: Subject must not end with a period
+
+**Valid topics include:**
+- Component names (automatically detected from `src/components/`): `button`, `input`, `select`, etc.
+- General categories: `multiple`, `tokens`, `dev`, `doc`, `config`, `ci`, `deps`, `release`, `util`, `assets`, `refactor`
+
+**Examples:**
+```bash
+button: Add loading state prop
+input,select: Update border styling
+doc: Update installation instructions
+tokens: Regenerate design tokens from Figma
+```
+
+**Setup:**
+
+Commit hooks are automatically installed when you run `npm install` (via the `prepare` script). Please make sure that your setup has the hooks correctly installed to enforce the commit message rules.
+
 ### Vibe coding
 
 This project is setup to work well in AI assisted workflows, specifically using Claude Code. This is achieved as follows:
