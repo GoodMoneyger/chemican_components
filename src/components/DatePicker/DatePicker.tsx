@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Popover from '@radix-ui/react-popover';
-import { IconCalendar } from '@tabler/icons-react';
+import { IconCalendarEvent } from '@tabler/icons-react';
 
 import type { IconProp } from '../../lib/utils';
 import { cn } from '../../lib/utils';
@@ -211,7 +211,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
             value={selectedDate ? formatDate(selectedDate) : undefined}
             disabled={disabled}
             invalid={error}
-            trailingIcon={icon || IconCalendar}
+            trailingIcon={icon || IconCalendarEvent}
             trailingIconSize={iconSize}
             onTrailingIconClick={() => !disabled && handleOpenChange(!isOpen)}
             className={cn(
