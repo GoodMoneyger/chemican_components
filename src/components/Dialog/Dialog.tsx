@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 
 import { Button } from '../Button';
 
 export interface DialogAction {
-  label: string;
+  label: ReactNode;
   onAction?: () => void;
   value?: unknown; // The value being passed to the onClose handler
   intent?: 'primary' | 'secondary' | 'tertiary' | 'text';
@@ -15,11 +15,11 @@ export interface DialogProps
   extends React.ComponentProps<typeof RadixDialog.Root> {
   isOpen: boolean;
   onClose: (value?: unknown) => void;
-  children: React.ReactNode;
-  title: string;
+  children: ReactNode;
+  title: ReactNode;
   actions?: DialogAction[];
   cancellable?: boolean;
-  cancelButtonLabel?: string;
+  cancelButtonLabel?: ReactNode;
 }
 
 const defaultActions: DialogAction[] = [
@@ -52,12 +52,12 @@ export const Dialog: React.FC<DialogProps> = ({
   return (
     <RadixDialog.Root open={isOpen} onOpenChange={onClose}>
       <RadixDialog.Overlay
-        className="bg-surface-scrimmed top-0 left-0 fixed h-full w-full
-          opacity-85"
+        className="bg-surface-scrimmed top-0 left-0 z-dialog fixed h-full
+          w-full"
       />
       <RadixDialog.Content
-        className="bg-surface-primary rounded-lg fixed top-1/2 left-1/2 w-2/3
-          max-w-[40rem] min-w-[25rem] -translate-x-1/2 -translate-y-1/2
+        className="bg-surface-primary rounded-lg z-dialog fixed top-1/2 left-1/2
+          w-2/3 max-w-[40rem] min-w-[25rem] -translate-x-1/2 -translate-y-1/2
           transform"
       >
         <div className="flex flex-col">
