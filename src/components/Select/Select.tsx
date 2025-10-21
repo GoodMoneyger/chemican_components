@@ -9,9 +9,10 @@ import { cn, renderIcon } from '../../lib/utils';
 
 const selectVariants = cva(
   `bg-surface-primary text-body-primary disabled:border-interactive-disabled
-  disabled:bg-surface-disabled disabled:text-body-disabled inline-flex
-  items-center justify-between border focus:ring-4 focus:outline-0
-  enabled:cursor-pointer`,
+  disabled:bg-surface-disabled disabled:text-body-disabled
+  [&[data-placeholder]]:text-body-placeholder
+  disabled:[&[data-placeholder]]:text-body-disabled inline-flex items-center
+  justify-between border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
   {
     variants: {
       variant: {
@@ -44,7 +45,8 @@ const selectVariants = cva(
 );
 
 const selectContentVariants = cva(
-  'bg-surface-primary relative z-50 w-full min-w-[8rem] overflow-hidden border',
+  `bg-surface-primary z-dropdown relative w-full min-w-[8rem] overflow-hidden
+  border`,
   {
     variants: {
       variant: {

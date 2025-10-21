@@ -93,8 +93,8 @@ const Tooltip = ({
       {children}
       {show && (
         <div
-          className="mb-xxs absolute bottom-full left-1/2 z-10 -translate-x-1/2
-            transform"
+          className="mb-xxs z-tooltip absolute bottom-full left-1/2
+            -translate-x-1/2 transform"
         >
           <div
             className="sb-unstyled bg-surface-scrimmed px-xxs py-xxxs

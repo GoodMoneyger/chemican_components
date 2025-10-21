@@ -8,7 +8,7 @@ import { renderIcon, cn } from '../../lib/utils';
 
 const dropdownContentVariants = cva(
   `bg-surface-primary border-divider-default shadow-overlay text-body-primary
-  py-xxs rounded-md z-50 min-w-[8rem] overflow-hidden`,
+  py-xxs rounded-md z-dropdown min-w-[8rem] overflow-hidden`,
   {
     variants: {
       size: {

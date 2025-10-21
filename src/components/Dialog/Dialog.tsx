@@ -1,48 +1,77 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { IconX } from '@tabler/icons-react';
 
 import { Button } from '../Button';
+
+export interface DialogAction {
+  label: ReactNode;
+  onAction?: () => void;
+  value?: unknown; // The value being passed to the onClose handler
+  intent?: 'primary' | 'secondary' | 'tertiary' | 'text';
+  classNames?: string;
+}
 
 export interface DialogProps
   extends React.ComponentProps<typeof RadixDialog.Root> {
   isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-  title: string;
-  confirmButtonLabel: string;
-  cancelButtonLabel?: string;
+  onClose: (value?: unknown) => void;
+  children: ReactNode;
+  title: ReactNode;
+  actions?: DialogAction[];
+  cancellable?: boolean;
+  cancelButtonLabel?: ReactNode;
 }
+
+const defaultActions: DialogAction[] = [
+  {
+    label: 'Confirm',
+    value: true,
+    intent: 'primary',
+  },
+];
 
 export const Dialog: React.FC<DialogProps> = ({
   isOpen,
   onClose,
   title,
   children,
-  confirmButtonLabel,
+  actions = defaultActions,
+  cancellable = true,
   cancelButtonLabel = 'キャンセル',
 }) => {
+  const handleActionClick = (action: DialogAction) => {
+    if (action.onAction) {
+      action.onAction();
+    }
+    onClose(action.value);
+  };
+
+  const handleCancelClick = () => {
+    onClose();
+  };
   return (
     <RadixDialog.Root open={isOpen} onOpenChange={onClose}>
       <RadixDialog.Overlay
-        className="bg-surface-scrimmed top-0 left-0 fixed h-full w-full
-          opacity-85"
+        className="bg-surface-scrimmed top-0 left-0 z-dialog fixed h-full
+          w-full"
       />
       <RadixDialog.Content
-        className="bg-surface-primary rounded-lg fixed top-1/2 left-1/2 w-2/3
-          max-w-[40rem] min-w-[25rem] -translate-x-1/2 -translate-y-1/2
+        className="bg-surface-primary rounded-lg z-dialog fixed top-1/2 left-1/2
+          w-2/3 max-w-[40rem] min-w-[25rem] -translate-x-1/2 -translate-y-1/2
           transform"
       >
         <div className="flex flex-col">
-          <div className="px-xl py-lg flex flex-grow justify-between">
-            <div>
-              {title && <h2 className="text-xxl text-body-primary">{title}</h2>}
-            </div>
-            <RadixDialog.Close asChild>
-              <button className="cursor-pointer">
-                <IconX className="h-xl text-body-primary w-xl" />
-              </button>
-            </RadixDialog.Close>
+          <div
+            className="px-xl py-lg flex flex-grow items-center justify-between"
+          >
+            {title && (
+              <span
+                className="text-xxl text-body-primary font-bold flex h-[18px]
+                  items-center"
+              >
+                {title}
+              </span>
+            )}
           </div>
           <div
             className="border-divider-default bg-surface-secondary px-xl py-lg
@@ -50,13 +79,27 @@ export const Dialog: React.FC<DialogProps> = ({
           >
             {children}
           </div>
-          <div className="gap-xs px-md py-lg flex flex-grow">
-            <RadixDialog.Close asChild>
-              <Button intent="secondary">{cancelButtonLabel}</Button>
-            </RadixDialog.Close>
-            <RadixDialog.Close asChild>
-              <Button intent="primary">{confirmButtonLabel}</Button>
-            </RadixDialog.Close>
+          <div className="px-md py-lg flex justify-between">
+            {cancellable && (
+              <RadixDialog.Close asChild>
+                <Button intent="tertiary" onClick={handleCancelClick}>
+                  {cancelButtonLabel}
+                </Button>
+              </RadixDialog.Close>
+            )}
+            <div className={`gap-xs flex ${!cancellable ? 'ml-auto' : ''}`}>
+              {actions.map((action, index) => (
+                <RadixDialog.Close key={index} asChild>
+                  <Button
+                    intent={action.intent || 'primary'}
+                    className={action.classNames}
+                    onClick={() => handleActionClick(action)}
+                  >
+                    {action.label}
+                  </Button>
+                </RadixDialog.Close>
+              ))}
+            </div>
           </div>
         </div>
       </RadixDialog.Content>

@@ -21,6 +21,7 @@ const iconMap = {
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
+  tags: ['autodocs'],
   argTypes: {
     children: {
       control: { type: 'text' },
@@ -135,34 +136,22 @@ Primary.args = {
   danger: false,
 };
 
-// IconButton story for Button with iconbutton intent
-export const IconButton = Template.bind({});
-IconButton.args = {
-  intent: 'icon',
-  size: 'sm',
+export const IconOnly = Template.bind({});
+IconOnly.args = {
+  intent: 'primary',
+  size: 'md',
   disabled: false,
   loading: false,
   icon: IconCheck,
   trailingIcon: undefined,
   asChild: false,
-  children: undefined, // No children for icon button
+  danger: false,
 };
-
-export const IconButtonStates: StoryFn<typeof Button> = () => (
-  <div className="gap-4 flex items-center">
-    <div className="gap-2 flex flex-col items-center">
-      <Button intent="icon" icon={IconCheck} size="sm" aria-label="Default" />
-      <span className="text-xs text-body-primary">Default</span>
-    </div>
-    <div className="gap-2 flex flex-col items-center">
-      <Button
-        intent="icon"
-        icon={IconCheck}
-        size="sm"
-        disabled
-        aria-label="Disabled"
-      />
-      <span className="text-xs text-interactive-disabled">Disabled</span>
-    </div>
-  </div>
-);
+IconOnly.parameters = {
+  docs: {
+    description: {
+      story:
+        'Icon-only buttons are automatically styled when a single icon is provided without any text. The button becomes square (1:1 aspect ratio) with appropriate padding. To create an icon-only button, provide either the `icon` or `trailingIcon` prop (not both) and omit the `children` prop.',
+    },
+  },
+};

@@ -11,8 +11,8 @@ import {
 import { SideNavigationCollapseButton } from './SideNavigationCollapseButton';
 
 const sideNavigationVariants = cva(
-  `bg-surface-primary shadow-overlay top-0 fixed z-50 flex h-full flex-col
-  overflow-visible`,
+  `bg-surface-primary shadow-overlay top-0 z-navigation fixed flex h-full
+  flex-col overflow-visible`,
   {
     variants: {
       width: {

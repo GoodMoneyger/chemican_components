@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { IconUsers, IconStar, IconHeart, IconX } from '@tabler/icons-react';
 
+import { ColorShapeTokens } from '../../tokens';
+import { Status } from '../Status';
+import type { StatusLevel } from '../Status/Status';
+import { Tag } from '../Tag';
+
 import { MultiSelect } from './MultiSelect';
 import type {
   MultiSelectOption,
@@ -148,6 +153,198 @@ export const WithDefaultValues: Story = {
   },
 };
 
+const optionsWithTags: MultiSelectOption[] = [
+  { label: 'タグアルファ', value: 'project-alpha' },
+  { label: 'タグベータ', value: 'project-beta' },
+  { label: 'タグガンマ', value: 'project-gamma' },
+  { label: 'タグデルタ', value: 'project-delta' },
+  { label: 'タグイプシロン', value: 'project-epsilon' },
+];
+
+const tagColors: ColorShapeTokens[] = [
+  ColorShapeTokens.AccentBlueSoft,
+  ColorShapeTokens.AccentGreenSoft,
+  ColorShapeTokens.AccentPurpleSoft,
+  ColorShapeTokens.AccentRedSoft,
+  ColorShapeTokens.AccentYellowSoft,
+];
+
+export const WithTagsAsItems: Story = {
+  args: {
+    options: optionsWithTags,
+    placeholder: '選択してください',
+    renderOption: ({ option, location, onRemove }: RenderOptionContext) => {
+      const colorIndex = optionsWithTags.findIndex(
+        (opt) => opt.value === option.value
+      );
+      const tagColor = tagColors[colorIndex % tagColors.length];
+
+      if (location === 'badge') {
+        return (
+          <Tag accentColor={tagColor} onRemove={onRemove}>
+            {option.label}
+          </Tag>
+        );
+      }
+
+      // Render in dropdown with Tag
+      return (
+        <div className="gap-2 flex items-center">
+          <Tag accentColor={tagColor} size="sm">
+            {option.label}
+          </Tag>
+        </div>
+      );
+    },
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates rendering Tag components inside MultiSelect items. Tags are displayed both in the dropdown list and as selected badges, each with a different accent color for visual distinction.',
+      },
+      source: {
+        code: `import { MultiSelect, Tag, ColorShapeTokens } from '@chemican/components';
+
+const options = [
+  { label: 'タグアルファ', value: 'project-alpha' },
+  { label: 'タグベータ', value: 'project-beta' },
+  { label: 'タグガンマ', value: 'project-gamma' },
+  { label: 'タグデルタ', value: 'project-delta' },
+  { label: 'タグイプシロン', value: 'project-epsilon' },
+];
+
+const tagColors = [
+  ColorShapeTokens.AccentBlueSoft,
+  ColorShapeTokens.AccentGreenSoft,
+  ColorShapeTokens.AccentPurpleSoft,
+  ColorShapeTokens.AccentRedSoft,
+  ColorShapeTokens.AccentYellowSoft,
+];
+
+<MultiSelect
+  options={options}
+  placeholder="選択してください"
+  renderOption={({ option, location, onRemove }) => {
+    const colorIndex = options.findIndex((opt) => opt.value === option.value);
+    const tagColor = tagColors[colorIndex % tagColors.length];
+
+    if (location === 'badge') {
+      return (
+        <Tag accentColor={tagColor} onRemove={onRemove}>
+          {option.label}
+        </Tag>
+      );
+    }
+
+    // Render in dropdown with Tag
+    return (
+      <div className="gap-2 flex items-center">
+        <Tag accentColor={tagColor} size="sm">
+          {option.label}
+        </Tag>
+      </div>
+    );
+  }}
+  onValueChange={(values) => console.log('Selected values:', values)}
+/>`,
+      },
+    },
+  },
+};
+
+interface StatusOption extends MultiSelectOption {
+  statusLevel: StatusLevel;
+}
+
+const optionsWithStatus: StatusOption[] = [
+  { label: '成功', value: 'status-success', statusLevel: 'success' },
+  { label: '進行中', value: 'status-inprogress', statusLevel: 'inProgress' },
+  { label: '準備中', value: 'status-queue', statusLevel: 'queue' },
+  { label: 'エラー', value: 'status-alert', statusLevel: 'alert' },
+  { label: '注意', value: 'status-warning', statusLevel: 'warning' },
+  { label: '開始前', value: 'status-neutral', statusLevel: 'neutral' },
+];
+
+export const WithStatusAsItems: Story = {
+  args: {
+    options: optionsWithStatus,
+    placeholder: '選択してください',
+    renderOption: ({ option, location, onRemove }: RenderOptionContext) => {
+      const statusOption = optionsWithStatus.find(
+        (opt) => opt.value === option.value
+      );
+      const statusLevel = statusOption?.statusLevel;
+
+      if (location === 'badge') {
+        return (
+          <Status level={statusLevel} onRemove={onRemove}>
+            {option.label}
+          </Status>
+        );
+      }
+
+      // Render in dropdown with Status
+      return (
+        <div className="gap-2 flex items-center">
+          <Status level={statusLevel} size="sm">
+            {option.label}
+          </Status>
+        </div>
+      );
+    },
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates rendering Status components inside MultiSelect items. Status badges are displayed both in the dropdown list and as selected badges, each with a different status level for visual distinction.',
+      },
+      source: {
+        code: `import { MultiSelect, Status } from '@chemican/components';
+
+const options = [
+  { label: '成功', value: 'status-success', statusLevel: 'success' },
+  { label: '進行中', value: 'status-inprogress', statusLevel: 'inProgress' },
+  { label: '準備中', value: 'status-queue', statusLevel: 'queue' },
+  { label: 'エラー', value: 'status-alert', statusLevel: 'alert' },
+  { label: '注意', value: 'status-warning', statusLevel: 'warning' },
+  { label: '開始前', value: 'status-neutral', statusLevel: 'neutral' },
+];
+
+<MultiSelect
+  options={options}
+  placeholder="選択してください"
+  renderOption={({ option, location, onRemove }) => {
+    const statusOption = options.find((opt) => opt.value === option.value);
+    const statusLevel = statusOption?.statusLevel;
+
+    if (location === 'badge') {
+      return (
+        <Status level={statusLevel} onRemove={onRemove}>
+          {option.label}
+        </Status>
+      );
+    }
+
+    // Render in dropdown with Status
+    return (
+      <div className="gap-2 flex items-center">
+        <Status level={statusLevel} size="sm">
+          {option.label}
+        </Status>
+      </div>
+    );
+  }}
+  onValueChange={(values) => console.log('Selected values:', values)}
+/>`,
+      },
+    },
+  },
+};
+
 export const WithIcons: Story = {
   args: {
     options: optionsWithIcons,
@@ -168,24 +365,6 @@ export const WithDisabledOptions: Story = {
   args: {
     options: disabledOptions,
     placeholder: 'Select options...',
-    onValueChange: (values) => console.log('Selected values:', values),
-  },
-};
-
-export const Secondary: Story = {
-  args: {
-    options: basicOptions,
-    variant: 'secondary',
-    placeholder: 'Secondary variant...',
-    onValueChange: (values) => console.log('Selected values:', values),
-  },
-};
-
-export const Destructive: Story = {
-  args: {
-    options: basicOptions,
-    variant: 'destructive',
-    placeholder: 'Destructive variant...',
     onValueChange: (values) => console.log('Selected values:', values),
   },
 };
@@ -232,31 +411,6 @@ export const CloseOnSelect: Story = {
   },
 };
 
-export const SingleLine: Story = {
-  args: {
-    options: basicOptions,
-    singleLine: true,
-    defaultValue: [
-      '550e8400-e29b-41d4-a716-446655440001',
-      '550e8400-e29b-41d4-a716-446655440002',
-      'cherry-fruit',
-      '550e8400-e29b-41d4-a716-446655440003',
-      'elderberry-premium',
-    ],
-    placeholder: 'Single line display...',
-    onValueChange: (values) => console.log('Selected values:', values),
-  },
-};
-
-export const AutoSize: Story = {
-  args: {
-    options: basicOptions,
-    autoSize: true,
-    placeholder: 'Auto-sized...',
-    onValueChange: (values) => console.log('Selected values:', values),
-  },
-};
-
 export const Disabled: Story = {
   args: {
     options: basicOptions,
@@ -267,45 +421,6 @@ export const Disabled: Story = {
     ],
     placeholder: 'Disabled state...',
     onValueChange: (values) => console.log('Selected values:', values),
-  },
-};
-
-export const WithAnimation: Story = {
-  args: {
-    options: basicOptions,
-    animation: 0.3,
-    animationConfig: {
-      badgeAnimation: 'bounce',
-      popoverAnimation: 'scale',
-      duration: 0.3,
-    },
-    placeholder: 'With animations...',
-    onValueChange: (values) => console.log('Selected values:', values),
-  },
-};
-
-export const Responsive: Story = {
-  args: {
-    options: basicOptions,
-    responsive: true,
-    defaultValue: [
-      '550e8400-e29b-41d4-a716-446655440001',
-      '550e8400-e29b-41d4-a716-446655440002',
-      'cherry-fruit',
-      '550e8400-e29b-41d4-a716-446655440003',
-      'elderberry-premium',
-      '550e8400-e29b-41d4-a716-446655440004',
-    ],
-    placeholder: 'Responsive behavior...',
-    onValueChange: (values) => console.log('Selected values:', values),
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'This story shows responsive behavior. Try resizing the viewport to see different maxCount values.',
-      },
-    },
   },
 };
 

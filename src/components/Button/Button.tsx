@@ -72,6 +72,7 @@ const buttonVariants = cva(
       { iconOnly: true, size: 'sm', class: 'size-6 p-0!' },
       { iconOnly: true, size: 'md', class: 'size-10' },
       { iconOnly: true, size: 'lg', class: 'size-12' },
+      { iconOnly: true, size: 'xl', class: 'size-14' },
       {
         iconOnly: true,
         intent: 'icon',
@@ -177,6 +178,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       console.warn('Button with intent="icon" requires an icon prop');
     }
 
+    // Icon-only style is automatically applied when:
+    // 1. Either icon OR trailingIcon is provided (but not both)
+    // 2. No children (text) is provided
+    // This renders a square button with aspect-ratio 1:1 and appropriate padding
     const iconOnly = Boolean(
       (finalIcon || finalTrailingIcon) && !finalChildren
     );

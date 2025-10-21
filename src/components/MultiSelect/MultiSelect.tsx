@@ -109,6 +109,8 @@ export interface RenderOptionContext {
   isSelected?: boolean;
   /** Callback to remove the option (only for badge) */
   onRemove?: () => void;
+  /** Whether the component is disabled */
+  disabled?: boolean;
 }
 
 /**
@@ -805,7 +807,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
     const defaultRenderOption = (
       context: RenderOptionContext
     ): React.ReactNode => {
-      const { option, location, onRemove } = context;
+      const { option, location, onRemove, disabled: isDisabled } = context;
 
       if (location === 'badge') {
         // Render as selected badge with full Tag component styling
@@ -830,10 +832,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
               responsiveSettings.compactMode && 'text-xs px-1.5 py-0.5',
               screenSize === 'mobile' && 'max-w-[120px] truncate',
               singleLine && 'flex-shrink-0 whitespace-nowrap',
-              '[&>svg]:pointer-events-auto'
+              '[&>svg]:pointer-events-auto',
+              isDisabled && 'cursor-not-allowed'
             )}
             style={badgeStyle}
-            onRemove={onRemove!}
+            {...(!isDisabled && { onRemove: onRemove! })}
           >
             {option.label}
           </Tag>
@@ -977,11 +980,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 className={cn(
                   `focus:ring-interactive-focused border-interactive-default
                   bg-surface-primary hover:border-interactive-hover px-0
-                  has-[:disabled]:border-interactive-disabled
-                  has-[:disabled]:bg-surface-disabled
+                  disabled:bg-surface-disabled
                   has-[:focus]:ring-interactive-focused h-12 rounded relative
                   flex w-full items-center border focus:ring-4
-                  focus-visible:outline-none
+                  focus-visible:outline-none disabled:cursor-not-allowed
                   has-[:focus-visible]:border-[var(--chemican-green-800)]
                   has-[:focus-visible]:ring-4 has-[:focus-visible]:outline-0`,
                   autoSize ? 'w-auto' : 'w-full',
@@ -992,11 +994,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     invalid &&
                     'ring-interactive-alert-focused ring-4',
                   responsiveSettings.compactMode && 'min-h-8 text-sm',
-                  screenSize === 'mobile' && 'min-h-12',
-                  disabled && 'cursor-not-allowed opacity-50',
-                  invalid &&
-                    `border-interactive-alert-default!
-                    focus:ring-interactive-alert-focused`
+                  screenSize === 'mobile' && 'min-h-12'
                 )}
                 style={{
                   ...widthConstraints,
@@ -1057,9 +1055,23 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 <div
                   className="mx-auto flex w-full items-center justify-between"
                 >
-                  <span className="text-body-primary mx-3">{placeholder}</span>
+                  <span
+                    className={cn(
+                      'mx-3',
+                      disabled
+                        ? 'text-body-disabled'
+                        : isPopoverOpen
+                          ? 'text-body-primary'
+                          : 'text-body-placeholder'
+                    )}
+                  >
+                    {placeholder}
+                  </span>
                   <IconChevronDown
-                    className="h-4 text-body-primary mx-2 cursor-pointer"
+                    className={cn(
+                      'h-4 mx-2 cursor-pointer',
+                      disabled ? 'text-body-disabled' : 'text-body-primary'
+                    )}
                   />
                 </div>
               </button>
@@ -1080,6 +1092,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         option,
                         location: 'badge',
                         onRemove: () => toggleOption(value),
+                        disabled,
                       })}
                     </div>
                   );
@@ -1094,9 +1107,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     multiSelectVariants({ variant }),
                     responsiveSettings.compactMode && 'text-xs px-1.5 py-0.5',
                     singleLine && 'flex-shrink-0 whitespace-nowrap',
-                    '[&>svg]:pointer-events-auto'
+                    '[&>svg]:pointer-events-auto',
+                    disabled && 'cursor-not-allowed'
                   )}
-                  onRemove={clearExtraOptions}
+                  {...(!disabled && { onRemove: clearExtraOptions })}
                 >
                   + {selectedValues.length - responsiveSettings.maxCount}{' '}
                   {moreSelectedLabel}
@@ -1206,7 +1220,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             }${option.disabled ? ', disabled' : ''}`}
                             className={cn(
                               'cursor-pointer',
-                              option.disabled && 'cursor-not-allowed opacity-50'
+                              option.disabled &&
+                                `text-interactive-disabled cursor-not-allowed
+                                  opacity-100 data-[disabled=true]:opacity-100`
                             )}
                             disabled={Boolean(option.disabled)}
                           >
@@ -1238,7 +1254,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           }${option.disabled ? ', disabled' : ''}`}
                           className={cn(
                             'cursor-pointer',
-                            option.disabled && 'cursor-not-allowed opacity-50'
+                            option.disabled &&
+                              `text-interactive-disabled cursor-not-allowed
+                                opacity-100 data-[disabled=true]:opacity-100`
                           )}
                           disabled={Boolean(option.disabled)}
                         >
@@ -1253,34 +1271,32 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     })}
                   </CommandGroup>
                 )}
-                <CommandSeparator />
-                <CommandGroup>
-                  <div
-                    className="border-t-divider-default px-md py-sm flex
-                      items-center justify-between border-t"
-                  >
-                    <>
-                      <Button
-                        intent="text"
-                        size="xs"
-                        className="min-w-auto"
-                        onClick={handleClear}
-                        disabled={selectedValues.length === 0}
-                      >
-                        {clearAllLabel}
-                      </Button>
-                      <Button
-                        intent="primary"
-                        size="xs"
-                        className="min-w-auto"
-                        onClick={() => setIsPopoverOpen(false)}
-                      >
-                        {applyLabel}
-                      </Button>
-                    </>
-                  </div>
-                </CommandGroup>
               </CommandList>
+              <CommandSeparator />
+              <div
+                className="px-md py-sm bg-surface-primary bottom-0 sticky flex
+                  items-center justify-between"
+              >
+                <>
+                  <Button
+                    intent="text"
+                    size="xs"
+                    className="min-w-auto"
+                    onClick={handleClear}
+                    disabled={selectedValues.length === 0}
+                  >
+                    {clearAllLabel}
+                  </Button>
+                  <Button
+                    intent="primary"
+                    size="xs"
+                    className="min-w-auto"
+                    onClick={() => setIsPopoverOpen(false)}
+                  >
+                    {applyLabel}
+                  </Button>
+                </>
+              </div>
             </Command>
           </PopoverContent>
           {animation > 0 && selectedValues.length > 0 && (
