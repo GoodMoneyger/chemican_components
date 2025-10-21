@@ -1,7 +1,7 @@
-import { default as React } from '../../../node_modules/react';
+import { default as React, ReactNode } from '../../../node_modules/react';
 import { Dialog as RadixDialog } from 'radix-ui';
 export interface DialogAction {
-    label: string;
+    label: ReactNode;
     onAction?: () => void;
     value?: unknown;
     intent?: 'primary' | 'secondary' | 'tertiary' | 'text';
@@ -10,10 +10,10 @@ export interface DialogAction {
 export interface DialogProps extends React.ComponentProps<typeof RadixDialog.Root> {
     isOpen: boolean;
     onClose: (value?: unknown) => void;
-    children: React.ReactNode;
-    title: string;
+    children: ReactNode;
+    title: ReactNode;
     actions?: DialogAction[];
     cancellable?: boolean;
-    cancelButtonLabel?: string;
+    cancelButtonLabel?: ReactNode;
 }
 export declare const Dialog: React.FC<DialogProps>;
