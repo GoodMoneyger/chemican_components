@@ -21,6 +21,7 @@ const iconMap = {
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
+  tags: ['autodocs'],
   argTypes: {
     children: {
       control: { type: 'text' },
@@ -31,7 +32,7 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       control: { type: 'select' },
-      options: ['xs', 'sm', 'md', 'lg'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     disabled: {
       control: { type: 'boolean' },
@@ -116,4 +117,24 @@ Primary.args = {
   asChild: false,
   children: 'ラベル',
   danger: false,
+};
+
+export const IconOnly = Template.bind({});
+IconOnly.args = {
+  intent: 'primary',
+  size: 'md',
+  disabled: false,
+  loading: false,
+  icon: IconCheck,
+  trailingIcon: undefined,
+  asChild: false,
+  danger: false,
+};
+IconOnly.parameters = {
+  docs: {
+    description: {
+      story:
+        'Icon-only buttons are automatically styled when a single icon is provided without any text. The button becomes square (1:1 aspect ratio) with appropriate padding. To create an icon-only button, provide either the `icon` or `trailingIcon` prop (not both) and omit the `children` prop.',
+    },
+  },
 };
