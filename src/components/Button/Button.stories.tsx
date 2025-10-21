@@ -32,7 +32,7 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       control: { type: 'select' },
-      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+      options: ['icon', 'xs', 'sm', 'md', 'lg', 'xl'],
     },
     disabled: {
       control: { type: 'boolean' },
@@ -135,6 +135,26 @@ IconOnly.parameters = {
     description: {
       story:
         'Icon-only buttons are automatically styled when a single icon is provided without any text. The button becomes square (1:1 aspect ratio) with appropriate padding. To create an icon-only button, provide either the `icon` or `trailingIcon` prop (not both) and omit the `children` prop.',
+    },
+  },
+};
+
+export const IconSize = Template.bind({});
+IconSize.args = {
+  intent: 'primary',
+  size: 'icon',
+  disabled: false,
+  loading: false,
+  icon: IconCheck,
+  trailingIcon: undefined,
+  asChild: false,
+  danger: false,
+};
+IconSize.parameters = {
+  docs: {
+    description: {
+      story:
+        'The `icon` size variant is specifically designed for icon-only buttons. It should only be used when there is an icon and no children/text content.',
     },
   },
 };

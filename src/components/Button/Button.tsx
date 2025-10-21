@@ -39,6 +39,7 @@ const buttonVariants = cva(
         false: 'focus-visible:ring-interactive-focused',
       },
       size: {
+        icon: '', // To be used with icon-only buttons only
         xs: 'px-sm h-8 min-w-15 text-sm',
         sm: 'px-md h-10 min-w-20',
         md: 'min-w-24 h-[2.875rem]',
@@ -46,7 +47,7 @@ const buttonVariants = cva(
         xl: 'h-17 min-w-43 text-xl',
       },
       iconOnly: {
-        true: 'min-w-0 aspect-square h-auto',
+        true: 'min-w-0 p-0! aspect-square h-auto',
       },
       textOnly: {
         true: '',
@@ -62,11 +63,13 @@ const buttonVariants = cva(
       { textOnly: true, size: 'lg', class: 'px-xl' },
       { iconOnly: false, size: 'md', class: 'px-lg' },
       { iconOnly: false, size: 'lg', class: 'px-xl' },
-      { iconOnly: true, size: 'xs', class: 'p-0' },
-      { iconOnly: true, size: 'sm', class: 'size-6 p-0!' },
-      { iconOnly: true, size: 'md', class: 'size-10' },
-      { iconOnly: true, size: 'lg', class: 'size-12' },
-      { iconOnly: true, size: 'xl', class: 'size-14' },
+      { iconOnly: false, size: 'icon', class: 'px-sm h-8 min-w-15 text-sm' }, // Fallback, should only be used with icon only
+      { iconOnly: true, size: 'icon', class: 'p-0' },
+      { iconOnly: true, size: 'xs', class: 'size-8' },
+      { iconOnly: true, size: 'sm', class: 'size-10' },
+      { iconOnly: true, size: 'md', class: 'size-[2.875rem]' },
+      { iconOnly: true, size: 'lg', class: 'size-14' },
+      { iconOnly: true, size: 'xl', class: 'size-17' },
       {
         intent: 'primary',
         danger: true,
@@ -114,6 +117,7 @@ const iconStyles = cva('', {
       true: '',
     },
     size: {
+      icon: 'size-4',
       xs: 'size-4',
       sm: 'size-5',
       md: 'size-5',
