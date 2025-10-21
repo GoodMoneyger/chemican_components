@@ -4,7 +4,7 @@ import { IconProp } from '../../lib/utils';
 declare const buttonVariants: (props?: ({
     intent?: "text" | "primary" | "secondary" | "tertiary" | null | undefined;
     danger?: boolean | null | undefined;
-    size?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "icon" | null | undefined;
     iconOnly?: boolean | null | undefined;
     textOnly?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
