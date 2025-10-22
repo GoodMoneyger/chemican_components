@@ -1,0 +1,230 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title='Design System/Themes' />
+
+# Themes
+
+The Chemican Design System supports multiple color themes that can be switched dynamically in your application.
+
+## Available Themes
+
+The design system currently provides two themes:
+
+- **Green Mode** (Default) - The default Chemican brand theme with green accents
+- **Blue Mode** - An alternative theme with blue accents
+
+Both themes share the same semantic token structure, ensuring consistent component behavior across themes.
+
+## How to Change the Theme
+
+Themes are controlled via the `data-theme` attribute on any parent HTML element. Typically, you would set this on the `<html>` or `<body>` element to apply the theme globally.
+
+### Default Theme (Green Mode)
+
+The Green Mode theme is active by default when no `data-theme` attribute is set:
+
+```html
+<!-- No data-theme attribute needed for default theme -->
+<html>
+  <body>
+    <!-- Your app content -->
+  </body>
+</html>
+```
+
+### Switching to Blue Mode
+
+To activate the Blue Mode theme, set the `data-theme` attribute to `'Blue Mode'`:
+
+```html
+<html data-theme="Blue Mode">
+  <body>
+    <!-- Your app content -->
+  </body>
+</html>
+```
+
+## Implementation Examples
+
+### Vanilla JavaScript
+
+```javascript
+// Switch to Blue Mode
+document.documentElement.setAttribute('data-theme', 'Blue Mode');
+
+// Switch back to Green Mode (default)
+document.documentElement.removeAttribute('data-theme');
+```
+
+### React with useState
+
+```tsx
+import { useState } from 'react';
+
+function App() {
+  const [theme, setTheme] = useState<'Green Mode' | 'Blue Mode'>('Green Mode');
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'Green Mode' ? 'Blue Mode' : 'Green Mode';
+    setTheme(newTheme);
+
+    if (newTheme === 'Blue Mode') {
+      document.documentElement.setAttribute('data-theme', 'Blue Mode');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={toggleTheme}>
+        Switch to {theme === 'Green Mode' ? 'Blue' : 'Green'} Mode
+      </button>
+      {/* Your app content */}
+    </div>
+  );
+}
+```
+
+### React with useEffect
+
+```tsx
+import { useEffect, useState } from 'react';
+
+function useTheme() {
+  const [theme, setTheme] = useState<'Green Mode' | 'Blue Mode'>('Green Mode');
+
+  useEffect(() => {
+    if (theme === 'Blue Mode') {
+      document.documentElement.setAttribute('data-theme', 'Blue Mode');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, [theme]);
+
+  return [theme, setTheme] as const;
+}
+
+function App() {
+  const [theme, setTheme] = useTheme();
+
+  return (
+    <div>
+      <button onClick={() => setTheme(theme === 'Green Mode' ? 'Blue Mode' : 'Green Mode')}>
+        Current: {theme}
+      </button>
+      {/* Your app content */}
+    </div>
+  );
+}
+```
+
+### Persisting Theme Selection
+
+To remember the user's theme preference across sessions, you can use `localStorage`:
+
+```tsx
+import { useEffect, useState } from 'react';
+
+function usePersistedTheme() {
+  const [theme, setTheme] = useState<'Green Mode' | 'Blue Mode'>(() => {
+    // Initialize from localStorage or default to Green Mode
+    const saved = localStorage.getItem('chemican-theme');
+    return (saved === 'Blue Mode' ? 'Blue Mode' : 'Green Mode');
+  });
+
+  useEffect(() => {
+    // Update DOM
+    if (theme === 'Blue Mode') {
+      document.documentElement.setAttribute('data-theme', 'Blue Mode');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+
+    // Persist to localStorage
+    localStorage.setItem('chemican-theme', theme);
+  }, [theme]);
+
+  return [theme, setTheme] as const;
+}
+```
+
+### Next.js with Server-Side Rendering
+
+When using Next.js or other SSR frameworks, you'll want to prevent theme flashing on page load:
+
+```tsx
+// app/layout.tsx
+import { cookies } from 'next/headers';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = cookies();
+  const theme = cookieStore.get('theme')?.value || 'Green Mode';
+
+  return (
+    <html data-theme={theme === 'Blue Mode' ? 'Blue Mode' : undefined}>
+      <body>
+        {children}
+      </body>
+    </html>
+  );
+}
+
+// app/ThemeToggle.tsx (client component)
+'use client';
+
+import { useState } from 'react';
+
+export function ThemeToggle() {
+  const [theme, setTheme] = useState<'Green Mode' | 'Blue Mode'>('Green Mode');
+
+  const handleThemeChange = (newTheme: 'Green Mode' | 'Blue Mode') => {
+    setTheme(newTheme);
+    document.documentElement.setAttribute(
+      'data-theme',
+      newTheme === 'Blue Mode' ? 'Blue Mode' : ''
+    );
+    document.cookie = `theme=${newTheme}; path=/; max-age=31536000`;
+  };
+
+  return (
+    <button onClick={() => handleThemeChange(
+      theme === 'Green Mode' ? 'Blue Mode' : 'Green Mode'
+    )}>
+      Toggle Theme
+    </button>
+  );
+}
+```
+
+## Best Practices
+
+1. **Apply theme at the highest level**: Set the `data-theme` attribute on the `<html>` or `<body>` element to ensure all components are affected.
+
+2. **Use semantic tokens**: All components use semantic design tokens that automatically adapt to the selected theme. Avoid using primitive color values directly.
+
+3. **Test both themes**: When developing components, ensure they work correctly in both Green and Blue Mode.
+
+4. **Consider accessibility**: When implementing theme switching, ensure it doesn't interfere with system-level accessibility preferences (like prefers-color-scheme).
+
+5. **Initialize early**: Apply the theme as early as possible in your application lifecycle to prevent flickering during load.
+
+## Technical Details
+
+The theme system works through CSS custom properties (CSS variables). When you set the `data-theme` attribute, it activates a different set of CSS variable definitions:
+
+```css
+/* Default (Green Mode) - active when data-theme is not set */
+:root:not([data-theme]) {
+  --token-color-background-interactive-primary-default: var(--chemican-green-800);
+  /* ... other tokens */
+}
+
+/* Blue Mode - active when data-theme='Blue Mode' */
+[data-theme='Blue Mode'] {
+  --token-color-background-interactive-primary-default: var(--sea-500);
+  /* ... other tokens */
+}
+```
+
+All components reference these semantic tokens, so changing the theme updates all components automatically without requiring any component-level changes.
