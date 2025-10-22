@@ -104,12 +104,14 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
       label: option.toString(),
     }));
 
+    // Ensure at least one page option exists, even when there are no results
+    const effectiveTotalPages = Math.max(totalPages, 1);
     const pageSelectOptions = Array.from(
-      { length: totalPages },
+      { length: effectiveTotalPages },
       (_, i) => i + 1
     ).map((page) => ({
       value: page.toString(),
-      label: formatPageOption(page, totalPages, totalItems),
+      label: formatPageOption(page, effectiveTotalPages, totalItems),
     }));
 
     return (
@@ -135,6 +137,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
             value={currentPage.toString()}
             onValueChange={handlePageChange}
             options={pageSelectOptions}
+            disabled={totalItems === 0}
           />
         </div>
 
