@@ -2,12 +2,13 @@ import React, { type ReactNode } from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 
 import { Button } from '../Button';
+import type { ButtonProps } from '../Button';
 
-export interface DialogAction {
+export interface DialogAction
+  extends Omit<ButtonProps, 'children' | 'asChild' | 'value'> {
   label: ReactNode;
   onAction?: () => void;
   value?: unknown; // The value being passed to the onClose handler
-  intent?: 'primary' | 'secondary' | 'tertiary' | 'text';
   classNames?: string;
 }
 
@@ -65,12 +66,12 @@ export const Dialog: React.FC<DialogProps> = ({
             className="px-xl py-lg flex flex-grow items-center justify-between"
           >
             {title && (
-              <span
+              <RadixDialog.Title
                 className="text-xxl text-body-primary font-bold flex h-[18px]
                   items-center"
               >
                 {title}
-              </span>
+              </RadixDialog.Title>
             )}
           </div>
           <div
@@ -88,17 +89,26 @@ export const Dialog: React.FC<DialogProps> = ({
               </RadixDialog.Close>
             )}
             <div className={`gap-xs flex ${!cancellable ? 'ml-auto' : ''}`}>
-              {actions.map((action, index) => (
-                <RadixDialog.Close key={index} asChild>
-                  <Button
-                    intent={action.intent || 'primary'}
-                    className={action.classNames}
-                    onClick={() => handleActionClick(action)}
+              {actions.map((action, index) => {
+                const { label, classNames, onAction, value, ...buttonProps } =
+                  action;
+                return (
+                  <RadixDialog.Close
+                    key={index}
+                    asChild
+                    disabled={action.disabled}
                   >
-                    {action.label}
-                  </Button>
-                </RadixDialog.Close>
-              ))}
+                    <Button
+                      {...buttonProps}
+                      intent={action.intent || 'primary'}
+                      className={classNames}
+                      onClick={() => handleActionClick(action)}
+                    >
+                      {label}
+                    </Button>
+                  </RadixDialog.Close>
+                );
+              })}
             </div>
           </div>
         </div>
