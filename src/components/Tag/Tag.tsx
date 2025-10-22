@@ -32,6 +32,7 @@ export interface TagProps {
   className?: string;
   children?: React.ReactNode;
   onRemove?: () => void;
+  onClick?: () => void;
   accentColor?: ColorShapeTokens;
   colorCode?: keyof typeof colorCodeToTokenMap;
   size?: 'sm' | 'md';
@@ -52,6 +53,9 @@ const tagVariants = cva(
         false: '',
         true: 'border-interactive-selected',
       },
+      interactive: {
+        true: 'cursor-pointer select-none',
+      },
     },
     defaultVariants: {
       size: 'md',
@@ -66,6 +70,7 @@ export const Tag: React.FC<TagProps> = ({
   children,
   className,
   onRemove,
+  onClick,
   size = 'md',
   style,
   selected = false,
@@ -87,11 +92,16 @@ export const Tag: React.FC<TagProps> = ({
 
   return (
     <div
-      className={cn(tagVariants({ size, selected }), className)}
+      className={cn(
+        tagVariants({ size, selected, interactive: Boolean(onClick) }),
+        className
+      )}
       style={{
         backgroundColor: `var(${effectiveColor})`,
         ...style,
       }}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
     >
       <div className="truncate">{children}</div>
       {Boolean(onRemove) && (
