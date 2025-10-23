@@ -116,7 +116,7 @@ const TableRow = React.forwardRef<
     ref={ref}
     className={cn(
       `border-surface-default hover:bg-interactive-neutral-hover
-      data-[state=selected]:bg-interactive-neutral-selected border-b
+      data-[state=selected]:bg-interactive-neutral-selected h-12 border-b
       transition-colors`,
       className
     )}
@@ -152,7 +152,8 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'py-sm [&:has([role=checkbox])]:pr-0 min-h-12 px-md text-md align-middle',
+      `py-sm [&:has([role=checkbox])]:pr-0 px-md text-md align-middle
+      leading-none`,
       className
     )}
     {...props}
