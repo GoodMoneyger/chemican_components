@@ -132,8 +132,10 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      `text-body-secondary font-medium [&:has([role=checkbox])]:w-8
-      [&:has([role=checkbox])]:pr-0 h-10 px-[1.44rem] text-left`,
+      `text-body-secondary font-medium h-10 [&:has([role=checkbox])]:w-9
+      [&:has([role=checkbox])]:pt-2 [&:has([role=checkbox])]:pb-2
+      [&:has([role=checkbox])]:pl-3 [&:has([role=checkbox])]:pr-0 max-w-[400px]
+      px-[1.44rem] text-left [&:has([role=checkbox])]:max-w-none`,
       className
     )}
     {...props}
@@ -150,7 +152,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'py-sm [&:has([role=checkbox])]:pr-0 min-h-12 px-[1.44rem] align-middle',
+      'py-sm [&:has([role=checkbox])]:pr-0 min-h-12 px-md text-md align-middle',
       className
     )}
     {...props}
