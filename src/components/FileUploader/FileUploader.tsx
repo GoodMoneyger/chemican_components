@@ -253,7 +253,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
               </div>
             </div>
             <div className="w-full">
-              <ProgressIndicator
+              <ProgressIndicator.Linear
                 indeterminate={!progress}
                 value={progress}
                 className="h-1"

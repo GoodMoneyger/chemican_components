@@ -3,7 +3,7 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 
-import { Spinner } from '../Spinner';
+import { ProgressIndicator } from '../ProgressIndicator';
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
@@ -194,7 +194,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             })}
           </span>
           <span className="inset-0 absolute flex items-center justify-center">
-            <Spinner size="sm" layout="row" />
+            <ProgressIndicator.Circular size="sm" layout="row" />
           </span>
         </Comp>
       );

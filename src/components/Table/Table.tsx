@@ -47,7 +47,7 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
       {loading && (
         <tr>
           <td colSpan={100} className="p-0 h-0">
-            <ProgressIndicator
+            <ProgressIndicator.Linear
               indeterminate
               className="bg-surface-primary border-b-divider-default box-content
                 border-b"
