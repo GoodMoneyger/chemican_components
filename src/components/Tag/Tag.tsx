@@ -8,12 +8,12 @@ import { cn } from '../../utils';
 // Reference: https://docs.google.com/spreadsheets/d/14r5PJTfzfESsKypY2cJlR65I2-DkO4RvODa04x_s1dA
 const colorCodeToTokenMap = {
   0: ColorShapeTokens.AccentGraySoft,
-  1: ColorShapeTokens.AccentRedSoft,
-  2: ColorShapeTokens.AccentRedSoft,
+  1: ColorShapeTokens.AccentSunSoft,
+  2: ColorShapeTokens.AccentSunPale,
   3: ColorShapeTokens.AccentPurpleSoft,
   4: ColorShapeTokens.AccentPurpleSoft,
-  5: ColorShapeTokens.AccentBlueSoft,
-  6: ColorShapeTokens.AccentBlueSoft,
+  5: ColorShapeTokens.AccentSeaSoft,
+  6: ColorShapeTokens.AccentSeaSoft,
   7: ColorShapeTokens.AccentCyanSoft,
   8: ColorShapeTokens.AccentCyanSoft,
   9: ColorShapeTokens.AccentGreenSoft,
