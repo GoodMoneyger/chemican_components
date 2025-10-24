@@ -54,7 +54,7 @@ const searchIconVariants = cva(
   }
 );
 
-const inputClasses = `text-md text-body-primary disabled:bg-input-disabled
+const inputClasses = `text-body-primary disabled:bg-input-disabled
   disabled:text-body-disabled placeholder:text-body-disabled flex-1
   bg-transparent leading-[100%] tracking-[0%] outline-none
   focus:placeholder-transparent disabled:cursor-not-allowed h-full`;
