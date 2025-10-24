@@ -8,7 +8,7 @@ import {
 import { cn } from '../../utils';
 import { Progress } from '../Progress';
 
-interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+export interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   loading?: boolean;
   loadingText?: React.ReactNode;
 }
@@ -28,7 +28,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 );
 Table.displayName = 'Table';
 
-interface TableHeaderProps
+export interface TableHeaderProps
   extends React.HTMLAttributes<HTMLTableSectionElement> {
   loading?: boolean;
 }
@@ -60,7 +60,8 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
 );
 TableHeader.displayName = 'TableHeader';
 
-interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+export interface TableBodyProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {
   loading?: boolean;
   loadingText?: React.ReactNode;
   colSpan?: number;

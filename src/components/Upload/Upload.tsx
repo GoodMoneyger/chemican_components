@@ -362,4 +362,4 @@ const Upload = React.forwardRef<HTMLDivElement, UploadProps>(
 
 Upload.displayName = 'Upload';
 
-export { Upload, uploadVariants };
+export { Upload };

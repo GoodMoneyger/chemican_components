@@ -1,14 +1,1 @@
-export {
-  Dropdown,
-  DropdownTrigger,
-  DropdownContent,
-  DropdownItem,
-  DropdownSeparator,
-  DropdownLabel,
-  type DropdownProps,
-  type DropdownTriggerProps,
-  type DropdownContentProps,
-  type DropdownItemProps,
-  type DropdownSeparatorProps,
-  type DropdownLabelProps,
-} from './Dropdown';
+export * from './Dropdown';
