@@ -67,8 +67,10 @@ const buttonVariants = cva(
   group-hover/wrapper:bg-shape-accent-gray-pale
   disabled:bg-shape-accent-gray-pale disabled:text-body-disabled
   disabled:hover:bg-shape-accent-gray-pale disabled:hover:text-body-disabled
-  flex h-full cursor-pointer flex-row items-center justify-center border-l
-  text-center disabled:cursor-not-allowed`,
+  focus:ring-interactive-focused
+  group-focus-within:border-l-interactive-primary-default flex h-full
+  cursor-pointer flex-row items-center justify-center border-l text-center
+  focus:ring-4 focus:outline-none disabled:cursor-not-allowed`,
   {
     variants: {
       size: {
