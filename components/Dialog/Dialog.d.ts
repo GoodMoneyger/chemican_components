@@ -1,10 +1,10 @@
 import { default as React, ReactNode } from '../../../node_modules/react';
 import { Dialog as RadixDialog } from 'radix-ui';
-export interface DialogAction {
+import { ButtonProps } from '../Button';
+export interface DialogAction extends Omit<ButtonProps, 'children' | 'asChild' | 'value'> {
     label: ReactNode;
     onAction?: () => void;
     value?: unknown;
-    intent?: 'primary' | 'secondary' | 'tertiary' | 'text';
     classNames?: string;
 }
 export interface DialogProps extends React.ComponentProps<typeof RadixDialog.Root> {

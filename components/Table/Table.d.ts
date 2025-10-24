@@ -1,14 +1,14 @@
 import { default as React } from '../../../node_modules/react';
-interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+export interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
     loading?: boolean;
     loadingText?: React.ReactNode;
 }
 declare const Table: React.ForwardRefExoticComponent<TableProps & React.RefAttributes<HTMLTableElement>>;
-interface TableHeaderProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+export interface TableHeaderProps extends React.HTMLAttributes<HTMLTableSectionElement> {
     loading?: boolean;
 }
 declare const TableHeader: React.ForwardRefExoticComponent<TableHeaderProps & React.RefAttributes<HTMLTableSectionElement>>;
-interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+export interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
     loading?: boolean;
     loadingText?: React.ReactNode;
     colSpan?: number;

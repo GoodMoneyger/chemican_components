@@ -25,6 +25,7 @@ export interface TagProps {
     className?: string;
     children?: React.ReactNode;
     onRemove?: () => void;
+    onClick?: () => void;
     accentColor?: ColorShapeTokens;
     colorCode?: keyof typeof colorCodeToTokenMap;
     size?: 'sm' | 'md';

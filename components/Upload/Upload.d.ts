@@ -26,4 +26,4 @@ export interface UploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     uploadFailedText?: string;
 }
 declare const Upload: React.ForwardRefExoticComponent<UploadProps & React.RefAttributes<HTMLDivElement>>;
-export { Upload, uploadVariants };
+export { Upload };
