@@ -8,13 +8,13 @@ import { renderIcon, cn } from '../../lib/utils';
 
 const dropdownContentVariants = cva(
   `bg-surface-primary border-divider-default shadow-overlay text-body-primary
-  py-xxs rounded-md z-dropdown min-w-[8rem] overflow-hidden`,
+  py-xxs rounded-md z-dropdown min-w-32 overflow-hidden`,
   {
     variants: {
       size: {
-        sm: 'min-w-[8rem]',
-        md: 'min-w-[12rem]',
-        lg: 'min-w-[16rem]',
+        sm: 'min-w-32',
+        md: 'min-w-48',
+        lg: 'min-w-64',
       },
     },
     defaultVariants: {
@@ -84,7 +84,7 @@ export const DropdownItem = React.forwardRef<
 
     return (
       <RadixDropdownMenu.Item {...itemProps}>
-        {renderIcon(icon, { size: 16, className: 'mr-2' })}
+        {renderIcon(icon, { size: 16, className: 'mr-xs' })}
         {children}
       </RadixDropdownMenu.Item>
     );
@@ -103,7 +103,10 @@ export const DropdownSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <RadixDropdownMenu.Separator
     ref={ref}
-    className={cn('border-divider-default -mx-1 my-0 h-px border-b', className)}
+    className={cn(
+      'border-divider-default -mx-xxs my-0 h-px border-b',
+      className
+    )}
     {...props}
   />
 ));
@@ -122,7 +125,7 @@ export const DropdownLabel = React.forwardRef<
   <RadixDropdownMenu.Label
     ref={ref}
     className={cn(
-      'text-body-secondary px-2 py-1.5 text-sm font-semibold',
+      'text-body-secondary px-xs py-1.5 text-sm font-semibold',
       className
     )}
     {...props}

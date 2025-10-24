@@ -42,7 +42,7 @@ const buttonVariants = cva(
         icon: '', // To be used with icon-only buttons only
         xs: 'px-sm h-8 min-w-15 text-sm',
         sm: 'px-md h-10 min-w-20',
-        md: 'min-w-24 h-[2.875rem]',
+        md: 'min-w-24 h-11.5',
         lg: 'h-14 min-w-34 text-lg',
         xl: 'h-17 min-w-43 text-xl',
       },
@@ -67,7 +67,7 @@ const buttonVariants = cva(
       { iconOnly: true, size: 'icon', class: 'p-0' },
       { iconOnly: true, size: 'xs', class: 'size-8' },
       { iconOnly: true, size: 'sm', class: 'size-10' },
-      { iconOnly: true, size: 'md', class: 'size-[2.875rem]' },
+      { iconOnly: true, size: 'md', class: 'size-11.5' },
       { iconOnly: true, size: 'lg', class: 'size-14' },
       { iconOnly: true, size: 'xl', class: 'size-17' },
       {

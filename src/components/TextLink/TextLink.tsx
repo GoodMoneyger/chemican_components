@@ -20,10 +20,10 @@ const textLinkVariants = cva(
         active:text-interactive-primary-active`,
       },
       size: {
-        lg: 'gap-1 text-lg',
-        md: 'gap-0.5 text-md',
-        sm: 'gap-0.5 text-sm',
-        xs: 'gap-0.5 text-xs',
+        lg: 'gap-xxs text-lg',
+        md: 'gap-xxxs text-md',
+        sm: 'gap-xxxs text-sm',
+        xs: 'gap-xxxs text-xs',
       },
     },
     defaultVariants: {

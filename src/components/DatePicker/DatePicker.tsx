@@ -215,7 +215,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
             trailingIconSize={iconSize}
             onTrailingIconClick={() => !disabled && handleOpenChange(!isOpen)}
             className={cn(
-              'pl-0 py-md rounded-sm gap-2 text-md min-h-[46px] cursor-pointer',
+              'pl-0 py-md rounded-sm gap-xs text-md min-h-11.5 cursor-pointer',
               isOpen && 'ring-interactive-focused ring-4',
               className
             )}

@@ -27,7 +27,7 @@ export interface SpinnerProps
 }
 
 const sizeClasses = {
-  sm: 'h-[1.25rem] w-[1.25rem]',
+  sm: 'h-5 w-5',
   md: 'h-9 w-9',
 };
 

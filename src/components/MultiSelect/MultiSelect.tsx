@@ -789,7 +789,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
       return (
         <span
           aria-hidden="true"
-          className="mr-2 text-body-secondary flex items-center"
+          className="mr-xs text-body-secondary flex items-center"
           style={
             customStyle?.iconColor
               ? { color: customStyle.iconColor }
@@ -1032,7 +1032,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         }
                       }}
                       aria-label={`Clear all ${selectedValues.length} selected options`}
-                      className="h-4 w-4 mx-2 text-body-secondary
+                      className="h-4 w-4 mx-xs text-body-secondary
                         hover:text-body-primary focus:ring-interactive-focused
                         rounded-sm flex cursor-pointer items-center
                         justify-center focus:ring-2 focus:ring-offset-1
@@ -1045,7 +1045,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                       className="min-h-6 flex h-full"
                     />
                     <IconChevronDown
-                      className="h-4 mx-2 text-body-secondary cursor-pointer"
+                      className="h-4 mx-xs text-body-secondary cursor-pointer"
                       aria-hidden="true"
                     />
                   </div>
@@ -1057,7 +1057,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 >
                   <span
                     className={cn(
-                      'mx-3',
+                      'mx-sm',
                       disabled
                         ? 'text-body-disabled'
                         : isPopoverOpen
@@ -1069,14 +1069,14 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   </span>
                   <IconChevronDown
                     className={cn(
-                      'h-4 mx-2 cursor-pointer',
+                      'h-4 mx-xs cursor-pointer',
                       disabled ? 'text-body-disabled' : 'text-body-primary'
                     )}
                   />
                 </div>
               </button>
             </PopoverTrigger>
-            <div className="gap-1 mt-xxs flex flex-wrap">
+            <div className="gap-xxs mt-xxs flex flex-wrap">
               {selectedValues
                 .slice(0, responsiveSettings.maxCount)
                 .map((value) => {
@@ -1181,7 +1181,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                       className="cursor-pointer"
                     >
                       <Checkbox
-                        className="mr-2"
+                        className="mr-xs"
                         checked={
                           selectedValues.length ===
                           getAllOptions().filter((opt) => !opt.disabled).length
@@ -1226,7 +1226,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             )}
                             disabled={Boolean(option.disabled)}
                           >
-                            <Checkbox className="mr-2" checked={isSelected} />
+                            <Checkbox className="mr-xs" checked={isSelected} />
                             {effectiveRenderOption({
                               option,
                               location: 'dropdown',
@@ -1260,7 +1260,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           )}
                           disabled={Boolean(option.disabled)}
                         >
-                          <Checkbox className="mr-2" checked={isSelected} />
+                          <Checkbox className="mr-xs" checked={isSelected} />
                           {effectiveRenderOption({
                             option,
                             location: 'dropdown',
@@ -1302,7 +1302,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
           {animation > 0 && selectedValues.length > 0 && (
             <IconSparkles
               className={cn(
-                `my-2 text-body-primary bg-surface-primary w-3 h-3
+                `my-xs text-body-primary bg-surface-primary w-3 h-3
                 cursor-pointer`,
                 isAnimating ? '' : 'text-body-secondary'
               )}

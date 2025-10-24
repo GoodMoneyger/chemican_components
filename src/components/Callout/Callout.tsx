@@ -12,7 +12,7 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const calloutVariants = cva(
-  'rounded-sm gap-1 flex items-start overflow-hidden border',
+  'rounded-sm gap-xxs flex items-start overflow-hidden border',
   {
     variants: {
       intent: {

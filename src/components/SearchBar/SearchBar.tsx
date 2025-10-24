@@ -34,7 +34,7 @@ const searchBarWrapperVariants = cva(
 const inputWrapperClasses =
   'gap-xxs px-sm disabled:bg-input-disabled flex h-full flex-1 items-center';
 
-const inputGroupClasses = `rounded-l-sm gap-1 disabled:bg-input-disabled flex h-full flex-1 flex-row
+const inputGroupClasses = `rounded-l-sm gap-xxs disabled:bg-input-disabled flex h-full flex-1 flex-row
   flex-nowrap items-center justify-between`;
 
 const searchIconVariants = cva(
@@ -84,10 +84,10 @@ const buttonVariants = cva(
     },
   }
 );
-const supportTextClasses = 'gap-2 text-sm text-body-secondary flex-row';
+const supportTextClasses = 'gap-xs text-sm text-body-secondary flex-row';
 const chipVariants = cva(
-  `gap-1 bg-shape-accent-gray-pale px-xs py-xxs text-md text-accent-gray-strong
-  flex items-center rounded-full`,
+  `gap-xxs bg-shape-accent-gray-pale px-xs py-xxs text-md
+  text-accent-gray-strong flex items-center rounded-full`,
   {
     variants: {
       size: {
@@ -105,7 +105,7 @@ const chipRemoveButtonClasses = `h-3 w-3 text-shape-primary flex items-center ju
   disabled:cursor-not-allowed disabled:opacity-50`;
 
 const chipContainerClasses =
-  'gap-2 flex min-h-full flex-1 flex-row flex-nowrap items-center';
+  'gap-xs flex min-h-full flex-1 flex-row flex-nowrap items-center';
 
 export interface SearchBarProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
@@ -212,7 +212,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
     return (
       <div
         className={cn(
-          'gap-1 group flex flex-col',
+          'gap-xxs group flex flex-col',
           disabled ? 'pointer-events-none' : '',
           className
         )}

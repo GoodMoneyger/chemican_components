@@ -20,7 +20,7 @@ const uploadVariants = cva(
   {
     variants: {
       size: {
-        small: 'p-md min-h-[80px]',
+        small: 'p-md min-h-20',
         large: 'pt-xxl pb-xxxl px-xl',
       },
       state: {
@@ -269,7 +269,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
             <div className="flex items-center justify-between">
               <p className="text-body-primary">{fileName || defaultFileName}</p>
               <button
-                className="hover:bg-surface-secondary rounded p-1"
+                className="hover:bg-surface-secondary rounded p-xxs"
                 onClick={(e) => {
                   e.stopPropagation();
                   onFileRemove?.();

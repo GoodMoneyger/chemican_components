@@ -57,9 +57,9 @@ export const Dialog: React.FC<DialogProps> = ({
           w-full"
       />
       <RadixDialog.Content
-        className="bg-surface-primary rounded-lg z-dialog fixed top-1/2 left-1/2
-          w-2/3 max-w-[40rem] min-w-[25rem] -translate-x-1/2 -translate-y-1/2
-          transform"
+        className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
+          min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
+          -translate-y-1/2 transform"
       >
         <div className="flex flex-col">
           <div
@@ -67,7 +67,7 @@ export const Dialog: React.FC<DialogProps> = ({
           >
             {title && (
               <RadixDialog.Title
-                className="text-xxl text-body-primary font-bold flex h-[18px]
+                className="text-xxl text-body-primary font-bold h-4.5 flex
                   items-center"
               >
                 {title}

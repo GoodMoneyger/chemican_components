@@ -61,7 +61,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     }
 
     return (
-      <div ref={ref} className={cn('px-8 w-full', className)} {...props}>
+      <div ref={ref} className={cn('px-xxl w-full', className)} {...props}>
         {/* Step indicators */}
         <div className="gap-sm flex items-center">
           {processedSteps.map((step, index) => (
@@ -174,7 +174,7 @@ const RadialStepper = React.forwardRef<
   return (
     <div ref={ref} className={cn('space-y-6', className)} {...props}>
       {/* Radial Progress Section */}
-      <div className="gap-4 px-8 mb-28 flex items-center">
+      <div className="gap-md px-xxl mb-28 flex items-center">
         {/* Circular Progress */}
         <div className="h-13 w-13 flex flex-shrink-0">
           <div className="relative h-full w-full">

@@ -178,15 +178,15 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
 
             // Base styles for reuse
             const navigationButton =
-              'text-interactive-primary-default hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover transition-colors rounded-md p-1';
+              'text-interactive-primary-default hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover transition-colors rounded-md p-xxs';
 
             return {
               // Root container
               root: `${defaultClassNames.root} shadow-none gap-2.5 ![--rdp-nav-height:20px] ![--rdp-nav-button-width:20px] ![--rdp-nav-button-height:20px]`,
 
               // Header elements
-              month_caption: `text-base font-bold text-body-primary px-xxs mb-4`,
-              weekdays: `mb-2`,
+              month_caption: `text-base font-bold text-body-primary px-xxs mb-md`,
+              weekdays: `mb-xs`,
               weekday: `text-body-secondary text-[13px] font-normal leading-5 tracking-normal text-center`,
 
               // Navigation

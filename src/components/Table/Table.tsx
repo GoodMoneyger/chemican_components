@@ -134,8 +134,8 @@ const TableHead = React.forwardRef<
     ref={ref}
     className={cn(
       `text-body-secondary font-medium h-10 [&:has([role=checkbox])]:w-9
-      [&:has([role=checkbox])]:pt-2 [&:has([role=checkbox])]:pb-2
-      [&:has([role=checkbox])]:pl-3 [&:has([role=checkbox])]:pr-0 max-w-[400px]
+      [&:has([role=checkbox])]:pt-xs [&:has([role=checkbox])]:pb-xs
+      [&:has([role=checkbox])]:pl-sm [&:has([role=checkbox])]:pr-0 max-w-[400px]
       px-[1.44rem] text-left [&:has([role=checkbox])]:max-w-none`,
       className
     )}
@@ -168,7 +168,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn('text-body-primary mt-4 text-sm', className)}
+    className={cn('text-body-primary mt-md text-sm', className)}
     {...props}
   />
 ));
