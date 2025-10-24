@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Input } from '../Input/Input';
+import { TextField } from '../TextField/TextField';
 
 import { FormField } from './FormField';
 
@@ -39,7 +39,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const MockInput = ({ hasError = false }: { hasError?: boolean }) => (
-  <Input
+  <TextField
     placeholder="Placeholder"
     invalid={hasError}
     prefixIcon={undefined}

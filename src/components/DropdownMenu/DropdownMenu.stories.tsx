@@ -18,10 +18,10 @@ import {
   DropdownItem,
   DropdownSeparator,
   DropdownLabel,
-} from './Dropdown';
+} from './DropdownMenu';
 
 const meta: Meta<typeof Dropdown> = {
-  title: 'Components/Dropdown',
+  title: 'Components/DropdownMenu',
   component: Dropdown,
   parameters: {
     layout: 'centered',

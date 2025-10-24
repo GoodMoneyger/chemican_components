@@ -1,10 +1,10 @@
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
-import { Textarea } from './Textarea';
+import { TextArea } from './TextArea';
 
-const meta: Meta<typeof Textarea> = {
-  title: 'Components/Textarea',
-  component: Textarea,
+const meta: Meta<typeof TextArea> = {
+  title: 'Components/TextArea',
+  component: TextArea,
   argTypes: {
     invalid: {
       control: { type: 'boolean' },
@@ -14,7 +14,7 @@ const meta: Meta<typeof Textarea> = {
 
 export default meta;
 
-const Template: StoryFn<typeof Textarea> = (args) => <Textarea {...args} />;
+const Template: StoryFn<typeof TextArea> = (args) => <TextArea {...args} />;
 export const Default = Template.bind({});
 Default.args = {
   placeholder: 'Placeholder',

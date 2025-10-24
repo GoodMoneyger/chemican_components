@@ -12,7 +12,7 @@ export type StatusLevel =
   | 'warning'
   | 'neutral';
 
-export interface StatusProps {
+export interface StatusIndicatorProps {
   className?: string;
   children?: React.ReactNode;
   level?: StatusLevel;
@@ -72,7 +72,7 @@ const indicatorDotVariants = cva('h-2 w-2 rounded-full', {
   },
 });
 
-export const Status: React.FC<StatusProps> = ({
+export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   children,
   className,
   level,

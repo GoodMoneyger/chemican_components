@@ -11,7 +11,7 @@ import {
   IconLock,
 } from '@tabler/icons-react';
 
-import { Input } from './Input';
+import { TextField } from './TextField';
 
 const prefixIconMap = {
   'IconSearch (size 16)': IconSearch,
@@ -34,9 +34,9 @@ const trailingIconMap = {
   None: undefined,
 };
 
-const meta: Meta<typeof Input> = {
-  title: 'Components/Input',
-  component: Input,
+const meta: Meta<typeof TextField> = {
+  title: 'Components/TextField',
+  component: TextField,
   argTypes: {
     disabled: {
       control: { type: 'boolean' },
@@ -68,7 +68,7 @@ const meta: Meta<typeof Input> = {
 
 export default meta;
 
-const Template: StoryFn<typeof Input> = (args) => <Input {...args} />;
+const Template: StoryFn<typeof TextField> = (args) => <TextField {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

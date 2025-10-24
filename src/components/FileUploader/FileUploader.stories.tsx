@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
-import { Upload } from './Upload';
+import { FileUploader } from './FileUploader';
 
-const meta: Meta<typeof Upload> = {
-  title: 'Components/Upload',
-  component: Upload,
+const meta: Meta<typeof FileUploader> = {
+  title: 'Components/FileUploader',
+  component: FileUploader,
   argTypes: {
     size: {
       control: { type: 'select' },
@@ -58,7 +58,7 @@ const meta: Meta<typeof Upload> = {
 
 export default meta;
 
-const Template: StoryFn<typeof Upload> = (args) => {
+const Template: StoryFn<typeof FileUploader> = (args) => {
   const [files, setFiles] = useState<FileList | null>(null);
 
   const handleFileSelect = (selectedFiles: FileList) => {
@@ -73,7 +73,7 @@ const Template: StoryFn<typeof Upload> = (args) => {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <Upload
+      <FileUploader
         {...args}
         onFileSelect={handleFileSelect}
         onFileRemove={handleFileRemove}

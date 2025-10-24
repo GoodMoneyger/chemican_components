@@ -5,7 +5,7 @@ import { IconCalendarEvent } from '@tabler/icons-react';
 import type { IconProp } from '../../lib/utils';
 import { cn } from '../../lib/utils';
 import { Calendar } from '../Calendar/Calendar';
-import { Input } from '../Input/Input';
+import { TextField } from '../TextField/TextField';
 
 // Popover content classes
 const contentClasses = `bg-surface-primary rounded-lg z-dropdown w-auto  max-w-none shadow-lg`;
@@ -203,7 +203,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
     const datePickerElement = (
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger asChild>
-          <Input
+          <TextField
             ref={ref}
             type="text"
             readOnly

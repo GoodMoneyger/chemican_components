@@ -3,8 +3,8 @@ import React from 'react';
 import { IconUsers, IconStar, IconHeart, IconX } from '@tabler/icons-react';
 
 import { ColorShapeTokens } from '../../tokens';
-import { Status } from '../Status';
-import type { StatusLevel } from '../Status/Status';
+import { StatusIndicator } from '../StatusIndicator';
+import type { StatusIndicatorLevel } from '../StatusIndicator/StatusIndicator';
 import { Tag } from '../Tag';
 
 import { MultiSelect } from './MultiSelect';
@@ -255,7 +255,7 @@ const tagColors = [
 };
 
 interface StatusOption extends MultiSelectOption {
-  statusLevel: StatusLevel;
+  statusLevel: StatusIndicatorLevel;
 }
 
 const optionsWithStatus: StatusOption[] = [
@@ -279,18 +279,18 @@ export const WithStatusAsItems: Story = {
 
       if (location === 'badge') {
         return (
-          <Status level={statusLevel} onRemove={onRemove}>
+          <StatusIndicator level={statusLevel} onRemove={onRemove}>
             {option.label}
-          </Status>
+          </StatusIndicator>
         );
       }
 
       // Render in dropdown with Status
       return (
         <div className="gap-2 flex items-center">
-          <Status level={statusLevel} size="sm">
+          <StatusIndicator level={statusLevel} size="sm">
             {option.label}
-          </Status>
+          </StatusIndicator>
         </div>
       );
     },
@@ -323,18 +323,18 @@ const options = [
 
     if (location === 'badge') {
       return (
-        <Status level={statusLevel} onRemove={onRemove}>
+        <StatusIndicator level={statusLevel} onRemove={onRemove}>
           {option.label}
-        </Status>
+        </StatusIndicator>
       );
     }
 
     // Render in dropdown with Status
     return (
       <div className="gap-2 flex items-center">
-        <Status level={statusLevel} size="sm">
+        <StatusIndicator level={statusLevel} size="sm">
           {option.label}
-        </Status>
+        </StatusIndicator>
       </div>
     );
   }}

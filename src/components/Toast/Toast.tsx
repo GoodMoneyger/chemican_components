@@ -40,7 +40,9 @@ export const Toast: React.FC<ToastProps> = ({
                 />
               )}
               {level === 'error' && (
-                <IconExclamationCircleFilled className="h-md text-shape-status-alert w-md" />
+                <IconExclamationCircleFilled
+                  className="h-md text-shape-status-alert w-md"
+                />
               )}
               {level === 'warning' && (
                 <IconExclamationCircleFilled

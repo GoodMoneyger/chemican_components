@@ -6,7 +6,7 @@ import {
 } from '@tabler/icons-react';
 
 import { cn } from '../../utils';
-import { Progress } from '../Progress';
+import { ProgressIndicator } from '../ProgressIndicator';
 
 export interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   loading?: boolean;
@@ -47,7 +47,7 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
       {loading && (
         <tr>
           <td colSpan={100} className="p-0 h-0">
-            <Progress
+            <ProgressIndicator
               indeterminate
               className="bg-surface-primary border-b-divider-default box-content
                 border-b"

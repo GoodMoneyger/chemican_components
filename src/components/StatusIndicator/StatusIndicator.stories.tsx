@@ -3,15 +3,17 @@ import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { ColorShapeTokens, ColorBackgroundTokens } from '../../tokens';
 
-import type { StatusProps } from './Status';
-import { Status } from './Status';
+import type { StatusIndicatorProps } from './StatusIndicator';
+import { StatusIndicator } from './StatusIndicator';
 
 export default {
-  title: 'Components/Status',
-  component: Status,
+  title: 'Components/StatusIndicator',
+  component: StatusIndicator,
 } as Meta;
 
-const StatusTemplate: StoryFn<StatusProps> = (args) => <Status {...args} />;
+const StatusTemplate: StoryFn<StatusIndicatorProps> = (args) => (
+  <StatusIndicator {...args} />
+);
 
 export const DefaultStatus = StatusTemplate.bind({});
 DefaultStatus.args = {

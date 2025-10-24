@@ -3,7 +3,7 @@ import { Progress as RadixProgress } from 'radix-ui';
 
 import { cn } from '../../utils';
 
-export interface ProgressProps
+export interface ProgressIndicatorProps
   extends React.ComponentProps<typeof RadixProgress.Root> {
   value?: number;
   max?: number;
@@ -11,7 +11,7 @@ export interface ProgressProps
   className?: string;
 }
 
-export const Progress: React.FC<ProgressProps> = ({
+export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   value,
   max = 100,
   indeterminate = false,
@@ -45,4 +45,4 @@ export const Progress: React.FC<ProgressProps> = ({
   );
 };
 
-Progress.displayName = 'Progress';
+ProgressIndicator.displayName = 'Progress';

@@ -20,7 +20,7 @@ import {
   DropdownContent,
   DropdownItem,
   DropdownSeparator,
-} from '../Dropdown';
+} from '../DropdownMenu';
 
 import { SideNavigation } from './SideNavigation';
 import { SideNavigationItem } from './SideNavigationItem';

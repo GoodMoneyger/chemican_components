@@ -10,7 +10,7 @@ import {
 } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
-import { Progress } from '../Progress';
+import { ProgressIndicator } from '../ProgressIndicator';
 import { Button } from '../Button';
 
 const uploadVariants = cva(
@@ -45,7 +45,7 @@ const uploadVariants = cva(
   }
 );
 
-export interface UploadProps
+export interface FileUploaderProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>,
     VariantProps<typeof uploadVariants> {
   onFileSelect?: (files: FileList) => void;
@@ -69,7 +69,7 @@ export interface UploadProps
   uploadFailedText?: string;
 }
 
-const Upload = React.forwardRef<HTMLDivElement, UploadProps>(
+const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
   (
     {
       className,
@@ -253,7 +253,7 @@ const Upload = React.forwardRef<HTMLDivElement, UploadProps>(
               </div>
             </div>
             <div className="w-full">
-              <Progress
+              <ProgressIndicator
                 indeterminate={!progress}
                 value={progress}
                 className="h-1"
@@ -360,6 +360,6 @@ const Upload = React.forwardRef<HTMLDivElement, UploadProps>(
   }
 );
 
-Upload.displayName = 'Upload';
+FileUploader.displayName = 'FileUploader';
 
-export { Upload };
+export { FileUploader };

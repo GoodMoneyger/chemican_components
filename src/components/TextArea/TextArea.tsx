@@ -21,7 +21,7 @@ const textareaVariants = cva(
   }
 );
 
-export interface TextareaProps
+export interface TextAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     VariantProps<typeof textareaVariants> {
   invalid?: boolean;
@@ -29,7 +29,7 @@ export interface TextareaProps
   showCharacterLimit?: boolean;
 }
 
-export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     {
       invalid,
@@ -72,4 +72,4 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   }
 );
 
-Textarea.displayName = 'Textarea';
+TextArea.displayName = 'TextArea';

@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
-import type { ProgressProps } from './Progress';
-import { Progress } from './Progress';
+import type { ProgressIndicatorProps } from './ProgressIndicator';
+import { ProgressIndicator } from './ProgressIndicator';
 
-const meta: Meta<typeof Progress> = {
-  title: 'Components/Progress',
-  component: Progress,
+const meta: Meta<typeof ProgressIndicator> = {
+  title: 'Components/ProgressIndicator',
+  component: ProgressIndicator,
   argTypes: {
     value: {
       control: { type: 'number' },
@@ -31,9 +31,9 @@ const meta: Meta<typeof Progress> = {
 
 export default meta;
 
-const Template: StoryFn<ProgressProps> = (args) => (
+const Template: StoryFn<ProgressIndicatorProps> = (args) => (
   <div className="w-96">
-    <Progress {...args} />
+    <ProgressIndicator {...args} />
   </div>
 );
 

@@ -56,7 +56,7 @@ const iconVariants = cva(
   }
 );
 
-export interface InputProps
+export interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'>,
     VariantProps<typeof inputWrapperVariants> {
   invalid?: boolean;
@@ -73,7 +73,7 @@ export interface InputProps
   prefixIconSize?: number;
 }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
       invalid,
@@ -135,4 +135,4 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-Input.displayName = 'Input';
+TextField.displayName = 'Input';
