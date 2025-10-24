@@ -2,12 +2,12 @@ import { default as React } from '../../../node_modules/react';
 import { ColorShapeTokens } from '../../tokens';
 declare const colorCodeToTokenMap: {
     readonly 0: ColorShapeTokens.AccentGraySoft;
-    readonly 1: ColorShapeTokens.AccentRedSoft;
-    readonly 2: ColorShapeTokens.AccentRedSoft;
+    readonly 1: ColorShapeTokens.AccentSunSoft;
+    readonly 2: ColorShapeTokens.AccentSunPale;
     readonly 3: ColorShapeTokens.AccentPurpleSoft;
     readonly 4: ColorShapeTokens.AccentPurpleSoft;
-    readonly 5: ColorShapeTokens.AccentBlueSoft;
-    readonly 6: ColorShapeTokens.AccentBlueSoft;
+    readonly 5: ColorShapeTokens.AccentSeaSoft;
+    readonly 6: ColorShapeTokens.AccentSeaSoft;
     readonly 7: ColorShapeTokens.AccentCyanSoft;
     readonly 8: ColorShapeTokens.AccentCyanSoft;
     readonly 9: ColorShapeTokens.AccentGreenSoft;

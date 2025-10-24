@@ -16,7 +16,6 @@ export * from './RadioButton';
 export * from './SearchBar';
 export * from './Select';
 export * from './SideNavigation';
-export * from './Spinner';
 export * from './StatusIndicator';
 export * from './Stepper';
 export * from './Switch';
