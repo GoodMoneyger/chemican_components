@@ -153,7 +153,7 @@ export const Default: Story = {
     };
 
     return (
-      <div className="flex h-screen">
+      <div className="h-screen">
         <SideNavigation
           {...args}
           header={<Header />}
@@ -163,7 +163,10 @@ export const Default: Story = {
           <DefaultContent />
         </SideNavigation>
 
-        <div className="bg-surface-secondary p-lg flex-1">
+        <div
+          className="bg-surface-secondary p-lg h-full"
+          style={{ marginLeft: 'var(--cc-side-navigation-width)' }}
+        >
           <div className="bg-surface-primary p-lg rounded-md">
             <h1 className="text-body-primary mb-md text-xl font-medium">
               Content Area
@@ -252,7 +255,7 @@ export const WithCustomLinks: Story = {
     };
 
     return (
-      <div className="flex h-screen">
+      <div className="h-screen">
         <SideNavigation
           {...args}
           header={<Header />}
@@ -262,7 +265,10 @@ export const WithCustomLinks: Story = {
           <CustomLinksContent />
         </SideNavigation>
 
-        <div className="bg-surface-secondary p-lg flex-1">
+        <div
+          className="bg-surface-secondary p-lg h-full"
+          style={{ marginLeft: 'var(--cc-side-navigation-width)' }}
+        >
           <div className="bg-surface-primary p-lg rounded-md">
             <h1 className="text-body-primary mb-md text-xl font-medium">
               Custom Links Demo
