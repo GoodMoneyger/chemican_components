@@ -17,7 +17,7 @@ const selectVariants = cva(
     variants: {
       variant: {
         default: `border-interactive-default p-md hover:border-interactive-hover
-        rounded gap-xs h-12 w-full`,
+        rounded gap-xs h-11.5 w-full`,
         compact: `py-xxs px-xs rounded-sm gap-xxs
         hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
       },

@@ -981,7 +981,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   `focus:ring-interactive-focused border-interactive-default
                   bg-surface-primary hover:border-interactive-hover px-0
                   disabled:bg-surface-disabled
-                  has-[:focus]:ring-interactive-focused h-12 rounded relative
+                  has-[:focus]:ring-interactive-focused h-11.5 rounded relative
                   flex w-full items-center border focus:ring-4
                   focus-visible:outline-none disabled:cursor-not-allowed
                   has-[:focus-visible]:border-[var(--chemican-green-800)]
