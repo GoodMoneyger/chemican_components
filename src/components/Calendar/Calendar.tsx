@@ -178,7 +178,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
 
             // Base styles for reuse
             const navigationButton =
-              'text-interactive-primary-default hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover transition-colors rounded-md p-xxs';
+              'text-interactive-primary-default hover:bg-interactive-neutral-hover hover:text-interactive-primary-hover transition-colors p-xxs cursor-pointer';
 
             return {
               // Root container
@@ -195,12 +195,12 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               chevron: `fill-current text-interactive-primary-default w-5 h-5`,
 
               // Day states
-              day: `    hover:bg-interactive-neutral-hover active:text-interactive-primary-active transition-colors text-body-primary text-md !w-[38px] !h-[38px]`,
-              day_button: `!w-9 !h-9 border border-transparent rounded-sm`,
+              day: `rounded-md transition-colors text-body-primary text-md !w-9.5 !h-9.5`,
+              day_button: `!w-9 !h-9 border border-transparent rounded-sm active:text-interactive-primary-active hover:bg-interactive-neutral-hover  cursor-pointer`,
               today: `text-interactive-primary-active border-surface-warning [&>button]:!border-interactive-default`,
               selected: `[&>button]:!bg-input-selected [&>button]:!text-body-inverse [&>button]:!font-bold hover:[&>button]:!bg-input-selected hover:[&>button]:!border-transparent hover:[&>button]:!text-body-inverse`,
               outside: `text-body-secondary text-md border border-transparent`,
-              disabled: `text-body-disabled text-md leading-none tracking-normal cursor-not-allowed hover:bg-transparent`,
+              disabled: `text-body-disabled text-md leading-none tracking-normal cursor-not-allowed`,
             };
           })()}
         />
