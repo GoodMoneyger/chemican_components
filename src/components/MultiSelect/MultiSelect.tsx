@@ -978,21 +978,13 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 onClick={handleTogglePopover}
                 disabled={disabled}
                 className={cn(
-                  `focus:ring-interactive-focused border-interactive-default
-                  bg-surface-primary hover:border-interactive-hover px-0
-                  disabled:bg-surface-disabled
-                  has-[:focus]:ring-interactive-focused h-11.5 rounded relative
-                  flex w-full items-center border focus:ring-4
-                  focus-visible:outline-none disabled:cursor-not-allowed
-                  has-[:focus-visible]:border-[var(--chemican-green-800)]
-                  has-[:focus-visible]:ring-4 has-[:focus-visible]:outline-0`,
+                  `border-interactive-default bg-surface-primary
+                  hover:border-interactive-hover px-0
+                  disabled:bg-surface-disabled h-12 rounded
+                  focus-visible:ring-interactive-focused relative flex w-full
+                  items-center border focus-visible:ring-4
+                  focus-visible:outline-none disabled:cursor-not-allowed`,
                   autoSize ? 'w-auto' : 'w-full',
-                  isPopoverOpen &&
-                    !invalid &&
-                    'ring-interactive-focused ring-4',
-                  isPopoverOpen &&
-                    invalid &&
-                    'ring-interactive-alert-focused ring-4',
                   responsiveSettings.compactMode && 'min-h-8 text-sm',
                   screenSize === 'mobile' && 'min-h-12'
                 )}
