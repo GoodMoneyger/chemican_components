@@ -3,7 +3,7 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 
-import { IconAlertCircle } from '../../tabler-icons';
+import { IconAlertCircleFilled } from '../../tabler-icons';
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
@@ -80,7 +80,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     },
     ref
   ) => {
-    const defaultIcon = intent === 'danger' ? IconAlertCircle : undefined;
+    const defaultIcon = intent === 'danger' ? IconAlertCircleFilled : undefined;
     const displayIcon = icon || defaultIcon;
 
     if (asChild) {
