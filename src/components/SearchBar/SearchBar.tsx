@@ -6,16 +6,16 @@ import { IconSearch, IconX } from '@tabler/icons-react';
 import { cn } from '../../lib/utils';
 
 const searchBarWrapperVariants = cva(
-  `rounded-sm bg-surface-primary min-h-8 border-interactive-default
+  `rounded-sm bg-surface-primary border-interactive-default
   hover:border-interactive-hover focus-within:border-interactive-hover
-  focus-within:ring-interactive-focused flex w-auto max-w-full items-center
-  justify-between overflow-hidden border focus-within:ring-4`,
+  focus-within:ring-interactive-focused flex w-auto overflow-hidden border
+  focus-within:ring-4`,
   {
     variants: {
       size: {
-        sm: 'h-8 text-sm',
-        md: 'h-10 text-md',
-        lg: 'h-12 text-md',
+        sm: 'min-h-8 text-sm',
+        md: 'min-h-10 text-md',
+        lg: 'min-h-12 text-md',
       },
       state: {
         default: '',
@@ -32,10 +32,10 @@ const searchBarWrapperVariants = cva(
 );
 
 const inputWrapperClasses =
-  'gap-xxs px-sm disabled:bg-input-disabled flex h-full flex-1 items-center';
+  'gap-xxs px-sm py-xs disabled:bg-input-disabled flex min-h-full flex-1 items-center flex-wrap';
 
-const inputGroupClasses = `rounded-l-sm gap-xxs disabled:bg-input-disabled flex h-full flex-1 flex-row
-  flex-nowrap items-center justify-between`;
+const inputGroupClasses = `rounded-l-sm gap-1 disabled:bg-input-disabled flex min-h-full flex-1 flex-row
+  flex-wrap items-center justify-start`;
 
 const searchIconVariants = cva(
   `text-shape-primary disabled:text-shape-interactive-disabled flex
@@ -54,13 +54,13 @@ const searchIconVariants = cva(
   }
 );
 
-const inputClasses = `text-body-primary disabled:bg-input-disabled
+const inputClasses = `min-w-24 min-h-6 text-md text-body-primary disabled:bg-input-disabled
   disabled:text-body-disabled placeholder:text-body-disabled flex-1
   bg-transparent leading-[100%] tracking-[0%] outline-none
   focus:placeholder-transparent disabled:cursor-not-allowed h-full`;
 
 const buttonVariants = cva(
-  `bg-shape-accent-gray-pale px-sm py-xs text-md text-shape-primary gap-xxs
+  `bg-shape-accent-gray-pale px-sm text-md text-shape-primary
   border-l-interactive-default hover:bg-interactive-neutral-hover
   hover:text-interactive-primary-hover focus:bg-shape-accent-gray-pale
   focus:text-interactive-primary-hover
@@ -68,9 +68,9 @@ const buttonVariants = cva(
   disabled:bg-shape-accent-gray-pale disabled:text-body-disabled
   disabled:hover:bg-shape-accent-gray-pale disabled:hover:text-body-disabled
   focus:ring-interactive-focused
-  group-focus-within:border-l-interactive-primary-default flex h-full
-  cursor-pointer flex-row items-center justify-center border-l text-center
-  focus:ring-4 focus:outline-none disabled:cursor-not-allowed`,
+  group-focus-within:border-l-interactive-primary-default cursor-pointer
+  items-center justify-center border-l text-center focus:ring-4
+  focus:outline-none disabled:cursor-not-allowed`,
   {
     variants: {
       size: {
@@ -113,13 +113,14 @@ export interface SearchBarProps
   value?: string;
   classname?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearch?: () => void;
+  onSearch?: (keywords: string[]) => void;
   placeholder?: string;
   disabled?: boolean;
   size?: 'sm' | 'md' | 'lg';
   state?: 'default' | 'filled' | 'disabled';
-  supportText?: string;
-  searchButtonText?: string;
+  supportText?: React.ReactNode;
+  searchButtonText?: React.ReactNode;
+  searchOnKeywordAdd?: boolean;
 }
 
 const iconSizeMap = {
@@ -141,6 +142,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       disabled: disabledProp,
       supportText,
       searchButtonText = '検索',
+      searchOnKeywordAdd = false,
       ...props
     },
     ref
@@ -183,13 +185,18 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (disabled) return;
       if (e.key === 'Enter' && value.trim()) {
-        setKeywords([...keywords, value.trim()]);
+        const newKeywords = [...keywords, value.trim()];
+        setKeywords(newKeywords);
         if (onChange) {
           const event = {
             ...e,
             target: { value: '' },
           } as unknown as React.ChangeEvent<HTMLInputElement>;
           onChange(event);
+        }
+        // Trigger search immediately when keyword is added (if enabled)
+        if (searchOnKeywordAdd && onSearch) {
+          onSearch(newKeywords);
         }
         e.preventDefault();
       }
@@ -199,14 +206,24 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
         !value &&
         keywords.length > 0
       ) {
-        setKeywords(keywords.slice(0, -1));
+        const newKeywords = keywords.slice(0, -1);
+        setKeywords(newKeywords);
+        // Trigger search when keyword is removed (if enabled)
+        if (searchOnKeywordAdd && onSearch) {
+          onSearch(newKeywords);
+        }
         e.preventDefault();
       }
     };
     // Remove keyword chip
     const handleRemoveKeyword = (idx: number) => {
       if (disabled) return; // Prevent changes if disabled
-      setKeywords(keywords.filter((_, i) => i !== idx));
+      const newKeywords = keywords.filter((_, i) => i !== idx);
+      setKeywords(newKeywords);
+      // Trigger search when keyword is removed (if enabled)
+      if (searchOnKeywordAdd && onSearch) {
+        onSearch(newKeywords);
+      }
     };
 
     return (
@@ -287,6 +304,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                       target: { value: '' },
                     } as React.ChangeEvent<HTMLInputElement>);
                   }
+                  onSearch?.([]);
                   setKeywords([]); // Clear all chips/keywords
                 }}
                 tabIndex={-1}
@@ -296,20 +314,18 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
             )}
           </div>
           {/* Search button - always fixed at right */}
-          <div className="flex h-full items-center">
-            <button
-              type="button"
-              className={cn(
-                buttonVariants({
-                  size,
-                })
-              )}
-              onClick={onSearch}
-              disabled={disabled}
-            >
-              {searchButtonText}
-            </button>
-          </div>
+          <button
+            type="button"
+            className={cn(
+              buttonVariants({
+                size,
+              })
+            )}
+            onClick={() => onSearch?.(keywords)}
+            disabled={disabled}
+          >
+            {searchButtonText}
+          </button>
         </div>
         {supportText && (
           <div
