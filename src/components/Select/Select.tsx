@@ -49,7 +49,7 @@ const selectVariants = cva(
 );
 
 const selectContentVariants = cva(
-  `bg-surface-primary z-dropdown relative -mt-px w-full min-w-[8rem]
+  `bg-surface-primary z-dropdown relative -mt-px -mb-px w-full min-w-[8rem]
   overflow-hidden border`,
   {
     variants: {
