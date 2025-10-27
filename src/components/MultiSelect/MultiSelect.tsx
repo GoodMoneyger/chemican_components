@@ -985,6 +985,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   items-center border focus-visible:ring-4
                   focus-visible:outline-none disabled:cursor-not-allowed`,
                   autoSize ? 'w-auto' : 'w-full',
+                  invalid &&
+                    `border-interactive-alert-default
+                    focus-visible:ring-interactive-alert-focused`,
                   responsiveSettings.compactMode && 'min-h-8 text-sm',
                   screenSize === 'mobile' && 'min-h-12'
                 )}
