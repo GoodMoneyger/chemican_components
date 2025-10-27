@@ -101,6 +101,9 @@ before committing them to the repository.
   --color-shape-accent-sun-pale: var(--sun-100);
   --color-shape-accent-sun-soft: var(--sun-300);
   --color-shape-accent-sun-strong: var(--sun-500);
+  --color-shape-accent-violet-pale: var(--violet-100);
+  --color-shape-accent-violet-soft: var(--violet-300);
+  --color-shape-accent-violet-strong: var(--violet-500);
   --color-shape-accent-wood-pale: var(--wood-200);
   --color-shape-accent-wood-soft: var(--wood-400);
   --color-shape-accent-wood-strong: var(--wood-600);
@@ -156,6 +159,8 @@ before committing them to the repository.
   --color-text-accent-sky-strong: var(--sky-1200);
   --color-text-accent-sun-soft: var(--sun-500);
   --color-text-accent-sun-strong: var(--sun-1200);
+  --color-text-accent-violet-soft: var(--violet-600);
+  --color-text-accent-violet-strong: var(--violet-1200);
   --color-text-accent-wood-soft: var(--wood-700);
   --color-text-accent-wood-strong: var(--wood-1200);
   --color-text-accent-yellow-soft: var(--yellow-600);
@@ -297,6 +302,9 @@ before committing them to the repository.
   --color-shape-accent-sun-pale: var(--sun-100);
   --color-shape-accent-sun-soft: var(--sun-300);
   --color-shape-accent-sun-strong: var(--sun-500);
+  --color-shape-accent-violet-pale: var(--violet-100);
+  --color-shape-accent-violet-soft: var(--violet-300);
+  --color-shape-accent-violet-strong: var(--violet-500);
   --color-shape-accent-wood-pale: var(--wood-200);
   --color-shape-accent-wood-soft: var(--wood-400);
   --color-shape-accent-wood-strong: var(--wood-600);
@@ -352,6 +360,8 @@ before committing them to the repository.
   --color-text-accent-sky-strong: var(--sky-1200);
   --color-text-accent-sun-soft: var(--sun-500);
   --color-text-accent-sun-strong: var(--sun-1200);
+  --color-text-accent-violet-soft: var(--violet-600);
+  --color-text-accent-violet-strong: var(--violet-1200);
   --color-text-accent-wood-soft: var(--wood-700);
   --color-text-accent-wood-strong: var(--wood-1200);
   --color-text-accent-yellow-soft: var(--yellow-600);
@@ -596,7 +606,7 @@ before committing them to the repository.
   --sea-700: #1651f3;
   --sea-800: #003ad8;
   --sea-900: #0033c1;
-  --sea-alpha-500-90: #5d87ffe6;
+  --sea-alpha-500-90: #5d87ffE6;
   --sky-1000: #004475;
   --sky-100: #cbe9fe;
   --sky-1100: #003458;
@@ -623,6 +633,19 @@ before committing them to the repository.
   --sun-700: #fa2525;
   --sun-800: #ec2020;
   --sun-900: #ce1616;
+  --violet-1000: #090475;
+  --violet-100: #dcdafe;
+  --violet-1100: #050158;
+  --violet-1200: #030040;
+  --violet-200: #cbc8fd;
+  --violet-300: #b7b3fa;
+  --violet-400: #a39ff6;
+  --violet-500: #7c76eb;
+  --violet-50: #eeedff;
+  --violet-600: #5750dc;
+  --violet-700: #3831c7;
+  --violet-800: #221aaf;
+  --violet-900: #120c93;
   --wood-1000: #914808;
   --wood-100: #fbe5dd;
   --wood-1100: #783b07;
