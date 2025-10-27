@@ -8,8 +8,8 @@ import { cn, renderIcon } from '../../lib/utils';
 
 const textLinkVariants = cva(
   `font-normal inline-flex items-center justify-center border border-transparent
-  underline decoration-solid decoration-from-font underline-offset-[3px]
-  transition-colors`,
+  decoration-solid decoration-from-font underline-offset-[3px] transition-colors
+  [:not(:hover):not(:active)]:underline`,
   {
     variants: {
       intent: {
