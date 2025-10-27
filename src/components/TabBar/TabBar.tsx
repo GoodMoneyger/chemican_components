@@ -23,10 +23,10 @@ const tabVariants = cva(
   `text-body-primary border-divider-default hover:border-interactive-hover
   data-[state=active]:border-interactive-selected data-[state=active]:font-bold
   disabled:text-interactive-disabled disabled:hover:border-divider-default
-  relative inline-flex cursor-pointer items-center justify-center border-b
+  relative inline-flex cursor-pointer items-center justify-center border-b pb-px
   leading-[100%] tracking-[0] transition-colors hover:border-b-2
-  disabled:cursor-not-allowed disabled:hover:border-b
-  data-[state=active]:border-b-2
+  hover:pb-[calc(1rem-1px)] disabled:cursor-not-allowed disabled:hover:border-b
+  data-[state=active]:border-b-2 data-[state=active]:pb-[calc(1rem-1px)]
   data-[state=active]:text-[var(--chemican-green-800)]`,
   {
     variants: {
