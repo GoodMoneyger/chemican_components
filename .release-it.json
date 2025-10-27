@@ -1,7 +1,7 @@
 {
   "git": {
     "tagName": "v${version}",
-    "commitMessage": "Release ${version}",
+    "commitMessage": "release: Release ${version}",
     "requireCleanWorkingDir": true
   },
   "github": {
