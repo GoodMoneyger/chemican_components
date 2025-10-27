@@ -9,7 +9,7 @@ import { cn, renderIcon } from '../../lib/utils';
 
 // Define button styles with CVA
 const buttonVariants = cva(
-  `gap-xxs rounded font-medium box-border inline-flex cursor-pointer
+  `gap-xxs rounded font-normal box-border inline-flex cursor-pointer
   items-center justify-center border border-transparent decoration-1
   focus-visible:ring-4 focus-visible:outline-none disabled:cursor-not-allowed
   disabled:no-underline`,
