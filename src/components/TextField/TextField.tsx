@@ -6,7 +6,8 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const inputWrapperVariants = cva(
-  `border-interactive-default bg-surface-primary hover:border-interactive-hover
+  `border-interactive-default bg-surface-primary
+  has-[>input:enabled]:hover:border-interactive-hover
   has-[:disabled]:bg-surface-disabled has-[:focus]:ring-interactive-focused
   h-11.5 rounded relative flex w-full items-center border
   has-[:focus]:border-[var(--chemican-green-800)] has-[:focus]:ring-4
@@ -114,6 +115,7 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
                   position: 'trailing',
                   interactive: true,
                 })}
+                disabled={props.disabled}
                 onClick={onTrailingIconClick}
               >
                 {renderIcon(trailingIcon, { size: trailingIconSize })}
