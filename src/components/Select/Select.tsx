@@ -12,12 +12,12 @@ const selectVariants = cva(
   disabled:bg-surface-disabled disabled:text-body-disabled
   [&[data-placeholder]]:text-body-placeholder
   disabled:[&[data-placeholder]]:text-body-disabled inline-flex items-center
-  justify-between border focus:ring-4 focus:outline-0 enabled:cursor-pointer`,
+  justify-between border focus-visible:ring-4 focus-visible:outline-none
+  enabled:cursor-pointer data-[state=open]:ring-4`,
   {
     variants: {
       variant: {
-        default: `border-interactive-default p-md hover:border-interactive-hover
-        rounded gap-xs h-11.5 w-full`,
+        default: 'border-interactive-default p-md rounded gap-xs h-11.5 w-full',
         compact: `py-xxs px-xs rounded-sm gap-xxs
         hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
       },
@@ -26,9 +26,14 @@ const selectVariants = cva(
         secondary: '',
       },
       invalid: {
-        false: 'focus:ring-interactive-focused',
+        false: `hover:border-interactive-hover
+        focus-visible:ring-interactive-focused
+        data-[state=open]:ring-interactive-focused
+        data-[state=open]:border-interactive-primary-default`,
         true: `border-interactive-alert-default
-        focus:ring-interactive-alert-focused`,
+        hover:border-interactive-alert-default
+        focus-visible:ring-interactive-alert-focused
+        data-[state=open]:ring-interactive-alert-focused`,
       },
     },
     compoundVariants: [
@@ -45,8 +50,8 @@ const selectVariants = cva(
 );
 
 const selectContentVariants = cva(
-  `bg-surface-primary z-dropdown relative w-full min-w-[8rem] overflow-hidden
-  border`,
+  `bg-surface-primary z-dropdown relative -mt-px -mb-px w-full min-w-[8rem]
+  overflow-hidden border`,
   {
     variants: {
       variant: {
