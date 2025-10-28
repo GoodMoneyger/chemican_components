@@ -40,7 +40,7 @@ const buttonVariants = cva(
       },
       size: {
         icon: '', // To be used with icon-only buttons only
-        xs: 'px-sm h-8 min-w-15 text-sm',
+        xs: 'px-sm h-8 min-w-15',
         sm: 'px-md h-10 min-w-20',
         md: 'min-w-24 h-11.5',
         lg: 'h-14 min-w-34 text-lg',
