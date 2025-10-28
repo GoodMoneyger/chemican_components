@@ -43,3 +43,6 @@ yarn.lock
 # Coverage reports
 coverage/
 
+# TypeScript build info
+tsconfig.tsbuildinfo
+
