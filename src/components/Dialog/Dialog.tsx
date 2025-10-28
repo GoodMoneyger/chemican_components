@@ -75,12 +75,12 @@ export const Dialog: React.FC<DialogProps> = ({
             )}
           </div>
           <div
-            className="border-divider-default bg-surface-secondary px-xl py-lg
-              text-body-primary min-h-40 flex flex-grow-0 border-y-1"
+            className="border-divider-default bg-surface-secondary px-xl pt-md
+              pb-xxl text-body-primary min-h-40 flex flex-grow-0 border-y-1"
           >
             {children}
           </div>
-          <div className="px-md py-lg flex justify-between">
+          <div className="px-xl py-md flex justify-between">
             {cancellable && (
               <RadixDialog.Close asChild>
                 <Button intent="tertiary" onClick={handleCancelClick}>
