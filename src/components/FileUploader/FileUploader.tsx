@@ -14,14 +14,14 @@ import { ProgressIndicator } from '../ProgressIndicator';
 import { Button } from '../Button';
 
 const uploadVariants = cva(
-  `focus-visible:ring-interactive-focused rounded-lg relative cursor-pointer
-  border-1 border-dashed transition-colors focus-visible:ring-4
+  `focus-visible:ring-interactive-focused relative cursor-pointer border-1
+  border-dashed transition-colors focus-visible:ring-4
   focus-visible:outline-none`,
   {
     variants: {
       size: {
-        small: 'p-md min-h-20',
-        large: 'pt-xxl pb-xxxl px-xl',
+        small: 'pt-md pb-lg min-h-20 rounded-sm',
+        large: 'pt-xxl pb-xxxl px-xl rounded-lg',
       },
       state: {
         default: `border-interactive-default bg-surface-primary
@@ -165,7 +165,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
 
     const renderSmallContent = () => {
       return (
-        <div className="gap-xxs flex flex-col items-center">
+        <div className="gap-xxs leading-6 flex flex-col items-center">
           <div className="mb-xxs text-center">
             <p className="text-body-secondary">{dragDropText}</p>
             <p className="text-body-secondary text-sm">{orText}</p>
