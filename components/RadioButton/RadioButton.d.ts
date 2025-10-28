@@ -2,7 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { RadioGroup } from 'radix-ui';
 export interface RadioButtonProps extends React.ComponentProps<typeof RadioGroup.Item> {
     value: string;
-    label: string;
+    label: React.ReactNode;
     children?: React.ReactNode;
     invalid?: boolean;
 }
