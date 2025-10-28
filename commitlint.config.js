@@ -67,6 +67,8 @@ export default {
             ...componentTopics,
             // General categories
             'multiple',
+            'misc',
+            'general',
             'tokens',
             'dev',
             'doc',
