@@ -7,7 +7,7 @@ import { cn } from '../../utils';
 export interface RadioButtonProps
   extends React.ComponentProps<typeof RadioGroup.Item> {
   value: string;
-  label: string;
+  label: React.ReactNode;
   children?: React.ReactNode;
   invalid?: boolean;
 }
