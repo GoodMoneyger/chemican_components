@@ -424,24 +424,6 @@ export const Disabled: Story = {
   },
 };
 
-export const Invalid: Story = {
-  args: {
-    options: basicOptions,
-    invalid: true,
-    defaultValue: ['550e8400-e29b-41d4-a716-446655440001'],
-    placeholder: 'Invalid state...',
-    onValueChange: (values) => console.log('Selected values:', values),
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'This story demonstrates the invalid/error state of the MultiSelect component. When invalid={true}, the component displays a red border to indicate validation failure. The red border is maintained on hover and focus states, providing consistent error feedback.',
-      },
-    },
-  },
-};
-
 export const CustomEmptyState: Story = {
   args: {
     options: [],

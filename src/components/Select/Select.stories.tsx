@@ -149,38 +149,6 @@ DisabledStates.args = {
   invalid: false,
 };
 
-export const Invalid = Template.bind({});
-Invalid.args = {
-  variant: 'default',
-  options: [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4', icon: IconRocket },
-    { type: 'Separator' },
-    { value: 'option5', label: 'Option 5' },
-  ],
-  placeholder: 'Invalid state - red border',
-  disabled: false,
-  invalid: true,
-  value: 'option1',
-};
-
-export const InvalidWithFormField = FormFieldTemplate.bind({});
-InvalidWithFormField.args = {
-  variant: 'default',
-  options: [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4', icon: IconRocket },
-  ],
-  placeholder: 'Invalid state with form field',
-  disabled: false,
-  invalid: true,
-  value: 'option1',
-};
-
 export const IsolatedVsFormField: StoryFn = () => (
   <div className="space-y-8">
     <div>

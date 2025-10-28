@@ -11,8 +11,7 @@ const selectVariants = cva(
   `bg-surface-primary text-body-primary disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
   [&[data-placeholder]]:text-body-placeholder
-  disabled:[&[data-placeholder]]:text-body-disabled
-  data-[state=open]:ring-interactive-focused inline-flex items-center
+  disabled:[&[data-placeholder]]:text-body-disabled inline-flex items-center
   justify-between border focus-visible:ring-4 focus-visible:outline-none
   enabled:cursor-pointer data-[state=open]:ring-4`,
   {
@@ -29,10 +28,12 @@ const selectVariants = cva(
       invalid: {
         false: `hover:border-interactive-hover
         focus-visible:ring-interactive-focused
+        data-[state=open]:ring-interactive-focused
         data-[state=open]:border-interactive-primary-default`,
         true: `border-interactive-alert-default
         hover:border-interactive-alert-default
-        focus-visible:ring-interactive-alert-focused`,
+        focus-visible:ring-interactive-alert-focused
+        data-[state=open]:ring-interactive-alert-focused`,
       },
     },
     compoundVariants: [

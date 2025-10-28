@@ -979,16 +979,20 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 disabled={disabled}
                 className={cn(
                   `border-interactive-default bg-surface-primary px-0
-                  disabled:bg-surface-disabled h-12 rounded
-                  focus-visible:ring-interactive-focused relative flex w-full
+                  disabled:bg-surface-disabled h-12 rounded relative flex w-full
                   items-center border focus-visible:ring-4
-                  focus-visible:outline-none disabled:cursor-not-allowed`,
-                  !invalid && 'hover:border-interactive-hover',
+                  focus-visible:outline-none active:ring-4
+                  disabled:cursor-not-allowed`,
                   autoSize ? 'w-auto' : 'w-full',
+                  !invalid &&
+                    `hover:border-interactive-hover
+                    active:ring-interactive-focused
+                    focus:ring-interactive-focused`,
                   invalid &&
                     `border-interactive-alert-default
                     hover:border-interactive-alert-default
-                    focus-visible:ring-interactive-alert-focused`,
+                    focus:ring-interactive-alert-focused
+                    active:ring-interactive-alert-focused`,
                   responsiveSettings.compactMode && 'min-h-8 text-sm',
                   screenSize === 'mobile' && 'min-h-12'
                 )}
