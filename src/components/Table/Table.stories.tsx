@@ -1,10 +1,6 @@
 import React from 'react';
-import type { Meta, StoryFn } from 'storybook/react-vite';
+import type { Meta, StoryFn } from '@storybook/react';
 import { IconPdf, IconExternalLink } from '@tabler/icons-react';
-
-import { StatusIndicator } from '../StatusIndicator/StatusIndicator';
-import { ColorBackgroundTokens } from '../../tokens';
-import { Checkbox } from '../Checkbox/Checkbox';
 
 import {
   Table,
@@ -22,7 +18,13 @@ type DataEntry = {
   companyName: string;
   creation: string;
   status: string;
-  statusColor: ColorBackgroundTokens;
+  statusLevel:
+    | 'success'
+    | 'inProgress'
+    | 'queue'
+    | 'alert'
+    | 'warning'
+    | 'neutral';
 };
 
 const data: DataEntry[] = [
@@ -32,7 +34,7 @@ const data: DataEntry[] = [
     companyName: '検見間株式会社',
     creation: '2024/04/16',
     status: '分析前',
-    statusColor: ColorBackgroundTokens.StatusNeutral,
+    statusLevel: 'neutral',
   },
   {
     sdsName: 'SDS-Plutonium_Oxide_2021.pdf',
@@ -40,7 +42,7 @@ const data: DataEntry[] = [
     companyName: '福田商事株式会社',
     creation: '2023/03/21',
     status: '分析中',
-    statusColor: ColorBackgroundTokens.StatusInprogress,
+    statusLevel: 'inProgress',
   },
   {
     sdsName: 'SDS-Thorium_2022.pdf',
@@ -48,7 +50,7 @@ const data: DataEntry[] = [
     companyName: '中村化学工業株式会社',
     creation: '2022/08/15',
     status: '登録済み',
-    statusColor: ColorBackgroundTokens.StatusSuccess,
+    statusLevel: 'success',
   },
   {
     sdsName: 'SDS-Cobalt_Alloy_2019.pdf',
@@ -56,7 +58,7 @@ const data: DataEntry[] = [
     companyName: '大和工業株式会社',
     creation: '2021/11/05',
     status: '分析不可',
-    statusColor: ColorBackgroundTokens.StatusAlert,
+    statusLevel: 'alert',
   },
   {
     sdsName: 'SDS-Lead_Metal_2023.pdf',
@@ -64,7 +66,7 @@ const data: DataEntry[] = [
     companyName: '山田金属株式会社',
     creation: '2023/07/29',
     status: '分析不可',
-    statusColor: ColorBackgroundTokens.StatusWarning,
+    statusLevel: 'warning',
   },
   {
     sdsName: 'SDS-Cadmium_Compound_2020.pdf',
@@ -72,7 +74,7 @@ const data: DataEntry[] = [
     companyName: '川崎薬品株式会社',
     creation: '2020/05/12',
     status: '再データ化中',
-    statusColor: ColorBackgroundTokens.StatusQueue,
+    statusLevel: 'queue',
   },
 ];
 
@@ -83,70 +85,132 @@ const meta: Meta<typeof Table> = {
 
 export default meta;
 
-const Template: StoryFn = () => (
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead>
-          <Checkbox label="" />
-        </TableHead>
-        <TableHead>
-          SDS名 <TableHeadSortButton sortOrder="asc" />
-        </TableHead>
-        <TableHead>
-          製品名
-          <TableHeadSortButton sortOrder="asc" />
-        </TableHead>
-        <TableHead>
-          会社名
-          <TableHeadSortButton sortOrder="asc" />
-        </TableHead>
-        <TableHead>作成日 / 改訂日</TableHead>
-        <TableHead>ステータス</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {data.map((row, index) => (
-        <TableRow key={index}>
-          <TableCell>
-            <Checkbox label="" />
-          </TableCell>
-          <TableCell>
-            <div className="gap-2 inline-flex items-center">
-              <div className="gap-1 flex items-center">
-                <div
-                  className="bg-shape-accent-gray-pale rounded p-0.5 inline-flex
-                    aspect-auto"
-                >
-                  <IconPdf size={16} className="text-shape-primary" />
-                </div>
-                {row.sdsName}
-              </div>
-              <a href="#">
-                <IconExternalLink size={20} className="text-shape-primary" />
-              </a>
-            </div>
-          </TableCell>
-          <TableCell>
-            <div
-              className="bg-surface-secondary px-xs py-xxs rounded inline-flex
-                uppercase"
-            >
-              {row.productName}
-            </div>
-          </TableCell>
-          <TableCell>{row.companyName}</TableCell>
-          <TableCell>{row.creation}</TableCell>
-          <TableCell>
-            <StatusIndicator accentColor={row.statusColor}>
-              {row.status}
-            </StatusIndicator>
-          </TableCell>
+const Template: StoryFn = () => {
+  const [sortStates, setSortStates] = React.useState<{
+    [key: string]: 'asc' | 'desc' | undefined;
+  }>({
+    sdsName: undefined,
+    productName: undefined,
+    companyName: undefined,
+  });
+
+  const handleSortChange =
+    (column: string) => (newSortOrder: 'asc' | 'desc' | undefined) => {
+      setSortStates((prev) => {
+        // Reset all other columns when sorting a new column
+        const newStates = Object.keys(prev).reduce(
+          (acc, key) => {
+            acc[key] = key === column ? newSortOrder : undefined;
+            return acc;
+          },
+          {} as typeof prev
+        );
+
+        return newStates;
+      });
+    };
+
+  // Sort the data based on current sort states
+  const sortedData = React.useMemo(() => {
+    const sorted = [...data];
+
+    // Find the active sort column
+    const activeSortColumn = Object.entries(sortStates).find(
+      ([, sortOrder]) => sortOrder !== undefined
+    );
+
+    if (activeSortColumn) {
+      const [column, sortOrder] = activeSortColumn;
+
+      sorted.sort((a, b) => {
+        let aValue: string;
+        let bValue: string;
+
+        switch (column) {
+          case 'sdsName':
+            aValue = a.sdsName.toLowerCase();
+            bValue = b.sdsName.toLowerCase();
+            break;
+          case 'productName':
+            aValue = a.productName.toLowerCase();
+            bValue = b.productName.toLowerCase();
+            break;
+          case 'companyName':
+            aValue = a.companyName.toLowerCase();
+            bValue = b.companyName.toLowerCase();
+            break;
+          default:
+            return 0;
+        }
+
+        if (sortOrder === 'asc') {
+          return aValue.localeCompare(bValue);
+        } else {
+          return bValue.localeCompare(aValue);
+        }
+      });
+    }
+
+    return sorted;
+  }, [sortStates]);
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead checkbox />
+          <TableHead>
+            SDS名{' '}
+            <TableHeadSortButton
+              sortOrder={sortStates.sdsName}
+              onSortChange={handleSortChange('sdsName')}
+            />
+          </TableHead>
+          <TableHead>
+            製品名
+            <TableHeadSortButton
+              sortOrder={sortStates.productName}
+              onSortChange={handleSortChange('productName')}
+            />
+          </TableHead>
+          <TableHead>
+            会社名
+            <TableHeadSortButton
+              sortOrder={sortStates.companyName}
+              onSortChange={handleSortChange('companyName')}
+            />
+          </TableHead>
+          <TableHead>作成日 / 改訂日</TableHead>
+          <TableHead>ステータス</TableHead>
         </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+      </TableHeader>
+      <TableBody>
+        {sortedData.map((row, index) => (
+          <TableRow key={index}>
+            <TableCell checkbox />
+            <TableCell
+              leftIcon={IconPdf}
+              rightIcon={IconExternalLink}
+              prefixBadgeContent="PDF"
+              trailingBadgeContent={`v${index + 1}.0`}
+              showPrefixBadge={true}
+              showTrailingBadge={true}
+              onRightIconClick={() =>
+                window.open(`https://example.com/sds/${row.sdsName}`, '_blank')
+              }
+            >
+              {row.sdsName}
+            </TableCell>
+            <TableCell tag>{row.productName}</TableCell>
+            <TableCell>{row.companyName}</TableCell>
+            <TableCell>{row.creation}</TableCell>
+            <TableCell status={row.statusLevel}>{row.status}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
@@ -158,7 +222,7 @@ const LoadingTemplate: StoryFn = () => (
     <TableHeader loading>
       <TableRow>
         <TableHead>
-          <Checkbox label="" />
+          <TableCell checkbox />
         </TableHead>
         <TableHead>
           SDS名 <TableHeadSortButton sortOrder="asc" />
