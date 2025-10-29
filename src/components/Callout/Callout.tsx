@@ -7,7 +7,7 @@ import {
 } from '@tabler/icons-react';
 import type { TablerIcon } from '@tabler/icons-react';
 
-import { Button } from '../Button';
+import { TextLink } from '../TextLink';
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
@@ -110,15 +110,9 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
             <div className="flex items-center justify-between">
               <div className={cn(titleVariants())}>{title}</div>
               {action && (
-                <Button
-                  onClick={action.onClick}
-                  intent="text"
-                  size="xs"
-                  className="py-0 text-md font-normal
-                    text-interactive-primary-default h-auto underline"
-                >
+                <TextLink onClick={action.onClick} intent="primary" size="sm">
                   {action.label}
-                </Button>
+                </TextLink>
               )}
             </div>
           )}
