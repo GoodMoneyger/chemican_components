@@ -44,7 +44,7 @@ const buttonVariants = cva(
         sm: 'px-md h-10 min-w-20',
         md: 'min-w-24 h-11.5',
         lg: 'h-14 min-w-34 text-lg',
-        xl: 'h-17 min-w-43 text-xl',
+        xl: 'pl-8 pr-8 pt-5 pb-5 h-17 min-w-43 text-xl',
       },
       iconOnly: {
         true: 'min-w-0 p-0! aspect-square h-auto',
@@ -61,8 +61,10 @@ const buttonVariants = cva(
       },
       { textOnly: true, size: 'md', class: 'px-lg' },
       { textOnly: true, size: 'lg', class: 'px-xl' },
+      { textOnly: true, size: 'xl', class: 'pl-8 pr-8' },
       { iconOnly: false, size: 'md', class: 'px-lg' },
       { iconOnly: false, size: 'lg', class: 'px-xl' },
+      { iconOnly: false, size: 'xl', class: 'pl-8 pr-8' },
       { iconOnly: false, size: 'icon', class: 'px-sm h-8 min-w-15 text-sm' }, // Fallback, should only be used with icon only
       { iconOnly: true, size: 'icon', class: 'p-0' },
       { iconOnly: true, size: 'xs', class: 'size-8' },
