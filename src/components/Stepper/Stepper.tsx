@@ -69,7 +69,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
               {/* Step dot */}
               <div className="relative flex flex-col items-center">
                 <div
-                  className="size-8 flex flex-col items-center justify-center"
+                  className="size-5 flex flex-col items-center justify-center"
                 >
                   <div
                     className={cn(
@@ -80,13 +80,14 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
                           text-interactive-inverse size-4.5`
                         : undefined,
                       step.status === 'active'
-                        ? `bg-interactive-primary-default
+                        ? `bg-shape-interactive-primary-default
                           text-interactive-inverse
                           ring-shape-interactive-primary-active/20 size-2.5
                           ring-4`
                         : undefined,
                       step.status === 'upcoming'
-                        ? 'bg-status-neutral text-body-primary size-2.5'
+                        ? `bg-shape-interactive-disabled text-body-primary
+                          size-2.5`
                         : undefined
                     )}
                   >
@@ -103,13 +104,13 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
                 {showLabels && (
                   <div
                     className={cn(
-                      `mt-xs max-w-20 absolute top-full min-w-max text-center
+                      `max-w-20 mt-1.5 absolute top-full min-w-max text-center
                       break-words transition-colors`,
                       step.status === 'completed' || step.status === 'active'
                         ? 'text-body-primary font-medium'
                         : undefined,
                       step.status === 'upcoming'
-                        ? 'text-body-secondary'
+                        ? 'text-body-primary'
                         : undefined
                     )}
                   >
