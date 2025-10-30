@@ -66,13 +66,13 @@ const intentIcons: Record<string, TablerIcon> = {
 };
 
 export interface CalloutProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>,
     VariantProps<typeof calloutVariants> {
-  title?: string;
-  description?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
   children?: React.ReactNode;
   action?: {
-    label: string;
+    label: React.ReactNode;
     onClick?: () => void;
   };
   icon?: IconProp;

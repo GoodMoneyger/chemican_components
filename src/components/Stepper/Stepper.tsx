@@ -7,10 +7,10 @@ export type StepStatus = 'completed' | 'active' | 'upcoming';
 
 export interface Step {
   id: string;
-  label: string;
+  label: React.ReactNode;
   status: StepStatus;
-  title?: string; // For radial variant - step title
-  description?: string; // For radial variant - step description
+  title?: React.ReactNode; // For radial variant - step title
+  description?: React.ReactNode; // For radial variant - step description
 }
 
 export interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
