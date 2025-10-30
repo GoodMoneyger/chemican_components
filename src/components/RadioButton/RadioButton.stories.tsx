@@ -29,18 +29,17 @@ Default.args = {
   disabled: false,
 };
 
-export const Selected = Template.bind({});
+export const Selected: StoryFn<RadioButtonProps> = (args) => (
+  <RadioButtonGroup defaultValue="option2">
+    <RadioButton {...args} label="選択肢" value="option1" />
+    <RadioButton {...args} label="選択肢" value="option2" />
+    <RadioButton {...args} label="選択肢" value="option3" />
+  </RadioButtonGroup>
+);
 Selected.args = {
   invalid: false,
   disabled: false,
 };
-Selected.decorators = [
-  (Story) => (
-    <RadioButtonGroup defaultValue="option2">
-      <Story />
-    </RadioButtonGroup>
-  ),
-];
 
 export const Error = Template.bind({});
 Error.args = {
@@ -54,18 +53,17 @@ Disabled.args = {
   disabled: true,
 };
 
-export const DisabledSelected = Template.bind({});
+export const DisabledSelected: StoryFn<RadioButtonProps> = (args) => (
+  <RadioButtonGroup defaultValue="option2">
+    <RadioButton {...args} label="選択肢" value="option1" />
+    <RadioButton {...args} label="選択肢" value="option2" />
+    <RadioButton {...args} label="選択肢" value="option3" />
+  </RadioButtonGroup>
+);
 DisabledSelected.args = {
   invalid: false,
   disabled: true,
 };
-DisabledSelected.decorators = [
-  (Story) => (
-    <RadioButtonGroup defaultValue="option2">
-      <Story />
-    </RadioButtonGroup>
-  ),
-];
 
 export const AllStates: StoryFn = () => (
   <div className="space-y-4">

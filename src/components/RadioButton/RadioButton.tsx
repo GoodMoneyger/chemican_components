@@ -126,9 +126,13 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
 export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   children,
   className,
+  ...props
 }) => {
   return (
-    <RadioGroup.Root className={cn('gap-xs flex flex-col', className)}>
+    <RadioGroup.Root
+      className={cn('gap-xs flex flex-col', className)}
+      {...props}
+    >
       {children}
     </RadioGroup.Root>
   );
