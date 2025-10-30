@@ -3,12 +3,12 @@ import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { Button } from '../Button';
 
-import type { ToastProps } from './Toast';
-import { Toast } from './Toast';
+import type { ToastItemProps } from './Toast';
+import { ToastItem, ToastProvider } from './Toast';
 
 export default {
   title: 'Components/Toast',
-  component: Toast,
+  component: ToastItem,
   parameters: {
     radixDocs: {
       primitive: 'Toast',
@@ -17,15 +17,15 @@ export default {
   },
 } as Meta;
 
-const Template: StoryFn<ToastProps> = (args) => {
+const Template: StoryFn<ToastItemProps> = (args) => {
   const [isOpen, setIsOpen] = useState(args.isOpen);
   return (
-    <>
+    <ToastProvider>
       <Button intent="secondary" onClick={() => setIsOpen(true)}>
         Show Toast
       </Button>
-      <Toast {...args} isOpen={isOpen} onClose={() => setIsOpen(false)} />
-    </>
+      <ToastItem {...args} isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </ToastProvider>
   );
 };
 
@@ -35,4 +35,77 @@ Default.args = {
   message: 'This is a toast message',
   isOpen: false,
   level: 'info',
+};
+
+export const Success = Template.bind({});
+Success.args = {
+  title: 'Success',
+  message: 'Operation completed successfully',
+  isOpen: false,
+  level: 'success',
+};
+
+export const Error = Template.bind({});
+Error.args = {
+  title: 'Error',
+  message: 'An error occurred',
+  isOpen: false,
+  level: 'error',
+};
+
+export const Warning = Template.bind({});
+Warning.args = {
+  title: 'Warning',
+  message: 'Please be aware of this warning',
+  isOpen: false,
+  level: 'warning',
+};
+
+export const MultipleToasts: StoryFn = () => {
+  const [toasts, setToasts] = useState<
+    Array<{ id: number; level: ToastItemProps['level']; open: boolean }>
+  >([]);
+  const [counter, setCounter] = useState(0);
+
+  const addToast = (level: ToastItemProps['level']) => {
+    const id = counter;
+    setCounter(counter + 1);
+    setToasts([...toasts, { id, level, open: true }]);
+  };
+
+  const removeToast = (id: number) => {
+    setToasts(toasts.map((t) => (t.id === id ? { ...t, open: false } : t)));
+    setTimeout(() => {
+      setToasts(toasts.filter((t) => t.id !== id));
+    }, 200);
+  };
+
+  return (
+    <ToastProvider>
+      <div className="gap-xs flex">
+        <Button intent="secondary" onClick={() => addToast('info')}>
+          Show Info Toast
+        </Button>
+        <Button intent="primary" onClick={() => addToast('success')}>
+          Show Success Toast
+        </Button>
+        <Button intent="alert" onClick={() => addToast('error')}>
+          Show Error Toast
+        </Button>
+        <Button intent="secondary" onClick={() => addToast('warning')}>
+          Show Warning Toast
+        </Button>
+      </div>
+      {toasts.map((toast) => (
+        <ToastItem
+          key={toast.id}
+          title={`${toast.level.charAt(0).toUpperCase() + toast.level.slice(1)} Toast ${toast.id}`}
+          message={`This is a ${toast.level} message`}
+          level={toast.level}
+          isOpen={toast.open}
+          onClose={() => removeToast(toast.id)}
+        />
+      ))}
+    </ToastProvider>
+  );
 };
