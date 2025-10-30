@@ -110,8 +110,15 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
             <div className="flex items-center justify-between">
               <div className={cn(titleVariants())}>{title}</div>
               {action && (
-                <TextLink onClick={action.onClick} intent="primary" size="sm">
-                  {action.label}
+                <TextLink
+                  onClick={action.onClick}
+                  intent="primary"
+                  size="sm"
+                  asChild
+                >
+                  <button type="button" className="cursor-pointer">
+                    {action.label}
+                  </button>
                 </TextLink>
               )}
             </div>

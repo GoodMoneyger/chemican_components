@@ -1,5 +1,5 @@
 import React from 'react';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from 'radix-ui';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
@@ -79,38 +79,43 @@ export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
       leadingIcon,
       trailingIcon,
       children,
-      onClick,
       ...props
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : 'a';
+    const Comp = asChild ? Slot.Slot : 'a';
     const iconSize = iconSizeMap[size];
 
-    const content = (
-      <>
-        {leadingIcon && (
-          <span className="flex-shrink-0">
-            {renderIcon(leadingIcon, { size: iconSize })}
-          </span>
-        )}
-        <span className="flex-1">{children}</span>
-        {trailingIcon && (
-          <span className="flex-shrink-0">
-            {renderIcon(trailingIcon, { size: iconSize })}
-          </span>
-        )}
-      </>
-    );
+    // When using asChild, pass children directly to Slot without icons
+    if (asChild) {
+      return (
+        <Comp
+          ref={ref}
+          className={cn(textLinkVariants({ intent, size }), className)}
+          {...props}
+        >
+          {children}
+        </Comp>
+      );
+    }
 
     return (
       <Comp
         ref={ref}
         className={cn(textLinkVariants({ intent, size }), className)}
-        onClick={onClick}
         {...props}
       >
-        {content}
+        {leadingIcon && (
+          <span className="flex-shrink-0">
+            {renderIcon(leadingIcon, { size: iconSize })}
+          </span>
+        )}
+        {children}
+        {trailingIcon && (
+          <span className="flex-shrink-0">
+            {renderIcon(trailingIcon, { size: iconSize })}
+          </span>
+        )}
       </Comp>
     );
   }
