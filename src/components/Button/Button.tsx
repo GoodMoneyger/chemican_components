@@ -61,8 +61,10 @@ const buttonVariants = cva(
       },
       { textOnly: true, size: 'md', class: 'px-lg' },
       { textOnly: true, size: 'lg', class: 'px-xl' },
+      { textOnly: true, size: 'xl', class: 'px-xxl' },
       { iconOnly: false, size: 'md', class: 'px-lg' },
       { iconOnly: false, size: 'lg', class: 'px-xl' },
+      { iconOnly: false, size: 'xl', class: 'px-xxl' },
       { iconOnly: false, size: 'icon', class: 'px-sm h-8 min-w-15 text-sm' }, // Fallback, should only be used with icon only
       { iconOnly: true, size: 'icon', class: 'p-0' },
       { iconOnly: true, size: 'xs', class: 'size-8' },
