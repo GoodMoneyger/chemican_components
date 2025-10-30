@@ -1,8 +1,6 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
-import { ColorShapeTokens } from '../../tokens';
-
 import type { TagProps } from './Tag';
 import { Tag } from './Tag';
 
@@ -10,10 +8,6 @@ const meta: Meta<typeof Tag> = {
   title: 'Components/Tag',
   component: Tag,
   argTypes: {
-    accentColor: {
-      control: 'select',
-      options: ColorShapeTokens,
-    },
     colorCode: {
       control: 'select',
       options: [
@@ -51,21 +45,21 @@ export const DefaultTag = TagTemplate.bind({});
 DefaultTag.args = {
   children: 'タグ',
   onRemove: undefined,
-  accentColor: ColorShapeTokens.AccentBlueSoft,
+  colorCode: 1,
 };
 
 export const MediumSize = TagTemplate.bind({});
 MediumSize.args = {
   children: 'メディアムサイズのタグ',
   size: 'md',
-  accentColor: ColorShapeTokens.AccentGreenSoft,
+  colorCode: 8,
 };
 
 export const WithRemoveButton = TagTemplate.bind({});
 WithRemoveButton.args = {
   children: '削除可能なタグ',
   size: 'sm',
-  accentColor: ColorShapeTokens.AccentRedSoft,
+  colorCode: 2,
   onRemove: () => alert('Tag removed!'),
 };
 
@@ -73,13 +67,13 @@ export const SelectedTag = TagTemplate.bind({});
 SelectedTag.args = {
   children: '選択されたタグ',
   selected: true,
-  accentColor: ColorShapeTokens.AccentBlueSoft,
+  colorCode: 1,
 };
 
-export const WithColorCode = TagTemplate.bind({});
-WithColorCode.args = {
-  children: 'カラーコード1',
-  colorCode: 1,
+export const WithCustomColors = TagTemplate.bind({});
+WithCustomColors.args = {
+  children: 'カスタムカラー',
+  className: 'bg-surface-alert text-body-primary',
 };
 
 export const ColorCodeShowcase: StoryFn<{ selected?: boolean }> = ({
@@ -107,11 +101,4 @@ ColorCodeShowcase.argTypes = {
   selected: {
     control: 'boolean',
   },
-};
-
-export const ConflictingProps = TagTemplate.bind({});
-ConflictingProps.args = {
-  children: '競合プロパティ (コンソールを確認)',
-  colorCode: 5,
-  accentColor: ColorShapeTokens.AccentRedSoft,
 };

@@ -1,31 +1,35 @@
 import React from 'react';
 import { cva } from 'class-variance-authority';
 
-import { ColorShapeTokens } from '../../tokens';
+import { ColorShapeTokens, ColorTextTokens } from '../../tokens';
 import { cn } from '../../utils';
 
 // Mapping the color codes for user defined tag colors to our design tokens
 // Reference: https://docs.google.com/spreadsheets/d/14r5PJTfzfESsKypY2cJlR65I2-DkO4RvODa04x_s1dA
+// [backgroundColor, textColor]
 const colorCodeToTokenMap = {
-  0: ColorShapeTokens.AccentGraySoft,
-  1: ColorShapeTokens.AccentSunSoft,
-  2: ColorShapeTokens.AccentSunPale,
-  3: ColorShapeTokens.AccentPurpleSoft,
-  4: ColorShapeTokens.AccentPurpleSoft,
-  5: ColorShapeTokens.AccentSeaSoft,
-  6: ColorShapeTokens.AccentSeaSoft,
-  7: ColorShapeTokens.AccentCyanSoft,
-  8: ColorShapeTokens.AccentCyanSoft,
-  9: ColorShapeTokens.AccentGreenSoft,
-  10: ColorShapeTokens.AccentGreenSoft,
-  11: ColorShapeTokens.AccentLimeSoft,
-  12: ColorShapeTokens.AccentLimeSoft,
-  13: ColorShapeTokens.AccentYellowSoft,
-  14: ColorShapeTokens.AccentYellowSoft,
-  15: ColorShapeTokens.AccentOrangeSoft,
-  16: ColorShapeTokens.AccentOrangeSoft,
-  17: ColorShapeTokens.AccentGraySoft,
-  18: ColorShapeTokens.AccentGraySoft,
+  0: [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong],
+  1: [ColorShapeTokens.AccentSunPale, ColorTextTokens.AccentSunStrong],
+  2: [ColorShapeTokens.AccentMagentaPale, ColorTextTokens.AccentMagentaStrong],
+  3: [ColorShapeTokens.AccentPurplePale, ColorTextTokens.AccentPurpleStrong],
+  4: [ColorShapeTokens.AccentVioletPale, ColorTextTokens.AccentVioletStrong],
+  5: [ColorShapeTokens.AccentSeaPale, ColorTextTokens.AccentSeaStrong],
+  6: [ColorShapeTokens.AccentSkyPale, ColorTextTokens.AccentSkyStrong],
+  7: [ColorShapeTokens.AccentCyanPale, ColorTextTokens.AccentCyanStrong],
+  8: [ColorShapeTokens.AccentPeacockPale, ColorTextTokens.AccentPeacockStrong],
+  9: [ColorShapeTokens.AccentGreenPale, ColorTextTokens.AccentGreenStrong],
+  10: [ColorShapeTokens.AccentBambooPale, ColorTextTokens.AccentBambooStrong],
+  11: [ColorShapeTokens.AccentLimePale, ColorTextTokens.AccentLimeStrong],
+  12: [ColorShapeTokens.AccentGrassPale, ColorTextTokens.AccentGrassStrong],
+  13: [ColorShapeTokens.AccentLemonPale, ColorTextTokens.AccentLemonStrong],
+  14: [ColorShapeTokens.AccentYellowPale, ColorTextTokens.AccentYellowStrong],
+  15: [ColorShapeTokens.AccentOrangePale, ColorTextTokens.AccentOrangeStrong],
+  16: [ColorShapeTokens.AccentWoodPale, ColorTextTokens.AccentWoodStrong],
+  17: [
+    ColorShapeTokens.AccentCharcoalPale,
+    ColorTextTokens.AccentCharchoalStrong,
+  ],
+  18: [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong],
 } as const;
 
 export interface TagProps {
@@ -33,7 +37,6 @@ export interface TagProps {
   children?: React.ReactNode;
   onRemove?: () => void;
   onClick?: () => void;
-  accentColor?: ColorShapeTokens;
   colorCode?: keyof typeof colorCodeToTokenMap;
   size?: 'sm' | 'md';
   style?: React.CSSProperties;
@@ -41,8 +44,9 @@ export interface TagProps {
 }
 
 const tagVariants = cva(
-  `gap-xxs text-accent-gray-strong py-xxs px-xs h-5.5 inline-flex items-center
-  rounded-full border border-transparent leading-none`,
+  `gap-xxs py-xxs px-xs h-5.5 bg-shape-accent-gray-pale
+  text-shape-accent-gray-strong inline-flex items-center rounded-full border
+  border-transparent leading-none`,
   {
     variants: {
       size: {
@@ -65,7 +69,6 @@ const tagVariants = cva(
 );
 
 export const Tag: React.FC<TagProps> = ({
-  accentColor = ColorShapeTokens.AccentGrayPale,
   colorCode,
   children,
   className,
@@ -75,20 +78,10 @@ export const Tag: React.FC<TagProps> = ({
   style,
   selected = false,
 }) => {
-  // Warning when both props are provided
-  React.useEffect(() => {
-    if (colorCode && accentColor !== ColorShapeTokens.AccentGrayPale) {
-      console.warn(
-        'Tag component: Both colorCode and accentColor props are provided. colorCode takes precedence over accentColor.'
-      );
-    }
-  }, [colorCode, accentColor]);
-
-  // colorCode takes precedence over accentColor
-  const effectiveColor =
+  const [effectiveColor, effectiveTextColor] =
     typeof colorCode === 'number'
       ? colorCodeToTokenMap[colorCode]
-      : accentColor;
+      : [undefined, undefined];
 
   return (
     <div
@@ -98,6 +91,7 @@ export const Tag: React.FC<TagProps> = ({
       )}
       style={{
         backgroundColor: `var(${effectiveColor})`,
+        color: effectiveTextColor ? `var(${effectiveTextColor})` : undefined,
         ...style,
       }}
       onClick={onClick}
