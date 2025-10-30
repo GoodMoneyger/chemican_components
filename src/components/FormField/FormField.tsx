@@ -21,6 +21,16 @@ export const FormField: React.FC<FormFieldProps> = ({
   description,
   optional,
 }) => {
+  const childWithProps = React.isValidElement(children)
+    ? React.cloneElement(
+        children as React.ReactElement<Record<string, unknown>>,
+        {
+          id: name,
+          name: name,
+        }
+      )
+    : children;
+
   return (
     <div className="flex flex-col">
       {label && (
@@ -36,7 +46,7 @@ export const FormField: React.FC<FormFieldProps> = ({
           {optional && <span className="text-body-secondary">(任意)</span>}
         </label>
       )}
-      {children}
+      {childWithProps}
       {error && (
         <div className="pt-xxs">
           <p className="text-body-alert text-sm font-normal leading-[1.5]">
