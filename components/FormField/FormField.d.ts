@@ -4,8 +4,8 @@ export interface FormFieldProps {
     children?: React.ReactNode;
     className?: string;
     name: string;
-    error?: string;
-    description?: string;
+    error?: React.ReactNode;
+    description?: React.ReactNode;
     optional?: boolean;
 }
 export declare const FormField: React.FC<FormFieldProps>;

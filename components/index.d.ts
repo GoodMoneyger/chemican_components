@@ -25,4 +25,5 @@ export * from './Tag';
 export * from './TextArea';
 export * from './TextLink';
 export * from './Toast';
+export * from './Tooltip';
 export * from './FileUploader';

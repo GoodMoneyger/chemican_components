@@ -3,7 +3,7 @@ import { Dialog as RadixDialog } from 'radix-ui';
 import { ButtonProps } from '../Button';
 export interface DialogAction extends Omit<ButtonProps, 'children' | 'asChild' | 'value'> {
     label: ReactNode;
-    onAction?: () => void;
+    onAction?: (close?: (value?: unknown) => void) => void | Promise<void>;
     value?: unknown;
     classNames?: string;
 }
@@ -11,6 +11,7 @@ export interface DialogProps extends React.ComponentProps<typeof RadixDialog.Roo
     isOpen: boolean;
     onClose: (value?: unknown) => void;
     children: ReactNode;
+    busy?: boolean;
     title: ReactNode;
     actions?: DialogAction[];
     cancellable?: boolean;
