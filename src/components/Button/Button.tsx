@@ -10,15 +10,15 @@ import { cn, renderIcon } from '../../lib/utils';
 // Define button styles with CVA
 const buttonVariants = cva(
   `gap-xxs rounded font-normal box-border inline-flex cursor-pointer
-  items-center justify-center border border-transparent decoration-1
-  focus-visible:ring-4 focus-visible:outline-none disabled:cursor-not-allowed
-  disabled:no-underline`,
+  items-center justify-center border decoration-1 focus-visible:ring-4
+  focus-visible:outline-none disabled:cursor-not-allowed disabled:no-underline`,
   {
     variants: {
       intent: {
         primary: `bg-interactive-primary-default text-interactive-inverse
         hover:bg-interactive-primary-hover active:bg-interactive-primary-active
-        disabled:text-interactive-disabled disabled:bg-interactive-disabled`,
+        disabled:text-interactive-disabled disabled:bg-interactive-disabled
+        border-transparent`,
         secondary: `bg-interactive-neutral-default
         text-interactive-primary-default hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active disabled:bg-interactive-disabled
@@ -32,7 +32,8 @@ const buttonVariants = cva(
         hover:text-interactive-primary-hover hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
         active:text-interactive-primary-active
-        disabled:text-interactive-disabled disabled:bg-transparent`,
+        disabled:text-interactive-disabled border-transparent
+        disabled:bg-transparent`,
       },
       danger: {
         true: 'focus-visible:ring-interactive-alert-focused',
