@@ -115,6 +115,7 @@ export interface SelectProps
   invalid?: boolean;
   value?: string;
   intent?: 'primary' | 'secondary';
+  hideChevron?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -126,6 +127,7 @@ export const Select: React.FC<SelectProps> = ({
   variant = 'default',
   intent = 'primary',
   value,
+  hideChevron = false,
   ...props
 }) => {
   const rootProps: React.ComponentProps<typeof RadixSelect.Root> = {
@@ -151,13 +153,15 @@ export const Select: React.FC<SelectProps> = ({
             })}
           />
         </div>
-        <RadixSelect.Icon
-          className={cn('text-body-primary h-3.5 w-3.5', {
-            'text-body-disabled': props.disabled,
-          })}
-        >
-          <IconChevronDown className="top-0.5 relative h-full w-full" />
-        </RadixSelect.Icon>
+        {!hideChevron && (
+          <RadixSelect.Icon
+            className={cn('text-body-primary h-3.5 w-3.5', {
+              'text-body-disabled': props.disabled,
+            })}
+          >
+            <IconChevronDown className="top-0.5 relative h-full w-full" />
+          </RadixSelect.Icon>
+        )}
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
         <RadixSelect.Content
