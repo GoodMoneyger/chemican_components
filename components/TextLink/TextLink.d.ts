@@ -3,7 +3,7 @@ import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const textLinkVariants: (props?: ({
     intent?: "primary" | "secondary" | null | undefined;
-    size?: "xs" | "sm" | "md" | "lg" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | "inherit" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface TextLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'color'>, VariantProps<typeof textLinkVariants> {
     /**
@@ -29,7 +29,7 @@ export interface TextLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAncho
     /**
      * Link size
      */
-    size?: 'lg' | 'md' | 'sm' | 'xs';
+    size?: 'lg' | 'md' | 'sm' | 'xs' | 'inherit';
 }
 export declare const TextLink: React.ForwardRefExoticComponent<TextLinkProps & React.RefAttributes<HTMLAnchorElement>>;
 export {};

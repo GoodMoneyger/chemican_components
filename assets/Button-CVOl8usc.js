@@ -1,0 +1,28 @@
+import{j as n}from"./jsx-runtime-D_zvdyIk.js";import{e as O}from"./iframe-BuT7b9y4.js";import{c as g}from"./index-CWZWjLbw.js";import{P as N}from"./ProgressIndicator-82pD9-21.js";import{c as a,r as o}from"./utils-DDC_s_PE.js";import{S as w}from"./index-BDEMLQKy.js";const p=g(`gap-xxs rounded font-normal box-border inline-flex cursor-pointer
+  items-center justify-center border decoration-1 focus-visible:ring-4
+  focus-visible:outline-none disabled:cursor-not-allowed disabled:no-underline`,{variants:{intent:{primary:`bg-interactive-primary-default text-interactive-inverse
+        hover:bg-interactive-primary-hover active:bg-interactive-primary-active
+        disabled:text-interactive-disabled disabled:bg-interactive-disabled
+        border-transparent`,secondary:`bg-interactive-neutral-default
+        text-interactive-primary-default hover:bg-interactive-neutral-hover
+        active:bg-interactive-neutral-active disabled:bg-interactive-disabled
+        disabled:text-interactive-disabled
+        enabled:border-interactive-primary-default border`,tertiary:`bg-interactive-neutral-default text-interactive-heavy
+        hover:bg-interactive-neutral-hover active:bg-interactive-neutral-active
+        enabled:border-interactive-default disabled:bg-interactive-disabled
+        disabled:text-interactive-disabled border`,text:`text-interactive-primary-default
+        hover:text-interactive-primary-hover hover:bg-interactive-neutral-hover
+        active:bg-interactive-neutral-active
+        active:text-interactive-primary-active
+        disabled:text-interactive-disabled border-transparent
+        disabled:bg-transparent`},danger:{true:"focus-visible:ring-interactive-alert-focused",false:"focus-visible:ring-interactive-focused"},size:{icon:"",xs:"px-sm h-8 min-w-15",sm:"px-md h-10 min-w-20",md:"min-w-24 h-11.5",lg:"h-14 min-w-34 text-lg",xl:"h-17 min-w-43 text-xl"},iconOnly:{true:"min-w-0 p-0! aspect-square h-auto"},textOnly:{true:""}},compoundVariants:[{iconOnly:!0,intent:"text",class:"text-shape-interactive-primary-default"},{textOnly:!0,size:"md",class:"px-lg"},{textOnly:!0,size:"lg",class:"px-xl"},{textOnly:!0,size:"xl",class:"px-xxl"},{iconOnly:!1,size:"md",class:"px-lg"},{iconOnly:!1,size:"lg",class:"px-xl"},{iconOnly:!1,size:"xl",class:"px-xxl"},{iconOnly:!1,size:"icon",class:"px-sm h-8 min-w-15 text-sm"},{iconOnly:!0,size:"icon",class:"p-0"},{iconOnly:!0,size:"xs",class:"size-8"},{iconOnly:!0,size:"sm",class:"size-10"},{iconOnly:!0,size:"md",class:"size-11.5"},{iconOnly:!0,size:"lg",class:"size-14"},{iconOnly:!0,size:"xl",class:"size-17"},{intent:"primary",danger:!0,class:`bg-interactive-alert-default hover:bg-interactive-alert-hover
+        active:bg-interactive-alert-active`},{intent:"secondary",danger:!0,class:`bg-interactive-neutral-default text-interactive-alert-default
+        hover:bg-interactive-neutral-alert-active
+        active:bg-interactive-neutral-alert-active
+        enabled:border-interactive-alert-default`},{intent:"tertiary",danger:!0,class:`text-interactive-alert-default
+        hover:bg-interactive-neutral-alert-hover
+        active:bg-interactive-neutral-alert-active border-none`},{intent:"text",danger:!0,class:`text-interactive-alert-default
+        hover:text-interactive-alert-hover
+        hover:bg-interactive-neutral-alert-hover
+        active:bg-interactive-neutral-alert-active
+        active:text-interactive-alert-active`}],defaultVariants:{intent:"primary",size:"md"}}),d=g("",{variants:{text:{true:""},iconOnly:{true:""},size:{icon:"size-4",xs:"size-4",sm:"size-5",md:"size-5",lg:"size-6",xl:"size-7"}},defaultVariants:{size:"md"}}),h=O.forwardRef(({intent:e,size:t,className:v,icon:i,trailingIcon:r,asChild:z=!1,loading:y=!1,danger:u=!1,children:l,...c},m)=>{const x=z?w:"button",s=!!((i||r)&&!l&&!(i&&r)),b=!!(l&&!i&&!r),f=y||c.disabled;return y?n.jsxs(x,{ref:m,className:a(p({intent:e,size:t,iconOnly:s,textOnly:b,danger:u}),"relative",v),...c,disabled:f,children:[n.jsxs("span",{className:"gap-xxs invisible flex items-center",children:[o(i,{className:a(d({size:t,iconOnly:s,text:e==="text"}))}),l,o(r,{className:a(d({size:t,iconOnly:s,text:e==="text"}))})]}),n.jsx("span",{className:"inset-0 absolute flex items-center justify-center",children:n.jsx(N.Circular,{size:"sm",layout:"row"})})]}):i||r?n.jsxs(x,{ref:m,className:a(p({intent:e,size:t,iconOnly:s,textOnly:b,danger:u}),v),...c,disabled:f,children:[o(i,{className:a(d({size:t,iconOnly:s,text:e==="text"}))}),l,o(r,{className:a(d({size:t,iconOnly:s,text:e==="text"}))})]}):n.jsx(x,{ref:m,className:a(p({intent:e,size:t,textOnly:b,danger:u}),v),children:l,...c,disabled:f})});h.displayName="Button";h.__docgenInfo={description:"",methods:[],displayName:"Button",props:{asChild:{required:!1,tsType:{name:"boolean"},description:"",defaultValue:{value:"false",computed:!1}},icon:{required:!1,tsType:{name:"union",raw:"React.ReactNode | TablerIcon",elements:[{name:"ReactReactNode",raw:"React.ReactNode"},{name:"TablerIcon"}]},description:""},trailingIcon:{required:!1,tsType:{name:"union",raw:"React.ReactNode | TablerIcon",elements:[{name:"ReactReactNode",raw:"React.ReactNode"},{name:"TablerIcon"}]},description:""},loading:{required:!1,tsType:{name:"boolean"},description:"",defaultValue:{value:"false",computed:!1}},danger:{required:!1,tsType:{name:"boolean"},description:"",defaultValue:{value:"false",computed:!1}}},composes:["VariantProps"]};export{h as B};

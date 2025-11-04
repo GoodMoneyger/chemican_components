@@ -21,6 +21,7 @@ export interface SelectProps extends VariantProps<typeof selectVariants>, Omit<R
     invalid?: boolean;
     value?: string;
     intent?: 'primary' | 'secondary';
+    hideChevron?: boolean;
 }
 export declare const Select: React.FC<SelectProps>;
 export {};
