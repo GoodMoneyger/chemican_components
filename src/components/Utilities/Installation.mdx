@@ -13,9 +13,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ## Installation
 
 ```sh
-npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-1.0.0-0
+npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-0.0.17
 ```
-> Note: Since this is a private repository, you will need to be authenticated to run this command. In CI, this means that the right SSH keys need to be available.
 
 > Note: Ensure you are using a fixed release tag `#release-x.x.x`, that you have to keep updated manually. This is to avoid automatically introducing breaking changes.
 
@@ -28,8 +27,8 @@ Install the design library via npm
 
 ```css
 @import "tailwindcss"
-@import "@chemican/components/tailwind-preset-next.css"
-// @import "@chemican/components/tailwind-preset.css" // Use this for non-Next.js projects instead
+@import "@chemican/components/tailwind-preset-next.css" /* For Next.js projects only */
+/* @import "@chemican/components/tailwind-preset.css" -> Use this for non-Next.js projects instead */
 @source "../node_modules/@chemican/components";
 ```
 

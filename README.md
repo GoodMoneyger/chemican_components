@@ -10,7 +10,7 @@ Our **React component library** built with **Radix UI, TailwindCSS, and TypeScri
 
 ## **📦 Installation**
 
-Since this library is private, install it directly from GitHub:
+Install directly from GitHub:
 
 ```sh
 npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-1.0.0-0
