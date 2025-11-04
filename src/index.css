@@ -37,3 +37,8 @@ html body[data-scroll-locked] {
 html {
   scrollbar-gutter: stable;
 }
+
+/* Tailwind does not set a pointer cursor on buttons by default */
+button {
+  cursor: pointer;
+}
