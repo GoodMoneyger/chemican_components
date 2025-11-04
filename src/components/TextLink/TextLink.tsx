@@ -9,7 +9,7 @@ import { cn, renderIcon } from '../../lib/utils';
 const textLinkVariants = cva(
   `font-normal inline-flex items-center justify-center border border-transparent
   decoration-solid decoration-from-font underline-offset-[3px] transition-colors
-  [:not(:hover):not(:active)]:underline`,
+  duration-75 [:not(:hover):not(:active)]:underline`,
   {
     variants: {
       intent: {
@@ -24,6 +24,7 @@ const textLinkVariants = cva(
         md: 'gap-xxxs text-md',
         sm: 'gap-xxxs text-sm',
         xs: 'gap-xxxs text-xs',
+        inherit: '',
       },
     },
     defaultVariants: {
@@ -66,7 +67,7 @@ export interface TextLinkProps
   /**
    * Link size
    */
-  size?: 'lg' | 'md' | 'sm' | 'xs';
+  size?: 'lg' | 'md' | 'sm' | 'xs' | 'inherit';
 }
 
 export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
@@ -74,7 +75,7 @@ export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
     {
       className,
       intent = 'primary',
-      size = 'md',
+      size = 'inherit',
       asChild = false,
       leadingIcon,
       trailingIcon,
@@ -84,7 +85,8 @@ export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
     ref
   ) => {
     const Comp = asChild ? Slot.Slot : 'a';
-    const iconSize = iconSizeMap[size];
+    const sz = size === 'inherit' ? 'md' : size;
+    const iconSize = iconSizeMap[sz];
 
     // When using asChild, pass children directly to Slot without icons
     if (asChild) {
