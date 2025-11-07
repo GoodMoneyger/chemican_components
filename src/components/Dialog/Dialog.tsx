@@ -87,8 +87,8 @@ export const Dialog: React.FC<DialogProps> = ({
         >
           {title && (
             <RadixDialog.Title
-              className="text-xxl text-body-primary font-bold h-4.5 flex
-                items-center"
+              className="text-xxl text-body-primary font-bold min-h-4.5 flex
+                items-center leading-none"
             >
               {title}
             </RadixDialog.Title>

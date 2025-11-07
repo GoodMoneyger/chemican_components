@@ -40,6 +40,7 @@ export interface MultiStepDialogRootProps {
   onClose: (value?: unknown) => void;
   children: ReactNode;
   initialStep?: number;
+  currentStep?: number; // Controlled mode
   onStepChange?: (step: number) => void;
 }
 
@@ -49,9 +50,12 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
   onClose,
   children,
   initialStep = 0,
+  currentStep: controlledStep,
   onStepChange,
 }) => {
-  const [currentStep, setCurrentStep] = useState(initialStep);
+  const [internalStep, setInternalStep] = useState(initialStep);
+  const currentStep =
+    controlledStep !== undefined ? controlledStep : internalStep;
 
   // Count total steps from children
   const steps = React.Children.toArray(children).filter(
@@ -61,7 +65,9 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
 
   const goToStep = (step: number) => {
     if (step >= 0 && step < totalSteps) {
-      setCurrentStep(step);
+      if (controlledStep === undefined) {
+        setInternalStep(step);
+      }
       onStepChange?.(step);
     }
   };
@@ -81,7 +87,9 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
 
   // Reset step on close
   const handleClose = (value?: unknown) => {
-    setCurrentStep(initialStep);
+    if (controlledStep === undefined) {
+      setInternalStep(initialStep);
+    }
     onClose(value);
   };
 
@@ -124,7 +132,8 @@ const Header: React.FC<MultiStepDialogHeaderProps> = ({ children }) => {
   return (
     <div className="px-xl py-lg flex items-center justify-between">
       <RadixDialog.Title
-        className="text-xxl text-body-primary font-bold h-4.5 flex items-center"
+        className="text-xxl text-body-primary font-bold min-h-4.5 flex
+          items-center leading-none"
       >
         {children}
       </RadixDialog.Title>
@@ -141,7 +150,7 @@ export interface MultiStepDialogBodyProps {
 const Body: React.FC<MultiStepDialogBodyProps> = ({ children, className }) => {
   return (
     <div
-      className={`border-divider-default bg-surface-secondary px-xl py-lg
+      className={`border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
         text-body-primary min-h-40 flex-grow-0 border-y-1 ${className || ''}`}
     >
       {children}
@@ -152,59 +161,19 @@ const Body: React.FC<MultiStepDialogBodyProps> = ({ children, className }) => {
 // Footer component
 export interface MultiStepDialogFooterProps {
   children?: ReactNode;
-  showNavigation?: boolean;
   showCancel?: boolean;
-  showBack?: boolean; // Control back button visibility separately
   cancelLabel?: ReactNode;
-  backLabel?: ReactNode;
-  nextLabel?: ReactNode;
-  backButtonProps?: Partial<ButtonProps>; // Additional props for back button
   onCancel?: () => void;
-  onNext?: () => void | boolean | Promise<void | boolean>; // Return false to prevent navigation
-  onBack?: () => void | boolean | Promise<void | boolean>;
 }
 
 const Footer: React.FC<MultiStepDialogFooterProps> = ({
   children,
-  showNavigation = true,
   showCancel = true,
-  showBack,
   cancelLabel = 'キャンセル',
-  backLabel = '戻る',
-  nextLabel = '次へ',
-  backButtonProps,
   onCancel,
-  onNext,
-  onBack,
 }) => {
-  const { isFirstStep, isLastStep, nextStep, prevStep } = useMultiStepDialog();
-
-  const handleNext = async () => {
-    if (onNext) {
-      const result = await onNext();
-      if (result === false) return;
-    }
-    if (!isLastStep) {
-      nextStep();
-    }
-  };
-
-  const handleBack = async () => {
-    if (onBack) {
-      const result = await onBack();
-      if (result === false) return;
-    }
-    if (!isFirstStep) {
-      prevStep();
-    }
-  };
-
-  // Determine if back button should be shown
-  const shouldShowBack =
-    showBack !== undefined ? showBack : showNavigation && !isFirstStep;
-
   return (
-    <div className="px-md py-lg flex justify-between">
+    <div className="px-xl py-md flex justify-between">
       <div className="gap-xs flex">
         {showCancel && (
           <RadixDialog.Close asChild>
@@ -213,23 +182,8 @@ const Footer: React.FC<MultiStepDialogFooterProps> = ({
             </Button>
           </RadixDialog.Close>
         )}
-        {shouldShowBack && (
-          <Button intent="secondary" onClick={handleBack} {...backButtonProps}>
-            {backLabel}
-          </Button>
-        )}
       </div>
-      {children ? (
-        <div className="gap-xs ml-auto flex">{children}</div>
-      ) : (
-        showNavigation && (
-          <div className="gap-xs ml-auto flex">
-            <Button intent="primary" onClick={handleNext}>
-              {isLastStep ? '完了' : nextLabel}
-            </Button>
-          </div>
-        )
-      )}
+      {children && <div className="gap-xs ml-auto flex">{children}</div>}
     </div>
   );
 };

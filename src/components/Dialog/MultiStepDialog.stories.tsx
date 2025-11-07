@@ -46,7 +46,13 @@ const BasicWizardComponent = () => {
               />
             </div>
           </MultiStepDialog.Body>
-          <MultiStepDialog.Footer />
+          <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="次へ"
+              intent="primary"
+              onAction={({ nextStep }) => nextStep()}
+            />
+          </MultiStepDialog.Footer>
         </MultiStepDialog.Step>
 
         <MultiStepDialog.Step>
@@ -64,7 +70,18 @@ const BasicWizardComponent = () => {
               </label>
             </div>
           </MultiStepDialog.Body>
-          <MultiStepDialog.Footer />
+          <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="戻る"
+              intent="secondary"
+              onAction={({ prevStep }) => prevStep()}
+            />
+            <MultiStepDialog.Action
+              label="次へ"
+              intent="primary"
+              onAction={({ nextStep }) => nextStep()}
+            />
+          </MultiStepDialog.Footer>
         </MultiStepDialog.Step>
 
         <MultiStepDialog.Step>
@@ -81,6 +98,11 @@ const BasicWizardComponent = () => {
             </div>
           </MultiStepDialog.Body>
           <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="戻る"
+              intent="secondary"
+              onAction={({ prevStep }) => prevStep()}
+            />
             <MultiStepDialog.Action
               label="Confirm"
               intent="primary"
@@ -142,7 +164,17 @@ const WithValidationComponent = () => {
               />
             </div>
           </MultiStepDialog.Body>
-          <MultiStepDialog.Footer onNext={validateStep1} />
+          <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="次へ"
+              intent="primary"
+              onAction={({ nextStep }) => {
+                if (validateStep1()) {
+                  nextStep();
+                }
+              }}
+            />
+          </MultiStepDialog.Footer>
         </MultiStepDialog.Step>
 
         <MultiStepDialog.Step>
@@ -158,6 +190,11 @@ const WithValidationComponent = () => {
             </div>
           </MultiStepDialog.Body>
           <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="戻る"
+              intent="secondary"
+              onAction={({ prevStep }) => prevStep()}
+            />
             <MultiStepDialog.Action
               label="Done"
               intent="primary"
@@ -196,7 +233,13 @@ const WithAsyncOperationsComponent = () => {
           <MultiStepDialog.Body>
             <p>Fill in the required information.</p>
           </MultiStepDialog.Body>
-          <MultiStepDialog.Footer />
+          <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="次へ"
+              intent="primary"
+              onAction={({ nextStep }) => nextStep()}
+            />
+          </MultiStepDialog.Footer>
         </MultiStepDialog.Step>
 
         <MultiStepDialog.Step>
@@ -207,10 +250,19 @@ const WithAsyncOperationsComponent = () => {
           </MultiStepDialog.Body>
           <MultiStepDialog.Footer>
             <MultiStepDialog.Action
+              label="戻る"
+              intent="secondary"
+              disabled={loading}
+              onAction={({ prevStep }) => prevStep()}
+            />
+            <MultiStepDialog.Action
               label={loading ? 'Processing...' : 'Submit'}
               intent="primary"
               disabled={loading}
-              onAction={handleSubmit}
+              onAction={async ({ nextStep }) => {
+                await handleSubmit();
+                nextStep();
+              }}
             />
           </MultiStepDialog.Footer>
         </MultiStepDialog.Step>
