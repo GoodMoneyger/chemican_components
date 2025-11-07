@@ -13,17 +13,17 @@ export interface FileUploaderProps extends Omit<React.HTMLAttributes<HTMLDivElem
     progress?: number;
     fileName?: string;
     fileSize?: string;
-    errorMessage?: string;
-    successMessage?: string;
+    errorMessage?: React.ReactNode;
+    successMessage?: React.ReactNode;
     maxFileSize?: number;
     onFileRemove?: () => void;
-    dragDropText?: string;
-    orText?: string;
-    selectFileText?: string;
-    dropFilesText?: string;
-    uploadingText?: string;
-    uploadCompletedText?: string;
-    uploadFailedText?: string;
+    dragDropText?: React.ReactNode;
+    orText?: React.ReactNode;
+    selectFileText?: React.ReactNode;
+    dropFilesText?: React.ReactNode;
+    uploadingText?: React.ReactNode;
+    uploadCompletedText?: React.ReactNode;
+    uploadFailedText?: React.ReactNode;
 }
 declare const FileUploader: React.ForwardRefExoticComponent<FileUploaderProps & React.RefAttributes<HTMLDivElement>>;
 export { FileUploader };

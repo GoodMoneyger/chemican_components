@@ -14,6 +14,7 @@ export interface MultiStepDialogRootProps {
     onClose: (value?: unknown) => void;
     children: ReactNode;
     initialStep?: number;
+    currentStep?: number;
     onStepChange?: (step: number) => void;
 }
 export interface MultiStepDialogStepProps {
@@ -30,16 +31,9 @@ export interface MultiStepDialogBodyProps {
 }
 export interface MultiStepDialogFooterProps {
     children?: ReactNode;
-    showNavigation?: boolean;
     showCancel?: boolean;
-    showBack?: boolean;
     cancelLabel?: ReactNode;
-    backLabel?: ReactNode;
-    nextLabel?: ReactNode;
-    backButtonProps?: Partial<ButtonProps>;
     onCancel?: () => void;
-    onNext?: () => void | boolean | Promise<void | boolean>;
-    onBack?: () => void | boolean | Promise<void | boolean>;
 }
 export interface NavigationHelpers {
     nextStep: () => void;

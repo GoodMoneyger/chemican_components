@@ -2,7 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { Toast as RadixToast } from 'radix-ui';
 export interface ToastItemProps extends Omit<React.ComponentProps<typeof RadixToast.Root>, 'title'> {
     message: React.ReactNode;
-    title: React.ReactNode;
+    title?: React.ReactNode;
     isOpen: boolean;
     onClose: () => void;
     level: 'success' | 'error' | 'warning' | 'info';
