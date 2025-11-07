@@ -61,6 +61,26 @@ Warning.args = {
   level: 'warning',
 };
 
+export const MessageOnly = Template.bind({});
+MessageOnly.args = {
+  message: 'This is a toast with only a message, no title',
+  isOpen: false,
+  level: 'info',
+};
+
+export const Inline: StoryFn<ToastItemProps> = (args) => {
+  return (
+    <ToastProvider>
+      <ToastItem {...args} onClose={() => {}} />
+    </ToastProvider>
+  );
+};
+Inline.args = {
+  message: 'This toast is displayed inline without triggers or dismiss actions',
+  level: 'info',
+  isOpen: true,
+};
+
 export const MultipleToasts: StoryFn = () => {
   const [toasts, setToasts] = useState<
     Array<{ id: number; level: ToastItemProps['level']; open: boolean }>

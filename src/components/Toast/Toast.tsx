@@ -7,10 +7,12 @@ import {
   IconInfoCircleFilled,
 } from '@tabler/icons-react';
 
+import { cn } from '../../utils';
+
 export interface ToastItemProps
   extends Omit<React.ComponentProps<typeof RadixToast.Root>, 'title'> {
   message: React.ReactNode;
-  title: React.ReactNode;
+  title?: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
   level: 'success' | 'error' | 'warning' | 'info';
@@ -28,7 +30,7 @@ export const ToastItem: React.FC<ToastItemProps> = ({
     <RadixToast.Root
       open={isOpen}
       onOpenChange={onClose}
-      className="border-surface-default bg-surface-primary p-md
+      className="border-surface-default bg-surface-primary p-sm
         text-body-primary shadow-high w-96 rounded
         data-[state=open]:animate-slide-in data-[state=closed]:animate-hide
         data-[swipe=end]:animate-swipe-out data-[swipe=cancel]:translate-x-0
@@ -36,7 +38,7 @@ export const ToastItem: React.FC<ToastItemProps> = ({
         data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]"
     >
       <div className="gap-xs flex items-start justify-between">
-        <div className="gap-xs flex items-start">
+        <div className="gap-xxs flex items-start">
           <div>
             {level === 'success' && (
               <IconCircleCheckFilled
@@ -58,17 +60,25 @@ export const ToastItem: React.FC<ToastItemProps> = ({
             )}
           </div>
           <div>
-            <RadixToast.Title className="text-body-primary font-bold">
-              <h5 className="mb-xxs text-md leading-none">{title}</h5>
-            </RadixToast.Title>
+            {title && (
+              <RadixToast.Title className="text-body-primary font-bold">
+                <h5
+                  className={cn('text-md leading-none', {
+                    'mb-xs': Boolean(message),
+                  })}
+                >
+                  {title}
+                </h5>
+              </RadixToast.Title>
+            )}
             <RadixToast.Description>
-              <p className="text-md">{message}</p>
+              <p className="text-md -my-1">{message}</p>
             </RadixToast.Description>
           </div>
         </div>
         <div>
-          <RadixToast.Action asChild altText="Close" className="pt-xxxs">
-            <button onClick={onClose} className="cursor-pointer">
+          <RadixToast.Action asChild altText="Close">
+            <button onClick={onClose} className="block">
               <IconX className="h-md text-body-primary w-md" />
             </button>
           </RadixToast.Action>
