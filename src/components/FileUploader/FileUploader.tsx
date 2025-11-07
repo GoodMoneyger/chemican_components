@@ -5,7 +5,7 @@ import {
   IconCloudUp,
   IconCircleCheck,
   IconFolderFilled,
-  IconTrashXFilled,
+  IconTrashX,
   IconAlertCircle,
 } from '@tabler/icons-react';
 
@@ -55,18 +55,18 @@ export interface FileUploaderProps
   progress?: number;
   fileName?: string;
   fileSize?: string;
-  errorMessage?: string;
-  successMessage?: string;
+  errorMessage?: React.ReactNode;
+  successMessage?: React.ReactNode;
   maxFileSize?: number;
   onFileRemove?: () => void;
   // Text customization props
-  dragDropText?: string;
-  orText?: string;
-  selectFileText?: string;
-  dropFilesText?: string;
-  uploadingText?: string;
-  uploadCompletedText?: string;
-  uploadFailedText?: string;
+  dragDropText?: React.ReactNode;
+  orText?: React.ReactNode;
+  selectFileText?: React.ReactNode;
+  dropFilesText?: React.ReactNode;
+  uploadingText?: React.ReactNode;
+  uploadCompletedText?: React.ReactNode;
+  uploadFailedText?: React.ReactNode;
 }
 
 const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
@@ -275,7 +275,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
                   onFileRemove?.();
                 }}
               >
-                <IconTrashXFilled size={24} className="text-shape-primary" />
+                <IconTrashX size={24} className="text-shape-primary" />
               </button>
             </div>
             <div className="gap-xxs flex items-center">
