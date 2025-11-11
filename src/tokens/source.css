@@ -36,7 +36,9 @@ before committing them to the repository.
   --color-background-surface-success: var(--chemican-green-50);
   --color-background-surface-tertiary: var(--raspberry-leaf-200);
   --color-background-surface-tooltip-neutral: var(--neutral-alpha-600-90);
-  --color-background-surface-tooltip-primary: var(--chemican-green-alpha-500-90);
+  --color-background-surface-tooltip-primary: var(
+    --chemican-green-alpha-500-90
+  );
   --color-background-surface-warning: var(--yellow-50);
   --color-border-divider-default: var(--raspberry-leaf-200);
   --color-border-interactive-alert-default: var(--sun-600);
@@ -606,7 +608,7 @@ before committing them to the repository.
   --sea-700: #1651f3;
   --sea-800: #003ad8;
   --sea-900: #0033c1;
-  --sea-alpha-500-90: #5d87ffE6;
+  --sea-alpha-500-90: #5d87ffe6;
   --sky-1000: #004475;
   --sky-100: #cbe9fe;
   --sky-1100: #003458;
