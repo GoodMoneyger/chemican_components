@@ -7,7 +7,9 @@ import type { ButtonProps } from '../Button';
 export interface DialogAction
   extends Omit<ButtonProps, 'children' | 'asChild' | 'value'> {
   label: ReactNode;
-  onAction?: (close?: (value?: unknown) => void) => void | Promise<void>;
+  onAction?: (
+    close?: (value?: unknown) => void
+  ) => void | Promise<void> | boolean | Promise<boolean>;
   value?: unknown; // The value being passed to the onClose handler
   classNames?: string;
 }
@@ -51,14 +53,21 @@ export const Dialog: React.FC<DialogProps> = ({
     const actionIndex = actions.indexOf(action);
     if (action.onAction) {
       setLoading(actionIndex);
-      await action.onAction(onClose);
+      const result = await action.onAction(onClose);
+      setLoading(-1);
+
+      // If onAction returns false, don't close the dialog
+      if (result === false) {
+        return;
+      }
+    } else {
+      setLoading(-1);
     }
     // Automatically close the dialog after the action is performed
-    // unless it was already closed.
+    // unless it was already closed or the action returned false.
     if (isOpen) {
       onClose(action.value);
     }
-    setLoading(-1);
   };
 
   const handleCancelClick = () => {
