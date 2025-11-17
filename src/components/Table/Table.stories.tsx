@@ -498,7 +498,7 @@ Default.args = {
 
 const LoadingTemplate: StoryFn = () => (
   <Table loading>
-    <TableHeader loading>
+    <TableHeader>
       <TableRow>
         <TableHead>
           <Checkbox label="" />
@@ -518,7 +518,7 @@ const LoadingTemplate: StoryFn = () => (
         <TableHead>ステータス</TableHead>
       </TableRow>
     </TableHeader>
-    <TableBody loading colSpan={6} />
+    <TableBody colSpan={6} />
   </Table>
 );
 
