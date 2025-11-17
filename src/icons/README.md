@@ -33,7 +33,7 @@ Thanks to `vite-plugin-svgr`, you can easily add new SVG icons without creating 
 
 ## Icon Guidelines
 
-- **Naming**: Use `Icon` prefix for standard icons (e.g., `IconAdministrator`)
+- **Naming**: Use `Icon` prefix and `Custom` suffix for standard icons (e.g., `IconAdministratorCustom`)
 - **Size**: Icons should be designed at 24×24px
 - **Color**: Use `currentColor` so icons inherit text color
 - **Props**: All icons support standard SVG props:

@@ -8,7 +8,7 @@ import {
 } from './index';
 
 const meta: Meta = {
-  title: 'Custom Icons',
+  title: 'Components/Custom Icons',
   tags: ['autodocs'],
   parameters: {
     docs: {
