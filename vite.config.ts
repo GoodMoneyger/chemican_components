@@ -2,9 +2,20 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import tailwindcss from '@tailwindcss/vite';
+import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  plugins: [react(), dts(), tailwindcss()],
+  plugins: [
+    react(),
+    dts(),
+    tailwindcss(),
+    svgr({
+      svgrOptions: {
+        icon: true, // Set default size to 1em
+        dimensions: false, // Remove width/height attributes
+      },
+    }),
+  ],
   build: {
     lib: {
       entry: './src/bundle.ts', // Entry point for the library
