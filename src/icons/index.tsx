@@ -35,6 +35,7 @@ const createIconComponent = (
 
 // Custom icons from assets/icons/
 // Note: Only SVGs in assets/icons/ should be exported here as icons
-export const IconAdministrator = createIconComponent(AdministratorSvg);
-export const IconMyFilter = createIconComponent(MyFilterSvg);
-export const IconUserList = createIconComponent(UserListSvg);
+// Order alphabetically, alway with `Icon{MyIcon}Custom`
+export const IconAdministratorCustom = createIconComponent(AdministratorSvg);
+export const IconMyFilterCustom = createIconComponent(MyFilterSvg);
+export const IconUserListCustom = createIconComponent(UserListSvg);

@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
 import {
-  IconAdministrator,
-  IconMyFilter,
-  IconUserList,
+  IconAdministratorCustom,
+  IconMyFilterCustom,
+  IconUserListCustom,
 } from './index';
 
 const meta: Meta = {
-  title: 'Icons/Custom Icons',
+  title: 'Custom Icons',
   tags: ['autodocs'],
   parameters: {
     docs: {
@@ -24,9 +24,9 @@ export default meta;
 
 // Icon data for the gallery
 const customIcons = [
-  { name: 'IconAdministrator', Component: IconAdministrator },
-  { name: 'IconMyFilter', Component: IconMyFilter },
-  { name: 'IconUserList', Component: IconUserList },
+  { name: 'IconAdministratorCustom', Component: IconAdministratorCustom },
+  { name: 'IconMyFilterCustom', Component: IconMyFilterCustom },
+  { name: 'IconUserListCustom', Component: IconUserListCustom },
 ];
 
 const CopyableIconName = ({ name }: { name: string }) => {
@@ -40,7 +40,8 @@ const CopyableIconName = ({ name }: { name: string }) => {
 
   return (
     <code
-      className="text-xs text-body-secondary cursor-pointer hover:text-body-primary transition-colors"
+      className="text-xs text-body-secondary hover:text-body-primary
+        cursor-pointer transition-colors"
       onClick={handleCopy}
       title="Click to copy"
     >
@@ -79,15 +80,15 @@ export const UsageExample: StoryObj = {
       <h3 className="text-lg font-semibold">Import and Usage</h3>
       <pre className="rounded bg-surface-primary p-4 overflow-x-auto">
         <code>{`import {
-  IconAdministrator,
-  IconMyFilter,
-  IconUserList
+  IconAdministratorCustom,
+  IconMyFilterCustom,
+  IconUserListCustom
 } from '@chemican/components/tabler-icons';
 
 // Use like any other icon
-<IconAdministrator size={24} />
-<IconMyFilter size={32} className="text-body-primary" />
-<IconUserList size={48} color="#ef4444" />`}</code>
+<IconAdministratorCustom size={24} />
+<IconMyFilterCustom size={32} className="text-body-primary" />
+<IconUserListCustom size={48} color="#ef4444" />`}</code>
       </pre>
       <p className="text-sm text-body-secondary">
         Custom icons are exported alongside Tabler icons for convenient access
@@ -110,32 +111,32 @@ export const SizeVariants: StoryObj = {
     <div className="gap-6 flex flex-col">
       <div className="gap-4 flex items-end">
         <div className="gap-2 flex flex-col items-center">
-          <IconAdministrator size={16} />
+          <IconAdministratorCustom size={16} />
           <code className="text-xs text-body-secondary">16px</code>
         </div>
         <div className="gap-2 flex flex-col items-center">
-          <IconAdministrator size={24} />
+          <IconAdministratorCustom size={24} />
           <code className="text-xs text-body-secondary">24px</code>
         </div>
         <div className="gap-2 flex flex-col items-center">
-          <IconAdministrator size={32} />
+          <IconAdministratorCustom size={32} />
           <code className="text-xs text-body-secondary">32px</code>
         </div>
         <div className="gap-2 flex flex-col items-center">
-          <IconAdministrator size={48} />
+          <IconAdministratorCustom size={48} />
           <code className="text-xs text-body-secondary">48px</code>
         </div>
         <div className="gap-2 flex flex-col items-center">
-          <IconAdministrator size={64} />
+          <IconAdministratorCustom size={64} />
           <code className="text-xs text-body-secondary">64px</code>
         </div>
       </div>
       <pre className="rounded bg-surface-primary p-4 overflow-x-auto">
-        <code>{`<IconAdministrator size={16} />
-<IconAdministrator size={24} />
-<IconAdministrator size={32} />
-<IconAdministrator size={48} />
-<IconAdministrator size={64} />`}</code>
+        <code>{`<IconAdministratorCustom size={16} />
+<IconAdministratorCustom size={24} />
+<IconAdministratorCustom size={32} />
+<IconAdministratorCustom size={48} />
+<IconAdministratorCustom size={64} />`}</code>
       </pre>
     </div>
   ),
@@ -170,11 +171,11 @@ export const ColorVariants: StoryObj = {
         <div className="gap-4 flex items-center">
           {colorTokens.map(({ token, label }) => (
             <div key={token} className="gap-2 flex flex-col items-center">
-              <IconAdministrator
+              <IconAdministratorCustom
                 size={48}
                 style={{ color: `var(${token})` }}
               />
-              <code className="text-xs text-body-secondary text-center max-w-24">
+              <code className="text-xs text-body-secondary max-w-24 text-center">
                 {label}
               </code>
             </div>
@@ -182,15 +183,15 @@ export const ColorVariants: StoryObj = {
         </div>
         <pre className="rounded bg-surface-primary p-4 overflow-x-auto">
           <code>{`// Using design tokens
-<IconAdministrator
+<IconAdministratorCustom
   size={48}
   style={{ color: 'var(--token-color-background-interactive-primary-default)' }}
 />
 
 // Or use Tailwind classes with design tokens
-<IconAdministrator size={48} className="text-body-primary" />
-<IconAdministrator size={48} className="text-body-secondary" />
-<IconAdministrator size={48} className="text-body-alert" />`}</code>
+<IconAdministratorCustom size={48} className="text-body-primary" />
+<IconAdministratorCustom size={48} className="text-body-secondary" />
+<IconAdministratorCustom size={48} className="text-body-alert" />`}</code>
         </pre>
       </div>
     );

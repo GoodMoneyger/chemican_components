@@ -18,15 +18,6 @@ Thanks to `vite-plugin-svgr`, you can easily add new SVG icons without creating 
 2. **Add export to `src/icons/index.tsx`**
 
    ```typescript
-   // Add to the "Custom icons from assets/icons/" section
-   export const IconMyIcon = createIconComponent(
-     require('../assets/icons/my_icon.svg?react').default
-   );
-   ```
-
-   Or simply import at the top and add the export:
-
-   ```typescript
    import MyIconSvg from '../assets/icons/my_icon.svg?react';
    // ... then in exports section:
    export const IconMyIcon = createIconComponent(MyIconSvg);
