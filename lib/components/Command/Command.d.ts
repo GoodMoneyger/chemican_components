@@ -64,7 +64,7 @@ declare const CommandItem: React.ForwardRefExoticComponent<Omit<{
     ref?: React.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, "key" | "asChild" | keyof React.HTMLAttributes<HTMLDivElement>>, "onSelect" | "value" | "disabled"> & {
+}, "key" | "asChild" | keyof React.HTMLAttributes<HTMLDivElement>>, "onSelect" | "disabled" | "value"> & {
     disabled?: boolean;
     onSelect?: (value: string) => void;
     value?: string;

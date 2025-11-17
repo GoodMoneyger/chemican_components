@@ -2,7 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 declare const tooltipVariants: (props?: ({
-    intent?: "accent" | "normal" | null | undefined;
+    intent?: "normal" | "accent" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface TooltipProps extends Omit<React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>, 'content'>, VariantProps<typeof tooltipVariants> {
     children: React.ReactNode;
