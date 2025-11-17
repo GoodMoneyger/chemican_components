@@ -43,7 +43,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
     return (
       <TableContext.Provider value={contextValue}>
         <div
-          className="border-surface-default bg-surface-primary relative w-max
+          className="border-surface-default bg-surface-primary relative
             border"
         >
           <table
