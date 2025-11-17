@@ -47,11 +47,11 @@ const componentTopics = getComponentTopics();
 
 export default {
   extends: ['@commitlint/config-conventional'],
-  // Custom parser to handle multiple topics
+  // Custom parser to handle scopes (standard conventional commits format)
   parserPreset: {
     parserOpts: {
-      headerPattern: /^([a-z,]+):\s(.+)$/,
-      headerCorrespondence: ['type', 'subject'],
+      headerPattern: /^([a-z,]+)(?:\(([a-z,\s]+)\))?:\s(.+)$/i,
+      headerCorrespondence: ['type', 'scope', 'subject'],
     },
   },
   // Custom plugin to validate multiple topics and capitalization
@@ -59,10 +59,37 @@ export default {
     {
       rules: {
         'multiple-topic-enum': (parsed) => {
-          const { type } = parsed;
+          const { type, scope } = parsed;
           if (!type) return [false, 'Type is required'];
 
-          const validTopics = [
+          // Valid conventional commit types
+          const validTypes = [
+            'feat',
+            'fix',
+            'docs',
+            'style',
+            'refactor',
+            'perf',
+            'test',
+            'build',
+            'ci',
+            'chore',
+            'revert',
+            'release',
+          ];
+
+          // Types that require a scope
+          const typesThatRequireScope = [
+            'feat',
+            'fix',
+            'refactor',
+            'perf',
+            'test',
+            'style',
+          ];
+
+          // Valid scopes (component names and general categories)
+          const validScopes = [
             // Dynamic component topics
             ...componentTopics,
             // General categories
@@ -78,21 +105,43 @@ export default {
             'release',
             'util',
             'assets',
-            'refactor',
-            'fix',
-            'chore',
           ];
 
-          const topics = type.split(',').map((t) => t.trim());
-          const invalidTopics = topics.filter(
-            (topic) => !validTopics.includes(topic)
-          );
+          // Validate type
+          const types = type.split(',').map((t) => t.trim().toLowerCase());
+          const invalidTypes = types.filter((t) => !validTypes.includes(t));
 
-          if (invalidTopics.length > 0) {
+          if (invalidTypes.length > 0) {
             return [
               false,
-              `Invalid topic(s): ${invalidTopics.join(', ')}. Valid topics: ${validTopics.join(', ')}`,
+              `Invalid type(s): ${invalidTypes.join(', ')}. Valid types: ${validTypes.join(', ')}`,
             ];
+          }
+
+          // Check if scope is required for this type
+          const requiresScope = types.some((t) =>
+            typesThatRequireScope.includes(t)
+          );
+          if (requiresScope && !scope) {
+            return [
+              false,
+              `Scope is required for commit types: ${typesThatRequireScope.join(', ')}`,
+            ];
+          }
+
+          // Validate scope if provided
+          if (scope) {
+            const scopes = scope.split(',').map((s) => s.trim().toLowerCase());
+            const invalidScopes = scopes.filter(
+              (s) => !validScopes.includes(s)
+            );
+
+            if (invalidScopes.length > 0) {
+              return [
+                false,
+                `Invalid scope(s): ${invalidScopes.join(', ')}. Valid scopes: ${validScopes.join(', ')}`,
+              ];
+            }
           }
 
           return [true];

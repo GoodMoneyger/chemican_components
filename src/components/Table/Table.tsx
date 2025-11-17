@@ -8,18 +8,55 @@ export interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   loadingText?: React.ReactNode;
 }
 
+interface TableContextValue {
+  loading: boolean;
+  loadingText: React.ReactNode;
+}
+
+const defaultTableContextValue: TableContextValue = {
+  loading: false,
+  loadingText: 'ローディング中…',
+};
+
+const TableContext = React.createContext<TableContextValue>(
+  defaultTableContextValue
+);
+
+const useTableContext = () => React.useContext(TableContext);
+
 const Table = React.forwardRef<HTMLTableElement, TableProps>(
-  ({ className, children, loading, ...props }, ref) => (
-    <div className="border-surface-default bg-surface-primary relative border">
-      <table
-        ref={ref}
-        className={cn('w-full caption-bottom', className)}
-        {...props}
-      >
-        {children}
-      </table>
-    </div>
-  )
+  (
+    {
+      className,
+      children,
+      loading = defaultTableContextValue.loading,
+      loadingText = defaultTableContextValue.loadingText,
+      ...props
+    },
+    ref
+  ) => {
+    const contextValue: TableContextValue = {
+      loading,
+      loadingText,
+    };
+
+    return (
+      <TableContext.Provider value={contextValue}>
+        <div
+          className="border-surface-default bg-surface-primary relative
+            border"
+        >
+          <table
+            ref={ref}
+            className={cn('w-full caption-bottom', className)}
+            {...props}
+          >
+            {children}
+          </table>
+        </div>
+      </TableContext.Provider>
+    );
+  }
 );
 Table.displayName = 'Table';
 
@@ -29,26 +66,31 @@ export interface TableHeaderProps
 }
 
 const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
-  ({ className, loading = false, children, ...props }, ref) => (
-    <thead
-      ref={ref}
-      className={cn('text-sm bg-surface-tertiary top-0 sticky', className)}
-      {...props}
-    >
-      {children}
-      {loading && (
-        <tr>
-          <td colSpan={100} className="p-0 h-0">
-            <ProgressIndicator.Linear
-              indeterminate
-              className="bg-surface-primary border-b-divider-default box-content
-                border-b"
-            />
-          </td>
-        </tr>
-      )}
-    </thead>
-  )
+  ({ className, loading: loadingProp, children, ...props }, ref) => {
+    const { loading: contextLoading } = useTableContext();
+    const loading = loadingProp ?? contextLoading;
+
+    return (
+      <thead
+        ref={ref}
+        className={cn('text-sm bg-surface-tertiary top-0 sticky', className)}
+        {...props}
+      >
+        {children}
+        {loading && (
+          <tr>
+            <td colSpan={100} className="p-0 h-0">
+              <ProgressIndicator.Linear
+                indeterminate
+                className="bg-surface-primary border-b-divider-default
+                  box-content border-b"
+              />
+            </td>
+          </tr>
+        )}
+      </thead>
+    );
+  }
 );
 TableHeader.displayName = 'TableHeader';
 
@@ -63,29 +105,36 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
   (
     {
       className,
-      loading = false,
-      loadingText = 'ローディング中…',
+      loading: loadingProp,
+      loadingText: loadingTextProp,
       colSpan = 1,
       children,
       ...props
     },
     ref
-  ) => (
-    <tbody ref={ref} className={className} {...props}>
-      {loading ? (
-        <tr>
-          <td
-            colSpan={colSpan}
-            className="py-sm min-h-12 px-[1.44rem] text-center align-middle"
-          >
-            {loadingText}
-          </td>
-        </tr>
-      ) : (
-        children
-      )}
-    </tbody>
-  )
+  ) => {
+    const { loading: contextLoading, loadingText: contextLoadingText } =
+      useTableContext();
+    const loading = loadingProp ?? contextLoading;
+    const loadingText = loadingTextProp ?? contextLoadingText;
+
+    return (
+      <tbody ref={ref} className={className} {...props}>
+        {loading ? (
+          <tr>
+            <td
+              colSpan={colSpan}
+              className="py-sm min-h-12 px-[1.44rem] text-center align-middle"
+            >
+              {loadingText}
+            </td>
+          </tr>
+        ) : (
+          children
+        )}
+      </tbody>
+    );
+  }
 );
 TableBody.displayName = 'TableBody';
 
