@@ -10,10 +10,7 @@ export interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
 
 const Table = React.forwardRef<HTMLTableElement, TableProps>(
   ({ className, children, loading, ...props }, ref) => (
-    <div
-      className="border-surface-default bg-surface-primary relative w-max
-        border"
-    >
+    <div className="border-surface-default bg-surface-primary relative border">
       <table
         ref={ref}
         className={cn('w-full caption-bottom', className)}

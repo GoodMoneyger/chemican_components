@@ -79,6 +79,8 @@ export default {
             'util',
             'assets',
             'refactor',
+            'fix',
+            'chore',
           ];
 
           const topics = type.split(',').map((t) => t.trim());
