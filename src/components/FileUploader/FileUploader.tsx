@@ -21,7 +21,7 @@ const uploadVariants = cva(
     variants: {
       size: {
         small: 'pt-md pb-lg min-h-20 rounded-sm',
-        large: 'pt-xxl pb-xxxl px-xl rounded-lg',
+        large: 'pt-6.5 pb-9.75 px-xl rounded-lg',
       },
       state: {
         default: `border-interactive-default bg-surface-primary
@@ -157,8 +157,9 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     const renderIcon = () => {
       return (
         <IconCloudUp
-          className="text-shape-interactive-primary-default"
-          size={size === 'large' ? 60 : 32}
+          className="text-shape-interactive-primary-default mb-2.25 mx-auto
+            block"
+          size={size === 'large' ? 74 : 32}
         />
       );
     };
@@ -187,26 +188,23 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
 
     const renderLargeContent = () => {
       return (
-        <div className="gap-sm flex flex-col items-center">
+        <div className="text-center">
           {renderIcon()}
-          <div className="gap-xs flex flex-col text-center">
-            <p className="text-body-secondary font-medium">
-              {dropFilesText}
-              <span className="text-sm">{orText}</span>
-            </p>
-            <Button
-              size="xs"
-              intent="tertiary"
-              className="self-center"
-              icon={IconFolderFilled}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClick();
-              }}
-            >
-              {selectFileText}
-            </Button>
-          </div>
+          <p className="text-body-secondary font-normal mb-2">
+            {dropFilesText} <span className="text-sm">{orText}</span>
+          </p>
+          <Button
+            size="xs"
+            intent="tertiary"
+            className="self-center"
+            icon={IconFolderFilled}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClick();
+            }}
+          >
+            {selectFileText}
+          </Button>
         </div>
       );
     };
