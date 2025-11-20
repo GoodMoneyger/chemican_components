@@ -32,15 +32,12 @@ export const FormField: React.FC<FormFieldProps> = ({
     : children;
 
   return (
-    <div className="flex flex-col">
+    <div className={cn('flex w-full flex-col', className)}>
       {label && (
         <label
           htmlFor={name}
-          className={cn(
-            `text-body-secondary gap-xxs pb-xs text-sm font-normal flex
-            items-center leading-none`,
-            className
-          )}
+          className="text-body-secondary gap-xxs pb-xs text-sm font-normal flex
+            items-center leading-none"
         >
           <span>{label}</span>
           {optional && <span className="text-body-secondary">(任意)</span>}
