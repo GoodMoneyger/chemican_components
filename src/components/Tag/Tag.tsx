@@ -32,12 +32,13 @@ const colorCodeToTokenMap = {
   18: [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong],
 } as const;
 
+export type TagColorCode = keyof typeof colorCodeToTokenMap;
 export interface TagProps {
   className?: string;
   children?: React.ReactNode;
   onRemove?: () => void;
   onClick?: () => void;
-  colorCode?: keyof typeof colorCodeToTokenMap;
+  colorCode?: TagColorCode;
   size?: 'sm' | 'md';
   style?: React.CSSProperties;
   selected?: boolean;
