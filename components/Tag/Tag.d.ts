@@ -21,12 +21,13 @@ declare const colorCodeToTokenMap: {
     readonly 17: readonly [ColorShapeTokens.AccentCharcoalPale, ColorTextTokens.AccentCharchoalStrong];
     readonly 18: readonly [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong];
 };
+export type TagColorCode = keyof typeof colorCodeToTokenMap;
 export interface TagProps {
     className?: string;
     children?: React.ReactNode;
     onRemove?: () => void;
     onClick?: () => void;
-    colorCode?: keyof typeof colorCodeToTokenMap;
+    colorCode?: TagColorCode;
     size?: 'sm' | 'md';
     style?: React.CSSProperties;
     selected?: boolean;
