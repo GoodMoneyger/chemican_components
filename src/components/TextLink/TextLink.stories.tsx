@@ -16,7 +16,6 @@ const meta: Meta<typeof TextLink> = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs'],
   argTypes: {
     intent: {
       control: 'select',

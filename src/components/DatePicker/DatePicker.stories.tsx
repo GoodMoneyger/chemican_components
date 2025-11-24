@@ -49,7 +49,6 @@ const meta: Meta<typeof DatePicker> = {
       defaultValue: false,
     },
   },
-  tags: [],
 };
 
 export default meta;

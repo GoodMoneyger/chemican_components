@@ -10,7 +10,6 @@ const meta: Meta<typeof FormField> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     label: {
       control: 'text',

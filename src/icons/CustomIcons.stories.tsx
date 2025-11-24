@@ -9,7 +9,6 @@ import {
 
 const meta: Meta = {
   title: 'Components/Custom Icons',
-  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {

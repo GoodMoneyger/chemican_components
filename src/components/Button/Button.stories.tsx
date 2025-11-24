@@ -21,7 +21,6 @@ const iconMap = {
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
-  tags: ['autodocs'],
   argTypes: {
     children: {
       control: { type: 'text' },
