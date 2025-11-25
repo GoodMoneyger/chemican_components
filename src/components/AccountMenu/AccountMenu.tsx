@@ -41,7 +41,6 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
 
         <DropdownContent align="end" className="py-0 min-w-auto">
           <p
-            aria-label="Account menu user role"
             className="h-6.75 px-3 py-0 text-sm font-medium leading-6.75
               text-body-success border-b-surface-default border-b text-center"
           >
