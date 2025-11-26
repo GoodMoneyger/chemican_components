@@ -6,7 +6,7 @@ import { cn } from '../../utils';
 
 // Mapping the color codes for user defined tag colors to our design tokens
 // Reference: https://docs.google.com/spreadsheets/d/14r5PJTfzfESsKypY2cJlR65I2-DkO4RvODa04x_s1dA
-export const colorCodeToMap = [
+export const colorCodeToTokenMap = [
   {
     backgroundColor: ColorShapeTokens.AccentSunSoft,
     textColor: ColorTextTokens.AccentSunStrong,
@@ -191,7 +191,7 @@ export const colorCodeToMap = [
   },
 ] as const;
 
-export type TagColorCode = (typeof colorCodeToMap)[number]['code'];
+export type TagColorCode = (typeof colorCodeToTokenMap)[number]['code'];
 
 export interface TagProps {
   className?: string;
@@ -238,7 +238,7 @@ export const Tag: React.FC<TagProps> = ({
   style,
   selected = false,
 }) => {
-  const colorMapping = colorCodeToMap.find(
+  const colorMapping = colorCodeToTokenMap.find(
     (colorMap) => colorMap.code === colorCode
   );
 

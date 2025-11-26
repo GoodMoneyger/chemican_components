@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import type { TagProps } from './Tag';
-import { colorCodeToMap, Tag } from './Tag';
+import { colorCodeToTokenMap, Tag } from './Tag';
 
 const meta: Meta<typeof Tag> = {
   title: 'Components/Tag',
@@ -82,7 +82,7 @@ export const ColorCodeShowcase: StoryFn<{ selected?: boolean }> = ({
 }) => {
   // Get unique color codes and sort them
   const uniqueColorCodes = Array.from(
-    new Set(colorCodeToMap.map((c) => c.code))
+    new Set(colorCodeToTokenMap.map((c) => c.code))
   ).sort((a, b) => a - b);
 
   return (
