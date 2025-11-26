@@ -21,10 +21,8 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
       <Dropdown>
         <DropdownTrigger
           asChild
-          className="rounded-sm bg-surface-tertiary cursor-pointer
-            transition-shadow duration-150
-            hover:shadow-[0_0_0_4px_var(--chemican-green-100)]
-            data-[state=open]:shadow-[0_0_0_4px_var(--chemican-green-100)]"
+          className="rounded-sm bg-surface-tertiary ring-interactive-focused
+            cursor-pointer hover:ring-4 data-[state=open]:ring-4"
         >
           <div className="group gap-0.5 h-6.5 py-0 px-2 flex items-center">
             <div className="gap-0.5 flex flex-1 items-center">
