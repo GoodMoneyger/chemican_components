@@ -6,33 +6,193 @@ import { cn } from '../../utils';
 
 // Mapping the color codes for user defined tag colors to our design tokens
 // Reference: https://docs.google.com/spreadsheets/d/14r5PJTfzfESsKypY2cJlR65I2-DkO4RvODa04x_s1dA
-// [backgroundColor, textColor]
-const colorCodeToTokenMap = {
-  0: [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong],
-  1: [ColorShapeTokens.AccentSunPale, ColorTextTokens.AccentSunStrong],
-  2: [ColorShapeTokens.AccentMagentaPale, ColorTextTokens.AccentMagentaStrong],
-  3: [ColorShapeTokens.AccentPurplePale, ColorTextTokens.AccentPurpleStrong],
-  4: [ColorShapeTokens.AccentVioletPale, ColorTextTokens.AccentVioletStrong],
-  5: [ColorShapeTokens.AccentSeaPale, ColorTextTokens.AccentSeaStrong],
-  6: [ColorShapeTokens.AccentSkyPale, ColorTextTokens.AccentSkyStrong],
-  7: [ColorShapeTokens.AccentCyanPale, ColorTextTokens.AccentCyanStrong],
-  8: [ColorShapeTokens.AccentPeacockPale, ColorTextTokens.AccentPeacockStrong],
-  9: [ColorShapeTokens.AccentGreenPale, ColorTextTokens.AccentGreenStrong],
-  10: [ColorShapeTokens.AccentBambooPale, ColorTextTokens.AccentBambooStrong],
-  11: [ColorShapeTokens.AccentLimePale, ColorTextTokens.AccentLimeStrong],
-  12: [ColorShapeTokens.AccentGrassPale, ColorTextTokens.AccentGrassStrong],
-  13: [ColorShapeTokens.AccentLemonPale, ColorTextTokens.AccentLemonStrong],
-  14: [ColorShapeTokens.AccentYellowPale, ColorTextTokens.AccentYellowStrong],
-  15: [ColorShapeTokens.AccentOrangePale, ColorTextTokens.AccentOrangeStrong],
-  16: [ColorShapeTokens.AccentWoodPale, ColorTextTokens.AccentWoodStrong],
-  17: [
-    ColorShapeTokens.AccentCharcoalPale,
-    ColorTextTokens.AccentCharchoalStrong,
-  ],
-  18: [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong],
-} as const;
+export const colorCodeToTokenMap = [
+  {
+    backgroundColor: ColorShapeTokens.AccentSunSoft,
+    textColor: ColorTextTokens.AccentSunStrong,
+    code: 19,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentSunPale,
+    textColor: ColorTextTokens.AccentSunStrong,
+    code: 1,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentWoodSoft,
+    textColor: ColorTextTokens.AccentWoodStrong,
+    code: 34,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentWoodPale,
+    textColor: ColorTextTokens.AccentWoodStrong,
+    code: 16,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentOrangeSoft,
+    textColor: ColorTextTokens.AccentOrangeStrong,
+    code: 33,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentOrangePale,
+    textColor: ColorTextTokens.AccentOrangeStrong,
+    code: 15,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentYellowSoft,
+    textColor: ColorTextTokens.AccentYellowStrong,
+    code: 32,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentYellowPale,
+    textColor: ColorTextTokens.AccentYellowStrong,
+    code: 14,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentLemonSoft,
+    textColor: ColorTextTokens.AccentLemonStrong,
+    code: 31,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentLemonPale,
+    textColor: ColorTextTokens.AccentLemonStrong,
+    code: 13,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentGrassSoft,
+    textColor: ColorTextTokens.AccentGrassStrong,
+    code: 30,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentGrassPale,
+    textColor: ColorTextTokens.AccentGrassStrong,
+    code: 12,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentLimeSoft,
+    textColor: ColorTextTokens.AccentLimeStrong,
+    code: 29,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentLimePale,
+    textColor: ColorTextTokens.AccentLimeStrong,
+    code: 11,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentGreenSoft,
+    textColor: ColorTextTokens.AccentGreenStrong,
+    code: 27,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentGreenPale,
+    textColor: ColorTextTokens.AccentGreenStrong,
+    code: 9,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentPeacockSoft,
+    textColor: ColorTextTokens.AccentPeacockStrong,
+    code: 26,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentPeacockPale,
+    textColor: ColorTextTokens.AccentPeacockStrong,
+    code: 8,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentCyanSoft,
+    textColor: ColorTextTokens.AccentCyanStrong,
+    code: 25,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentCyanPale,
+    textColor: ColorTextTokens.AccentCyanStrong,
+    code: 7,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentSkySoft,
+    textColor: ColorTextTokens.AccentSkyStrong,
+    code: 24,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentSkyPale,
+    textColor: ColorTextTokens.AccentSkyStrong,
+    code: 6,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentSeaSoft,
+    textColor: ColorTextTokens.AccentSeaStrong,
+    code: 23,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentSeaPale,
+    textColor: ColorTextTokens.AccentSeaStrong,
+    code: 5,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentVioletSoft,
+    textColor: ColorTextTokens.AccentVioletStrong,
+    code: 22,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentVioletPale,
+    textColor: ColorTextTokens.AccentVioletStrong,
+    code: 4,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentPurpleSoft,
+    textColor: ColorTextTokens.AccentPurpleStrong,
+    code: 21,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentPurplePale,
+    textColor: ColorTextTokens.AccentPurpleStrong,
+    code: 3,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentMagentaSoft,
+    textColor: ColorTextTokens.AccentMagentaStrong,
+    code: 20,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentMagentaPale,
+    textColor: ColorTextTokens.AccentMagentaStrong,
+    code: 2,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentCharcoalSoft,
+    textColor: ColorTextTokens.AccentCharchoalStrong,
+    code: 35,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentCharcoalPale,
+    textColor: ColorTextTokens.AccentCharchoalStrong,
+    code: 17,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentGraySoft,
+    textColor: ColorTextTokens.AccentGrayStrong,
+    code: 36,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentGrayPale,
+    textColor: ColorTextTokens.AccentGrayStrong,
+    code: 18,
+  },
 
-export type TagColorCode = keyof typeof colorCodeToTokenMap;
+  // LegacyColor and fallback to default gray (0)
+  {
+    backgroundColor: ColorShapeTokens.AccentGrayPale,
+    textColor: ColorTextTokens.AccentGrayStrong,
+    code: 0,
+  },
+  {
+    backgroundColor: ColorShapeTokens.AccentBambooPale,
+    textColor: ColorTextTokens.AccentBambooStrong,
+    code: 10,
+  },
+] as const;
+
+export type TagColorCode = (typeof colorCodeToTokenMap)[number]['code'];
+
 export interface TagProps {
   className?: string;
   children?: React.ReactNode;
@@ -69,7 +229,7 @@ const tagVariants = cva(
 );
 
 export const Tag: React.FC<TagProps> = ({
-  colorCode,
+  colorCode = 0,
   children,
   className,
   onRemove,
@@ -78,10 +238,9 @@ export const Tag: React.FC<TagProps> = ({
   style,
   selected = false,
 }) => {
-  const [effectiveColor, effectiveTextColor] =
-    typeof colorCode === 'number'
-      ? colorCodeToTokenMap[colorCode]
-      : [undefined, undefined];
+  const colorMapping = colorCodeToTokenMap.find(
+    (colorMap) => colorMap.code === colorCode
+  );
 
   return (
     <div
@@ -90,8 +249,8 @@ export const Tag: React.FC<TagProps> = ({
         className
       )}
       style={{
-        backgroundColor: `var(${effectiveColor})`,
-        color: effectiveTextColor ? `var(${effectiveTextColor})` : undefined,
+        backgroundColor: `var(${colorMapping?.backgroundColor})`,
+        color: `var(${colorMapping?.textColor})`,
         ...style,
       }}
       onClick={onClick}

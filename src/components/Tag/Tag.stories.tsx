@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import type { TagProps } from './Tag';
-import { Tag } from './Tag';
+import { colorCodeToTokenMap, Tag } from './Tag';
 
 const meta: Meta<typeof Tag> = {
   title: 'Components/Tag',
@@ -11,7 +11,8 @@ const meta: Meta<typeof Tag> = {
     colorCode: {
       control: 'select',
       options: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+        20, 21, 22, 23, 24, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36,
       ],
     },
     size: {
@@ -78,20 +79,22 @@ WithCustomColors.args = {
 
 export const ColorCodeShowcase: StoryFn<{ selected?: boolean }> = ({
   selected = false,
-}) => (
-  <div className="gap-2 flex flex-wrap">
-    {Array.from({ length: 19 }, (_, i) => i).map((colorCode) => (
-      <Tag
-        key={colorCode}
-        // prettier-ignore
-        colorCode={colorCode as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18}
-        selected={selected}
-      >
-        カラー {colorCode}
-      </Tag>
-    ))}
-  </div>
-);
+}) => {
+  // Get unique color codes and sort them
+  const uniqueColorCodes = Array.from(
+    new Set(colorCodeToTokenMap.map((c) => c.code))
+  ).sort((a, b) => a - b);
+
+  return (
+    <div className="gap-2 flex flex-wrap">
+      {uniqueColorCodes.map((colorCode) => (
+        <Tag key={colorCode} colorCode={colorCode} selected={selected}>
+          カラー {colorCode}
+        </Tag>
+      ))}
+    </div>
+  );
+};
 
 ColorCodeShowcase.args = {
   selected: false,
