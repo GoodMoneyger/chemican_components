@@ -1,27 +1,151 @@
 import { default as React } from '../../../node_modules/react';
 import { ColorShapeTokens, ColorTextTokens } from '../../tokens';
-declare const colorCodeToTokenMap: {
-    readonly 0: readonly [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong];
-    readonly 1: readonly [ColorShapeTokens.AccentSunPale, ColorTextTokens.AccentSunStrong];
-    readonly 2: readonly [ColorShapeTokens.AccentMagentaPale, ColorTextTokens.AccentMagentaStrong];
-    readonly 3: readonly [ColorShapeTokens.AccentPurplePale, ColorTextTokens.AccentPurpleStrong];
-    readonly 4: readonly [ColorShapeTokens.AccentVioletPale, ColorTextTokens.AccentVioletStrong];
-    readonly 5: readonly [ColorShapeTokens.AccentSeaPale, ColorTextTokens.AccentSeaStrong];
-    readonly 6: readonly [ColorShapeTokens.AccentSkyPale, ColorTextTokens.AccentSkyStrong];
-    readonly 7: readonly [ColorShapeTokens.AccentCyanPale, ColorTextTokens.AccentCyanStrong];
-    readonly 8: readonly [ColorShapeTokens.AccentPeacockPale, ColorTextTokens.AccentPeacockStrong];
-    readonly 9: readonly [ColorShapeTokens.AccentGreenPale, ColorTextTokens.AccentGreenStrong];
-    readonly 10: readonly [ColorShapeTokens.AccentBambooPale, ColorTextTokens.AccentBambooStrong];
-    readonly 11: readonly [ColorShapeTokens.AccentLimePale, ColorTextTokens.AccentLimeStrong];
-    readonly 12: readonly [ColorShapeTokens.AccentGrassPale, ColorTextTokens.AccentGrassStrong];
-    readonly 13: readonly [ColorShapeTokens.AccentLemonPale, ColorTextTokens.AccentLemonStrong];
-    readonly 14: readonly [ColorShapeTokens.AccentYellowPale, ColorTextTokens.AccentYellowStrong];
-    readonly 15: readonly [ColorShapeTokens.AccentOrangePale, ColorTextTokens.AccentOrangeStrong];
-    readonly 16: readonly [ColorShapeTokens.AccentWoodPale, ColorTextTokens.AccentWoodStrong];
-    readonly 17: readonly [ColorShapeTokens.AccentCharcoalPale, ColorTextTokens.AccentCharchoalStrong];
-    readonly 18: readonly [ColorShapeTokens.AccentGrayPale, ColorTextTokens.AccentGrayStrong];
-};
-export type TagColorCode = keyof typeof colorCodeToTokenMap;
+export declare const colorCodeToTokenMap: readonly [{
+    readonly backgroundColor: ColorShapeTokens.AccentSunSoft;
+    readonly textColor: ColorTextTokens.AccentSunStrong;
+    readonly code: 19;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentSunPale;
+    readonly textColor: ColorTextTokens.AccentSunStrong;
+    readonly code: 1;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentWoodSoft;
+    readonly textColor: ColorTextTokens.AccentWoodStrong;
+    readonly code: 34;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentWoodPale;
+    readonly textColor: ColorTextTokens.AccentWoodStrong;
+    readonly code: 16;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentOrangeSoft;
+    readonly textColor: ColorTextTokens.AccentOrangeStrong;
+    readonly code: 33;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentOrangePale;
+    readonly textColor: ColorTextTokens.AccentOrangeStrong;
+    readonly code: 15;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentYellowSoft;
+    readonly textColor: ColorTextTokens.AccentYellowStrong;
+    readonly code: 32;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentYellowPale;
+    readonly textColor: ColorTextTokens.AccentYellowStrong;
+    readonly code: 14;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentLemonSoft;
+    readonly textColor: ColorTextTokens.AccentLemonStrong;
+    readonly code: 31;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentLemonPale;
+    readonly textColor: ColorTextTokens.AccentLemonStrong;
+    readonly code: 13;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentGrassSoft;
+    readonly textColor: ColorTextTokens.AccentGrassStrong;
+    readonly code: 30;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentGrassPale;
+    readonly textColor: ColorTextTokens.AccentGrassStrong;
+    readonly code: 12;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentLimeSoft;
+    readonly textColor: ColorTextTokens.AccentLimeStrong;
+    readonly code: 29;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentLimePale;
+    readonly textColor: ColorTextTokens.AccentLimeStrong;
+    readonly code: 11;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentGreenSoft;
+    readonly textColor: ColorTextTokens.AccentGreenStrong;
+    readonly code: 27;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentGreenPale;
+    readonly textColor: ColorTextTokens.AccentGreenStrong;
+    readonly code: 9;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentPeacockSoft;
+    readonly textColor: ColorTextTokens.AccentPeacockStrong;
+    readonly code: 26;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentPeacockPale;
+    readonly textColor: ColorTextTokens.AccentPeacockStrong;
+    readonly code: 8;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentCyanSoft;
+    readonly textColor: ColorTextTokens.AccentCyanStrong;
+    readonly code: 25;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentCyanPale;
+    readonly textColor: ColorTextTokens.AccentCyanStrong;
+    readonly code: 7;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentSkySoft;
+    readonly textColor: ColorTextTokens.AccentSkyStrong;
+    readonly code: 24;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentSkyPale;
+    readonly textColor: ColorTextTokens.AccentSkyStrong;
+    readonly code: 6;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentSeaSoft;
+    readonly textColor: ColorTextTokens.AccentSeaStrong;
+    readonly code: 23;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentSeaPale;
+    readonly textColor: ColorTextTokens.AccentSeaStrong;
+    readonly code: 5;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentVioletSoft;
+    readonly textColor: ColorTextTokens.AccentVioletStrong;
+    readonly code: 22;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentVioletPale;
+    readonly textColor: ColorTextTokens.AccentVioletStrong;
+    readonly code: 4;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentPurpleSoft;
+    readonly textColor: ColorTextTokens.AccentPurpleStrong;
+    readonly code: 21;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentPurplePale;
+    readonly textColor: ColorTextTokens.AccentPurpleStrong;
+    readonly code: 3;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentMagentaSoft;
+    readonly textColor: ColorTextTokens.AccentMagentaStrong;
+    readonly code: 20;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentMagentaPale;
+    readonly textColor: ColorTextTokens.AccentMagentaStrong;
+    readonly code: 2;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentCharcoalSoft;
+    readonly textColor: ColorTextTokens.AccentCharchoalStrong;
+    readonly code: 35;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentCharcoalPale;
+    readonly textColor: ColorTextTokens.AccentCharchoalStrong;
+    readonly code: 17;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentGraySoft;
+    readonly textColor: ColorTextTokens.AccentGrayStrong;
+    readonly code: 36;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentGrayPale;
+    readonly textColor: ColorTextTokens.AccentGrayStrong;
+    readonly code: 18;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentGrayPale;
+    readonly textColor: ColorTextTokens.AccentGrayStrong;
+    readonly code: 0;
+}, {
+    readonly backgroundColor: ColorShapeTokens.AccentBambooPale;
+    readonly textColor: ColorTextTokens.AccentBambooStrong;
+    readonly code: 10;
+}];
+export type TagColorCode = (typeof colorCodeToTokenMap)[number]['code'];
 export interface TagProps {
     className?: string;
     children?: React.ReactNode;
@@ -33,4 +157,3 @@ export interface TagProps {
     selected?: boolean;
 }
 export declare const Tag: React.FC<TagProps>;
-export {};
