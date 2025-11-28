@@ -34,6 +34,9 @@ export default defineConfig({
           if (assetInfo.name?.match(/\.(woff2?|ttf|eot|otf)$/)) {
             return 'fonts/[name][extname]';
           }
+          if (assetInfo.name?.endsWith('.svg')) {
+            return 'icons/[name][extname]';
+          }
           if (assetInfo.name?.endsWith('.css')) {
             return '[name][extname]';
           }

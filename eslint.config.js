@@ -85,5 +85,18 @@ export default tseslint.config(
         project: false,
       },
     },
+  },
+  // Override configuration for config files in root
+  {
+    files: ['*.config.{ts,js,mjs,cjs}', '*.{ts,js,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: { ...globals.browser, ...globals.node },
+      parser: eslintParserTypeScript,
+      parserOptions: {
+        // Remove TypeScript project requirement for config files
+        project: false,
+      },
+    },
   }
 );

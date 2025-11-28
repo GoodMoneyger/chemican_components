@@ -40,7 +40,9 @@
     "./tailwind-preset-next.css": "./src/tailwind-preset-next.css",
     "./dist/components.css": "./dist/components.css",
     "./src/assets/fonts/*": "./src/assets/fonts/*",
-    "./dist/fonts/*": "./dist/fonts/*"
+    "./dist/fonts/*": "./dist/fonts/*",
+    "./src/assets/icons/*": "./src/assets/icons/*",
+    "./dist/icons/*": "./dist/icons/*"
   },
   "scripts": {
     "dev": "vite",
