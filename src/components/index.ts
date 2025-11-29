@@ -10,6 +10,7 @@ export * from './DropdownMenu';
 export * from './FormField';
 export * from './TextField';
 export * from './MultiSelect';
+export * from './InlineMultiSelect';
 export * from './Pagination';
 export * from './ProgressIndicator';
 export * from './RadioButton';
