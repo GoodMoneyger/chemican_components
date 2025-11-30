@@ -43,8 +43,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
     return (
       <TableContext.Provider value={contextValue}>
         <div
-          className="border-surface-default bg-surface-primary relative
-            border"
+          className="border-surface-default bg-surface-primary relative border"
         >
           <table
             ref={ref}
@@ -98,7 +97,6 @@ export interface TableBodyProps
   extends React.HTMLAttributes<HTMLTableSectionElement> {
   loading?: boolean;
   loadingText?: React.ReactNode;
-  colSpan?: number;
 }
 
 const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
@@ -107,7 +105,6 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
       className,
       loading: loadingProp,
       loadingText: loadingTextProp,
-      colSpan = 1,
       children,
       ...props
     },
@@ -123,10 +120,16 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
         {loading ? (
           <tr>
             <td
-              colSpan={colSpan}
-              className="py-sm min-h-12 px-[1.44rem] text-center align-middle"
+              className="py-sm h-12 sticky
+                left-[calc((100vw+var(--cc-side-navigation-width,0px))/2)]
+                min-w-fit px-[1.44rem] text-center align-middle"
             >
-              {loadingText}
+              <div
+                className="top-0 absolute flex h-full w-max -translate-x-1/2
+                  transform items-center"
+              >
+                {loadingText}
+              </div>
             </td>
           </tr>
         ) : (
