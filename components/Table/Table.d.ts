@@ -11,7 +11,6 @@ declare const TableHeader: React.ForwardRefExoticComponent<TableHeaderProps & Re
 export interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
     loading?: boolean;
     loadingText?: React.ReactNode;
-    colSpan?: number;
 }
 declare const TableBody: React.ForwardRefExoticComponent<TableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableFooter: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
