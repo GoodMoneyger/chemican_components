@@ -64,7 +64,7 @@ const Footer = () => {
       <SideNavigationItem asChild>
         <a href="#" className="gap-xs flex items-center">
           <IconInfoCircle size={16} className="shrink-0" />
-          {!isCollapsed && '使い方ガイド'}
+          {!isCollapsed && 'ヘルプセンター'}
         </a>
       </SideNavigationItem>
       <SideNavigationItem asChild>

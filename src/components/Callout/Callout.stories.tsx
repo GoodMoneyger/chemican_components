@@ -126,7 +126,7 @@ export const WithDescriptionAndAction: StoryFn<typeof Callout> = (args) => (
 WithDescriptionAndAction.args = {
   title: 'SDS登録時の注意事項',
   description:
-    'ファイル形式はPDF(.pdf)です。Excel, Word, PNG, ZIP, docx等のファイル形式は正常に登録できません。アップロードできるファイル容量は、1ファイルあたり最大10MBです。超過するとアップロードできません。パスワードで保護されたPDFファイルは解析することができません。パスワード保護を解除した上でアップロードしてください。PDFは複数件まとめて(上限50件まで)アップロードできます。詳細は使い方ガイドをご確認ください。',
+    'ファイル形式はPDF(.pdf)です。Excel, Word, PNG, ZIP, docx等のファイル形式は正常に登録できません。アップロードできるファイル容量は、1ファイルあたり最大10MBです。超過するとアップロードできません。パスワードで保護されたPDFファイルは解析することができません。パスワード保護を解除した上でアップロードしてください。PDFは複数件まとめて(上限50件まで)アップロードできます。詳細はヘルプセンターをご確認ください。',
   action: {
     label: 'ラベル',
     onClick: () => alert('Action clicked!'),
