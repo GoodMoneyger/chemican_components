@@ -1,11 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { IconUsers, IconStar, IconHeart, IconX } from '@tabler/icons-react';
+import {
+  IconUsers,
+  IconStar,
+  IconHeart,
+  IconX,
+  IconChevronDown,
+} from '@tabler/icons-react';
 
-import { ColorShapeTokens } from '../../tokens';
 import { StatusIndicator } from '../StatusIndicator';
-import type { StatusIndicatorLevel } from '../StatusIndicator/StatusIndicator';
+import type { StatusLevel } from '../StatusIndicator/StatusIndicator';
 import { Tag } from '../Tag';
+import type { TagColorCode } from '../Tag/Tag';
 
 import { MultiSelect } from './MultiSelect';
 import type {
@@ -161,13 +167,7 @@ const optionsWithTags: MultiSelectOption[] = [
   { label: 'タグイプシロン', value: 'project-epsilon' },
 ];
 
-const tagColors: ColorShapeTokens[] = [
-  ColorShapeTokens.AccentBlueSoft,
-  ColorShapeTokens.AccentGreenSoft,
-  ColorShapeTokens.AccentPurpleSoft,
-  ColorShapeTokens.AccentRedSoft,
-  ColorShapeTokens.AccentYellowSoft,
-];
+const tagColorCodes: TagColorCode[] = [29, 27, 21, 33, 32]; // Lime, Green, Purple, Orange, Yellow
 
 export const WithTagsAsItems: Story = {
   args: {
@@ -177,11 +177,11 @@ export const WithTagsAsItems: Story = {
       const colorIndex = optionsWithTags.findIndex(
         (opt) => opt.value === option.value
       );
-      const tagColor = tagColors[colorIndex % tagColors.length];
+      const colorCode = tagColorCodes[colorIndex % tagColorCodes.length];
 
       if (location === 'badge') {
         return (
-          <Tag accentColor={tagColor} onRemove={onRemove}>
+          <Tag colorCode={colorCode} onRemove={onRemove}>
             {option.label}
           </Tag>
         );
@@ -190,7 +190,7 @@ export const WithTagsAsItems: Story = {
       // Render in dropdown with Tag
       return (
         <div className="gap-2 flex items-center">
-          <Tag accentColor={tagColor} size="sm">
+          <Tag colorCode={colorCode} size="sm">
             {option.label}
           </Tag>
         </div>
@@ -215,24 +215,18 @@ const options = [
   { label: 'タグイプシロン', value: 'project-epsilon' },
 ];
 
-const tagColors = [
-  ColorShapeTokens.AccentBlueSoft,
-  ColorShapeTokens.AccentGreenSoft,
-  ColorShapeTokens.AccentPurpleSoft,
-  ColorShapeTokens.AccentRedSoft,
-  ColorShapeTokens.AccentYellowSoft,
-];
+const tagColorCodes: TagColorCode[] = [29, 27, 21, 33, 32]; // Lime, Green, Purple, Orange, Yellow
 
 <MultiSelect
   options={options}
   placeholder="選択してください"
   renderOption={({ option, location, onRemove }) => {
     const colorIndex = options.findIndex((opt) => opt.value === option.value);
-    const tagColor = tagColors[colorIndex % tagColors.length];
+    const colorCode = tagColorCodes[colorIndex % tagColorCodes.length];
 
     if (location === 'badge') {
       return (
-        <Tag accentColor={tagColor} onRemove={onRemove}>
+        <Tag colorCode={colorCode} onRemove={onRemove}>
           {option.label}
         </Tag>
       );
@@ -241,7 +235,7 @@ const tagColors = [
     // Render in dropdown with Tag
     return (
       <div className="gap-2 flex items-center">
-        <Tag accentColor={tagColor} size="sm">
+        <Tag colorCode={colorCode} size="sm">
           {option.label}
         </Tag>
       </div>
@@ -255,7 +249,7 @@ const tagColors = [
 };
 
 interface StatusOption extends MultiSelectOption {
-  statusLevel: StatusIndicatorLevel;
+  statusLevel: StatusLevel;
 }
 
 const optionsWithStatus: StatusOption[] = [
@@ -468,14 +462,17 @@ export const CustomRenderOption: Story = {
       isSelected,
       onRemove,
     }: RenderOptionContext) => {
+      const IconComponent = option.icon as React.ComponentType<{
+        className?: string;
+      }>;
+
       if (location === 'badge') {
         return (
           <div
             className="gap-1 px-2 py-1 rounded-md bg-surface-secondary
               border-divider-default inline-flex items-center border"
           >
-            {option.icon &&
-              React.createElement(option.icon, { className: 'h-3 w-3' })}
+            {IconComponent && <IconComponent className="h-3 w-3" />}
             <span className="text-sm font-medium">{option.label}</span>
             {onRemove && (
               <button
@@ -495,10 +492,12 @@ export const CustomRenderOption: Story = {
       // Render in dropdown
       return (
         <div className="gap-2 flex items-center">
-          {option.icon &&
-            React.createElement(option.icon, {
-              className: `h-4 w-4 ${isSelected ? 'text-interactive-primary-default' : 'text-body-secondary'}`,
-            })}
+          {IconComponent && (
+            <IconComponent
+              className={`h-4 w-4
+              ${isSelected ? 'text-interactive-primary-default' : 'text-body-secondary'}`}
+            />
+          )}
           <span
             className={
               isSelected ? 'font-bold text-interactive-primary-default' : ''
@@ -521,6 +520,280 @@ export const CustomRenderOption: Story = {
       description: {
         story:
           'This story demonstrates custom rendering of options. The renderOption function allows you to customize how options appear in both the dropdown list and as selected badges. Notice the different styling for selected vs unselected states and the custom remove button.',
+      },
+    },
+  },
+};
+
+const WithOnApplySelectionComponent = () => {
+  const [appliedValues, setAppliedValues] = React.useState<
+    Array<string | number>
+  >([]);
+
+  return (
+    <div className="gap-4 flex flex-col">
+      <MultiSelect
+        options={basicOptions}
+        placeholder="Select fruits and click Apply..."
+        onValueChange={(values) =>
+          console.log('Values changed (not applied yet):', values)
+        }
+        onApplySelection={(values) => {
+          console.log('Values applied:', values);
+          setAppliedValues(values);
+        }}
+      />
+      <div
+        className="p-4 rounded-md bg-surface-secondary border-divider-default
+          border"
+      >
+        <p className="text-sm font-medium text-body-primary mb-2">
+          Applied Values:
+        </p>
+        {appliedValues.length > 0 ? (
+          <ul className="text-sm text-body-secondary list-inside list-disc">
+            {appliedValues.map((value) => {
+              const option = basicOptions.find((opt) => opt.value === value);
+              return <li key={value}>{option?.label || value}</li>;
+            })}
+          </ul>
+        ) : (
+          <p className="text-sm text-body-secondary italic">
+            No values applied yet
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export const WithOnApplySelection: Story = {
+  render: () => <WithOnApplySelectionComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates the onApplySelection callback. Unlike onValueChange which fires on every selection, onApplySelection only fires when the user clicks the "Apply" button. This is useful when you want to defer processing until the user confirms their selection.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+import { useState } from 'react';
+
+const [appliedValues, setAppliedValues] = useState<string[]>([]);
+
+<MultiSelect
+  options={options}
+  placeholder="Select fruits and click Apply..."
+  onValueChange={(values) => console.log('Values changed:', values)}
+  onApplySelection={(values) => {
+    console.log('Values applied:', values);
+    setAppliedValues(values);
+  }}
+/>`,
+      },
+    },
+  },
+};
+
+export const WithCustomTrigger: Story = {
+  args: {
+    options: basicOptions,
+    customTrigger: (
+      <button
+        className="px-4 py-2 rounded-md bg-interactive-primary-default
+          text-interactive-inverse hover:bg-interactive-primary-hover
+          focus:ring-interactive-focused focus:ring-4 focus:outline-none"
+      >
+        <div className="gap-2 flex items-center">
+          <IconStar className="h-5 w-5" />
+          <span className="font-medium">Custom Trigger Button</span>
+        </div>
+      </button>
+    ),
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates using a customTrigger to completely replace the default trigger button. You can use any React element as the trigger, allowing for complete customization of the component appearance while maintaining the dropdown functionality.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+import { IconStar } from '@tabler/icons-react';
+
+<MultiSelect
+  options={options}
+  customTrigger={
+    <button className="px-4 py-2 rounded-md bg-interactive-primary-default text-interactive-inverse hover:bg-interactive-primary-hover focus:ring-4 focus:ring-interactive-focused focus:outline-none">
+      <div className="flex items-center gap-2">
+        <IconStar className="h-5 w-5" />
+        <span className="font-medium">Custom Trigger Button</span>
+      </div>
+    </button>
+  }
+  onValueChange={(values) => console.log('Selected values:', values)}
+/>`,
+      },
+    },
+  },
+};
+
+export const WithHideSelection: Story = {
+  args: {
+    options: basicOptions,
+    placeholder: 'Select fruits (badges hidden)...',
+    hideSelection: true,
+    defaultValue: [
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440002',
+      'cherry-fruit',
+    ],
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates the hideSelection prop which hides the selected option badges below the trigger button. This is useful when you want to show selections only in the dropdown or when you need a more compact layout.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+
+<MultiSelect
+  options={options}
+  placeholder="Select fruits (badges hidden)..."
+  hideSelection={true}
+  defaultValue={['apple', 'banana', 'cherry']}
+  onValueChange={(values) => console.log('Selected values:', values)}
+/>`,
+      },
+    },
+  },
+};
+
+const CustomTriggerWithHideSelectionComponent = () => {
+  const [selectedValues, setSelectedValues] = React.useState<
+    Array<string | number>
+  >([
+    '550e8400-e29b-41d4-a716-446655440001',
+    '550e8400-e29b-41d4-a716-446655440002',
+  ]);
+
+  const selectedLabels = selectedValues
+    .map((value) => basicOptions.find((opt) => opt.value === value)?.label)
+    .filter(Boolean);
+
+  return (
+    <div className="gap-4 flex flex-col">
+      <MultiSelect
+        options={basicOptions}
+        hideSelection={true}
+        customTrigger={
+          <button
+            className="px-4 py-3 rounded-md bg-surface-primary
+              border-interactive-default hover:bg-surface-secondary
+              focus:ring-interactive-focused border focus:ring-4
+              focus:outline-none"
+          >
+            <div
+              className="gap-4 flex min-w-[300px] items-center justify-between"
+            >
+              <div className="gap-2 flex items-center">
+                <IconUsers className="h-5 w-5 text-body-secondary" />
+                <span className="font-medium text-body-primary">
+                  {selectedValues.length > 0
+                    ? `${selectedValues.length} selected`
+                    : 'Select options'}
+                </span>
+              </div>
+              <IconChevronDown className="h-4 w-4 text-body-secondary" />
+            </div>
+          </button>
+        }
+        onValueChange={(values) => setSelectedValues(values)}
+      />
+      <div
+        className="p-4 rounded-md bg-surface-secondary border-divider-default
+          border"
+      >
+        <p className="text-sm font-medium text-body-primary mb-2">
+          Selected Items ({selectedValues.length}):
+        </p>
+        {selectedLabels.length > 0 ? (
+          <div className="gap-2 flex flex-wrap">
+            {selectedLabels.map((label, index) => (
+              <span
+                key={index}
+                className="px-2 py-1 rounded-md bg-surface-primary text-sm
+                  text-body-primary border-divider-default border"
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-body-secondary italic">
+            No items selected
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export const CustomTriggerWithHideSelection: Story = {
+  render: () => <CustomTriggerWithHideSelectionComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story combines customTrigger and hideSelection to create a fully custom selection experience. The trigger button shows a count of selected items, and the selected items are displayed in a custom area below instead of as badges.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+import { useState } from 'react';
+import { IconUsers, IconChevronDown } from '@tabler/icons-react';
+
+const [selectedValues, setSelectedValues] = useState<string[]>(['apple', 'banana']);
+
+const selectedLabels = selectedValues
+  .map((value) => options.find((opt) => opt.value === value)?.label)
+  .filter(Boolean);
+
+<>
+  <MultiSelect
+    options={options}
+    hideSelection={true}
+    customTrigger={
+      <button className="px-4 py-3 rounded-md bg-surface-primary border-interactive-default border hover:bg-surface-secondary focus:ring-4 focus:ring-interactive-focused focus:outline-none">
+        <div className="flex items-center justify-between gap-4 min-w-[300px]">
+          <div className="flex items-center gap-2">
+            <IconUsers className="h-5 w-5 text-body-secondary" />
+            <span className="font-medium text-body-primary">
+              {selectedValues.length > 0
+                ? \`\${selectedValues.length} selected\`
+                : 'Select options'}
+            </span>
+          </div>
+          <IconChevronDown className="h-4 w-4 text-body-secondary" />
+        </div>
+      </button>
+    }
+    onValueChange={(values) => setSelectedValues(values)}
+  />
+
+  <div className="p-4 rounded-md bg-surface-secondary">
+    <p className="text-sm font-medium mb-2">
+      Selected Items ({selectedValues.length}):
+    </p>
+    {selectedLabels.map((label, index) => (
+      <span key={index} className="px-2 py-1 rounded-md bg-surface-primary text-sm">
+        {label}
+      </span>
+    ))}
+  </div>
+</>`,
       },
     },
   },
