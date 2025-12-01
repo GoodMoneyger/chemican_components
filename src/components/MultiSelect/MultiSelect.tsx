@@ -322,6 +322,19 @@ interface MultiSelectProps<T = string | number>
   hideSelection?: boolean;
 
   /**
+   * Controls how selected values are displayed in the component.
+   * - 'default': Shows selected items as removable badge components below the trigger button
+   * - 'inline': Displays selected items as comma-separated text within the trigger button itself
+   *
+   * Use 'inline' mode for more compact layouts or when badge removal functionality
+   * is not needed in the trigger area. The 'default' mode provides better visual
+   * feedback and individual item removal capabilities.
+   *
+   * Optional, defaults to 'default'.
+   */
+  selectionDisplayMode?: 'default' | 'inline';
+
+  /**
    * Custom render function for option content.
    * Allows customization of how options appear in both the dropdown and as selected badges.
    * If not provided, uses default rendering with label and optional icon.
@@ -410,6 +423,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     filterByValueAndLabel = false,
     renderOption,
     customTrigger,
+    selectionDisplayMode = 'default',
     hideSelection = false,
     ...props
   }: MultiSelectProps<T>,
@@ -752,6 +766,16 @@ const MultiSelectInner = <T extends string | number = string | number>(
 
   const widthConstraints = getWidthConstraints();
 
+  const triggerText = React.useMemo(() => {
+    if (selectionDisplayMode === 'default' || selectedValues.length === 0)
+      return placeholder;
+
+    return selectedValues
+      .map((v) => getOptionByValue(v)?.label)
+      .filter(Boolean)
+      .join(', ');
+  }, [selectedValues, getOptionByValue, placeholder, selectionDisplayMode]);
+
   React.useEffect(() => {
     if (!isPopoverOpen) {
       setSearchValue('');
@@ -887,14 +911,17 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   <span
                     className={cn(
                       'mx-sm',
+                      selectionDisplayMode === 'inline' && 'truncate',
                       disabled
                         ? 'text-body-disabled'
-                        : isPopoverOpen
+                        : isPopoverOpen ||
+                            (selectionDisplayMode === 'inline' &&
+                              triggerText !== placeholder)
                           ? 'text-body-primary'
                           : 'text-body-placeholder'
                     )}
                   >
-                    {placeholder}
+                    {triggerText}
                   </span>
                   <IconChevronDown
                     className={cn(
@@ -907,7 +934,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
             )}
           </PopoverTrigger>
 
-          {!hideSelection && (
+          {!(hideSelection || selectionDisplayMode === 'inline') && (
             <div className="gap-xxs mt-xxs flex flex-wrap">
               {selectedValues
                 .slice(0, responsiveSettings.maxCount)
@@ -989,8 +1016,8 @@ const MultiSelectInner = <T extends string | number = string | number>(
 
             <CommandList
               className={cn(
-                'max-h-[40vh] overflow-y-auto',
-                screenSize === 'mobile' && 'max-h-[50vh]'
+                'max-h-[calc(40vh-56px)] overflow-y-auto',
+                screenSize === 'mobile' && 'max-h-[calc(50vh-56px)]'
               )}
               style={{ overscrollBehaviorY: 'contain' }}
             >

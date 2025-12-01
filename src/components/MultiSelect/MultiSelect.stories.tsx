@@ -798,3 +798,104 @@ const selectedLabels = selectedValues
     },
   },
 };
+
+export const InlineSelectionDisplay: Story = {
+  args: {
+    options: basicOptions,
+    placeholder: 'Select fruits...',
+    selectionDisplayMode: 'inline',
+    defaultValue: [
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440002',
+    ],
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates the inline selection display mode. When selectionDisplayMode is set to "inline", selected values are displayed as comma-separated text within the trigger button instead of as badge elements below it. This provides a more compact layout that is suitable for space-constrained interfaces.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+
+<MultiSelect
+  options={options}
+  placeholder="Select fruits..."
+  selectionDisplayMode="inline"
+  defaultValue={['apple', 'banana']}
+  onValueChange={(values) => console.log('Selected values:', values)}
+/>`,
+      },
+    },
+  },
+};
+
+const InlineSelectionComparisonComponent = () => {
+  return (
+    <div className="gap-6 flex flex-col">
+      <div className="gap-2 flex flex-col">
+        <h3 className="font-semibold text-body-primary">
+          Default Mode (Badges Below)
+        </h3>
+        <MultiSelect
+          options={basicOptions}
+          placeholder="Select fruits..."
+          selectionDisplayMode="default"
+          defaultValue={[
+            '550e8400-e29b-41d4-a716-446655440001',
+            '550e8400-e29b-41d4-a716-446655440002',
+            'cherry-fruit',
+          ]}
+        />
+      </div>
+
+      <div className="gap-2 flex flex-col">
+        <h3 className="font-semibold text-body-primary">
+          Inline Mode (Inside Trigger)
+        </h3>
+        <MultiSelect
+          options={basicOptions}
+          placeholder="Select fruits..."
+          selectionDisplayMode="inline"
+          defaultValue={[
+            '550e8400-e29b-41d4-a716-446655440001',
+            '550e8400-e29b-41d4-a716-446655440002',
+            'cherry-fruit',
+          ]}
+        />
+      </div>
+    </div>
+  );
+};
+
+export const InlineSelectionComparison: Story = {
+  render: () => <InlineSelectionComparisonComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story compares the two selection display modes side by side. The default mode shows selected items as removable badges below the trigger button, while the inline mode displays them as comma-separated text within the trigger button itself. Use inline mode when you need a more compact layout or when badge removal functionality is not needed in the trigger area.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+
+// Default mode - badges below trigger
+<MultiSelect
+  options={options}
+  placeholder="Select fruits..."
+  selectionDisplayMode="default"
+  defaultValue={['apple', 'banana', 'cherry']}
+/>
+
+// Inline mode - text inside trigger
+<MultiSelect
+  options={options}
+  placeholder="Select fruits..."
+  selectionDisplayMode="inline"
+  defaultValue={['apple', 'banana', 'cherry']}
+/>`,
+      },
+    },
+  },
+};
