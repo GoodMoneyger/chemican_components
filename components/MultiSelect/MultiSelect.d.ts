@@ -1,65 +1,35 @@
 import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
-import { IconProp } from '../../lib/utils';
-/**
- * Animation types and configurations
- */
-export interface AnimationConfig {
-    /** Badge animation type */
-    badgeAnimation?: 'bounce' | 'pulse' | 'fade' | 'slide' | 'none';
-    /** Popover animation type */
-    popoverAnimation?: 'scale' | 'slide' | 'fade' | 'flip' | 'none';
-    /** Option hover animation type */
-    optionHoverAnimation?: 'highlight' | 'scale' | 'glow' | 'none';
-    /** Animation duration in seconds */
-    duration?: number;
-    /** Animation delay in seconds */
-    delay?: number;
-}
 /**
  * Variants for the multi-select component to handle different styles.
  */
 declare const multiSelectVariants: (props?: ({
     variant?: "default" | "secondary" | "destructive" | null | undefined;
-    badgeAnimation?: "none" | "bounce" | "pulse" | "fade" | "slide" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 /**
  * Option interface for MultiSelect component
  */
-interface MultiSelectOption {
-    /** The text to display for the option. */
+interface MultiSelectOption<T = string | number> {
+    value: T;
     label: string;
-    /** The unique value associated with the option. */
-    value: string;
-    /** Optional icon component to display alongside the option. */
-    icon?: IconProp;
-    /** Whether this option is disabled */
     disabled?: boolean;
-    /** Custom styling for the option */
-    style?: {
-        /** Custom badge color */
-        badgeColor?: string;
-        /** Custom icon color */
-        iconColor?: string;
-        /** Gradient background for badge */
-        gradient?: string;
-    };
+    [key: string]: unknown;
 }
 /**
  * Group interface for organizing options
  */
-interface MultiSelectGroup {
+interface MultiSelectGroup<T = string | number> {
     /** Group heading */
     heading: string;
     /** Options in this group */
-    options: MultiSelectOption[];
+    options: MultiSelectOption<T>[];
 }
 /**
  * Render function context for rendering custom option content
  */
-export interface RenderOptionContext {
+export interface RenderOptionContext<T = string | number> {
     /** The option being rendered */
-    option: MultiSelectOption;
+    option: MultiSelectOption<T>;
     /** Whether this is rendering in the dropdown list or as a selected badge */
     location: 'dropdown' | 'badge';
     /** Whether the option is currently selected (only for dropdown) */
@@ -72,63 +42,52 @@ export interface RenderOptionContext {
 /**
  * Props for MultiSelect component
  */
-interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'>, VariantProps<typeof multiSelectVariants> {
+interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'defaultValue'>, VariantProps<typeof multiSelectVariants> {
     /**
-     * An array of option objects or groups to be displayed in the multi-select component.
+     * Array of options or grouped options to display in the dropdown.
+     * Can be a flat array of options or an array of groups with nested options.
      */
-    options: MultiSelectOption[] | MultiSelectGroup[];
+    options: MultiSelectOption<T>[] | MultiSelectGroup<T>[];
     /**
-     * Callback function triggered when the selected values change.
-     * Receives an array of the new selected values.
+     * Initial selected values when the component mounts.
+     * Optional, defaults to an empty array.
      */
-    onValueChange: (value: string[]) => void;
-    /** The default selected values when the component mounts. */
-    defaultValue?: string[];
+    defaultValue?: T[];
     /**
-     * Placeholder content to display when no values are selected.
-     * Optional, defaults to "Select options".
+     * Content displayed in the trigger button when no options are selected.
+     * Optional, defaults to "選択してください" (Please select).
      */
     placeholder?: React.ReactNode;
     /**
-     * Placeholder text used for assistive technologies describing the trigger button.
-     * Optional, defaults to "Select options".
+     * Accessible label for the placeholder, announced to screen readers.
+     * Optional, defaults to "選択してください" (Please select).
      */
     placeholderAriaLabel?: string;
     /**
-     * Screen reader description announced for the trigger button.
-     * Optional, defaults to "Multi-select dropdown. Use arrow keys to navigate, Enter to select, and Escape to close.".
+     * Description of the component for screen readers, providing usage instructions.
+     * Optional, defaults to navigation instructions in Japanese.
      */
     triggerDescription?: React.ReactNode;
     /**
-     * Screen reader label announced when no options are selected.
-     * Optional, defaults to "No options selected".
+     * Label announced to screen readers when no options are selected.
+     * Optional, defaults to "オプションが選択されていません" (No options selected).
      */
     noSelectionLabel?: React.ReactNode;
     /**
-     * Assistive text describing how to use the search input.
-     * Optional, defaults to "Type to filter options. Use arrow keys to navigate results.".
+     * Help text for screen readers explaining how to use the search input.
+     * Optional, defaults to search instructions in Japanese.
      */
     searchHelpText?: React.ReactNode;
     /**
-     * Accessible label applied to the search input.
-     * Optional, defaults to "Search through available options".
+     * Accessible label for the search input field.
+     * Optional, defaults to "利用可能なオプションを検索" (Search available options).
      */
     searchAriaLabel?: string;
     /**
-     * Accessible label applied to the options list popover.
-     * Optional, defaults to "Available options".
+     * Accessible label for the options list element.
+     * Optional, defaults to "利用可能なオプション" (Available options).
      */
     optionsListAriaLabel?: string;
-    /**
-     * Animation duration in seconds for the visual effects (e.g., bouncing badges).
-     * Optional, defaults to 0 (no animation).
-     */
-    animation?: number;
-    /**
-     * Advanced animation configuration for different component parts.
-     * Optional, allows fine-tuning of various animation effects.
-     */
-    animationConfig?: AnimationConfig;
     /**
      * Maximum number of items to display. Extra selected items will be summarized.
      * Optional, defaults to 3.
@@ -227,19 +186,16 @@ interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
         /** Configuration for mobile devices (< 640px) */
         mobile?: {
             maxCount?: number;
-            hideIcons?: boolean;
             compactMode?: boolean;
         };
         /** Configuration for tablet devices (640px - 1024px) */
         tablet?: {
             maxCount?: number;
-            hideIcons?: boolean;
             compactMode?: boolean;
         };
         /** Configuration for desktop devices (> 1024px) */
         desktop?: {
             maxCount?: number;
-            hideIcons?: boolean;
             compactMode?: boolean;
         };
     };
@@ -279,17 +235,53 @@ interface MultiSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
      */
     filterByValueAndLabel?: boolean;
     /**
+     * Custom trigger element to replace the default button trigger.
+     * Allows complete customization of the trigger component.
+     * Optional, if not provided uses the default button with placeholder and chevron icon.
+     */
+    customTrigger?: React.ReactNode;
+    /**
+     * If true, hides the selected option badges below the trigger button.
+     * Useful when you want to show selections only in the trigger or use a custom display.
+     * Optional, defaults to false.
+     */
+    hideSelection?: boolean;
+    /**
+     * Controls how selected values are displayed in the component.
+     * - 'default': Shows selected items as removable badge components below the trigger button
+     * - 'inline': Displays selected items as comma-separated text within the trigger button itself
+     *
+     * Use 'inline' mode for more compact layouts or when badge removal functionality
+     * is not needed in the trigger area. The 'default' mode provides better visual
+     * feedback and individual item removal capabilities.
+     *
+     * Optional, defaults to 'default'.
+     */
+    selectionDisplayMode?: 'default' | 'inline';
+    /**
      * Custom render function for option content.
      * Allows customization of how options appear in both the dropdown and as selected badges.
      * If not provided, uses default rendering with label and optional icon.
      * Optional, defaults to a function that renders the label with remove button for badges.
      */
-    renderOption?: (context: RenderOptionContext) => React.ReactNode;
+    renderOption?: (context: RenderOptionContext<T>) => React.ReactNode;
+    /**
+     * Callback fired when selected values change.
+     * Receives the array of currently selected values.
+     * Optional, called after each selection/deselection.
+     */
+    onValueChange?: (value: T[]) => void;
+    /**
+     * Callback fired when the Apply button is clicked in the popover footer.
+     * Receives the array of currently selected values.
+     * Optional, called only when user confirms their selection.
+     */
+    onApplySelection?: (value: T[]) => void;
 }
 /**
  * Imperative methods exposed through ref
  */
-export interface MultiSelectRef {
+export interface MultiSelectRef<T = string | number> {
     /**
      * Programmatically reset the component to its default value
      */
@@ -297,11 +289,11 @@ export interface MultiSelectRef {
     /**
      * Get current selected values
      */
-    getSelectedValues: () => string[];
+    getSelectedValues: () => T[];
     /**
      * Set selected values programmatically
      */
-    setSelectedValues: (values: string[]) => void;
+    setSelectedValues: (values: T[]) => void;
     /**
      * Clear all selected values
      */
@@ -311,5 +303,10 @@ export interface MultiSelectRef {
      */
     focus: () => void;
 }
-export declare const MultiSelect: React.ForwardRefExoticComponent<MultiSelectProps & React.RefAttributes<MultiSelectRef>>;
+type MultiSelectComponent = <T extends string | number = string | number>(props: MultiSelectProps<T> & {
+    ref?: React.Ref<MultiSelectRef<T>>;
+}) => React.ReactElement;
+export declare const MultiSelect: MultiSelectComponent & {
+    displayName?: string;
+};
 export type { MultiSelectOption, MultiSelectGroup, MultiSelectProps };
