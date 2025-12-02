@@ -96,17 +96,20 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
   return (
     <MultiStepDialogContext.Provider value={contextValue}>
       <RadixDialog.Root open={isOpen} onOpenChange={handleClose}>
-        <RadixDialog.Overlay
-          className="bg-surface-scrimmed top-0 left-0 z-dialog fixed h-full
-            w-full"
-        />
-        <RadixDialog.Content
-          className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
-            min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
-            -translate-y-1/2 transform"
-        >
-          {steps[currentStep]}
-        </RadixDialog.Content>
+        <RadixDialog.Portal>
+          <RadixDialog.Overlay
+            className="bg-surface-scrimmed top-0 left-0 z-dialog fixed h-full
+              w-full"
+          >
+            <RadixDialog.Content
+              className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
+                min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
+                -translate-y-1/2 transform overflow-auto"
+            >
+              {steps[currentStep]}
+            </RadixDialog.Content>
+          </RadixDialog.Overlay>
+        </RadixDialog.Portal>
       </RadixDialog.Root>
     </MultiStepDialogContext.Provider>
   );
