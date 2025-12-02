@@ -31,7 +31,6 @@ const meta: Meta<typeof MultiSelect> = {
       },
     },
   },
-  tags: ['autodocs'],
   argTypes: {
     variant: {
       control: 'select',

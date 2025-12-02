@@ -11,7 +11,6 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof MultiStepDialog.Root>;
 
 export default meta;

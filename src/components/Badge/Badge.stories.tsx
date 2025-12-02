@@ -9,7 +9,6 @@ const meta: Meta<typeof Badge> = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs'],
   argTypes: {
     intent: {
       control: 'select',

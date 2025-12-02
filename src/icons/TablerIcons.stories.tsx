@@ -29,7 +29,6 @@ import { Button } from '../components/Button';
 
 const meta: Meta = {
   title: 'Components/Tabler Icons',
-  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {

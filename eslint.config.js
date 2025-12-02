@@ -9,7 +9,7 @@ import eslintParserTypeScript from '@typescript-eslint/parser';
 import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', '.storybook'] },
   {
     extends: [
       js.configs.recommended,
