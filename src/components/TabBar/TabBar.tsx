@@ -5,6 +5,17 @@ import { Tabs as RadixTabs } from 'radix-ui';
 
 import { cn } from '../../lib/utils';
 
+// TabBar Context for size propagation
+interface TabBarContextValue {
+  size?: 'normal' | 'small';
+}
+
+const TabBarContext = React.createContext<TabBarContextValue>({
+  size: 'normal',
+});
+
+const useTabBarContext = () => React.useContext(TabBarContext);
+
 // TabBar container variants
 const tabBarVariants = cva('inline-flex', {
   variants: {
@@ -25,14 +36,16 @@ const tabVariants = cva(
   disabled:text-interactive-disabled disabled:hover:border-divider-default
   relative inline-flex cursor-pointer items-center justify-center border-b pb-px
   leading-[100%] tracking-[0] transition-colors hover:border-b-2
-  hover:pb-[calc(1rem-1px)] disabled:cursor-not-allowed disabled:hover:border-b
-  data-[state=active]:border-b-2 data-[state=active]:pb-[calc(1rem-1px)]
+  disabled:cursor-not-allowed disabled:hover:border-b
+  data-[state=active]:border-b-2
   data-[state=active]:text-[var(--chemican-green-800)]`,
   {
     variants: {
       size: {
-        normal: 'p-md min-h-12 text-lg',
-        small: 'p-sm min-h-10 text-md',
+        normal: `p-md h-12 text-lg hover:pb-[calc(1rem-1px)]
+        data-[state=active]:pb-[calc(1rem-1px)]`,
+        small: `p-sm h-9.5 text-md hover:pb-[calc(0.75rem-1px)]
+        data-[state=active]:pb-[calc(0.75rem-1px)]`,
       },
     },
     defaultVariants: {
@@ -49,13 +62,19 @@ export interface TabBarProps
 export const TabBar = React.forwardRef<
   React.ElementRef<typeof RadixTabs.Root>,
   TabBarProps
->(({ className, size, children, ...props }, ref) => (
-  <RadixTabs.Root ref={ref} className={cn('w-full', className)} {...props}>
-    <RadixTabs.List className={cn(tabBarVariants({ size }))} role="tablist">
-      {children}
-    </RadixTabs.List>
-  </RadixTabs.Root>
-));
+>(({ className, size, children, ...props }, ref) => {
+  const contextValue: TabBarContextValue = size ? { size } : {};
+
+  return (
+    <TabBarContext.Provider value={contextValue}>
+      <RadixTabs.Root ref={ref} className={cn('w-full', className)} {...props}>
+        <RadixTabs.List className={cn(tabBarVariants({ size }))} role="tablist">
+          {children}
+        </RadixTabs.List>
+      </RadixTabs.Root>
+    </TabBarContext.Provider>
+  );
+});
 
 TabBar.displayName = 'TabBar';
 
@@ -69,15 +88,20 @@ export interface TabProps
 export const Tab = React.forwardRef<
   React.ElementRef<typeof RadixTabs.Trigger>,
   TabProps
->(({ className, size, label, disabled, ...props }, ref) => (
-  <RadixTabs.Trigger
-    ref={ref}
-    className={cn(tabVariants({ size }), className)}
-    disabled={disabled}
-    {...props}
-  >
-    {label}
-  </RadixTabs.Trigger>
-));
+>(({ className, size, label, disabled, ...props }, ref) => {
+  const { size: contextSize } = useTabBarContext();
+  const effectiveSize = size ?? contextSize;
+
+  return (
+    <RadixTabs.Trigger
+      ref={ref}
+      className={cn(tabVariants({ size: effectiveSize }), className)}
+      disabled={disabled}
+      {...props}
+    >
+      {label}
+    </RadixTabs.Trigger>
+  );
+});
 
 Tab.displayName = 'Tab';
