@@ -2,6 +2,7 @@ import React from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import type { TooltipProps as TTProps } from '@radix-ui/react-tooltip';
 
 import { cn } from '../../lib/utils';
 
@@ -23,19 +24,15 @@ const tooltipVariants = cva(
 );
 
 export interface TooltipProps
-  extends Omit<
-      React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>,
-      'content'
-    >,
+  extends TTProps,
     VariantProps<typeof tooltipVariants> {
+  className?: string;
   children: React.ReactNode;
   content: React.ReactNode;
   side?: 'top' | 'right' | 'bottom' | 'left';
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   alignOffset?: number;
-  delayDuration?: number;
-  disableHoverableContent?: boolean;
 }
 
 export const TooltipProvider = TooltipPrimitive.Provider;
@@ -55,6 +52,8 @@ export const Tooltip = React.forwardRef<
       alignOffset,
       delayDuration = 700,
       disableHoverableContent,
+      open,
+      onOpenChange,
       className,
       ...props
     },
@@ -63,6 +62,8 @@ export const Tooltip = React.forwardRef<
     return (
       <TooltipPrimitive.Root
         delayDuration={delayDuration}
+        {...(open !== undefined && { open })}
+        {...(onOpenChange !== undefined && { onOpenChange })}
         {...(disableHoverableContent !== undefined && {
           disableHoverableContent,
         })}
