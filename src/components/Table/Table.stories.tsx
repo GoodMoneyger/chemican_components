@@ -8,6 +8,7 @@ import {
 } from '../StatusIndicator/StatusIndicator';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { Tag } from '../Tag';
+import { Button } from '../Button';
 
 import {
   Table,
@@ -17,6 +18,7 @@ import {
   TableBody,
   TableCell,
   TableHeadSortButton,
+  TableEditableRow,
 } from './Table';
 
 type DataEntry = {
@@ -495,6 +497,43 @@ export const Default = Template.bind({});
 Default.args = {
   data,
 };
+
+const EditableTemplate: StoryFn = () => {
+  const ActionComponent = (
+    <>
+      <Button size="xs" intent="secondary">
+        編集
+      </Button>
+      <Button size="xs" intent="primary">
+        削除
+      </Button>
+    </>
+  );
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>氏名</TableHead>
+          <TableHead>所属</TableHead>
+          <TableHead>メールアドレス</TableHead>
+          <TableHead>作成日</TableHead>
+          <TableHead>ステータス</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableEditableRow actionComponent={ActionComponent}>
+          <TableCell>テスト太郎</TableCell>
+          <TableCell>開発部門</TableCell>
+          <TableCell>test@example.com</TableCell>
+          <TableCell>2025/11/11</TableCell>
+          <TableCell>有効</TableCell>
+        </TableEditableRow>
+      </TableBody>
+    </Table>
+  );
+};
+
+export const Editable = EditableTemplate.bind({});
 
 const LoadingTemplate: StoryFn = () => (
   <Table loading>

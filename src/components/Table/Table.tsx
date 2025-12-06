@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, type ReactNode } from 'react';
 
 import { cn } from '../../utils';
 import { ProgressIndicator } from '../ProgressIndicator';
@@ -126,7 +126,7 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
             >
               <div
                 className="top-0 absolute flex h-full w-max -translate-x-1/2
-                  transform items-center"
+                  items-center"
               >
                 {loadingText}
               </div>
@@ -169,6 +169,48 @@ const TableRow = React.forwardRef<
   />
 ));
 TableRow.displayName = 'TableRow';
+
+interface TableEditableRowProps
+  extends React.HTMLAttributes<HTMLTableRowElement> {
+  actionComponent: ReactNode;
+}
+
+const TableEditableRow = React.forwardRef<
+  HTMLTableRowElement,
+  TableEditableRowProps
+>(({ className, children, actionComponent, ...props }, ref) => {
+  const [isShowEditRow, setIsShowEditRow] = useState(false);
+
+  const handleOnMouseOver = () => {
+    setIsShowEditRow(true);
+  };
+  const handleOnMouseLeave = () => {
+    setIsShowEditRow(false);
+  };
+
+  return (
+    <TableRow
+      ref={ref}
+      onMouseOver={handleOnMouseOver}
+      onMouseLeave={handleOnMouseLeave}
+      {...props}
+    >
+      {children}
+      {isShowEditRow ? (
+        <td
+          className="top-0 right-0 left-0 bottom-0 bg-surface-scrimmed p-sm
+            absolute"
+        >
+          <div className="gap-1 flex h-full items-center justify-end">
+            {actionComponent}
+          </div>
+        </td>
+      ) : null}
+    </TableRow>
+  );
+});
+
+TableEditableRow.displayName = 'TableEditableRow';
 
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
@@ -286,6 +328,7 @@ export {
   TableFooter,
   TableHead,
   TableRow,
+  TableEditableRow,
   TableCell,
   TableCaption,
   TableHeadSortButton,
