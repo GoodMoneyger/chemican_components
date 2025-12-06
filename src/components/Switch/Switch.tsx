@@ -3,11 +3,21 @@ import { Switch as SwitchPrimitive } from 'radix-ui';
 
 import { cn } from '../../utils';
 
-export type SwitchProps = React.ComponentProps<typeof SwitchPrimitive.Root>;
+export type SwitchProps = React.ComponentProps<typeof SwitchPrimitive.Root> & {
+  label?: React.ReactNode;
+  id?: string;
+};
 
-function Switch({ className, ...props }: SwitchProps) {
-  return (
+const Switch = React.forwardRef<
+  React.ElementRef<typeof SwitchPrimitive.Root>,
+  SwitchProps
+>(({ className, label, id, ...props }, ref) => {
+  const usedId = id || (label ? `switch-${label}` : undefined);
+
+  const switchElement = (
     <SwitchPrimitive.Root
+      ref={ref}
+      id={usedId}
       data-slot="switch"
       className={cn(
         `peer data-[state=checked]:enabled:bg-status-success
@@ -36,6 +46,24 @@ function Switch({ className, ...props }: SwitchProps) {
       />
     </SwitchPrimitive.Root>
   );
-}
+
+  if (label) {
+    return (
+      <div className="gap-3 flex items-center">
+        {switchElement}
+        <label
+          htmlFor={usedId}
+          className="text-body-primary font-semibold cursor-pointer select-none"
+        >
+          {label}
+        </label>
+      </div>
+    );
+  }
+
+  return switchElement;
+});
+
+Switch.displayName = 'Switch';
 
 export { Switch };
