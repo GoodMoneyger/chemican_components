@@ -8,6 +8,7 @@ import {
 } from '../StatusIndicator/StatusIndicator';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { Tag } from '../Tag';
+import { Button } from '../Button';
 
 import {
   Table,
@@ -18,6 +19,7 @@ import {
   TableCell,
   TableHeadSortButton,
 } from './Table';
+import { TableRowOverlay } from './TableRowOverlay';
 
 type DataEntry = {
   sdsName: string;
@@ -523,3 +525,221 @@ const LoadingTemplate: StoryFn = () => (
 );
 
 export const Loading = LoadingTemplate.bind({});
+
+const RowOverlayTemplate: StoryFn = () => {
+  const [openRowId, setOpenRowId] = React.useState<string | null>(null);
+  const [sortOrders, setSortOrders] = React.useState<{
+    [key: string]: 'asc' | 'desc' | undefined;
+  }>({
+    pdfUploadDate: undefined,
+    sdsRevisionDate: undefined,
+    supplierConfirmDate: undefined,
+    riskAssessmentDate: undefined,
+  });
+
+  const toggleSort = (column: string) => {
+    setSortOrders((prev) => ({
+      ...prev,
+      [column]:
+        prev[column] === 'asc'
+          ? 'desc'
+          : prev[column] === 'desc'
+            ? undefined
+            : 'asc',
+    }));
+  };
+
+  const sortedData = React.useMemo(() => {
+    const sorted = [...data];
+
+    if (sortOrders.pdfUploadDate) {
+      sorted.sort((a, b) => {
+        const compare = a.pdfUploadDate.localeCompare(b.pdfUploadDate);
+        return sortOrders.pdfUploadDate === 'asc' ? compare : -compare;
+      });
+    } else if (sortOrders.sdsRevisionDate) {
+      sorted.sort((a, b) => {
+        const compare = a.sdsRevisionDate.localeCompare(b.sdsRevisionDate);
+        return sortOrders.sdsRevisionDate === 'asc' ? compare : -compare;
+      });
+    } else if (sortOrders.supplierConfirmDate) {
+      sorted.sort((a, b) => {
+        const compare = a.supplierConfirmDate.localeCompare(
+          b.supplierConfirmDate
+        );
+        return sortOrders.supplierConfirmDate === 'asc' ? compare : -compare;
+      });
+    } else if (sortOrders.riskAssessmentDate) {
+      sorted.sort((a, b) => {
+        const compare = a.riskAssessmentDate.localeCompare(
+          b.riskAssessmentDate
+        );
+        return sortOrders.riskAssessmentDate === 'asc' ? compare : -compare;
+      });
+    }
+
+    return sorted;
+  }, [sortOrders]);
+
+  return (
+    <div className="overflow-x-auto">
+      <Table className="w-max">
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Checkbox label="" />
+            </TableHead>
+            <TableHead>SDSファイル名</TableHead>
+            <TableHead>製品名</TableHead>
+            <TableHead>製造者</TableHead>
+            <TableHead>データ化ステータス</TableHead>
+            <TableHead>
+              PDFアップロード日{' '}
+              <TableHeadSortButton
+                sortOrder={sortOrders.pdfUploadDate}
+                onClick={() => toggleSort('pdfUploadDate')}
+              />
+            </TableHead>
+            <TableHead>担当ユーザー</TableHead>
+            <TableHead>
+              SDS改訂日{' '}
+              <TableHeadSortButton
+                sortOrder={sortOrders.sdsRevisionDate}
+                onClick={() => toggleSort('sdsRevisionDate')}
+              />
+            </TableHead>
+            <TableHead>
+              サプライヤーへの確認日{' '}
+              <TableHeadSortButton
+                sortOrder={sortOrders.supplierConfirmDate}
+                onClick={() => toggleSort('supplierConfirmDate')}
+              />
+            </TableHead>
+            <TableHead>改訂ステータス</TableHead>
+            <TableHead>担当部署</TableHead>
+            <TableHead>タグ</TableHead>
+            <TableHead>製品コード</TableHead>
+            <TableHead>
+              リスクアセスメント実施日{' '}
+              <TableHeadSortButton
+                sortOrder={sortOrders.riskAssessmentDate}
+                onClick={() => toggleSort('riskAssessmentDate')}
+              />
+            </TableHead>
+            <TableHead>CREATE SIMPLEを出力</TableHead>
+            {/* Empty header for overlay column alignment */}
+            <TableHead className="w-0 p-0" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedData.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                <Checkbox label="" />
+              </TableCell>
+              <TableCell>
+                <div className="gap-2 inline-flex items-center">
+                  <div className="gap-1 flex items-center">{row.sdsName}</div>
+                  <a href="#">
+                    <IconExternalLink
+                      size={20}
+                      className="text-shape-primary"
+                    />
+                  </a>
+                </div>
+              </TableCell>
+              <TableCell>
+                <Tag className="uppercase">{row.productName}</Tag>
+              </TableCell>
+              <TableCell>{row.manufacturer}</TableCell>
+              <TableCell>
+                <StatusIndicator level={row.dataStatusLevel}>
+                  {row.dataStatus}
+                </StatusIndicator>
+              </TableCell>
+              <TableCell>{row.pdfUploadDate}</TableCell>
+              <TableCell>
+                <Tag>{row.assignedUser}</Tag>
+              </TableCell>
+              <TableCell>{row.sdsRevisionDate}</TableCell>
+              <TableCell>{row.supplierConfirmDate}</TableCell>
+              <TableCell>
+                <StatusIndicator level={row.revisionStatusLevel}>
+                  {row.revisionStatus}
+                </StatusIndicator>
+              </TableCell>
+              <TableCell>
+                <div className="gap-xs flex flex-wrap">
+                  {row.departments.map((dept, i) => (
+                    <Tag key={i}>{dept}</Tag>
+                  ))}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="gap-xs flex flex-wrap">
+                  {row.tags.map((tag, i) => (
+                    <Tag key={i} colorCode={tag.colorCode}>
+                      {tag.label}
+                    </Tag>
+                  ))}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="gap-xs flex flex-wrap">
+                  {row.productCodes.map((code, i) => (
+                    <Tag key={i}>{code}</Tag>
+                  ))}
+                </div>
+              </TableCell>
+              <TableCell>{row.riskAssessmentDate}</TableCell>
+              <TableCell>
+                <div className="gap-1 flex items-center">
+                  <button
+                    title="Export v3.1.1"
+                    className="text-body-primary flex cursor-pointer
+                      items-center"
+                  >
+                    <IconFileCheck size={16} className="shrink-0" />
+                  </button>
+                  <span className="text-md text-body-primary font-normal">
+                    v3.1.1
+                  </span>
+                </div>
+              </TableCell>
+              <TableRowOverlay forceVisible={openRowId === row.sdsName}>
+                <Button
+                  size="sm"
+                  intent="primary"
+                  onClick={() => alert(`Edit ${row.productName}`)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  size="sm"
+                  intent="secondary"
+                  onClick={() =>
+                    setOpenRowId(openRowId === row.sdsName ? null : row.sdsName)
+                  }
+                >
+                  {openRowId === row.sdsName ? 'Close' : 'More'}
+                </Button>
+              </TableRowOverlay>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+export const WithRowOverlay = RowOverlayTemplate.bind({});
+WithRowOverlay.parameters = {
+  docs: {
+    description: {
+      story:
+        'Demonstrates the TableRowOverlay component that appears on row hover. ' +
+        'The overlay sticks to the right edge during horizontal scroll and can be ' +
+        'forced visible (e.g., when a dropdown is open).',
+    },
+  },
+};
