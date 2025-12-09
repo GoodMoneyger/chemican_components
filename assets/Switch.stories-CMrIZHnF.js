@@ -1,0 +1,93 @@
+import{j as e}from"./jsx-runtime-D_zvdyIk.js";import{r}from"./iframe-0mSjn8q6.js";import{c as R}from"./utils-F-pq2323.js";import{u as oe,c as ie}from"./index-Bn_zxLGJ.js";import{u as Z}from"./index-BnSSkuMw.js";import{c as le,P as ee}from"./index-B8QkrwYh.js";import{u as he}from"./index-fW6tOrKh.js";import{u as ue}from"./index-BLgxz1Ld.js";import"./preload-helper-Dp1pzeXC.js";import"./index-CDQOISmb.js";import"./index-whZVXnad.js";var N="Switch",[pe]=le(N),[me,fe]=pe(N),te=r.forwardRef((t,c)=>{const{__scopeSwitch:s,name:n,checked:a,defaultChecked:o,required:i,disabled:l,value:f="on",onCheckedChange:y,form:h,...E}=t,[w,v]=r.useState(null),M=Z(c,j=>v(j)),_=r.useRef(!1),D=w?h||!!w.closest("form"):!0,[S,ne]=oe({prop:a,defaultProp:o??!1,onChange:y,caller:N});return e.jsxs(me,{scope:s,checked:S,disabled:l,children:[e.jsx(ee.button,{type:"button",role:"switch","aria-checked":S,"aria-required":i,"data-state":de(S),"data-disabled":l?"":void 0,disabled:l,value:f,...E,ref:M,onClick:ie(t.onClick,j=>{ne(re=>!re),D&&(_.current=j.isPropagationStopped(),_.current||j.stopPropagation())})}),D&&e.jsx(ce,{control:w,bubbles:!_.current,name:n,value:f,checked:S,required:i,disabled:l,form:h,style:{transform:"translateX(-100%)"}})]})});te.displayName=N;var se="SwitchThumb",ae=r.forwardRef((t,c)=>{const{__scopeSwitch:s,...n}=t,a=fe(se,s);return e.jsx(ee.span,{"data-state":de(a.checked),"data-disabled":a.disabled?"":void 0,...n,ref:c})});ae.displayName=se;var be="SwitchBubbleInput",ce=r.forwardRef(({__scopeSwitch:t,control:c,checked:s,bubbles:n=!0,...a},o)=>{const i=r.useRef(null),l=Z(i,o),f=he(s),y=ue(c);return r.useEffect(()=>{const h=i.current;if(!h)return;const E=window.HTMLInputElement.prototype,v=Object.getOwnPropertyDescriptor(E,"checked").set;if(f!==s&&v){const M=new Event("click",{bubbles:n});v.call(h,s),h.dispatchEvent(M)}},[f,s,n]),e.jsx("input",{type:"checkbox","aria-hidden":!0,defaultChecked:s,...a,tabIndex:-1,ref:l,style:{...a.style,...y,position:"absolute",pointerEvents:"none",opacity:0,margin:0}})});ce.displayName=be;function de(t){return t?"checked":"unchecked"}var ke=te,Ce=ae;const d=r.forwardRef(({className:t,label:c,id:s,...n},a)=>{const o=s||(c?`switch-${c}`:void 0),i=e.jsx(ke,{ref:a,id:o,"data-slot":"switch",className:R(`peer data-[state=checked]:enabled:bg-status-success
+        data-[state=unchecked]:enabled:bg-shape-accent-gray-soft
+        data-[state=checked]:disabled:bg-interactive-neutral-selected
+        data-[state=unchecked]:disabled:bg-interactive-disabled h-6 w-10
+        data-[state=checked]:enabled:hover:bg-shape-interactive-primary-hover
+        data-[state=unchecked]:enabled:hover:bg-shape-accent-gray-strong
+        inline-flex shrink-0 cursor-pointer items-center rounded-full
+        transition-all outline-none focus-visible:ring-[3px]
+        focus-visible:ring-[var(--token-color-background-interactive-neutral-active)]
+        disabled:cursor-not-allowed`,t),...n,children:e.jsx(Ce,{"data-slot":"switch-thumb",className:R(`data-[state=checked]:bg-shape-interactive-inverse size-4
+          data-[state=unchecked]:bg-shape-accent-gray-pale
+          data-[state=checked]:translate-x-5
+          data-[state=unchecked]:translate-x-1 pointer-events-none block
+          rounded-full ring-0 transition-transform`)})});return c?e.jsxs("div",{className:"gap-3 flex items-center",children:[i,e.jsx("label",{htmlFor:o,className:"text-body-primary font-semibold cursor-pointer select-none",children:c})]}):i});d.displayName="Switch";d.__docgenInfo={description:"",methods:[],displayName:"Switch",props:{label:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:""},id:{required:!1,tsType:{name:"string"},description:""}}};const De={title:"Components/Switch",component:d,argTypes:{label:{control:{type:"text"}},disabled:{control:{type:"boolean"}},defaultChecked:{control:{type:"boolean"}},onCheckedChange:{action:"changed",table:{disable:!0}}},parameters:{design:{type:"figma"},radixDocs:{primitive:"Switch",url:"https://www.radix-ui.com/primitives/docs/components/switch"}}},x=t=>{const[c,s]=r.useState(t.defaultChecked||!1);return e.jsx(d,{...t,checked:c,onCheckedChange:n=>{var a;s(n),(a=t.onCheckedChange)==null||a.call(t,n)}})},b=x.bind({});b.args={disabled:!1,defaultChecked:!1};const u=x.bind({});u.args={label:"Enable notifications",disabled:!1,defaultChecked:!1};u.parameters={docs:{description:{story:"Switch with a label. The label is properly linked to the switch control using htmlFor for better accessibility. Clicking the label will toggle the switch."}}};const k=x.bind({});k.args={label:"Enable notifications",disabled:!1,defaultChecked:!0};const C=x.bind({});C.args={label:"Enable notifications",disabled:!0,defaultChecked:!1};const g=x.bind({});g.args={label:"Enable notifications",disabled:!0,defaultChecked:!0};const p=()=>e.jsxs("div",{className:"space-y-6",children:[e.jsxs("div",{children:[e.jsx("h3",{className:"mb-3 text-lg font-semibold",children:"Default States"}),e.jsxs("div",{className:"gap-3 flex flex-col",children:[e.jsx(d,{label:"Unchecked"}),e.jsx(d,{label:"Checked",defaultChecked:!0})]})]}),e.jsxs("div",{children:[e.jsx("h3",{className:"mb-3 text-lg font-semibold",children:"Disabled States"}),e.jsxs("div",{className:"gap-3 flex flex-col",children:[e.jsx(d,{label:"Disabled Unchecked",disabled:!0}),e.jsx(d,{label:"Disabled Checked",disabled:!0,defaultChecked:!0})]})]}),e.jsxs("div",{children:[e.jsx("h3",{className:"mb-3 text-lg font-semibold",children:"Without Label"}),e.jsxs("div",{className:"gap-3 flex flex-col",children:[e.jsx(d,{}),e.jsx(d,{defaultChecked:!0}),e.jsx(d,{disabled:!0})]})]})]});p.parameters={docs:{description:{story:"Comprehensive view of all switch states including enabled, checked, and disabled variations, both with and without labels."}}};const m=()=>{const[t,c]=r.useState(!1),[s,n]=r.useState(!0),[a,o]=r.useState(!1);return e.jsxs("div",{className:"space-y-4",children:[e.jsxs("div",{className:"rounded-md p-4 border",children:[e.jsx("h3",{className:"mb-4 text-lg font-semibold",children:"Settings"}),e.jsxs("div",{className:"gap-4 flex flex-col",children:[e.jsx(d,{label:"Airplane Mode",checked:t,onCheckedChange:c}),e.jsx(d,{label:"Wi-Fi",checked:s,onCheckedChange:n,disabled:t}),e.jsx(d,{label:"Bluetooth",checked:a,onCheckedChange:o,disabled:t})]})]}),e.jsxs("div",{className:"text-sm text-body-secondary",children:[e.jsx("p",{children:"Current state:"}),e.jsxs("ul",{className:"ml-4 mt-2 list-disc",children:[e.jsxs("li",{children:["Airplane Mode: ",t?"On":"Off"]}),e.jsxs("li",{children:["Wi-Fi: ",s?"On":"Off"]}),e.jsxs("li",{children:["Bluetooth: ",a?"On":"Off"]})]})]})]})};m.parameters={docs:{description:{story:"Example of controlled switches with interdependent states. When Airplane Mode is enabled, Wi-Fi and Bluetooth switches become disabled."}}};p.__docgenInfo={description:"",methods:[],displayName:"AllStates"};m.__docgenInfo={description:"",methods:[],displayName:"ControlledExample"};var B,O,A;b.parameters={...b.parameters,docs:{...(B=b.parameters)==null?void 0:B.docs,source:{originalSource:`args => {
+  const [checked, setChecked] = useState(args.defaultChecked || false);
+  return <Switch {...args} checked={checked} onCheckedChange={newChecked => {
+    setChecked(newChecked);
+    args.onCheckedChange?.(newChecked);
+  }} />;
+}`,...(A=(O=b.parameters)==null?void 0:O.docs)==null?void 0:A.source}}};var P,W,T;u.parameters={...u.parameters,docs:{...(P=u.parameters)==null?void 0:P.docs,source:{originalSource:`args => {
+  const [checked, setChecked] = useState(args.defaultChecked || false);
+  return <Switch {...args} checked={checked} onCheckedChange={newChecked => {
+    setChecked(newChecked);
+    args.onCheckedChange?.(newChecked);
+  }} />;
+}`,...(T=(W=u.parameters)==null?void 0:W.docs)==null?void 0:T.source}}};var I,F,U;k.parameters={...k.parameters,docs:{...(I=k.parameters)==null?void 0:I.docs,source:{originalSource:`args => {
+  const [checked, setChecked] = useState(args.defaultChecked || false);
+  return <Switch {...args} checked={checked} onCheckedChange={newChecked => {
+    setChecked(newChecked);
+    args.onCheckedChange?.(newChecked);
+  }} />;
+}`,...(U=(F=k.parameters)==null?void 0:F.docs)==null?void 0:U.source}}};var L,q,H;C.parameters={...C.parameters,docs:{...(L=C.parameters)==null?void 0:L.docs,source:{originalSource:`args => {
+  const [checked, setChecked] = useState(args.defaultChecked || false);
+  return <Switch {...args} checked={checked} onCheckedChange={newChecked => {
+    setChecked(newChecked);
+    args.onCheckedChange?.(newChecked);
+  }} />;
+}`,...(H=(q=C.parameters)==null?void 0:q.docs)==null?void 0:H.source}}};var z,$,X;g.parameters={...g.parameters,docs:{...(z=g.parameters)==null?void 0:z.docs,source:{originalSource:`args => {
+  const [checked, setChecked] = useState(args.defaultChecked || false);
+  return <Switch {...args} checked={checked} onCheckedChange={newChecked => {
+    setChecked(newChecked);
+    args.onCheckedChange?.(newChecked);
+  }} />;
+}`,...(X=($=g.parameters)==null?void 0:$.docs)==null?void 0:X.source}}};var G,J,K;p.parameters={...p.parameters,docs:{...(G=p.parameters)==null?void 0:G.docs,source:{originalSource:`() => {
+  return <div className="space-y-6">
+      <div>
+        <h3 className="mb-3 text-lg font-semibold">Default States</h3>
+        <div className="gap-3 flex flex-col">
+          <Switch label="Unchecked" />
+          <Switch label="Checked" defaultChecked />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-lg font-semibold">Disabled States</h3>
+        <div className="gap-3 flex flex-col">
+          <Switch label="Disabled Unchecked" disabled />
+          <Switch label="Disabled Checked" disabled defaultChecked />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-lg font-semibold">Without Label</h3>
+        <div className="gap-3 flex flex-col">
+          <Switch />
+          <Switch defaultChecked />
+          <Switch disabled />
+        </div>
+      </div>
+    </div>;
+}`,...(K=(J=p.parameters)==null?void 0:J.docs)==null?void 0:K.source}}};var Q,V,Y;m.parameters={...m.parameters,docs:{...(Q=m.parameters)==null?void 0:Q.docs,source:{originalSource:`() => {
+  const [airplaneMode, setAirplaneMode] = useState(false);
+  const [wifi, setWifi] = useState(true);
+  const [bluetooth, setBluetooth] = useState(false);
+  return <div className="space-y-4">
+      <div className="rounded-md p-4 border">
+        <h3 className="mb-4 text-lg font-semibold">Settings</h3>
+        <div className="gap-4 flex flex-col">
+          <Switch label="Airplane Mode" checked={airplaneMode} onCheckedChange={setAirplaneMode} />
+          <Switch label="Wi-Fi" checked={wifi} onCheckedChange={setWifi} disabled={airplaneMode} />
+          <Switch label="Bluetooth" checked={bluetooth} onCheckedChange={setBluetooth} disabled={airplaneMode} />
+        </div>
+      </div>
+      <div className="text-sm text-body-secondary">
+        <p>Current state:</p>
+        <ul className="ml-4 mt-2 list-disc">
+          <li>Airplane Mode: {airplaneMode ? 'On' : 'Off'}</li>
+          <li>Wi-Fi: {wifi ? 'On' : 'Off'}</li>
+          <li>Bluetooth: {bluetooth ? 'On' : 'Off'}</li>
+        </ul>
+      </div>
+    </div>;
+}`,...(Y=(V=m.parameters)==null?void 0:V.docs)==null?void 0:Y.source}}};const Re=["Default","WithLabel","Checked","Disabled","DisabledChecked","AllStates","ControlledExample"];export{p as AllStates,k as Checked,m as ControlledExample,b as Default,C as Disabled,g as DisabledChecked,u as WithLabel,Re as __namedExportsOrder,De as default};
