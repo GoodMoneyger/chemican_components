@@ -23,6 +23,7 @@ function getComponentTopics() {
     );
     // Fallback to static list if directory reading fails
     return [
+      'accordion',
       'accountmenu',
       'button',
       'callout',
