@@ -3,7 +3,7 @@ import { VariantProps } from 'class-variance-authority';
 import { TooltipProps as TTProps } from '@radix-ui/react-tooltip';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 declare const tooltipVariants: (props?: ({
-    intent?: "normal" | "accent" | null | undefined;
+    intent?: "accent" | "normal" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface TooltipProps extends TTProps, VariantProps<typeof tooltipVariants> {
     className?: string;

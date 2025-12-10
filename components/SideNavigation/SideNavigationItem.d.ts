@@ -1,7 +1,7 @@
 import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 declare const sideNavigationItemVariants: (props?: ({
-    variant?: "default" | "disabled" | "selected" | null | undefined;
+    variant?: "disabled" | "default" | "selected" | null | undefined;
     size?: "sm" | "md" | null | undefined;
     collapsed?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
