@@ -108,7 +108,8 @@ const AccordionTrigger = React.forwardRef<
         `text-body-primary py-sm px-md text-lg font-bold
         focus-visible:ring-interactive-focused flex flex-1 items-center
         justify-between leading-[1.2] transition-all focus-visible:ring-4
-        focus-visible:outline-none [&[data-state=open]>svg]:rotate-180`,
+        focus-visible:outline-none data-[disabled]:pointer-events-none
+        [&[data-state=open]>svg]:rotate-180`,
         className
       )}
       {...props}
