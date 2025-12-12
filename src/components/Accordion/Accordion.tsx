@@ -137,7 +137,7 @@ const AccordionContent = React.forwardRef<
   <RadixAccordion.Content
     ref={ref}
     className={cn(
-      'text-body-secondary px-md pt-md pb-xl overflow-hidden',
+      'text-body-secondary px-md pt-xs pb-md overflow-hidden',
       className
     )}
     {...props}
