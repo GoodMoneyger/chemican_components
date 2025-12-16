@@ -110,13 +110,13 @@ export const TableData: Story = () => (
 );
 
 export const TableWithActions: Story = () => {
-  const handleEdit = (rowIndex: number) => {
-    alert(`Edit row ${rowIndex}`);
+  const handleEdit = (itemId: string) => {
+    alert(`Edit item ${itemId}`);
   };
 
-  const handleRemove = (rowIndex: number) => {
-    if (confirm(`Remove row ${rowIndex}?`)) {
-      alert('Row removed');
+  const handleRemove = (itemId: string) => {
+    if (confirm(`Remove item ${itemId}?`)) {
+      alert('Item removed');
     }
   };
 
@@ -147,7 +147,7 @@ export const TableWithActions: Story = () => {
             </DataSheet.TableRow>
           </DataSheet.TableHeader>
           <DataSheet.TableBody>
-            <DataSheet.TableRow>
+            <DataSheet.TableRow itemId="explosive-001">
               <DataSheet.TableCell>
                 火薬類・爆発物 / Explosives
               </DataSheet.TableCell>
@@ -155,7 +155,7 @@ export const TableWithActions: Story = () => {
               <DataSheet.TableCell>-</DataSheet.TableCell>
               <DataSheet.TableActionsCell />
             </DataSheet.TableRow>
-            <DataSheet.TableRow>
+            <DataSheet.TableRow itemId="flammable-gas-001">
               <DataSheet.TableCell>
                 可燃性・引火性ガス / Flammable gases （including chemically
                 unstable gases）

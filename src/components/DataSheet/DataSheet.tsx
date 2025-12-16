@@ -10,7 +10,7 @@ import type { ButtonProps } from '../Button/Button';
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface DataSheetProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const dataSheetVariants = cva('bg-surface-primary min-w-0 space-y-md w-full', {
+const dataSheetVariants = cva('bg-surface-primary space-y-md w-full', {
   variants: {},
 });
 
@@ -40,18 +40,18 @@ const dataSheetHeaderVariants = cva(
 );
 
 export interface DataSheetHeaderProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof dataSheetHeaderVariants> {
   onEdit?: () => void;
   onRemove?: () => void;
 }
 
-const DataSheetHeader = React.forwardRef<HTMLDivElement, DataSheetHeaderProps>(
+const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
   ({ className, variant, children, onEdit, onRemove, ...props }, ref) => {
     const hasActions = onEdit || onRemove;
 
     return (
-      <div
+      <header
         ref={ref}
         className={cn(
           dataSheetHeaderVariants({ variant }),
@@ -84,7 +84,7 @@ const DataSheetHeader = React.forwardRef<HTMLDivElement, DataSheetHeaderProps>(
             )}
           </div>
         )}
-      </div>
+      </header>
     );
   }
 );
@@ -92,20 +92,19 @@ DataSheetHeader.displayName = 'DataSheetHeader';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface DataSheetSectionProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+  extends React.HTMLAttributes<HTMLElement> {}
 
-const DataSheetSection = React.forwardRef<
-  HTMLDivElement,
-  DataSheetSectionProps
->(({ className, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('divide-surface-default divide-y', className)}
-    {...props}
-  >
-    {children}
-  </div>
-));
+const DataSheetSection = React.forwardRef<HTMLElement, DataSheetSectionProps>(
+  ({ className, children, ...props }, ref) => (
+    <section
+      ref={ref}
+      className={cn('divide-surface-default divide-y', className)}
+      {...props}
+    >
+      {children}
+    </section>
+  )
+);
 DataSheetSection.displayName = 'DataSheetSection';
 
 const dataSheetKeyValueVariants = cva('py-sm', {
@@ -135,17 +134,20 @@ const dataSheetKeyValueLabelVariants = cva(
   }
 );
 
-const dataSheetKeyValueValueVariants = cva('font-normal', {
-  variants: {
-    orientation: {
-      vertical: 'text-body-primary leading-[1.5]',
-      horizontal: 'text-body-primary flex-1 leading-[1.5]',
+const dataSheetKeyValueValueVariants = cva(
+  'font-normal text-body-primary leading-[1.5]',
+  {
+    variants: {
+      orientation: {
+        vertical: '',
+        horizontal: 'flex-1',
+      },
     },
-  },
-  defaultVariants: {
-    orientation: 'vertical',
-  },
-});
+    defaultVariants: {
+      orientation: 'vertical',
+    },
+  }
+);
 
 export interface DataSheetKeyValueProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -174,14 +176,14 @@ DataSheetKeyValue.displayName = 'DataSheetKeyValue';
 
 export interface DataSheetTableProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  onEditRow?: (rowIndex: number) => void;
-  onRemoveRow?: (rowIndex: number) => void;
+  onEditRow?: (itemId: string) => void;
+  onRemoveRow?: (itemId: string) => void;
   actionsColumnParts?: number;
 }
 
 interface DataSheetTableContextValue {
-  onEditRow?: (rowIndex: number) => void;
-  onRemoveRow?: (rowIndex: number) => void;
+  onEditRow?: (itemId: string) => void;
+  onRemoveRow?: (itemId: string) => void;
   actionsColumnParts: number;
 }
 
@@ -195,9 +197,9 @@ const DataSheetTableContext = React.createContext<DataSheetTableContextValue>(
 
 const useDataSheetTableContext = () => React.useContext(DataSheetTableContext);
 
-// Context for TableRow to provide rowIndex to cells
+// Context for TableRow to provide itemId to cells
 interface DataSheetTableRowContextValue {
-  rowIndex?: number;
+  itemId?: string;
 }
 
 const DataSheetTableRowContext =
@@ -256,40 +258,25 @@ export interface DataSheetTableBodyProps
 const DataSheetTableBody = React.forwardRef<
   HTMLTableSectionElement,
   DataSheetTableBodyProps
->(({ className, children, ...props }, ref) => {
-  // Auto-inject rowIndex for non-header rows
-  const childrenWithIndex = React.Children.map(children, (child, index) => {
-    if (React.isValidElement(child)) {
-      const childProps = child.props as { rowIndex?: number; header?: boolean };
-      if (childProps.rowIndex === undefined && !childProps.header) {
-        return React.cloneElement(child, { rowIndex: index } as Partial<
-          typeof childProps
-        >);
-      }
-    }
-    return child;
-  });
-
-  return (
-    <tbody ref={ref} className={cn('', className)} {...props}>
-      {childrenWithIndex}
-    </tbody>
-  );
-});
+>(({ className, children, ...props }, ref) => (
+  <tbody ref={ref} className={cn('', className)} {...props}>
+    {children}
+  </tbody>
+));
 DataSheetTableBody.displayName = 'DataSheetTableBody';
 
 export interface DataSheetTableRowProps
   extends React.HTMLAttributes<HTMLTableRowElement> {
   header?: boolean;
-  rowIndex?: number;
+  itemId?: string;
 }
 
 const DataSheetTableRow = React.forwardRef<
   HTMLTableRowElement,
   DataSheetTableRowProps
->(({ className, header, rowIndex, children, ...props }, ref) => {
+>(({ className, header, itemId, children, ...props }, ref) => {
   const rowContextValue: DataSheetTableRowContextValue = {
-    ...(rowIndex !== undefined && { rowIndex }),
+    ...(itemId !== undefined && { itemId }),
   };
 
   return (
@@ -347,19 +334,19 @@ DataSheetTableCell.displayName = 'DataSheetTableCell';
 
 export interface DataSheetTableActionsCellProps
   extends Omit<DataSheetTableCellProps, 'parts'> {
-  rowIndex?: number;
+  itemId?: string;
 }
 
 const DataSheetTableActionsCell = React.forwardRef<
   HTMLTableCellElement,
   DataSheetTableActionsCellProps
->(({ className, header, rowIndex: rowIndexProp, children, ...props }, ref) => {
+>(({ className, header, itemId: itemIdProp, children, ...props }, ref) => {
   const { onEditRow, onRemoveRow, actionsColumnParts } =
     useDataSheetTableContext();
-  const { rowIndex: rowIndexFromContext } = useDataSheetTableRowContext();
+  const { itemId: itemIdFromContext } = useDataSheetTableRowContext();
 
   // Use explicit prop if provided, otherwise use context
-  const rowIndex = rowIndexProp ?? rowIndexFromContext;
+  const itemId = itemIdProp ?? itemIdFromContext;
 
   // Header row - render empty or label
   if (header) {
@@ -384,25 +371,25 @@ const DataSheetTableActionsCell = React.forwardRef<
     <DataSheetTableCell
       ref={ref}
       parts={actionsColumnParts}
-      className={cn('align-middle', className)}
+      className={cn('align-top', className)}
       {...props}
     >
       <div className="flex">
-        {onEditRow && rowIndex !== undefined && (
+        {onEditRow && itemId && (
           <Button
             size="icon"
             intent="text"
             icon={IconPencil}
-            onClick={() => onEditRow(rowIndex)}
+            onClick={() => onEditRow(itemId)}
             className="text-shape-primary [&_svg]:!size-5"
           />
         )}
-        {onRemoveRow && rowIndex !== undefined && (
+        {onRemoveRow && itemId && (
           <Button
             size="icon"
             intent="text"
             icon={IconTrash}
-            onClick={() => onRemoveRow(rowIndex)}
+            onClick={() => onRemoveRow(itemId)}
             danger
             className="[&_svg]:!size-5"
           />
