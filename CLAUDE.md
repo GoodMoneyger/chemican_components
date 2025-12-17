@@ -115,5 +115,22 @@ Always run `npm run lint` and `npm run prettier` before committing changes.
 - Create comprehensive Storybook stories
 - Ensure accessibility via Radix UI primitives
 
+### Working with Figma Designs
+When implementing components from Figma designs, always fetch the design variables to ensure accurate implementation:
+
+1. **Fetch Design Context**: Use `get_design_context` to get the component structure and generated code
+2. **Get Design Variables**: **CRITICAL** - Always use `get_variable_defs` to fetch the design token values used in the Figma design
+3. **Get Screenshot**: Use `get_screenshot` to see the visual representation
+
+The design variables show the exact token names and values (e.g., `spacing.xs: "8"`, `text.size.md: "14"`) that map directly to Tailwind classes in our design system. This ensures you choose the correct spacing, typography, and color tokens rather than guessing or using hardcoded values.
+
+**Example workflow:**
+```
+1. get_design_context (nodeId: "123:456") → See component structure
+2. get_variable_defs (nodeId: "123:456") → See design tokens like spacing.xs, text.size.md
+3. get_screenshot (nodeId: "123:456") → Verify visual design
+4. Map tokens to Tailwind: spacing.xs → gap-xs, text.size.md → text-md
+```
+
 ### Token Updates
 If design tokens need updating, use `npm run tokens:generate` to regenerate from Figma. Never manually edit `src/tokens.ts`.
