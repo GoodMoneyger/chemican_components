@@ -5,6 +5,7 @@ export * from './Button';
 export * from './Calendar';
 export * from './Callout';
 export * from './Checkbox';
+export * from './DataSheet';
 export * from './DatePicker';
 export * from './Dialog';
 export * from './DropdownMenu';
