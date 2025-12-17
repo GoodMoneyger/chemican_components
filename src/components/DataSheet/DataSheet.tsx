@@ -7,8 +7,7 @@ import { cn } from '../../utils';
 import { Button } from '../Button/Button';
 import type { ButtonProps } from '../Button/Button';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface DataSheetProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
 
 const dataSheetVariants = cva('bg-surface-primary space-y-md w-full', {
   variants: {},
@@ -90,9 +89,7 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
 );
 DataSheetHeader.displayName = 'DataSheetHeader';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface DataSheetSectionProps
-  extends React.HTMLAttributes<HTMLElement> {}
+export type DataSheetSectionProps = React.HTMLAttributes<HTMLElement>;
 
 const DataSheetSection = React.forwardRef<HTMLElement, DataSheetSectionProps>(
   ({ className, children, ...props }, ref) => (
@@ -197,9 +194,10 @@ const DataSheetTableContext = React.createContext<DataSheetTableContextValue>(
 
 const useDataSheetTableContext = () => React.useContext(DataSheetTableContext);
 
-// Context for TableRow to provide itemId to cells
+// Context for TableRow to provide itemId and totalParts to cells
 interface DataSheetTableRowContextValue {
   itemId?: string;
+  totalParts?: number;
 }
 
 const DataSheetTableRowContext =
@@ -237,9 +235,8 @@ const DataSheetTable = React.forwardRef<HTMLDivElement, DataSheetTableProps>(
 );
 DataSheetTable.displayName = 'DataSheetTable';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface DataSheetTableHeaderProps
-  extends React.HTMLAttributes<HTMLTableSectionElement> {}
+export type DataSheetTableHeaderProps =
+  React.HTMLAttributes<HTMLTableSectionElement>;
 
 const DataSheetTableHeader = React.forwardRef<
   HTMLTableSectionElement,
@@ -251,9 +248,8 @@ const DataSheetTableHeader = React.forwardRef<
 ));
 DataSheetTableHeader.displayName = 'DataSheetTableHeader';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface DataSheetTableBodyProps
-  extends React.HTMLAttributes<HTMLTableSectionElement> {}
+export type DataSheetTableBodyProps =
+  React.HTMLAttributes<HTMLTableSectionElement>;
 
 const DataSheetTableBody = React.forwardRef<
   HTMLTableSectionElement,
@@ -275,8 +271,23 @@ const DataSheetTableRow = React.forwardRef<
   HTMLTableRowElement,
   DataSheetTableRowProps
 >(({ className, header, itemId, children, ...props }, ref) => {
+  // Calculate total parts from all children with parts prop
+  const totalParts = React.useMemo(() => {
+    let total = 0;
+    React.Children.forEach(children, (child) => {
+      if (
+        React.isValidElement<{ parts?: number }>(child) &&
+        typeof child.props.parts === 'number'
+      ) {
+        total += child.props.parts;
+      }
+    });
+    return total > 0 ? total : undefined;
+  }, [children]);
+
   const rowContextValue: DataSheetTableRowContextValue = {
     ...(itemId !== undefined && { itemId }),
+    ...(totalParts !== undefined && { totalParts }),
   };
 
   return (
@@ -307,10 +318,14 @@ const DataSheetTableCell = React.forwardRef<
   DataSheetTableCellProps
 >(({ className, header, parts, children, style, ...props }, ref) => {
   const Component = header ? 'th' : 'td';
+  const { totalParts } = useDataSheetTableRowContext();
+
   // Calculate width as percentage based on parts
   // Parts represent relative weight - total is calculated from all cells in the row
   const widthStyle =
-    parts !== undefined ? { width: `${parts}%`, ...style } : style;
+    parts !== undefined && totalParts !== undefined
+      ? { width: `${(parts / totalParts) * 100}%`, ...style }
+      : style;
 
   return (
     <Component
@@ -400,8 +415,7 @@ const DataSheetTableActionsCell = React.forwardRef<
 });
 DataSheetTableActionsCell.displayName = 'DataSheetTableActionsCell';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface DataSheetActionProps extends ButtonProps {}
+export type DataSheetActionProps = ButtonProps;
 
 const DataSheetAction = React.forwardRef<
   HTMLButtonElement,
