@@ -59,7 +59,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
       totalItems,
       onPageChange,
       rowsPerPage,
-      rowsPerPageOptions = [10, 25, 50, 100],
+      rowsPerPageOptions = [50, 100, 200],
       onRowsPerPageChange,
       rowsPerPageLabel = '表示行数',
       pageSelectLabel = 'ページ選択',

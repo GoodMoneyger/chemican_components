@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { DataSheet } from '../DataSheet/DataSheet';
+
 import { Accordion, type AccordionProps } from './Accordion';
 
 const meta: Meta<AccordionProps> = {
@@ -51,16 +53,16 @@ export const Default: Story = {
       <Accordion.Item value="item-1">
         <Accordion.Trigger>0. 基礎情報</Accordion.Trigger>
         <Accordion.Content>
-          <div className="space-y-4">
-            <div>
-              <div className="text-body-secondary mb-xxs">SDS作成日</div>
-              <div>2025/01/08</div>
-            </div>
-            <div>
-              <div className="text-body-secondary mb-xxs">SDS改訂日</div>
-              <div>2025/01/08</div>
-            </div>
-          </div>
+          <DataSheet>
+            <DataSheet.Section>
+              <DataSheet.KeyValue label="SDS作成日">
+                2025/01/08
+              </DataSheet.KeyValue>
+              <DataSheet.KeyValue label="SDS改訂日">
+                2025/01/08
+              </DataSheet.KeyValue>
+            </DataSheet.Section>
+          </DataSheet>
         </Accordion.Content>
       </Accordion.Item>
 
