@@ -103,32 +103,20 @@ const DataSheetSection = React.forwardRef<HTMLElement, DataSheetSectionProps>(
 );
 DataSheetSection.displayName = 'DataSheetSection';
 
-const dataSheetKeyValueVariants = cva('', {
+const dataSheetKeyValueVariants = cva('py-sm', {
   variants: {
     orientation: {
       vertical: 'gap-xxs flex flex-col',
-      horizontal: 'px-0 flex items-center',
+      horizontal: 'px-0 py-0 min-h-11 flex items-center',
     },
-    variant: {
-      default: 'py-sm',
-      compact: 'py-xxs',
+    spacing: {
+      default: '',
+      compact: 'py-xxs min-h-0 border-none',
     },
   },
-  compoundVariants: [
-    {
-      orientation: 'horizontal',
-      variant: 'default',
-      className: 'py-0 min-h-11',
-    },
-    {
-      orientation: 'horizontal',
-      variant: 'compact',
-      className: 'py-xxs',
-    },
-  ],
   defaultVariants: {
     orientation: 'vertical',
-    variant: 'default',
+    spacing: 'default',
   },
 });
 
@@ -171,11 +159,11 @@ export interface DataSheetKeyValueProps
 const DataSheetKeyValue = React.forwardRef<
   HTMLDivElement,
   DataSheetKeyValueProps
->(({ className, label, orientation, variant, children, ...props }, ref) => (
+>(({ className, label, orientation, spacing, children, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      dataSheetKeyValueVariants({ orientation, variant }),
+      dataSheetKeyValueVariants({ orientation, spacing }),
       className
     )}
     {...props}
