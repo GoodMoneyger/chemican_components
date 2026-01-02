@@ -398,3 +398,29 @@ export const SectionDataExampleWithinAccordion: Story = () => (
     </Accordion>
   </div>
 );
+
+export const CompactKeyValue: Story = () => (
+  <DataSheet className="w-140">
+    <DataSheet.Section className="divide-y-0">
+      <DataSheet.CompactKeyValue label="SDSファイル名">
+        4-AMINO-2-CHLOROBENZOIC-5GR.pdf
+      </DataSheet.CompactKeyValue>
+      <DataSheet.CompactKeyValue label="SDS改訂日">
+        2025/01/08 22:38
+      </DataSheet.CompactKeyValue>
+    </DataSheet.Section>
+  </DataSheet>
+);
+
+export const CompactHorizontalKeyValue: Story = () => (
+  <DataSheet className="w-140">
+    <DataSheet.Section className="divide-y-0">
+      <DataSheet.CompactKeyValue orientation="horizontal" label="推奨用途">
+        -
+      </DataSheet.CompactKeyValue>
+      <DataSheet.CompactKeyValue orientation="horizontal" label="使用上の制限">
+        -
+      </DataSheet.CompactKeyValue>
+    </DataSheet.Section>
+  </DataSheet>
+);
