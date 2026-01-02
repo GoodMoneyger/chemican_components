@@ -103,15 +103,32 @@ const DataSheetSection = React.forwardRef<HTMLElement, DataSheetSectionProps>(
 );
 DataSheetSection.displayName = 'DataSheetSection';
 
-const dataSheetKeyValueVariants = cva('py-sm', {
+const dataSheetKeyValueVariants = cva('', {
   variants: {
     orientation: {
       vertical: 'gap-xxs flex flex-col',
-      horizontal: 'px-0 py-0 min-h-11 flex items-center',
+      horizontal: 'px-0 flex items-center',
+    },
+    variant: {
+      default: 'py-sm',
+      compact: 'py-xxs',
     },
   },
+  compoundVariants: [
+    {
+      orientation: 'horizontal',
+      variant: 'default',
+      className: 'py-0 min-h-11',
+    },
+    {
+      orientation: 'horizontal',
+      variant: 'compact',
+      className: 'py-xxs',
+    },
+  ],
   defaultVariants: {
     orientation: 'vertical',
+    variant: 'default',
   },
 });
 
@@ -154,10 +171,13 @@ export interface DataSheetKeyValueProps
 const DataSheetKeyValue = React.forwardRef<
   HTMLDivElement,
   DataSheetKeyValueProps
->(({ className, label, orientation, children, ...props }, ref) => (
+>(({ className, label, orientation, variant, children, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(dataSheetKeyValueVariants({ orientation }), className)}
+    className={cn(
+      dataSheetKeyValueVariants({ orientation, variant }),
+      className
+    )}
     {...props}
   >
     <div className={cn(dataSheetKeyValueLabelVariants({ orientation }))}>
@@ -169,43 +189,6 @@ const DataSheetKeyValue = React.forwardRef<
   </div>
 ));
 DataSheetKeyValue.displayName = 'DataSheetKeyValue';
-
-const dataSheetCompactKeyValueVariants = cva('py-xxs', {
-  variants: {
-    orientation: {
-      vertical: 'gap-xxs flex flex-col',
-      horizontal: 'px-0 flex items-center',
-    },
-  },
-  defaultVariants: {
-    orientation: 'vertical',
-  },
-});
-
-export interface DataSheetCompactKeyValueProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof dataSheetCompactKeyValueVariants> {
-  label: React.ReactNode;
-}
-
-const DataSheetCompactKeyValue = React.forwardRef<
-  HTMLDivElement,
-  DataSheetCompactKeyValueProps
->(({ className, label, orientation, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(dataSheetCompactKeyValueVariants({ orientation }), className)}
-    {...props}
-  >
-    <div className={cn(dataSheetKeyValueLabelVariants({ orientation }))}>
-      {label}
-    </div>
-    <div className={cn(dataSheetKeyValueValueVariants({ orientation }))}>
-      {children}
-    </div>
-  </div>
-));
-DataSheetCompactKeyValue.displayName = 'DataSheetCompactKeyValue';
 
 export interface DataSheetTableProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -466,7 +449,6 @@ const DataSheetNamespace = Object.assign(DataSheet, {
   Header: DataSheetHeader,
   Section: DataSheetSection,
   KeyValue: DataSheetKeyValue,
-  CompactKeyValue: DataSheetCompactKeyValue,
   Table: DataSheetTable,
   TableHeader: DataSheetTableHeader,
   TableBody: DataSheetTableBody,
@@ -481,7 +463,6 @@ export {
   DataSheetHeader,
   DataSheetSection,
   DataSheetKeyValue,
-  DataSheetCompactKeyValue,
   DataSheetTable,
   DataSheetTableHeader,
   DataSheetTableBody,
