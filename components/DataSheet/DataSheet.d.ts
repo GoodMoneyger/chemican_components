@@ -14,6 +14,7 @@ export type DataSheetSectionProps = React.HTMLAttributes<HTMLElement>;
 declare const DataSheetSection: React.ForwardRefExoticComponent<DataSheetSectionProps & React.RefAttributes<HTMLElement>>;
 declare const dataSheetKeyValueVariants: (props?: ({
     orientation?: "horizontal" | "vertical" | null | undefined;
+    spacing?: "default" | "compact" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface DataSheetKeyValueProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof dataSheetKeyValueVariants> {
     label: React.ReactNode;
