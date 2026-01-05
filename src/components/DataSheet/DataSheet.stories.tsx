@@ -51,6 +51,40 @@ export const HorizontalKeyValue: Story = () => (
   </DataSheet>
 );
 
+export const CompactKeyValue: Story = () => (
+  <DataSheet className="w-140">
+    <DataSheet.Section>
+      <DataSheet.KeyValue spacing="compact" label="SDSファイル名">
+        4-AMINO-2-CHLOROBENZOIC-5GR.pdf
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue spacing="compact" label="SDS改訂日">
+        2025/01/08 22:38
+      </DataSheet.KeyValue>
+    </DataSheet.Section>
+  </DataSheet>
+);
+
+export const CompactHorizontalKeyValue: Story = () => (
+  <DataSheet className="w-140">
+    <DataSheet.Section>
+      <DataSheet.KeyValue
+        spacing="compact"
+        orientation="horizontal"
+        label="推奨用途"
+      >
+        -
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue
+        spacing="compact"
+        orientation="horizontal"
+        label="使用上の制限"
+      >
+        -
+      </DataSheet.KeyValue>
+    </DataSheet.Section>
+  </DataSheet>
+);
+
 export const MixedLayout: Story = () => (
   <DataSheet className="w-140">
     <DataSheet.Section>

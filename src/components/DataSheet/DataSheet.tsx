@@ -6,7 +6,6 @@ import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { cn } from '../../utils';
 import { Button } from '../Button/Button';
 import type { ButtonProps } from '../Button/Button';
-
 export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
 
 const dataSheetVariants = cva('bg-surface-primary space-y-md w-full', {
@@ -110,9 +109,14 @@ const dataSheetKeyValueVariants = cva('py-sm', {
       vertical: 'gap-xxs flex flex-col',
       horizontal: 'px-0 py-0 min-h-11 flex items-center',
     },
+    spacing: {
+      default: '',
+      compact: 'py-xxs min-h-0 border-none',
+    },
   },
   defaultVariants: {
     orientation: 'vertical',
+    spacing: 'default',
   },
 });
 
@@ -155,10 +159,13 @@ export interface DataSheetKeyValueProps
 const DataSheetKeyValue = React.forwardRef<
   HTMLDivElement,
   DataSheetKeyValueProps
->(({ className, label, orientation, children, ...props }, ref) => (
+>(({ className, label, orientation, spacing, children, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(dataSheetKeyValueVariants({ orientation }), className)}
+    className={cn(
+      dataSheetKeyValueVariants({ orientation, spacing }),
+      className
+    )}
     {...props}
   >
     <div className={cn(dataSheetKeyValueLabelVariants({ orientation }))}>
