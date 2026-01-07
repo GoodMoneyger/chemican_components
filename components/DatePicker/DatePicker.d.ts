@@ -69,5 +69,11 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
      * Which side to display the calendar relative to the input.
      */
     side?: 'top' | 'right' | 'bottom' | 'left';
+    /**
+     * The locale for date picker localization.
+     * Defaults to 'ja' (Japanese).
+     * Supported values: 'ja', 'en'
+     */
+    locale?: 'ja' | 'en';
 }
 export declare const DatePicker: React.ForwardRefExoticComponent<DatePickerProps & React.RefAttributes<HTMLInputElement>>;

@@ -37,10 +37,6 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
      */
     fixedWeeks?: boolean;
     /**
-     * Whether to enable animations.
-     */
-    animate?: boolean;
-    /**
      * The month to display by default.
      */
     defaultMonth?: Date;
@@ -49,5 +45,11 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
      * When inline=true, no shadow is applied. When inline=false (default), shadow is applied for overlay usage.
      */
     inline?: boolean;
+    /**
+     * The locale for date picker localization.
+     * Defaults to 'ja' (Japanese).
+     * Supported values: 'ja', 'en'
+     */
+    locale?: 'ja' | 'en';
 }
 export declare const Calendar: React.ForwardRefExoticComponent<CalendarProps & React.RefAttributes<HTMLDivElement>>;
