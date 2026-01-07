@@ -83,6 +83,12 @@ export interface DatePickerProps
    * Which side to display the calendar relative to the input.
    */
   side?: 'top' | 'right' | 'bottom' | 'left';
+  /**
+   * The locale for date picker localization.
+   * Defaults to 'ja' (Japanese).
+   * Supported values: 'ja', 'en'
+   */
+  locale?: 'ja' | 'en';
 }
 
 // Utility functions
@@ -123,6 +129,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
       open,
       onOpenChange,
       side = 'bottom',
+      locale = 'ja',
     },
     ref
   ) => {
@@ -249,8 +256,8 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
               disabled={!isValidDateRange}
               showOutsideDays={true}
               fixedWeeks={true}
-              animate={true}
               defaultMonth={selectedDate || new Date()}
+              locale={locale}
             />
           </Popover.Content>
         </Popover.Portal>

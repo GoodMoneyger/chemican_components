@@ -48,6 +48,12 @@ const meta: Meta<typeof DatePicker> = {
       description: 'Whether the popover should be open by default',
       defaultValue: false,
     },
+    locale: {
+      control: 'select',
+      options: ['ja', 'en'],
+      description: 'The locale for date picker localization',
+      defaultValue: 'ja',
+    },
   },
 };
 
@@ -148,6 +154,33 @@ export const CustomFormatting: Story = {
       </div>
     );
   },
+};
+
+// Locale Examples - demonstrates Japanese and English locales
+export const Locales: Story = {
+  render: () => (
+    <div className="space-y-6">
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">Japanese</h3>
+          <h4 className="text-sm text-body-secondary">日本語</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker locale="ja" placeholder="選択してください" />
+        </div>
+      </div>
+
+      <div className="gap-6 flex items-start">
+        <div className="w-24 flex-shrink-0">
+          <h3 className="text-sm font-medium text-body-primary">English</h3>
+          <h4 className="text-sm text-body-secondary">英語</h4>
+        </div>
+        <div className="flex-1">
+          <DatePicker locale="en" placeholder="Select a date" />
+        </div>
+      </div>
+    </div>
+  ),
 };
 
 // ReactNode Placeholder Examples - showcasing the ReactNode conversion functionality

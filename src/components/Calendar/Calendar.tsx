@@ -1,21 +1,9 @@
 import React from 'react';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
 import 'react-day-picker/style.css';
-import { ja } from 'react-day-picker/locale';
+import { ja, enUS } from 'react-day-picker/locale';
 
 import { cn } from '../../lib/utils';
-
-// Custom locale: Japanese month/year formatting with English weekdays
-const customLocale = {
-  ...ja,
-  localize: {
-    ...ja.localize,
-    day: (n: number) => {
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      return days[n] || '';
-    },
-  },
-};
 
 // Component styles
 const getCalendarStyles = (inline: boolean) =>
@@ -66,10 +54,6 @@ export interface CalendarProps
    */
   fixedWeeks?: boolean;
   /**
-   * Whether to enable animations.
-   */
-  animate?: boolean;
-  /**
    * The month to display by default.
    */
   defaultMonth?: Date;
@@ -78,6 +62,12 @@ export interface CalendarProps
    * When inline=true, no shadow is applied. When inline=false (default), shadow is applied for overlay usage.
    */
   inline?: boolean;
+  /**
+   * The locale for date picker localization.
+   * Defaults to 'ja' (Japanese).
+   * Supported values: 'ja', 'en'
+   */
+  locale?: 'ja' | 'en';
 }
 
 // Utility functions
@@ -102,9 +92,9 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       className,
       showOutsideDays = true,
       fixedWeeks = true,
-      animate = true,
       defaultMonth,
       inline = false,
+      locale = 'ja',
       ...props
     },
     ref
@@ -150,11 +140,17 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
         {...props}
       >
         <DayPicker
-          animate={animate}
+          animate={false}
           mode="single"
           selected={selectedDate || undefined}
           onSelect={handleDateChange}
-          locale={customLocale}
+          locale={locale === 'ja' ? ja : enUS}
+          captionLayout="dropdown"
+          navLayout="after"
+          formatters={{
+            formatYearDropdown: (year: Date) =>
+              `${year.getFullYear()}${locale === 'ja' ? '年' : ''}`,
+          }}
           disabled={
             !isValidDateRange
               ? [
@@ -184,14 +180,26 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               // Root container
               root: `${defaultClassNames.root} shadow-none gap-2.5 ![--rdp-nav-height:20px] ![--rdp-nav-button-width:20px] ![--rdp-nav-button-height:20px]`,
 
-              // Header elements
-              month_caption: `text-base font-bold text-body-primary px-xxs mb-md`,
+              // Month wrapper - CSS Grid with 2 columns for header row
+              month: `grid grid-cols-[1fr_auto] auto-rows-auto`,
+
+              // Header elements - dropdowns on left (col 1, row 1)
+              month_caption: `col-start-1 row-start-1 px-xxs mb-md flex items-center`,
+              caption_label: `hidden`,
+              dropdowns: `flex gap-xxs items-center`,
+              dropdown: `border border-shape-interactive-neutral-default rounded-xs px-xs pr-xxs py-xxs gap-xxxs flex items-center text-lg font-bold text-body-primary cursor-pointer hover:border-shape-interactive-neutral-hover focus:outline-none focus:ring-2 focus:ring-interactive-focused transition-colors disabled:opacity-50 disabled:cursor-not-allowed`,
+              dropdown_root: `relative`,
+
+              // Navigation - on right (col 2, row 1)
+              nav: `col-start-2 row-start-1 flex gap-xs items-center px-xxs mb-md`,
+
+              // Calendar grid below (spans both columns, row 2)
+              month_grid: `col-span-2 row-start-2`,
+
               weekdays: `mb-xs`,
               weekday: `text-body-secondary text-[13px] font-normal leading-5 tracking-normal text-center`,
-
-              // Navigation
-              button_previous: navigationButton,
-              button_next: navigationButton,
+              button_previous: `${navigationButton} flex items-center justify-center`,
+              button_next: `${navigationButton} flex items-center justify-center`,
               chevron: `fill-current text-interactive-primary-default w-5 h-5`,
 
               // Day states
