@@ -205,13 +205,13 @@ export interface TagProps {
 }
 
 const tagVariants = cva(
-  `gap-xxs py-xxs px-xs h-5.5 bg-shape-accent-gray-pale text-accent-gray-strong
+  `gap-xxs py-xxs px-xs bg-shape-accent-gray-pale text-accent-gray-strong
   inline-flex items-center rounded-full border border-transparent leading-none`,
   {
     variants: {
       size: {
-        sm: 'text-sm',
-        md: '',
+        sm: 'text-sm h-5',
+        md: 'h-5.5',
       },
       selected: {
         false: '',
