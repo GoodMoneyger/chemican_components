@@ -15,6 +15,7 @@ export interface MultiStepDialogRootProps {
     children: ReactNode;
     initialStep?: number;
     currentStep?: number;
+    allowClickOutside?: boolean;
     onStepChange?: (step: number) => void;
 }
 export interface MultiStepDialogStepProps {
