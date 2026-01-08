@@ -4,22 +4,22 @@ interface SideNavigationContextValue {
   isCollapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
   toggleCollapsed: () => void;
-  isInFooter: boolean;
 }
 
 const SideNavigationContext = createContext<
   SideNavigationContextValue | undefined
 >(undefined);
 
+// Separate context for tracking footer state to avoid interfering with collapse state
+const FooterContext = createContext<boolean>(false);
+
 export interface SideNavigationProviderProps {
   defaultCollapsed?: boolean;
-  isInFooter?: boolean;
   children: React.ReactNode;
 }
 
 export const SideNavigationProvider: React.FC<SideNavigationProviderProps> = ({
   defaultCollapsed = false,
-  isInFooter = false,
   children,
 }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
@@ -33,9 +33,8 @@ export const SideNavigationProvider: React.FC<SideNavigationProviderProps> = ({
       isCollapsed,
       setIsCollapsed,
       toggleCollapsed,
-      isInFooter,
     }),
-    [isCollapsed, setIsCollapsed, toggleCollapsed, isInFooter]
+    [isCollapsed, setIsCollapsed, toggleCollapsed]
   );
 
   return (
@@ -45,12 +44,19 @@ export const SideNavigationProvider: React.FC<SideNavigationProviderProps> = ({
   );
 };
 
-export const useSideNavigation = (): SideNavigationContextValue => {
+export const FooterProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  return <FooterContext.Provider value={true}>{children}</FooterContext.Provider>;
+};
+
+export const useSideNavigation = () => {
   const context = useContext(SideNavigationContext);
   if (context === undefined) {
     throw new Error(
       'useSideNavigation must be used within a SideNavigationProvider'
     );
   }
-  return context;
+  const isInFooter = useContext(FooterContext);
+  return { ...context, isInFooter };
 };
