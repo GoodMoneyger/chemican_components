@@ -36,16 +36,15 @@ const tabVariants = cva(
   disabled:text-interactive-disabled disabled:hover:border-divider-default
   relative inline-flex cursor-pointer items-center justify-center border-b pb-px
   leading-[100%] tracking-[0] transition-colors hover:border-b-2
-  disabled:cursor-not-allowed disabled:hover:border-b
-  data-[state=active]:border-b-2
+  disabled:cursor-default disabled:hover:border-b data-[state=active]:border-b-2
   data-[state=active]:text-[var(--chemican-green-800)]`,
   {
     variants: {
       size: {
         normal: `p-md h-12 text-lg hover:pb-[calc(1rem-1px)]
-        data-[state=active]:pb-[calc(1rem-1px)]`,
+        disabled:hover:pb-px data-[state=active]:pb-[calc(1rem-1px)]`,
         small: `p-sm h-9.5 text-md hover:pb-[calc(0.75rem-1px)]
-        data-[state=active]:pb-[calc(0.75rem-1px)]`,
+        disabled:hover:pb-px data-[state=active]:pb-[calc(0.75rem-1px)]`,
       },
     },
     defaultVariants: {
