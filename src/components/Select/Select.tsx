@@ -140,7 +140,11 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <RadixSelect.Root {...rootProps}>
       <RadixSelect.Trigger
-        className={cn(selectVariants({ variant, intent, invalid }), className)}
+        className={cn(
+          selectVariants({ variant, intent, invalid }),
+          'group',
+          className
+        )}
       >
         <div className="inline-flex items-center">
           {renderIcon(Icon, {
@@ -159,7 +163,10 @@ export const Select: React.FC<SelectProps> = ({
               'text-body-disabled': props.disabled,
             })}
           >
-            <IconChevronDown className="top-0.5 relative h-full w-full" />
+            <IconChevronDown
+              className="top-0.5 relative h-full w-full transition-transform
+                duration-200 group-data-[state=open]:rotate-180"
+            />
           </RadixSelect.Icon>
         )}
       </RadixSelect.Trigger>
