@@ -6,6 +6,7 @@ import { cn } from '../../lib/utils';
 
 import {
   SideNavigationProvider,
+  FooterProvider,
   useSideNavigation,
 } from './SideNavigationContext';
 import { SideNavigationCollapseButton } from './SideNavigationCollapseButton';
@@ -112,7 +113,11 @@ const SideNavigationContent = React.forwardRef<
           {children}
         </div>
 
-        {footer && <div className="px-xs py-md">{footer}</div>}
+        {footer && (
+          <div className="px-xs py-md">
+            <FooterProvider>{footer}</FooterProvider>
+          </div>
+        )}
 
         {showCollapseButton && <SideNavigationCollapseButton />}
       </nav>
