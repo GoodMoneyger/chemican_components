@@ -141,8 +141,8 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      */
     clearAllLabel?: React.ReactNode;
     /**
-     * Label displayed for the footer apply action.
-     * Optional, defaults to "Apply".
+     * Label displayed for the footer close action.
+     * Optional, defaults to "閉じる" (Close).
      */
     applyLabel?: React.ReactNode;
     /**
