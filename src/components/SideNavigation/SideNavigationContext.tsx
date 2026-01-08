@@ -4,6 +4,7 @@ interface SideNavigationContextValue {
   isCollapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
   toggleCollapsed: () => void;
+  isInFooter: boolean;
 }
 
 const SideNavigationContext = createContext<
@@ -12,11 +13,13 @@ const SideNavigationContext = createContext<
 
 export interface SideNavigationProviderProps {
   defaultCollapsed?: boolean;
+  isInFooter?: boolean;
   children: React.ReactNode;
 }
 
 export const SideNavigationProvider: React.FC<SideNavigationProviderProps> = ({
   defaultCollapsed = false,
+  isInFooter = false,
   children,
 }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
@@ -30,8 +33,9 @@ export const SideNavigationProvider: React.FC<SideNavigationProviderProps> = ({
       isCollapsed,
       setIsCollapsed,
       toggleCollapsed,
+      isInFooter,
     }),
-    [isCollapsed, setIsCollapsed, toggleCollapsed]
+    [isCollapsed, setIsCollapsed, toggleCollapsed, isInFooter]
   );
 
   return (

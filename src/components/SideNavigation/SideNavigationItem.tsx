@@ -62,7 +62,7 @@ export const SideNavigationItem = React.forwardRef<
     },
     ref
   ) => {
-    const { isCollapsed } = useSideNavigation();
+    const { isCollapsed, isInFooter } = useSideNavigation();
     const Comp = asChild ? Slot.Root : 'button';
     const finalVariant = disabled ? 'disabled' : variant;
 
@@ -75,6 +75,7 @@ export const SideNavigationItem = React.forwardRef<
             size,
             collapsed: isCollapsed,
           }),
+          !isInFooter && 'font-bold',
           className
         )}
         disabled={disabled}

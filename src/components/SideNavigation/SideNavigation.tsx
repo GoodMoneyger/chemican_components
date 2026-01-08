@@ -112,7 +112,13 @@ const SideNavigationContent = React.forwardRef<
           {children}
         </div>
 
-        {footer && <div className="px-xs py-md">{footer}</div>}
+        {footer && (
+          <div className="px-xs py-md">
+            <SideNavigationProvider isInFooter={true}>
+              {footer}
+            </SideNavigationProvider>
+          </div>
+        )}
 
         {showCollapseButton && <SideNavigationCollapseButton />}
       </nav>
