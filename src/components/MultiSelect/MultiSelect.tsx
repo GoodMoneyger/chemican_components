@@ -198,8 +198,8 @@ interface MultiSelectProps<T = string | number>
   clearAllLabel?: React.ReactNode;
 
   /**
-   * Label displayed for the footer apply action.
-   * Optional, defaults to "Apply".
+   * Label displayed for the footer close action.
+   * Optional, defaults to "閉じる" (Close).
    */
   applyLabel?: React.ReactNode;
 
@@ -400,7 +400,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     selectAllLabel = 'すべて選択',
     selectAllCountLabel = 'オプション',
     clearAllLabel = 'すべてクリア',
-    applyLabel = '適用',
+    applyLabel = '閉じる',
     moreSelectedLabel = 'その他',
     searchPlaceholder = 'オプションを検索...',
     maxCount = 10,
