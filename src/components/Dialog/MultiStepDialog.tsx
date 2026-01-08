@@ -41,6 +41,7 @@ export interface MultiStepDialogRootProps {
   children: ReactNode;
   initialStep?: number;
   currentStep?: number; // Controlled mode
+  allowClickOutside?: boolean;
   onStepChange?: (step: number) => void;
 }
 
@@ -51,6 +52,7 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
   children,
   initialStep = 0,
   currentStep: controlledStep,
+  allowClickOutside = true,
   onStepChange,
 }) => {
   const [internalStep, setInternalStep] = useState(initialStep);
@@ -105,6 +107,11 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
               className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
                 min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
                 -translate-y-1/2 transform overflow-auto"
+              onPointerDownOutside={(event) => {
+                if (!allowClickOutside) {
+                  event.preventDefault();
+                }
+              }}
             >
               {steps[currentStep]}
             </RadixDialog.Content>
