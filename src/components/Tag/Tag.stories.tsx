@@ -49,6 +49,13 @@ DefaultTag.args = {
   colorCode: 1,
 };
 
+export const SmallSize = TagTemplate.bind({});
+SmallSize.args = {
+  children: 'スモールサイズのタグ',
+  size: 'sm',
+  colorCode: 2,
+};
+
 export const MediumSize = TagTemplate.bind({});
 MediumSize.args = {
   children: 'メディアムサイズのタグ',
