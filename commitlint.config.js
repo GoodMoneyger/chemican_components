@@ -30,6 +30,7 @@ function getComponentTopics() {
       'checkbox',
       'chip',
       'dialog',
+      'multistepdialog',
       'formfield',
       'input',
       'progress',
