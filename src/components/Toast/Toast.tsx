@@ -61,7 +61,14 @@ export const ToastItem: React.FC<ToastItemProps> = ({
           </div>
           <div>
             {title && (
-              <RadixToast.Title className="text-body-primary font-bold">
+              <RadixToast.Title
+                className={cn('font-bold', {
+                  'text-body-primary': level === 'info',
+                  'text-body-success': level === 'success',
+                  'text-body-alert': level === 'error',
+                  'text-body-warning': level === 'warning',
+                })}
+              >
                 <h5
                   className={cn('text-md leading-none', {
                     'mb-xs': Boolean(message),
