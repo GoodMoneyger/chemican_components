@@ -18,6 +18,8 @@ const textLinkVariants = cva(
         active:text-interactive-primary-active`,
         secondary: `text-body-primary hover:text-interactive-primary-hover
         active:text-interactive-primary-active`,
+        tertiary: `text-body-primary hover:text-interactive-primary-hover
+        active:text-interactive-primary-active [&_svg]:text-shape-primary`,
       },
       size: {
         lg: 'gap-xxs text-lg',
@@ -63,7 +65,7 @@ export interface TextLinkProps
   /**
    * Link intent
    */
-  intent?: 'primary' | 'secondary';
+  intent?: 'primary' | 'secondary' | 'tertiary';
   /**
    * Link size
    */
