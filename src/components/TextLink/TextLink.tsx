@@ -17,12 +17,9 @@ const textLinkVariants = cva(
         hover:text-interactive-primary-hover
         active:text-interactive-primary-active
         [:not(:hover):not(:active)]:underline`,
-        secondary: `text-body-primary hover:text-interactive-primary-hover
-        active:text-interactive-primary-active
-        [:not(:hover):not(:active)]:underline`,
-        tertiary: `text-body-primary hover:text-interactive-primary-hover
-        active:text-interactive-primary-active [&_svg]:text-shape-primary
-        hover:underline active:underline`,
+        secondary: 'text-body-primary [:not(:hover):not(:active)]:underline',
+        tertiary: `text-body-primary [&_svg]:text-shape-primary hover:underline
+        active:underline`,
       },
       size: {
         lg: 'gap-xxs text-lg',
