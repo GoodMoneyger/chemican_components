@@ -206,7 +206,7 @@ export interface TagProps {
 
 const tagVariants = cva(
   `gap-xxs py-xxs px-xs bg-shape-accent-gray-pale text-accent-gray-strong
-  inline-flex items-center rounded-full border border-transparent leading-none`,
+  inline-flex items-center rounded-full border border-transparent`,
   {
     variants: {
       size: {
@@ -256,7 +256,7 @@ export const Tag: React.FC<TagProps> = ({
       onClick={onClick}
       role={onClick ? 'button' : undefined}
     >
-      <div className="truncate">{children}</div>
+      <div className="-top-1 relative truncate">{children}</div>
       {Boolean(onRemove) && (
         <button
           className={cn(
