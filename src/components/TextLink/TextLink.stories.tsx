@@ -19,7 +19,7 @@ const meta: Meta<typeof TextLink> = {
   argTypes: {
     intent: {
       control: 'select',
-      options: ['primary', 'secondary'],
+      options: ['primary', 'secondary', 'tertiary'],
     },
     size: {
       control: 'select',
@@ -85,6 +85,12 @@ export const Intents: Story = {
         <h3 className="text-sm font-medium mb-2">Secondary Intent</h3>
         <TextLink href="#" intent="secondary">
           Secondary Link
+        </TextLink>
+      </div>
+      <div>
+        <h3 className="text-sm font-medium mb-2">Tertiary Intent</h3>
+        <TextLink href="#" intent="tertiary">
+          Tertiary Link
         </TextLink>
       </div>
     </div>
@@ -236,6 +242,64 @@ export const AllCombinations: Story = {
               leadingIcon={IconPhone}
             >
               XSmall Secondary
+            </TextLink>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="text-lg font-bold">Tertiary Intent - All Sizes</h2>
+      <div className="gap-4 grid grid-cols-2">
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium">Default</h3>
+          <div className="space-y-2">
+            <TextLink href="#" intent="tertiary" size="lg">
+              Large Tertiary
+            </TextLink>
+            <TextLink href="#" intent="tertiary" size="md">
+              Medium Tertiary
+            </TextLink>
+            <TextLink href="#" intent="tertiary" size="sm">
+              Small Tertiary
+            </TextLink>
+            <TextLink href="#" intent="tertiary" size="xs">
+              XSmall Tertiary
+            </TextLink>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium">With Icons</h3>
+          <div className="space-y-2">
+            <TextLink
+              href="#"
+              intent="tertiary"
+              size="lg"
+              leadingIcon={IconPhone}
+            >
+              Large Tertiary
+            </TextLink>
+            <TextLink
+              href="#"
+              intent="tertiary"
+              size="md"
+              leadingIcon={IconPhone}
+            >
+              Medium Tertiary
+            </TextLink>
+            <TextLink
+              href="#"
+              intent="tertiary"
+              size="sm"
+              leadingIcon={IconPhone}
+            >
+              Small Tertiary
+            </TextLink>
+            <TextLink
+              href="#"
+              intent="tertiary"
+              size="xs"
+              leadingIcon={IconPhone}
+            >
+              XSmall Tertiary
             </TextLink>
           </div>
         </div>
