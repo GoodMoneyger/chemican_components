@@ -201,7 +201,7 @@ interface MultiSelectProps<T = string | number>
    * Label displayed for the footer close action.
    * Optional, defaults to "閉じる" (Close).
    */
-  applyLabel?: React.ReactNode;
+  closeLabel?: React.ReactNode;
 
   /**
    * Label appended to the overflow badge when more selections exist than can be shown.
@@ -400,7 +400,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     selectAllLabel = 'すべて選択',
     selectAllCountLabel = 'オプション',
     clearAllLabel = 'すべてクリア',
-    applyLabel = '閉じる',
+    closeLabel = '閉じる',
     moreSelectedLabel = 'その他',
     searchPlaceholder = 'オプションを検索...',
     maxCount = 10,
@@ -1152,7 +1152,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
                     setIsPopoverOpen(false);
                   }}
                 >
-                  {applyLabel}
+                  {closeLabel}
                 </Button>
               </>
             </footer>
