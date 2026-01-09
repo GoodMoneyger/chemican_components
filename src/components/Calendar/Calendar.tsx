@@ -4,6 +4,7 @@ import 'react-day-picker/style.css';
 import { ja, enUS } from 'react-day-picker/locale';
 
 import { cn } from '../../lib/utils';
+import './Calendar.css';
 
 // Component styles
 const getCalendarStyles = (inline: boolean) =>
@@ -187,7 +188,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               month_caption: `col-start-1 row-start-1 px-xxs mb-md flex items-center`,
               caption_label: `hidden`,
               dropdowns: `flex gap-xxs items-center`,
-              dropdown: `border border-shape-interactive-neutral-default rounded-xs px-xs pr-xs py-xxs gap-xxxs flex items-center text-lg font-bold text-body-primary cursor-pointer hover:border-shape-interactive-neutral-hover focus:outline-none focus:ring-2 focus:ring-interactive-focused transition-colors disabled:opacity-50 disabled:cursor-not-allowed`,
+              dropdown: `border border-shape-interactive-neutral-default rounded-xs px-xs pr-xxs py-xxs gap-xxxs flex items-center text-lg font-bold text-body-primary cursor-pointer hover:border-shape-interactive-neutral-hover focus:outline-none focus:ring-2 focus:ring-interactive-focused transition-colors disabled:opacity-50 disabled:cursor-not-allowed`,
               dropdown_root: `relative`,
 
               // Navigation - on right (col 2, row 1)
