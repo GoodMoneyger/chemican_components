@@ -4,6 +4,7 @@ import 'react-day-picker/style.css';
 import { ja, enUS } from 'react-day-picker/locale';
 
 import { cn } from '../../lib/utils';
+import './Calendar.css';
 
 // Component styles
 const getCalendarStyles = (inline: boolean) =>
