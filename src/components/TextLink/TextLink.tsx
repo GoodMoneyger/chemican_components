@@ -9,17 +9,20 @@ import { cn, renderIcon } from '../../lib/utils';
 const textLinkVariants = cva(
   `font-normal inline-flex items-center justify-center border border-transparent
   decoration-solid decoration-from-font underline-offset-[3px] transition-colors
-  duration-75 [:not(:hover):not(:active)]:underline`,
+  duration-75`,
   {
     variants: {
       intent: {
         primary: `text-interactive-primary-default
         hover:text-interactive-primary-hover
-        active:text-interactive-primary-active`,
+        active:text-interactive-primary-active
+        [:not(:hover):not(:active)]:underline`,
         secondary: `text-body-primary hover:text-interactive-primary-hover
-        active:text-interactive-primary-active`,
+        active:text-interactive-primary-active
+        [:not(:hover):not(:active)]:underline`,
         tertiary: `text-body-primary hover:text-interactive-primary-hover
-        active:text-interactive-primary-active [&_svg]:text-shape-primary`,
+        active:text-interactive-primary-active [&_svg]:text-shape-primary
+        hover:underline active:underline`,
       },
       size: {
         lg: 'gap-xxs text-lg',
