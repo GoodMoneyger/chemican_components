@@ -144,7 +144,7 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      * Label displayed for the footer close action.
      * Optional, defaults to "閉じる" (Close).
      */
-    applyLabel?: React.ReactNode;
+    closeLabel?: React.ReactNode;
     /**
      * Label appended to the overflow badge when more selections exist than can be shown.
      * Optional, defaults to "more".
