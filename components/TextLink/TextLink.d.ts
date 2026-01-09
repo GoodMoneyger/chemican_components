@@ -2,7 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const textLinkVariants: (props?: ({
-    intent?: "primary" | "secondary" | null | undefined;
+    intent?: "primary" | "secondary" | "tertiary" | null | undefined;
     size?: "xs" | "sm" | "md" | "lg" | "inherit" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface TextLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'color'>, VariantProps<typeof textLinkVariants> {
@@ -25,7 +25,7 @@ export interface TextLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAncho
     /**
      * Link intent
      */
-    intent?: 'primary' | 'secondary';
+    intent?: 'primary' | 'secondary' | 'tertiary';
     /**
      * Link size
      */
