@@ -8,10 +8,12 @@
   -moz-appearance: none;
   
   /* Add padding on the right to make room for the custom arrow */
+  /* !important is required to override react-day-picker's inline styles */
   padding-right: var(--spacing-xs) !important;
   
   /* Add custom chevron arrow as a background image */
-  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%231a3b31" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M6 9l6 6 6-6"/%3E%3C/svg%3E');
+  /* Using raspberry-leaf-900 color (#143028) to match text-body-primary from design tokens */
+  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23143028" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M6 9l6 6 6-6"/%3E%3C/svg%3E');
   background-repeat: no-repeat;
   background-position: right center;
   background-size: 20px;
