@@ -1,3 +1,4 @@
+export * from './AccountMenu';
 export * from './Accordion';
 export * from './Badge';
 export * from './Breadcrumbs';

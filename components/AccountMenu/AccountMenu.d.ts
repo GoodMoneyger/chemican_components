@@ -1,7 +1,6 @@
 interface AccountMenuProps {
     userName: string;
     loggedAsRole: string;
-    logoutText: string;
     children?: React.ReactNode;
     className?: string;
 }

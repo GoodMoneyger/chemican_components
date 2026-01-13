@@ -2,7 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const badgeVariants: (props?: ({
-    intent?: "default" | "new" | "danger" | null | undefined;
+    intent?: "default" | "danger" | "new" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
     /**
