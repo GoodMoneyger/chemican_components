@@ -18,8 +18,8 @@ const selectVariants = cva(
     variants: {
       variant: {
         default: 'border-interactive-default p-md rounded gap-xs h-11.5 w-full',
-        compact: `py-xxs px-xs rounded-sm gap-xxs
-        hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
+        compact: `py-xxs px-xs rounded-sm gap-xxs h-[26px] w-fit
+        border-transparent`,
       },
       intent: {
         primary: '',
@@ -161,6 +161,7 @@ export const Select: React.FC<SelectProps> = ({
           <RadixSelect.Icon
             className={cn('text-body-primary h-3.5 w-3.5', {
               'text-body-disabled': props.disabled,
+              'group-hover:text-body-secondary': variant === 'compact',
             })}
           >
             <IconChevronDown
