@@ -47,7 +47,9 @@ export const SideNavigationProvider: React.FC<SideNavigationProviderProps> = ({
 export const FooterProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  return <FooterContext.Provider value={true}>{children}</FooterContext.Provider>;
+  return (
+    <FooterContext.Provider value={true}>{children}</FooterContext.Provider>
+  );
 };
 
 export const useSideNavigation = () => {

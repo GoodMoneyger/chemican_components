@@ -192,7 +192,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               dropdown_root: `relative`,
 
               // Navigation - on right (col 2, row 1)
-              nav: `col-start-2 row-start-1 flex gap-xs items-center px-xxs mb-md`,
+              nav: `col-start-2 row-start-1 flex gap-xxs items-center px-xxs mb-md`,
 
               // Calendar grid below (spans both columns, row 2)
               month_grid: `col-span-2 row-start-2`,
@@ -204,8 +204,8 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               chevron: `fill-current text-interactive-primary-default w-5 h-5`,
 
               // Day states
-              day: `rounded-md transition-colors text-body-primary text-md !w-9.5 !h-9.5`,
-              day_button: `!w-9 !h-9 border border-transparent rounded-sm active:text-interactive-primary-active hover:bg-interactive-neutral-hover  cursor-pointer`,
+              day: `rounded-md transition-colors text-body-primary text-md !w-9 !h-9`,
+              day_button: `!w-full !h-full border border-transparent rounded-sm active:text-interactive-primary-active hover:bg-interactive-neutral-hover  cursor-pointer`,
               today: `text-interactive-primary-active border-surface-warning [&>button]:!border-interactive-default`,
               selected: `[&>button]:!bg-input-selected [&>button]:!text-body-inverse [&>button]:!font-bold hover:[&>button]:!bg-input-selected hover:[&>button]:!border-transparent hover:[&>button]:!text-body-inverse`,
               outside: `text-body-secondary text-md border border-transparent`,
