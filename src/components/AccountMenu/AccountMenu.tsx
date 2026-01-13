@@ -5,7 +5,6 @@ import { Dropdown, DropdownContent, DropdownTrigger } from './../DropdownMenu';
 interface AccountMenuProps {
   userName: string;
   loggedAsRole: string;
-  logoutText: string;
   children?: React.ReactNode;
   className?: string;
 }
