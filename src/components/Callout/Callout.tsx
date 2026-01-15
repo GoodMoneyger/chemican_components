@@ -58,6 +58,18 @@ const descriptionVariants = cva(
   'text-body-primary font-normal leading-6 text-md'
 );
 
+const contentVariants = cva('min-w-0 flex flex-1 flex-col', {
+  variants: {
+    size: {
+      default: 'gap-xxxs',
+      large: 'gap-xxs',
+    },
+  },
+  defaultVariants: {
+    size: 'default',
+  },
+});
+
 const intentIcons: Record<string, TablerIcon> = {
   info: IconInfoCircleFilled,
   success: IconCircleCheckFilled,
@@ -105,7 +117,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
           {renderIcon(IconComponent, { className: 'size-full' })}
         </div>
 
-        <div className="min-w-0 gap-xxs flex flex-1 flex-col">
+        <div className={cn(contentVariants({ size }))}>
           {title && (
             <div className="flex items-center justify-between">
               <div className={cn(titleVariants())}>{title}</div>
