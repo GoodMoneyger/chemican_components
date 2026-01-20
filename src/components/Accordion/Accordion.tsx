@@ -82,8 +82,8 @@ const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(
     <RadixAccordion.Item
       ref={ref}
       className={cn(
-        `bg-surface-primary data-[disabled]:bg-surface-tertiary rounded-sm mt-2
-        first:mt-0 overflow-hidden`,
+        `bg-surface-primary rounded-sm mt-2 first:mt-0 overflow-hidden
+        data-[disabled]:opacity-30`,
         className
       )}
       {...props}
