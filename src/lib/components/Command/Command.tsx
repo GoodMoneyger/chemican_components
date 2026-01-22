@@ -28,7 +28,7 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
   <div
-    className="border-divider-default py-md px-md flex items-center border-b"
+    className="border-divider-default py-sm px-md flex items-center border-b"
     cmdk-input-wrapper=""
   >
     <div
@@ -63,7 +63,7 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn('max-h-[300px] overflow-x-hidden overflow-y-auto', className)}
+    className={cn('max-h-[300px] py-xs overflow-x-hidden overflow-y-auto', className)}
     {...props}
   />
 ));
