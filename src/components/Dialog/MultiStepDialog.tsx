@@ -161,7 +161,7 @@ const Body: React.FC<MultiStepDialogBodyProps> = ({ children, className }) => {
   return (
     <div
       className={`border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
-        text-body-primary min-h-40 flex-grow-0 border-y-1 ${className || ''}`}
+        text-body-primary flex-grow-0 border-y-1 ${className || ''}`}
     >
       {children}
     </div>

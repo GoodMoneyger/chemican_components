@@ -108,8 +108,7 @@ export const Dialog: React.FC<DialogProps> = ({
             </div>
             <div
               className="border-divider-default bg-surface-secondary px-xl pt-md
-                pb-xxl text-body-primary min-h-40 flex-1 overflow-y-auto
-                border-y-1"
+                pb-xxl text-body-primary flex-1 border-y-1"
             >
               {children}
             </div>
