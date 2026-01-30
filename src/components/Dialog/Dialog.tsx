@@ -24,6 +24,7 @@ export interface DialogProps
   actions?: DialogAction[];
   cancellable?: boolean;
   cancelButtonLabel?: ReactNode;
+  allowClickOutside?: boolean;
 }
 
 const defaultActions: DialogAction[] = [
@@ -43,6 +44,7 @@ export const Dialog: React.FC<DialogProps> = ({
   actions = defaultActions,
   cancellable = true,
   cancelButtonLabel = 'キャンセル',
+  allowClickOutside = true,
 }) => {
   const [loading, setLoading] = React.useState<number>(-1);
 
@@ -84,7 +86,7 @@ export const Dialog: React.FC<DialogProps> = ({
           <RadixDialog.Content
             aria-describedby={undefined}
             onPointerDownOutside={(e) => {
-              if (!cancellable || busyState) {
+              if (!allowClickOutside || busyState) {
                 e.preventDefault();
               }
             }}
