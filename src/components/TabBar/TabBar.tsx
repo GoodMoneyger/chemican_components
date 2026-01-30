@@ -31,21 +31,21 @@ const tabBarVariants = cva('inline-flex', {
 
 // Individual Tab variants
 const tabVariants = cva(
-  `text-body-primary border-divider-default hover:border-interactive-hover
-  data-[state=active]:border-interactive-selected data-[state=active]:font-bold
-  disabled:text-interactive-disabled disabled:hover:border-divider-default
-  relative inline-flex cursor-pointer items-center justify-center border-b pb-px
-  leading-[100%] tracking-[0] transition-colors hover:border-b-2
-  disabled:cursor-not-allowed disabled:hover:border-b
-  data-[state=active]:border-b-2
-  data-[state=active]:text-[var(--chemican-green-800)]`,
+  `text-body-primary border-divider-default data-[state=active]:font-bold
+  disabled:text-interactive-disabled after:left-0 after:h-0
+  disabled:hover:after:h-0 relative inline-flex cursor-pointer items-center
+  justify-center border-b leading-[100%] tracking-[0] transition-colors
+  after:absolute after:bottom-[-1px] after:w-full after:transition-all
+  after:content-[''] hover:after:h-[2px]
+  hover:after:bg-[var(--chemican-green-800)] disabled:cursor-not-allowed
+  data-[state=active]:text-[var(--chemican-green-800)]
+  data-[state=active]:after:h-[2px]
+  data-[state=active]:after:bg-[var(--chemican-green-800)]`,
   {
     variants: {
       size: {
-        normal: `p-md h-12 text-lg hover:pb-[calc(1rem-1px)]
-        data-[state=active]:pb-[calc(1rem-1px)]`,
-        small: `p-sm h-9.5 text-md hover:pb-[calc(0.75rem-1px)]
-        data-[state=active]:pb-[calc(0.75rem-1px)]`,
+        normal: 'p-md h-12 text-lg',
+        small: 'p-sm h-9.5 text-md',
       },
     },
     defaultVariants: {
