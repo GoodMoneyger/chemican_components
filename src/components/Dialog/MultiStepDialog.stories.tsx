@@ -306,3 +306,105 @@ const SingleStepComponent = () => {
 export const SingleStep: Story = {
   render: () => <SingleStepComponent />,
 };
+
+// With onCancel control
+const WithOnCancelControlComponent = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true);
+
+  const handleCancel = (close: () => void) => {
+    if (hasUnsavedChanges) {
+      const confirmed = confirm(
+        'You have unsaved changes. Are you sure you want to close?'
+      );
+      if (confirmed) {
+        close();
+      }
+      // If not confirmed, don't call close() - dialog stays open
+    } else {
+      close(); // No changes, close immediately
+    }
+  };
+
+  return (
+    <>
+      <div style={{ marginBottom: '10px' }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={hasUnsavedChanges}
+            onChange={(e) => setHasUnsavedChanges(e.target.checked)}
+          />{' '}
+          Simulate unsaved changes
+        </label>
+      </div>
+      <Button onClick={() => setIsOpen(true)}>Open Form</Button>
+      <MultiStepDialog.Root
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onCancel={handleCancel}
+      >
+        <MultiStepDialog.Step>
+          <MultiStepDialog.Header>Edit User Profile</MultiStepDialog.Header>
+          <MultiStepDialog.Body>
+            <div className="gap-md flex flex-col">
+              <p>
+                This dialog demonstrates the onCancel handler. Try clicking
+                outside, pressing Escape, or clicking Cancel with the checkbox
+                enabled/disabled.
+              </p>
+              <input
+                type="text"
+                placeholder="Name"
+                className="border-divider-default rounded-md px-md py-sm
+                  border-1"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                className="border-divider-default rounded-md px-md py-sm
+                  border-1"
+              />
+            </div>
+          </MultiStepDialog.Body>
+          <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="次へ"
+              intent="primary"
+              onAction={({ nextStep }) => nextStep()}
+            />
+          </MultiStepDialog.Footer>
+        </MultiStepDialog.Step>
+
+        <MultiStepDialog.Step>
+          <MultiStepDialog.Header>Preferences</MultiStepDialog.Header>
+          <MultiStepDialog.Body>
+            <div className="gap-md flex flex-col">
+              <p>Configure your preferences.</p>
+              <label className="gap-sm flex items-center">
+                <input type="checkbox" />
+                <span>Email notifications</span>
+              </label>
+            </div>
+          </MultiStepDialog.Body>
+          <MultiStepDialog.Footer>
+            <MultiStepDialog.Action
+              label="戻る"
+              intent="secondary"
+              onAction={({ prevStep }) => prevStep()}
+            />
+            <MultiStepDialog.Action
+              label="Save"
+              intent="primary"
+              closeOnAction
+            />
+          </MultiStepDialog.Footer>
+        </MultiStepDialog.Step>
+      </MultiStepDialog.Root>
+    </>
+  );
+};
+
+export const WithOnCancelControl: Story = {
+  render: () => <WithOnCancelControlComponent />,
+};
