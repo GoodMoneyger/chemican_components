@@ -71,6 +71,10 @@ const meta: Meta<typeof MultiSelect> = {
       control: 'boolean',
       description: 'Whether to filter by both value and label when searching',
     },
+    allowCreate: {
+      control: 'boolean',
+      description: 'Whether to allow creating new items',
+    },
   },
 };
 
@@ -893,6 +897,78 @@ export const InlineSelectionComparison: Story = {
   placeholder="Select fruits..."
   selectionDisplayMode="inline"
   defaultValue={['apple', 'banana', 'cherry']}
+/>`,
+      },
+    },
+  },
+};
+
+const WithAllowCreateComponent = () => {
+  const [values, setValues] = React.useState<Array<string | number>>([]);
+  const [options, setOptions] =
+    React.useState<MultiSelectOption[]>(basicOptions);
+
+  const handleCreate = (inputValue: string) => {
+    const newOption: MultiSelectOption = {
+      value: inputValue.toLowerCase().replace(/\s+/g, '-'),
+      label: inputValue,
+      isCreated: true,
+    };
+    setOptions((prev) => [newOption, ...prev]);
+    return newOption;
+  };
+
+  return (
+    <div className="w-[350px]">
+      <MultiSelect
+        options={options}
+        defaultValue={values}
+        onValueChange={setValues}
+        allowCreate
+        onCreate={handleCreate}
+        placeholder="Select or create..."
+        searchPlaceholder="Type to search or create..."
+      />
+      <p className="mt-md text-body-secondary text-sm">
+        Type a new value and press Enter to create
+      </p>
+    </div>
+  );
+};
+
+export const WithAllowCreate: Story = {
+  render: () => <WithAllowCreateComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'This story demonstrates the allowCreate functionality. When enabled, users can type a new value and press Enter to create a new option. Created items appear in a separate "Created Items" group with a "(created)" label.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+import { useState } from 'react';
+
+const [values, setValues] = useState<string[]>([]);
+const [options, setOptions] = useState(basicOptions);
+
+const handleCreate = (inputValue: string) => {
+  const newOption = {
+    value: inputValue.toLowerCase().replace(/\\s+/g, '-'),
+    label: inputValue,
+    isCreated: true,
+  };
+  setOptions((prev) => [newOption, ...prev]);
+  return newOption;
+};
+
+<MultiSelect
+  options={options}
+  defaultValue={values}
+  onValueChange={setValues}
+  allowCreate
+  onCreate={handleCreate}
+  placeholder="Select or create..."
+  searchPlaceholder="Type to search or create..."
 />`,
       },
     },

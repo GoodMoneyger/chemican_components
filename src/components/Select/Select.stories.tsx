@@ -31,6 +31,12 @@ const meta: Meta<typeof Select> = {
     invalid: {
       control: { type: 'boolean' },
     },
+    searchable: {
+      control: { type: 'boolean' },
+    },
+    allowCreate: {
+      control: { type: 'boolean' },
+    },
   },
   parameters: {
     radixDocs: {
@@ -242,3 +248,69 @@ export const IsolatedVsFormField: StoryFn = () => (
     </div>
   </div>
 );
+
+export const WithSearch: StoryFn<SelectProps> = () => {
+  const [value, setValue] = React.useState<string | undefined>(undefined);
+
+  return (
+    <div className="w-[300px]">
+      <Select
+        options={[
+          { value: 'apple', label: 'Apple' },
+          { value: 'banana', label: 'Banana' },
+          { value: 'cherry', label: 'Cherry' },
+          { value: 'date', label: 'Date' },
+          { value: 'elderberry', label: 'Elderberry' },
+          { value: 'fig', label: 'Fig' },
+          { value: 'grape', label: 'Grape' },
+        ]}
+        value={value}
+        onValueChange={setValue}
+        searchable
+        placeholder="Search fruits..."
+        searchPlaceholder="Type to search..."
+      />
+      <p className="mt-md text-body-secondary text-sm">
+        Select with search enabled
+      </p>
+    </div>
+  );
+};
+WithSearch.storyName = 'With Search';
+
+export const WithAllowCreate: StoryFn<SelectProps> = () => {
+  const [value, setValue] = React.useState<string | undefined>(undefined);
+  const [options, setOptions] = React.useState([
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+  ]);
+
+  const handleCreate = (inputValue: string) => {
+    const newOption = {
+      value: inputValue.toLowerCase().replace(/\s+/g, '-'),
+      label: inputValue,
+      isCreated: true,
+    };
+    setOptions((prev) => [newOption, ...prev]);
+    return newOption;
+  };
+
+  return (
+    <div className="w-[300px]">
+      <Select
+        options={options}
+        value={value}
+        onValueChange={setValue}
+        allowCreate
+        onCreate={handleCreate}
+        placeholder="Select or create"
+        searchPlaceholder="Type to search or create..."
+      />
+      <p className="mt-md text-body-secondary text-sm">
+        Type a new value and press Enter to create
+      </p>
+    </div>
+  );
+};
+WithAllowCreate.storyName = 'With Allow Create';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconPlus } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
 import { Button } from '../Button';
@@ -46,6 +46,7 @@ interface MultiSelectOption<T = string | number> {
   value: T;
   label: string;
   disabled?: boolean;
+  isCreated?: boolean;
   [key: string]: unknown;
 }
 
@@ -343,6 +344,37 @@ interface MultiSelectProps<T = string | number>
   renderOption?: (context: RenderOptionContext<T>) => React.ReactNode;
 
   /**
+   * If true, allows creating new items by typing and pressing Enter.
+   * Optional, defaults to false.
+   */
+  allowCreate?: boolean;
+
+  /**
+   * Callback fired when a new item is created.
+   * Should return the new option, or void if handled externally.
+   * If not provided, the component manages created items internally.
+   */
+  onCreate?: (inputValue: string) => MultiSelectOption<T> | void;
+
+  /**
+   * Label shown next to created items.
+   * Optional, defaults to "(created)".
+   */
+  createdLabel?: React.ReactNode;
+
+  /**
+   * Group label for created items section.
+   * Optional, defaults to "Created Items".
+   */
+  createdGroupLabel?: React.ReactNode;
+
+  /**
+   * Group label for available items section (shown when there are created items).
+   * Optional, defaults to "Available Items".
+   */
+  availableGroupLabel?: React.ReactNode;
+
+  /**
    * Callback fired when selected values change.
    * Receives the array of currently selected values.
    * Optional, called after each selection/deselection.
@@ -425,6 +457,11 @@ const MultiSelectInner = <T extends string | number = string | number>(
     customTrigger,
     selectionDisplayMode = 'default',
     hideSelection = false,
+    allowCreate = false,
+    onCreate,
+    createdLabel = '(created)',
+    createdGroupLabel = 'Created Items',
+    availableGroupLabel = 'Available Items',
     ...props
   }: MultiSelectProps<T>,
   ref: React.Ref<MultiSelectRef<T>>
@@ -432,6 +469,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
   const [selectedValues, setSelectedValues] = React.useState<T[]>(defaultValue);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
+  const [createdOptions, setCreatedOptions] = React.useState<
+    MultiSelectOption<T>[]
+  >([]);
 
   const [politeMessage, setPoliteMessage] = React.useState('');
   const [assertiveMessage, setAssertiveMessage] = React.useState('');
@@ -571,13 +611,18 @@ const MultiSelectInner = <T extends string | number = string | number>(
   const responsiveSettings = getResponsiveSettings();
 
   const getAllOptions = React.useCallback((): MultiSelectOption<T>[] => {
-    if (options.length === 0) return [];
-    let allOptions: MultiSelectOption<T>[];
-    if (isGroupedOptions(options)) {
-      allOptions = options.flatMap((group) => group.options);
+    let baseOptions: MultiSelectOption<T>[];
+    if (options.length === 0) {
+      baseOptions = [];
+    } else if (isGroupedOptions(options)) {
+      baseOptions = options.flatMap((group) => group.options);
     } else {
-      allOptions = options;
+      baseOptions = options;
     }
+
+    // Include created options (either from internal state or from options with isCreated)
+    const allOptions = [...createdOptions, ...baseOptions];
+
     const valueSet = new Set<T>();
     const duplicates: T[] = [];
     const uniqueOptions: MultiSelectOption<T>[] = [];
@@ -606,7 +651,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
       );
     }
     return deduplicateOptions ? uniqueOptions : allOptions;
-  }, [options, deduplicateOptions, isGroupedOptions]);
+  }, [options, deduplicateOptions, isGroupedOptions, createdOptions]);
 
   const getOptionByValue = React.useCallback(
     (value: T): MultiSelectOption<T> | undefined => {
@@ -646,9 +691,69 @@ const MultiSelectInner = <T extends string | number = string | number>(
     [filterByValueAndLabel]
   );
 
+  const handleCreate = () => {
+    if (!allowCreate || !searchValue.trim()) return;
+
+    const trimmedValue = searchValue.trim();
+    const allOpts = getAllOptions();
+
+    // Check if value already exists
+    const exists = allOpts.some(
+      (opt) =>
+        String(opt.label).toLowerCase() === trimmedValue.toLowerCase() ||
+        String(opt.value).toLowerCase() === trimmedValue.toLowerCase()
+    );
+
+    if (exists) return;
+
+    let newOption: MultiSelectOption<T>;
+
+    if (onCreate) {
+      // Parent manages created options via onCreate callback
+      const result = onCreate(trimmedValue);
+      if (result) {
+        newOption = { ...result, isCreated: true };
+        const newSelectedValues = [...selectedValues, newOption.value];
+        setSelectedValues(newSelectedValues);
+        onValueChange(newSelectedValues);
+      }
+    } else {
+      // No onCreate provided - use internal state to track created items
+      newOption = {
+        value: trimmedValue as T,
+        label: trimmedValue,
+        isCreated: true,
+      };
+      setCreatedOptions((prev) => [newOption, ...prev]);
+      const newSelectedValues = [...selectedValues, newOption.value];
+      setSelectedValues(newSelectedValues);
+      onValueChange(newSelectedValues);
+    }
+
+    setSearchValue('');
+  };
+
+  const showCreateOption = React.useMemo(() => {
+    if (!allowCreate || !searchValue.trim()) return false;
+    const allOpts = getAllOptions();
+    return !allOpts.some(
+      (opt) =>
+        String(opt.label).toLowerCase() === searchValue.trim().toLowerCase()
+    );
+  }, [allowCreate, searchValue, getAllOptions]);
+
+  const hasCreatedItems = React.useMemo(() => {
+    return getAllOptions().some((opt) => opt.isCreated);
+  }, [getAllOptions]);
+
   const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      setIsPopoverOpen(true);
+      if (allowCreate && showCreateOption) {
+        event.preventDefault();
+        handleCreate();
+      } else {
+        setIsPopoverOpen(true);
+      }
     } else if (event.key === 'Backspace' && !event.currentTarget.value) {
       const newSelectedValues = [...selectedValues];
       newSelectedValues.pop();
@@ -1021,8 +1126,25 @@ const MultiSelectInner = <T extends string | number = string | number>(
               )}
               style={{ overscrollBehaviorY: 'contain' }}
             >
-              <CommandEmpty>{emptyIndicator}</CommandEmpty>
+              <CommandEmpty>
+                {showCreateOption ? null : emptyIndicator}
+              </CommandEmpty>
 
+              {/* Create new item option */}
+              {showCreateOption && (
+                <CommandGroup>
+                  <CommandItem
+                    value={`create:${searchValue}`}
+                    onSelect={handleCreate}
+                    className="text-interactive-primary-default !cursor-pointer"
+                  >
+                    <IconPlus className="h-4 w-4 mr-xs" />
+                    <span>Create &quot;{searchValue.trim()}&quot;</span>
+                  </CommandItem>
+                </CommandGroup>
+              )}
+
+              {/* Select all - at the very top */}
               {!hideSelectAll && !searchValue && (
                 <CommandGroup>
                   <CommandItem
@@ -1035,7 +1157,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
                       getAllOptions().filter((opt) => !opt.disabled).length
                     }
                     aria-label={`Select all ${getAllOptions().length} options`}
-                    className="cursor-pointer"
+                    className="!cursor-pointer"
                   >
                     <Checkbox
                       className="mr-xs"
@@ -1057,10 +1179,90 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   </CommandItem>
                 </CommandGroup>
               )}
+
+              {/* Created items group */}
+              {getAllOptions().filter((opt) => opt.isCreated).length > 0 && (
+                <CommandGroup heading={createdGroupLabel as string}>
+                  {getAllOptions()
+                    .filter((opt) => opt.isCreated)
+                    .map((option) => {
+                      const isSelected = selectedValues.includes(option.value);
+                      return (
+                        <CommandItem
+                          key={option.value}
+                          value={`${option.value}:${option.label}`}
+                          onSelect={() => toggleOption(option.value)}
+                          role="option"
+                          aria-selected={isSelected}
+                          className="!cursor-pointer"
+                        >
+                          <Checkbox className="mr-xs" checked={isSelected} />
+                          <span className="flex-1">{option.label}</span>
+                          <span className="text-body-secondary text-sm">
+                            {createdLabel}
+                          </span>
+                        </CommandItem>
+                      );
+                    })}
+                </CommandGroup>
+              )}
+
               {isGroupedOptions(options) ? (
-                options.map((group) => (
-                  <CommandGroup key={group.heading} heading={group.heading}>
-                    {group.options.map((option) => {
+                <>
+                  {options.map((group) => (
+                    <CommandGroup key={group.heading} heading={group.heading}>
+                      {group.options
+                        .filter((opt) => !opt.isCreated)
+                        .map((option) => {
+                          const isSelected = selectedValues.includes(
+                            option.value
+                          );
+                          return (
+                            <CommandItem
+                              key={option.value}
+                              value={`${option.value}:${option.label}`}
+                              onSelect={() => toggleOption(option.value)}
+                              role="option"
+                              aria-selected={isSelected}
+                              aria-disabled={option.disabled ?? false}
+                              aria-label={`${option.label}${
+                                isSelected ? ', selected' : ', not selected'
+                              }${option.disabled ? ', disabled' : ''}`}
+                              className={cn(
+                                '!cursor-pointer',
+                                option.disabled &&
+                                  `text-interactive-disabled !cursor-not-allowed
+                                    opacity-100
+                                    data-[disabled=true]:opacity-100`
+                              )}
+                              disabled={Boolean(option.disabled)}
+                            >
+                              <Checkbox
+                                className="mr-xs"
+                                checked={isSelected}
+                              />
+                              {effectiveRenderOption({
+                                option,
+                                location: 'dropdown',
+                                isSelected,
+                              })}
+                            </CommandItem>
+                          );
+                        })}
+                    </CommandGroup>
+                  ))}
+                </>
+              ) : (
+                <CommandGroup
+                  heading={
+                    hasCreatedItems
+                      ? (availableGroupLabel as string)
+                      : undefined
+                  }
+                >
+                  {(options as MultiSelectOption<T>[])
+                    .filter((opt) => !opt.isCreated)
+                    .map((option) => {
                       const isSelected = selectedValues.includes(option.value);
                       return (
                         <CommandItem
@@ -1074,9 +1276,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
                             isSelected ? ', selected' : ', not selected'
                           }${option.disabled ? ', disabled' : ''}`}
                           className={cn(
-                            'cursor-pointer',
+                            '!cursor-pointer',
                             option.disabled &&
-                              `text-interactive-disabled cursor-not-allowed
+                              `text-interactive-disabled !cursor-not-allowed
                                 opacity-100 data-[disabled=true]:opacity-100`
                           )}
                           disabled={Boolean(option.disabled)}
@@ -1090,40 +1292,6 @@ const MultiSelectInner = <T extends string | number = string | number>(
                         </CommandItem>
                       );
                     })}
-                  </CommandGroup>
-                ))
-              ) : (
-                <CommandGroup>
-                  {options.map((option) => {
-                    const isSelected = selectedValues.includes(option.value);
-                    return (
-                      <CommandItem
-                        key={option.value}
-                        value={`${option.value}:${option.label}`}
-                        onSelect={() => toggleOption(option.value)}
-                        role="option"
-                        aria-selected={isSelected}
-                        aria-disabled={option.disabled ?? false}
-                        aria-label={`${option.label}${
-                          isSelected ? ', selected' : ', not selected'
-                        }${option.disabled ? ', disabled' : ''}`}
-                        className={cn(
-                          'cursor-pointer',
-                          option.disabled &&
-                            `text-interactive-disabled cursor-not-allowed
-                              opacity-100 data-[disabled=true]:opacity-100`
-                        )}
-                        disabled={Boolean(option.disabled)}
-                      >
-                        <Checkbox className="mr-xs" checked={isSelected} />
-                        {effectiveRenderOption({
-                          option,
-                          location: 'dropdown',
-                          isSelected,
-                        })}
-                      </CommandItem>
-                    );
-                  })}
                 </CommandGroup>
               )}
             </CommandList>
