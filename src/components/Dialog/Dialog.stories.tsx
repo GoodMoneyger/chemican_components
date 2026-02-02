@@ -122,3 +122,71 @@ WithCustomActions.args = {
     },
   ],
 };
+
+export const WithOnCancelControl: StoryFn<DialogProps> = (args) => {
+  const [isOpen, setIsOpen] = useState(args.isOpen);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true);
+  const [result, setResult] = useState<unknown>(null);
+
+  const handleClose = (value?: unknown) => {
+    setIsOpen(false);
+    setResult(value);
+    console.log('Dialog closed with value:', value);
+  };
+
+  const handleCancel = (close: () => void) => {
+    if (hasUnsavedChanges) {
+      const confirmed = confirm(
+        'You have unsaved changes. Are you sure you want to close?'
+      );
+      if (confirmed) {
+        close();
+      }
+      // If not confirmed, don't call close() - dialog stays open
+    } else {
+      close(); // No changes, close immediately
+    }
+  };
+
+  return (
+    <>
+      <div style={{ marginBottom: '10px' }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={hasUnsavedChanges}
+            onChange={(e) => setHasUnsavedChanges(e.target.checked)}
+          />{' '}
+          Simulate unsaved changes
+        </label>
+      </div>
+      <Button intent="secondary" onClick={() => setIsOpen(true)}>
+        Open Modal
+      </Button>
+      {result && (
+        <p style={{ marginTop: '10px', color: '#666' }}>
+          Last result: {JSON.stringify(result)}
+        </p>
+      )}
+      <Dialog
+        {...args}
+        isOpen={isOpen}
+        onClose={handleClose}
+        onCancel={handleCancel}
+      />
+    </>
+  );
+};
+WithOnCancelControl.args = {
+  isOpen: false,
+  title: 'Edit Form',
+  children:
+    'This dialog demonstrates the onCancel handler. Try clicking outside, pressing Escape, or clicking Cancel with the checkbox enabled/disabled.',
+  actions: [
+    {
+      label: 'Save',
+      value: 'saved',
+      intent: 'primary',
+    },
+  ],
+};

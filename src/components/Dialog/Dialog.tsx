@@ -18,12 +18,14 @@ export interface DialogProps
   extends React.ComponentProps<typeof RadixDialog.Root> {
   isOpen: boolean;
   onClose: (value?: unknown) => void;
+  onCancel?: (close: () => void) => void | Promise<void>;
   children: ReactNode;
   busy?: boolean;
   title: ReactNode;
   actions?: DialogAction[];
   cancellable?: boolean;
   cancelButtonLabel?: ReactNode;
+  allowClickOutside?: boolean;
 }
 
 const defaultActions: DialogAction[] = [
@@ -37,12 +39,14 @@ const defaultActions: DialogAction[] = [
 export const Dialog: React.FC<DialogProps> = ({
   isOpen,
   onClose,
+  onCancel = (close) => close(),
   title,
   children,
   busy,
   actions = defaultActions,
   cancellable = true,
   cancelButtonLabel = 'キャンセル',
+  allowClickOutside = true,
 }) => {
   const [loading, setLoading] = React.useState<number>(-1);
 
@@ -71,7 +75,24 @@ export const Dialog: React.FC<DialogProps> = ({
   };
 
   const handleCancelClick = () => {
-    onClose();
+    onCancel(onClose);
+  };
+
+  const handleOutsideClick = (e: Event) => {
+    e.preventDefault();
+    if (cancellable && !busyState && allowClickOutside) {
+      onCancel(onClose);
+    }
+  };
+
+  const handleEscapeKeyDown = (e: KeyboardEvent) => {
+    if (busyState) {
+      e.preventDefault();
+      return;
+    }
+
+    e.preventDefault();
+    onCancel(onClose);
   };
 
   return (
@@ -83,11 +104,8 @@ export const Dialog: React.FC<DialogProps> = ({
         >
           <RadixDialog.Content
             aria-describedby={undefined}
-            onPointerDownOutside={(e) => {
-              if (!cancellable || busyState) {
-                e.preventDefault();
-              }
-            }}
+            onPointerDownOutside={handleOutsideClick}
+            onEscapeKeyDown={handleEscapeKeyDown}
             className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
               min-w-96 fixed top-1/2 left-1/2 flex max-h-[90vh] w-2/3
               -translate-x-1/2 -translate-y-1/2 transform flex-col
@@ -114,15 +132,13 @@ export const Dialog: React.FC<DialogProps> = ({
             </div>
             <div className="px-xl py-md flex flex-shrink-0 justify-between">
               {cancellable && (
-                <RadixDialog.Close asChild>
-                  <Button
-                    intent="tertiary"
-                    onClick={handleCancelClick}
-                    disabled={busyState}
-                  >
-                    {cancelButtonLabel}
-                  </Button>
-                </RadixDialog.Close>
+                <Button
+                  intent="tertiary"
+                  onClick={handleCancelClick}
+                  disabled={busyState}
+                >
+                  {cancelButtonLabel}
+                </Button>
               )}
               <div className={`gap-xs flex ${!cancellable ? 'ml-auto' : ''}`}>
                 {actions.map((action, index) => {
