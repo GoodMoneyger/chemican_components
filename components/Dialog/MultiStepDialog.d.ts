@@ -8,13 +8,18 @@ interface MultiStepDialogContextValue {
     prevStep: () => void;
     isFirstStep: boolean;
     isLastStep: boolean;
+    cancellable: boolean;
+    onClose: (value?: unknown) => void;
+    onCancel: (close: () => void) => void | Promise<void>;
 }
 export interface MultiStepDialogRootProps {
     isOpen: boolean;
     onClose: (value?: unknown) => void;
+    onCancel?: (close: () => void) => void | Promise<void>;
     children: ReactNode;
     initialStep?: number;
     currentStep?: number;
+    cancellable?: boolean;
     allowClickOutside?: boolean;
     onStepChange?: (step: number) => void;
 }

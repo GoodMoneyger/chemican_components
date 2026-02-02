@@ -10,11 +10,13 @@ export interface DialogAction extends Omit<ButtonProps, 'children' | 'asChild' |
 export interface DialogProps extends React.ComponentProps<typeof RadixDialog.Root> {
     isOpen: boolean;
     onClose: (value?: unknown) => void;
+    onCancel?: (close: () => void) => void | Promise<void>;
     children: ReactNode;
     busy?: boolean;
     title: ReactNode;
     actions?: DialogAction[];
     cancellable?: boolean;
     cancelButtonLabel?: ReactNode;
+    allowClickOutside?: boolean;
 }
 export declare const Dialog: React.FC<DialogProps>;
