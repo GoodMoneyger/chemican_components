@@ -15,9 +15,17 @@ const meta: Meta<typeof TextArea> = {
 export default meta;
 
 const Template: StoryFn<typeof TextArea> = (args) => <TextArea {...args} />;
+
 export const Default = Template.bind({});
 Default.args = {
   placeholder: 'Placeholder',
   characterLimit: 0,
   invalid: false,
+};
+
+export const Invalid = Template.bind({});
+Invalid.args = {
+  placeholder: 'This field has an error',
+  characterLimit: 0,
+  invalid: true,
 };

@@ -5,16 +5,16 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../utils';
 
 const textareaVariants = cva(
-  `border-interactive-default bg-surface-primary px-md py-sm
+  `border-interactive-default bg-surface-primary px-md py-sm text-body-primary
   focus:border-interactive-selected disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
-  hover:border-interactive-hover h-12 min-h-30 rounded w-full border
-  focus:ring-4 focus:outline-0`,
+  hover:border-interactive-hover h-12 min-h-30 rounded
+  focus:ring-interactive-focused w-full border focus:ring-4 focus:outline-0`,
   {
     variants: {
       invalid: {
-        false: 'text-body-primary focus:ring-interactive-focused',
-        true: `border-shape-interactive-alert-default!
+        false: '',
+        true: `!border-shape-interactive-alert-default
         focus:ring-interactive-alert-focused`,
       },
     },
