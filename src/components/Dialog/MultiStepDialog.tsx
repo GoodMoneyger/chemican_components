@@ -18,6 +18,9 @@ interface MultiStepDialogContextValue {
   prevStep: () => void;
   isFirstStep: boolean;
   isLastStep: boolean;
+  cancellable: boolean;
+  onClose: (value?: unknown) => void;
+  onCancel: (close: () => void) => void | Promise<void>;
 }
 
 const MultiStepDialogContext = createContext<
@@ -38,9 +41,11 @@ const useMultiStepDialog = () => {
 export interface MultiStepDialogRootProps {
   isOpen: boolean;
   onClose: (value?: unknown) => void;
+  onCancel?: (close: () => void) => void | Promise<void>;
   children: ReactNode;
   initialStep?: number;
   currentStep?: number; // Controlled mode
+  cancellable?: boolean;
   allowClickOutside?: boolean;
   onStepChange?: (step: number) => void;
 }
@@ -49,9 +54,11 @@ export interface MultiStepDialogRootProps {
 const Root: React.FC<MultiStepDialogRootProps> = ({
   isOpen,
   onClose,
+  onCancel = (close) => close(),
   children,
   initialStep = 0,
   currentStep: controlledStep,
+  cancellable = true,
   allowClickOutside = true,
   onStepChange,
 }) => {
@@ -77,6 +84,28 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
   const nextStep = () => goToStep(currentStep + 1);
   const prevStep = () => goToStep(currentStep - 1);
 
+  // Reset step on close
+  const handleClose = (value?: unknown) => {
+    if (controlledStep === undefined) {
+      setInternalStep(initialStep);
+    }
+    onClose(value);
+  };
+
+  const handleOutsideClick = (e: Event) => {
+    e.preventDefault();
+    if (cancellable && allowClickOutside) {
+      onCancel(handleClose);
+    }
+  };
+
+  const handleEscapeKeyDown = (e: KeyboardEvent) => {
+    e.preventDefault();
+    if (cancellable) {
+      onCancel(handleClose);
+    }
+  };
+
   const contextValue: MultiStepDialogContextValue = {
     currentStep,
     totalSteps,
@@ -85,14 +114,9 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
     prevStep,
     isFirstStep: currentStep === 0,
     isLastStep: currentStep === totalSteps - 1,
-  };
-
-  // Reset step on close
-  const handleClose = (value?: unknown) => {
-    if (controlledStep === undefined) {
-      setInternalStep(initialStep);
-    }
-    onClose(value);
+    cancellable,
+    onClose: handleClose,
+    onCancel,
   };
 
   return (
@@ -107,11 +131,8 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
               className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
                 min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
                 -translate-y-1/2 transform overflow-auto"
-              onPointerDownOutside={(event) => {
-                if (!allowClickOutside) {
-                  event.preventDefault();
-                }
-              }}
+              onPointerDownOutside={handleOutsideClick}
+              onEscapeKeyDown={handleEscapeKeyDown}
             >
               {steps[currentStep]}
             </RadixDialog.Content>
@@ -161,7 +182,7 @@ const Body: React.FC<MultiStepDialogBodyProps> = ({ children, className }) => {
   return (
     <div
       className={`border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
-        text-body-primary min-h-40 flex-grow-0 border-y-1 ${className || ''}`}
+        text-body-primary flex-grow-0 border-y-1 ${className || ''}`}
     >
       {children}
     </div>
@@ -180,17 +201,24 @@ const Footer: React.FC<MultiStepDialogFooterProps> = ({
   children,
   showCancel = true,
   cancelLabel = 'キャンセル',
-  onCancel,
+  onCancel: onCancelProp,
 }) => {
+  const { onCancel, onClose, cancellable } = useMultiStepDialog();
+
+  const handleCancelClick = () => {
+    if (onCancelProp) {
+      onCancelProp();
+    }
+    onCancel(onClose);
+  };
+
   return (
     <div className="px-xl py-md flex justify-between">
       <div className="gap-xs flex">
-        {showCancel && (
-          <RadixDialog.Close asChild>
-            <Button intent="tertiary" onClick={onCancel}>
-              {cancelLabel}
-            </Button>
-          </RadixDialog.Close>
+        {showCancel && cancellable && (
+          <Button intent="tertiary" onClick={handleCancelClick}>
+            {cancelLabel}
+          </Button>
         )}
       </div>
       {children && <div className="gap-xs ml-auto flex">{children}</div>}
