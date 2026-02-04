@@ -149,6 +149,84 @@ DisabledStates.args = {
   invalid: false,
 };
 
+export const WithNumericValues: StoryFn = () => {
+  const [selectedPriority, setSelectedPriority] = React.useState<number>(2);
+  const [selectedQuantity, setSelectedQuantity] = React.useState<number>(5);
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          Priority Selector (Number Values)
+        </h3>
+        <p className="text-sm mb-4">
+          Selected Priority: <strong>{selectedPriority}</strong> (type:{' '}
+          {typeof selectedPriority})
+        </p>
+        <Select<number>
+          variant="default"
+          value={selectedPriority}
+          onValueChange={setSelectedPriority}
+          options={[
+            { value: 1, label: 'Low Priority', icon: IconRocket },
+            { value: 2, label: 'Medium Priority', icon: IconRocket },
+            { value: 3, label: 'High Priority', icon: IconRocket },
+            { value: 4, label: 'Critical', icon: IconRocket },
+          ]}
+          placeholder="Select priority level"
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          Quantity Selector (Number Values)
+        </h3>
+        <p className="text-sm mb-4">
+          Selected Quantity: <strong>{selectedQuantity}</strong> (type:{' '}
+          {typeof selectedQuantity})
+        </p>
+        <Select<number>
+          variant="compact"
+          value={selectedQuantity}
+          onValueChange={setSelectedQuantity}
+          options={[
+            { value: 1, label: '1 item' },
+            { value: 5, label: '5 items' },
+            { value: 10, label: '10 items' },
+            { value: 25, label: '25 items' },
+            { value: 50, label: '50 items' },
+            { value: 100, label: '100 items' },
+          ]}
+          placeholder="Select quantity"
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          With FormField (Number Values)
+        </h3>
+        <FormField
+          name="age-range"
+          label="Age Range"
+          description="Select your age range for demographics"
+        >
+          <Select<number>
+            variant="default"
+            options={[
+              { value: 1, label: '18-24 years' },
+              { value: 2, label: '25-34 years' },
+              { value: 3, label: '35-44 years' },
+              { value: 4, label: '45-54 years' },
+              { value: 5, label: '55+ years' },
+            ]}
+            placeholder="Select age range"
+          />
+        </FormField>
+      </div>
+    </div>
+  );
+};
+
 export const IsolatedVsFormField: StoryFn = () => (
   <div className="space-y-8">
     <div>
