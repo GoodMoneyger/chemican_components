@@ -20,42 +20,57 @@ export interface DataSheetKeyValueProps extends React.HTMLAttributes<HTMLDivElem
     label: React.ReactNode;
 }
 declare const DataSheetKeyValue: React.ForwardRefExoticComponent<DataSheetKeyValueProps & React.RefAttributes<HTMLDivElement>>;
-export interface DataSheetTableProps extends React.HTMLAttributes<HTMLDivElement> {
-    onEditRow?: (itemId: string) => void;
-    onRemoveRow?: (itemId: string) => void;
+export type DataSheetItemType = string | number | object;
+export interface DataSheetTableProps<TItem extends DataSheetItemType = string> extends React.HTMLAttributes<HTMLDivElement> {
+    onEditRow?: (item: TItem) => void;
+    onRemoveRow?: (item: TItem) => void;
+    onRestoreRow?: (item: TItem) => void;
     actionsColumnParts?: number;
 }
-declare const DataSheetTable: React.ForwardRefExoticComponent<DataSheetTableProps & React.RefAttributes<HTMLDivElement>>;
+declare const DataSheetTable: <TItem extends DataSheetItemType = string>(props: DataSheetTableProps<TItem> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+}) => React.ReactElement;
 export type DataSheetTableHeaderProps = React.HTMLAttributes<HTMLTableSectionElement>;
 declare const DataSheetTableHeader: React.ForwardRefExoticComponent<DataSheetTableHeaderProps & React.RefAttributes<HTMLTableSectionElement>>;
 export type DataSheetTableBodyProps = React.HTMLAttributes<HTMLTableSectionElement>;
 declare const DataSheetTableBody: React.ForwardRefExoticComponent<DataSheetTableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
-export interface DataSheetTableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+export interface DataSheetTableRowProps<TItem extends DataSheetItemType = string> extends React.HTMLAttributes<HTMLTableRowElement> {
     header?: boolean;
-    itemId?: string;
+    item?: TItem;
+    isDeleted?: boolean;
 }
-declare const DataSheetTableRow: React.ForwardRefExoticComponent<DataSheetTableRowProps & React.RefAttributes<HTMLTableRowElement>>;
+declare const DataSheetTableRow: <TItem extends DataSheetItemType = string>(props: DataSheetTableRowProps<TItem> & {
+    ref?: React.ForwardedRef<HTMLTableRowElement>;
+}) => React.ReactElement;
 export interface DataSheetTableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
     header?: boolean;
     parts?: number;
 }
 declare const DataSheetTableCell: React.ForwardRefExoticComponent<DataSheetTableCellProps & React.RefAttributes<HTMLTableCellElement>>;
-export interface DataSheetTableActionsCellProps extends Omit<DataSheetTableCellProps, 'parts'> {
-    itemId?: string;
+export interface DataSheetTableActionsCellProps<TItem extends DataSheetItemType = string> extends Omit<DataSheetTableCellProps, 'parts'> {
+    item?: TItem;
 }
-declare const DataSheetTableActionsCell: React.ForwardRefExoticComponent<DataSheetTableActionsCellProps & React.RefAttributes<HTMLTableCellElement>>;
+declare const DataSheetTableActionsCell: <TItem extends DataSheetItemType = string>(props: DataSheetTableActionsCellProps<TItem> & {
+    ref?: React.ForwardedRef<HTMLTableCellElement>;
+}) => React.ReactElement;
 export type DataSheetActionProps = ButtonProps;
 declare const DataSheetAction: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
 declare const DataSheetNamespace: React.ForwardRefExoticComponent<DataSheetProps & React.RefAttributes<HTMLDivElement>> & {
     Header: React.ForwardRefExoticComponent<DataSheetHeaderProps & React.RefAttributes<HTMLElement>>;
     Section: React.ForwardRefExoticComponent<DataSheetSectionProps & React.RefAttributes<HTMLElement>>;
     KeyValue: React.ForwardRefExoticComponent<DataSheetKeyValueProps & React.RefAttributes<HTMLDivElement>>;
-    Table: React.ForwardRefExoticComponent<DataSheetTableProps & React.RefAttributes<HTMLDivElement>>;
+    Table: <TItem extends DataSheetItemType = string>(props: DataSheetTableProps<TItem> & {
+        ref?: React.ForwardedRef<HTMLDivElement>;
+    }) => React.ReactElement;
     TableHeader: React.ForwardRefExoticComponent<DataSheetTableHeaderProps & React.RefAttributes<HTMLTableSectionElement>>;
     TableBody: React.ForwardRefExoticComponent<DataSheetTableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
-    TableRow: React.ForwardRefExoticComponent<DataSheetTableRowProps & React.RefAttributes<HTMLTableRowElement>>;
+    TableRow: <TItem extends DataSheetItemType = string>(props: DataSheetTableRowProps<TItem> & {
+        ref?: React.ForwardedRef<HTMLTableRowElement>;
+    }) => React.ReactElement;
     TableCell: React.ForwardRefExoticComponent<DataSheetTableCellProps & React.RefAttributes<HTMLTableCellElement>>;
-    TableActionsCell: React.ForwardRefExoticComponent<DataSheetTableActionsCellProps & React.RefAttributes<HTMLTableCellElement>>;
+    TableActionsCell: <TItem extends DataSheetItemType = string>(props: DataSheetTableActionsCellProps<TItem> & {
+        ref?: React.ForwardedRef<HTMLTableCellElement>;
+    }) => React.ReactElement;
     Action: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
 };
 export { DataSheetNamespace as DataSheet, DataSheetHeader, DataSheetSection, DataSheetKeyValue, DataSheetTable, DataSheetTableHeader, DataSheetTableBody, DataSheetTableRow, DataSheetTableCell, DataSheetTableActionsCell, DataSheetAction, };
