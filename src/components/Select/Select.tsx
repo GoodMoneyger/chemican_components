@@ -50,12 +50,12 @@ const selectVariants = cva(
 );
 
 const selectContentVariants = cva(
-  `bg-surface-primary z-dropdown relative -mt-px -mb-px w-full min-w-[8rem]
-  overflow-hidden border`,
+  `bg-surface-primary z-dropdown relative w-full
+  min-w-[var(--radix-select-trigger-width)] overflow-hidden border`,
   {
     variants: {
       variant: {
-        default: 'border-interactive-default py-xxs max-h-96 rounded',
+        default: 'border-interactive-default max-h-96 rounded',
         compact: `border-divider-default rounded-sm
         shadow-[0px_5px_9px_0px_rgba(0,0,0,0.16)]`,
       },
@@ -173,10 +173,11 @@ export const Select: React.FC<SelectProps> = ({
       <RadixSelect.Portal>
         <RadixSelect.Content
           position="popper"
+          sideOffset={-1}
           className={cn(selectContentVariants({ variant }), className)}
         >
           <RadixSelect.ScrollUpButton />
-          <RadixSelect.Viewport className="min-w-[var(--radix-select-trigger-width)]">
+          <RadixSelect.Viewport>
             {options.map((option, index) => {
               switch (option.type) {
                 case 'Group':
@@ -189,7 +190,7 @@ export const Select: React.FC<SelectProps> = ({
                   return (
                     <RadixSelect.Separator
                       key={index}
-                      className="border-divider-default m-[5px] h-px border-b"
+                      className="border-divider-default h-px border-b"
                     />
                   );
                 default:
