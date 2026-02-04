@@ -7,21 +7,31 @@ declare const selectVariants: (props?: ({
     intent?: "primary" | "secondary" | null | undefined;
     invalid?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
-export interface SelectProps extends VariantProps<typeof selectVariants>, Omit<React.ComponentProps<typeof RadixSelect.Root>, 'value'> {
-    options: {
-        value: string;
-        label: React.ReactNode;
-        icon?: IconProp;
-        type?: 'Option' | 'Group' | 'Separator';
-        disabled?: boolean;
-    }[];
+type SelectOption<T extends number | string = string> = {
+    value: T;
+    label: React.ReactNode;
+    icon?: IconProp;
+    type?: 'Option';
+    disabled?: boolean;
+} | {
+    label: React.ReactNode;
+    type: 'Group';
+} | {
+    type: 'Separator';
+};
+export interface SelectProps<T extends number | string = string> extends VariantProps<typeof selectVariants>, Omit<React.ComponentProps<typeof RadixSelect.Root>, 'value' | 'onValueChange'> {
+    options: SelectOption<T>[];
     placeholder?: React.ReactNode;
     className?: string;
     icon?: IconProp;
     invalid?: boolean;
-    value?: string;
+    value?: T;
+    onValueChange?: (value: T) => void;
     intent?: 'primary' | 'secondary';
     hideChevron?: boolean;
 }
-export declare const Select: React.FC<SelectProps>;
+export declare const Select: {
+    <T extends number | string = string>({ options, placeholder, className, icon: Icon, invalid, variant, intent, value, hideChevron, onValueChange, ...props }: SelectProps<T>): import("react/jsx-runtime").JSX.Element;
+    displayName: string;
+};
 export {};
