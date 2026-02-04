@@ -8,7 +8,7 @@ import { Button } from '../Button/Button';
 import type { ButtonProps } from '../Button/Button';
 export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
 
-const dataSheetVariants = cva('bg-surface-primary space-y-md w-full', {
+const dataSheetVariants = cva('bg-inherit space-y-md w-full', {
   variants: {},
 });
 
