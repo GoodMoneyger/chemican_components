@@ -205,7 +205,7 @@ export const TableWithActions: Story = () => {
   );
 };
 
-export const TableWithRecordType: Story = () => {
+export const TableWithRemoveRestoreAction: Story = () => {
   interface ItemRecord {
     id: number;
     label: string;
