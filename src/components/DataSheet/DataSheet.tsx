@@ -1,7 +1,7 @@
 import React from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { IconPencil, IconRestore, IconTrash } from '@tabler/icons-react';
 
 import { cn } from '../../utils';
 import { Button } from '../Button/Button';
@@ -184,12 +184,14 @@ export interface DataSheetTableProps<TItem extends DataSheetItemType = string>
   extends React.HTMLAttributes<HTMLDivElement> {
   onEditRow?: (item: TItem) => void;
   onRemoveRow?: (item: TItem) => void;
+  onRestoreRow?: (item: TItem) => void;
   actionsColumnParts?: number;
 }
 
 interface DataSheetTableContextValue<TItem extends DataSheetItemType = string> {
   onEditRow?: (item: TItem) => void;
   onRemoveRow?: (item: TItem) => void;
+  onRestoreRow?: (item: TItem) => void;
   actionsColumnParts: number;
 }
 
@@ -210,6 +212,7 @@ interface DataSheetTableRowContextValue<
 > {
   item?: TItem;
   totalParts?: number;
+  isDeleted?: boolean;
 }
 
 const DataSheetTableRowContext =
@@ -228,6 +231,7 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
     children,
     onEditRow,
     onRemoveRow,
+    onRestoreRow,
     actionsColumnParts = 10,
     ...props
   }: DataSheetTableProps<TItem>,
@@ -237,6 +241,7 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
     actionsColumnParts,
     ...(onEditRow && { onEditRow }),
     ...(onRemoveRow && { onRemoveRow }),
+    ...(onRestoreRow && { onRestoreRow }),
   };
 
   return (
@@ -293,6 +298,7 @@ export interface DataSheetTableRowProps<
 > extends React.HTMLAttributes<HTMLTableRowElement> {
   header?: boolean;
   item?: TItem;
+  isDeleted?: boolean;
 }
 
 function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
@@ -300,6 +306,7 @@ function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
     className,
     header,
     item,
+    isDeleted = false,
     children,
     ...props
   }: DataSheetTableRowProps<TItem>,
@@ -322,6 +329,7 @@ function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
   const rowContextValue: DataSheetTableRowContextValue<TItem> = {
     ...(item !== undefined && { item }),
     ...(totalParts !== undefined && { totalParts }),
+    isDeleted,
   };
 
   return (
@@ -332,6 +340,7 @@ function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
         ref={ref}
         className={cn(
           header ? 'h-[18px]' : 'border-surface-default border-t',
+          isDeleted && 'opacity-60',
           className
         )}
         {...props}
@@ -365,7 +374,7 @@ const DataSheetTableCell = React.forwardRef<
   DataSheetTableCellProps
 >(({ className, header, parts, children, style, ...props }, ref) => {
   const Component = header ? 'th' : 'td';
-  const { totalParts } = useDataSheetTableRowContext();
+  const { totalParts, isDeleted } = useDataSheetTableRowContext();
 
   // Calculate width as percentage based on parts
   // Parts represent relative weight - total is calculated from all cells in the row
@@ -373,6 +382,13 @@ const DataSheetTableCell = React.forwardRef<
     parts !== undefined && totalParts !== undefined
       ? { width: `${(parts / totalParts) * 100}%`, ...style }
       : style;
+
+  // Determine if content should have line-through
+  // Skip line-through for empty content or single dash
+  const contentStr =
+    typeof children === 'string' ? children.trim() : String(children || '');
+  const shouldApplyLineThrough =
+    isDeleted && !header && contentStr !== '' && contentStr !== '-';
 
   return (
     <Component
@@ -383,6 +399,7 @@ const DataSheetTableCell = React.forwardRef<
         header
           ? 'text-body-secondary text-sm font-normal leading-[1.5]'
           : 'text-body-primary font-normal leading-[1.5]',
+        shouldApplyLineThrough && 'line-through',
         className
       )}
       style={widthStyle}
@@ -412,9 +429,10 @@ function DataSheetTableActionsCellInner<
   }: DataSheetTableActionsCellProps<TItem>,
   ref: React.ForwardedRef<HTMLTableCellElement>
 ) {
-  const { onEditRow, onRemoveRow, actionsColumnParts } =
+  const { onEditRow, onRemoveRow, onRestoreRow, actionsColumnParts } =
     useDataSheetTableContext<TItem>();
-  const { item: itemFromContext } = useDataSheetTableRowContext<TItem>();
+  const { item: itemFromContext, isDeleted } =
+    useDataSheetTableRowContext<TItem>();
 
   // Use explicit prop if provided, otherwise use context
   const item = itemProp ?? itemFromContext;
@@ -435,7 +453,7 @@ function DataSheetTableActionsCellInner<
   }
 
   // Data row - render action buttons
-  const hasActions = onEditRow || onRemoveRow;
+  const hasActions = onEditRow || onRemoveRow || onRestoreRow;
   if (!hasActions) return null;
 
   return (
@@ -445,17 +463,21 @@ function DataSheetTableActionsCellInner<
       className={cn('align-top', className)}
       {...props}
     >
-      <div className="flex">
+      <div className="gap-xs flex">
         {onEditRow && item && (
           <Button
             size="icon"
             intent="text"
             icon={IconPencil}
+            disabled={isDeleted}
             onClick={() => onEditRow(item)}
-            className="text-shape-primary [&_svg]:!size-5"
+            className={cn(
+              'text-shape-primary [&_svg]:size-5!',
+              isDeleted && 'cursor-not-allowed!'
+            )}
           />
         )}
-        {onRemoveRow && item && (
+        {onRemoveRow && item && !isDeleted && (
           <Button
             size="icon"
             intent="text"
@@ -463,6 +485,15 @@ function DataSheetTableActionsCellInner<
             onClick={() => onRemoveRow(item)}
             danger
             className="[&_svg]:!size-5"
+          />
+        )}
+        {onRestoreRow && item && isDeleted && (
+          <Button
+            size="icon"
+            intent="text"
+            icon={IconRestore}
+            onClick={() => onRestoreRow(item)}
+            className="text-shape-primary [&_svg]:!size-5"
           />
         )}
       </div>

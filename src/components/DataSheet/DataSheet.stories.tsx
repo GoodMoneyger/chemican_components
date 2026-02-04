@@ -212,11 +212,12 @@ export const TableWithRecordType: Story = () => {
     isDeleted: boolean;
   }
 
-  const items: ItemRecord[] = [
+  const [items, setItems] = React.useState<ItemRecord[]>([
     { id: 1, label: 'Explosives', isDeleted: false },
     { id: 2, label: 'Flammable gases', isDeleted: false },
     { id: 3, label: 'Oxidizing gases', isDeleted: true },
-  ];
+    { id: 4, label: '-', isDeleted: true },
+  ]);
 
   const handleEdit = (item: ItemRecord) => {
     alert(`Edit item: ${item.label} (ID: ${item.id})`);
@@ -224,7 +225,19 @@ export const TableWithRecordType: Story = () => {
 
   const handleRemove = (item: ItemRecord) => {
     if (confirm(`Remove item: ${item.label}?`)) {
-      alert(`Item ${item.label} removed`);
+      setItems((prevItems) =>
+        prevItems.map((i) => (i.id === item.id ? { ...i, isDeleted: true } : i))
+      );
+    }
+  };
+
+  const handleRestore = (item: ItemRecord) => {
+    if (confirm(`Restore item: ${item.label}?`)) {
+      setItems((prevItems) =>
+        prevItems.map((i) =>
+          i.id === item.id ? { ...i, isDeleted: false } : i
+        )
+      );
     }
   };
 
@@ -237,6 +250,7 @@ export const TableWithRecordType: Story = () => {
         <DataSheet.Table<ItemRecord>
           onEditRow={handleEdit}
           onRemoveRow={handleRemove}
+          onRestoreRow={handleRestore}
           actionsColumnParts={10}
         >
           <DataSheet.TableHeader>
@@ -255,7 +269,11 @@ export const TableWithRecordType: Story = () => {
           </DataSheet.TableHeader>
           <DataSheet.TableBody>
             {items.map((item) => (
-              <DataSheet.TableRow key={item.id} item={item}>
+              <DataSheet.TableRow
+                key={item.id}
+                item={item}
+                isDeleted={item.isDeleted}
+              >
                 <DataSheet.TableCell>{item.id}</DataSheet.TableCell>
                 <DataSheet.TableCell>{item.label}</DataSheet.TableCell>
                 <DataSheet.TableCell>
