@@ -28,7 +28,7 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
   <div
-    className="border-divider-default py-md px-md flex items-center border-b"
+    className="border-divider-default py-sm px-md flex items-center border-b"
     cmdk-input-wrapper=""
   >
     <div

@@ -50,12 +50,12 @@ const selectVariants = cva(
 );
 
 const selectContentVariants = cva(
-  `bg-surface-primary z-dropdown relative -mt-px -mb-px w-full min-w-[8rem]
-  overflow-hidden border`,
+  `bg-surface-primary z-dropdown relative w-full
+  min-w-[var(--radix-select-trigger-width)] overflow-hidden border`,
   {
     variants: {
       variant: {
-        default: 'border-interactive-default py-xxs max-h-96 rounded',
+        default: 'border-interactive-default max-h-96 rounded',
         compact: `border-divider-default rounded-sm
         shadow-[0px_5px_9px_0px_rgba(0,0,0,0.16)]`,
       },
@@ -99,26 +99,40 @@ const selectItemVariants = cva(
   }
 );
 
-export interface SelectProps
+type SelectOption<T extends number | string = string> =
+  | {
+      value: T;
+      label: React.ReactNode;
+      icon?: IconProp;
+      type?: 'Option';
+      disabled?: boolean;
+    }
+  | {
+      label: React.ReactNode;
+      type: 'Group';
+    }
+  | {
+      type: 'Separator';
+    };
+
+export interface SelectProps<T extends number | string = string>
   extends VariantProps<typeof selectVariants>,
-    Omit<React.ComponentProps<typeof RadixSelect.Root>, 'value'> {
-  options: {
-    value: string;
-    label: React.ReactNode;
-    icon?: IconProp;
-    type?: 'Option' | 'Group' | 'Separator';
-    disabled?: boolean;
-  }[];
+    Omit<
+      React.ComponentProps<typeof RadixSelect.Root>,
+      'value' | 'onValueChange'
+    > {
+  options: SelectOption<T>[];
   placeholder?: React.ReactNode;
   className?: string;
   icon?: IconProp;
   invalid?: boolean;
-  value?: string;
+  value?: T;
+  onValueChange?: (value: T) => void;
   intent?: 'primary' | 'secondary';
   hideChevron?: boolean;
 }
 
-export const Select: React.FC<SelectProps> = ({
+export const Select = <T extends number | string = string>({
   options,
   placeholder,
   className,
@@ -128,13 +142,33 @@ export const Select: React.FC<SelectProps> = ({
   intent = 'primary',
   value,
   hideChevron = false,
+  onValueChange,
   ...props
-}) => {
+}: SelectProps<T>) => {
   const rootProps: React.ComponentProps<typeof RadixSelect.Root> = {
     ...props,
   };
-  if (value !== undefined) {
-    rootProps.value = value;
+
+  // Convert value to string for Radix compatibility
+  const stringValue = value !== undefined ? String(value) : undefined;
+
+  // Helper to convert string back to original type
+  const parseValue = (strValue: string): T => {
+    const option = options.find(
+      (opt) => 'value' in opt && String(opt.value) === strValue
+    );
+    return option && 'value' in option ? option.value : (strValue as T);
+  };
+
+  if (stringValue !== undefined) {
+    rootProps.value = stringValue;
+  }
+
+  if (onValueChange) {
+    rootProps.onValueChange = (strValue: string) => {
+      const parsedValue = parseValue(strValue);
+      onValueChange(parsedValue);
+    };
   }
 
   return (
@@ -173,10 +207,11 @@ export const Select: React.FC<SelectProps> = ({
       <RadixSelect.Portal>
         <RadixSelect.Content
           position="popper"
+          sideOffset={-1} // Needed to not have the 1px spacing because of the borders.
           className={cn(selectContentVariants({ variant }), className)}
         >
           <RadixSelect.ScrollUpButton />
-          <RadixSelect.Viewport className="min-w-[var(--radix-select-trigger-width)]">
+          <RadixSelect.Viewport>
             {options.map((option, index) => {
               switch (option.type) {
                 case 'Group':
@@ -189,14 +224,14 @@ export const Select: React.FC<SelectProps> = ({
                   return (
                     <RadixSelect.Separator
                       key={index}
-                      className="border-divider-default m-[5px] h-px border-b"
+                      className="border-divider-default h-px border-b"
                     />
                   );
                 default:
                   return (
                     <RadixSelect.Item
                       key={index}
-                      value={option.value}
+                      value={String(option.value)}
                       disabled={option.disabled ?? false}
                       className={selectItemVariants({
                         variant,
