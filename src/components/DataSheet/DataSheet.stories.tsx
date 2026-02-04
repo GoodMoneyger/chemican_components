@@ -144,12 +144,12 @@ export const TableData: Story = () => (
 );
 
 export const TableWithActions: Story = () => {
-  const handleEdit = (itemId: string) => {
-    alert(`Edit item ${itemId}`);
+  const handleEdit = (item: string) => {
+    alert(`Edit item ${item}`);
   };
 
-  const handleRemove = (itemId: string) => {
-    if (confirm(`Remove item ${itemId}?`)) {
+  const handleRemove = (item: string) => {
+    if (confirm(`Remove item ${item}?`)) {
       alert('Item removed');
     }
   };
@@ -181,7 +181,7 @@ export const TableWithActions: Story = () => {
             </DataSheet.TableRow>
           </DataSheet.TableHeader>
           <DataSheet.TableBody>
-            <DataSheet.TableRow itemId="explosive-001">
+            <DataSheet.TableRow item="explosive-001">
               <DataSheet.TableCell>
                 火薬類・爆発物 / Explosives
               </DataSheet.TableCell>
@@ -189,7 +189,7 @@ export const TableWithActions: Story = () => {
               <DataSheet.TableCell>-</DataSheet.TableCell>
               <DataSheet.TableActionsCell />
             </DataSheet.TableRow>
-            <DataSheet.TableRow itemId="flammable-gas-001">
+            <DataSheet.TableRow item="flammable-gas-001">
               <DataSheet.TableCell>
                 可燃性・引火性ガス / Flammable gases （including chemically
                 unstable gases）
@@ -198,6 +198,90 @@ export const TableWithActions: Story = () => {
               <DataSheet.TableCell>-</DataSheet.TableCell>
               <DataSheet.TableActionsCell />
             </DataSheet.TableRow>
+          </DataSheet.TableBody>
+        </DataSheet.Table>
+      </DataSheet.Section>
+    </DataSheet>
+  );
+};
+
+export const TableWithRemoveRestoreAction: Story = () => {
+  interface ItemRecord {
+    id: number;
+    label: string;
+    isDeleted: boolean;
+  }
+
+  const [items, setItems] = React.useState<ItemRecord[]>([
+    { id: 1, label: 'Explosives', isDeleted: false },
+    { id: 2, label: 'Flammable gases', isDeleted: false },
+    { id: 3, label: 'Oxidizing gases', isDeleted: true },
+    { id: 4, label: '-', isDeleted: true },
+  ]);
+
+  const handleEdit = (item: ItemRecord) => {
+    alert(`Edit item: ${item.label} (ID: ${item.id})`);
+  };
+
+  const handleRemove = (item: ItemRecord) => {
+    if (confirm(`Remove item: ${item.label}?`)) {
+      setItems((prevItems) =>
+        prevItems.map((i) => (i.id === item.id ? { ...i, isDeleted: true } : i))
+      );
+    }
+  };
+
+  const handleRestore = (item: ItemRecord) => {
+    if (confirm(`Restore item: ${item.label}?`)) {
+      setItems((prevItems) =>
+        prevItems.map((i) =>
+          i.id === item.id ? { ...i, isDeleted: false } : i
+        )
+      );
+    }
+  };
+
+  return (
+    <DataSheet className="max-w-4xl w-140">
+      <DataSheet.Section>
+        <DataSheet.Header variant="table">
+          Table with Record Type - TItem as Object
+        </DataSheet.Header>
+        <DataSheet.Table<ItemRecord>
+          onEditRow={handleEdit}
+          onRemoveRow={handleRemove}
+          onRestoreRow={handleRestore}
+          actionsColumnParts={10}
+        >
+          <DataSheet.TableHeader>
+            <DataSheet.TableRow header>
+              <DataSheet.TableCell header parts={15}>
+                ID
+              </DataSheet.TableCell>
+              <DataSheet.TableCell header parts={50}>
+                Label
+              </DataSheet.TableCell>
+              <DataSheet.TableCell header parts={25}>
+                Status
+              </DataSheet.TableCell>
+              <DataSheet.TableActionsCell header />
+            </DataSheet.TableRow>
+          </DataSheet.TableHeader>
+          <DataSheet.TableBody>
+            {items.map((item) => (
+              <DataSheet.TableRow
+                key={item.id}
+                item={item}
+                isDeleted={item.isDeleted}
+              >
+                <DataSheet.TableCell>{item.id}</DataSheet.TableCell>
+                <DataSheet.TableCell>{item.label}</DataSheet.TableCell>
+                <DataSheet.TableCell>
+                  {item.isDeleted ? 'Deleted' : 'Active'}
+                </DataSheet.TableCell>
+                <DataSheet.TableActionsCell />
+              </DataSheet.TableRow>
+            ))}
           </DataSheet.TableBody>
         </DataSheet.Table>
       </DataSheet.Section>

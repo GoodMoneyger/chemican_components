@@ -1,14 +1,14 @@
 import React from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { IconPencil, IconRestore, IconTrash } from '@tabler/icons-react';
 
 import { cn } from '../../utils';
 import { Button } from '../Button/Button';
 import type { ButtonProps } from '../Button/Button';
 export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
 
-const dataSheetVariants = cva('bg-inherit space-y-md w-full', {
+const dataSheetVariants = cva('space-y-md w-full bg-inherit', {
   variants: {},
 });
 
@@ -178,16 +178,20 @@ const DataSheetKeyValue = React.forwardRef<
 ));
 DataSheetKeyValue.displayName = 'DataSheetKeyValue';
 
-export interface DataSheetTableProps
+export type DataSheetItemType = string | number | object;
+
+export interface DataSheetTableProps<TItem extends DataSheetItemType = string>
   extends React.HTMLAttributes<HTMLDivElement> {
-  onEditRow?: (itemId: string) => void;
-  onRemoveRow?: (itemId: string) => void;
+  onEditRow?: (item: TItem) => void;
+  onRemoveRow?: (item: TItem) => void;
+  onRestoreRow?: (item: TItem) => void;
   actionsColumnParts?: number;
 }
 
-interface DataSheetTableContextValue {
-  onEditRow?: (itemId: string) => void;
-  onRemoveRow?: (itemId: string) => void;
+interface DataSheetTableContextValue<TItem extends DataSheetItemType = string> {
+  onEditRow?: (item: TItem) => void;
+  onRemoveRow?: (item: TItem) => void;
+  onRestoreRow?: (item: TItem) => void;
   actionsColumnParts: number;
 }
 
@@ -199,48 +203,69 @@ const DataSheetTableContext = React.createContext<DataSheetTableContextValue>(
   defaultDataSheetTableContextValue
 );
 
-const useDataSheetTableContext = () => React.useContext(DataSheetTableContext);
+const useDataSheetTableContext = <TItem extends DataSheetItemType = string>() =>
+  React.useContext(DataSheetTableContext) as DataSheetTableContextValue<TItem>;
 
-// Context for TableRow to provide itemId and totalParts to cells
-interface DataSheetTableRowContextValue {
-  itemId?: string;
+// Context for TableRow to provide item and totalParts to cells
+interface DataSheetTableRowContextValue<
+  TItem extends DataSheetItemType = string,
+> {
+  item?: TItem;
   totalParts?: number;
+  isDeleted?: boolean;
 }
 
 const DataSheetTableRowContext =
   React.createContext<DataSheetTableRowContextValue>({});
 
-const useDataSheetTableRowContext = () =>
-  React.useContext(DataSheetTableRowContext);
+const useDataSheetTableRowContext = <
+  TItem extends DataSheetItemType = string,
+>() =>
+  React.useContext(
+    DataSheetTableRowContext
+  ) as DataSheetTableRowContextValue<TItem>;
 
-const DataSheetTable = React.forwardRef<HTMLDivElement, DataSheetTableProps>(
-  (
-    {
-      className,
-      children,
-      onEditRow,
-      onRemoveRow,
-      actionsColumnParts = 10,
-      ...props
-    },
-    ref
-  ) => {
-    const contextValue: DataSheetTableContextValue = {
-      actionsColumnParts,
-      ...(onEditRow && { onEditRow }),
-      ...(onRemoveRow && { onRemoveRow }),
-    };
+function DataSheetTableInner<TItem extends DataSheetItemType = string>(
+  {
+    className,
+    children,
+    onEditRow,
+    onRemoveRow,
+    onRestoreRow,
+    actionsColumnParts = 10,
+    ...props
+  }: DataSheetTableProps<TItem>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
+  const contextValue: DataSheetTableContextValue<TItem> = {
+    actionsColumnParts,
+    ...(onEditRow && { onEditRow }),
+    ...(onRemoveRow && { onRemoveRow }),
+    ...(onRestoreRow && { onRestoreRow }),
+  };
 
-    return (
-      <DataSheetTableContext.Provider value={contextValue}>
-        <div ref={ref} className={cn('overflow-x-auto', className)} {...props}>
-          <table className="w-full table-fixed">{children}</table>
-        </div>
-      </DataSheetTableContext.Provider>
-    );
+  return (
+    <DataSheetTableContext.Provider
+      value={contextValue as DataSheetTableContextValue}
+    >
+      <div ref={ref} className={cn('overflow-x-auto', className)} {...props}>
+        <table className="w-full table-fixed">{children}</table>
+      </div>
+    </DataSheetTableContext.Provider>
+  );
+}
+
+const DataSheetTable = React.forwardRef(DataSheetTableInner) as <
+  TItem extends DataSheetItemType = string,
+>(
+  props: DataSheetTableProps<TItem> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
   }
-);
-DataSheetTable.displayName = 'DataSheetTable';
+) => React.ReactElement;
+
+(
+  DataSheetTable as unknown as React.ForwardRefExoticComponent<DataSheetTableProps>
+).displayName = 'DataSheetTable';
 
 export type DataSheetTableHeaderProps =
   React.HTMLAttributes<HTMLTableSectionElement>;
@@ -268,16 +293,25 @@ const DataSheetTableBody = React.forwardRef<
 ));
 DataSheetTableBody.displayName = 'DataSheetTableBody';
 
-export interface DataSheetTableRowProps
-  extends React.HTMLAttributes<HTMLTableRowElement> {
+export interface DataSheetTableRowProps<
+  TItem extends DataSheetItemType = string,
+> extends React.HTMLAttributes<HTMLTableRowElement> {
   header?: boolean;
-  itemId?: string;
+  item?: TItem;
+  isDeleted?: boolean;
 }
 
-const DataSheetTableRow = React.forwardRef<
-  HTMLTableRowElement,
-  DataSheetTableRowProps
->(({ className, header, itemId, children, ...props }, ref) => {
+function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
+  {
+    className,
+    header,
+    item,
+    isDeleted = false,
+    children,
+    ...props
+  }: DataSheetTableRowProps<TItem>,
+  ref: React.ForwardedRef<HTMLTableRowElement>
+) {
   // Calculate total parts from all children with parts prop
   const totalParts = React.useMemo(() => {
     let total = 0;
@@ -292,17 +326,21 @@ const DataSheetTableRow = React.forwardRef<
     return total > 0 ? total : undefined;
   }, [children]);
 
-  const rowContextValue: DataSheetTableRowContextValue = {
-    ...(itemId !== undefined && { itemId }),
+  const rowContextValue: DataSheetTableRowContextValue<TItem> = {
+    ...(item !== undefined && { item }),
     ...(totalParts !== undefined && { totalParts }),
+    isDeleted,
   };
 
   return (
-    <DataSheetTableRowContext.Provider value={rowContextValue}>
+    <DataSheetTableRowContext.Provider
+      value={rowContextValue as DataSheetTableRowContextValue}
+    >
       <tr
         ref={ref}
         className={cn(
           header ? 'h-[18px]' : 'border-surface-default border-t',
+          isDeleted && 'opacity-60',
           className
         )}
         {...props}
@@ -311,8 +349,19 @@ const DataSheetTableRow = React.forwardRef<
       </tr>
     </DataSheetTableRowContext.Provider>
   );
-});
-DataSheetTableRow.displayName = 'DataSheetTableRow';
+}
+
+const DataSheetTableRow = React.forwardRef(DataSheetTableRowInner) as <
+  TItem extends DataSheetItemType = string,
+>(
+  props: DataSheetTableRowProps<TItem> & {
+    ref?: React.ForwardedRef<HTMLTableRowElement>;
+  }
+) => React.ReactElement;
+
+(
+  DataSheetTableRow as unknown as React.ForwardRefExoticComponent<DataSheetTableRowProps>
+).displayName = 'DataSheetTableRow';
 
 export interface DataSheetTableCellProps
   extends React.TdHTMLAttributes<HTMLTableCellElement> {
@@ -325,7 +374,7 @@ const DataSheetTableCell = React.forwardRef<
   DataSheetTableCellProps
 >(({ className, header, parts, children, style, ...props }, ref) => {
   const Component = header ? 'th' : 'td';
-  const { totalParts } = useDataSheetTableRowContext();
+  const { totalParts, isDeleted } = useDataSheetTableRowContext();
 
   // Calculate width as percentage based on parts
   // Parts represent relative weight - total is calculated from all cells in the row
@@ -333,6 +382,13 @@ const DataSheetTableCell = React.forwardRef<
     parts !== undefined && totalParts !== undefined
       ? { width: `${(parts / totalParts) * 100}%`, ...style }
       : style;
+
+  // Determine if content should have line-through
+  // Skip line-through for empty content or single dash
+  const contentStr =
+    typeof children === 'string' ? children.trim() : String(children || '');
+  const shouldApplyLineThrough =
+    isDeleted && !header && contentStr !== '' && contentStr !== '-';
 
   return (
     <Component
@@ -343,6 +399,7 @@ const DataSheetTableCell = React.forwardRef<
         header
           ? 'text-body-secondary text-sm font-normal leading-[1.5]'
           : 'text-body-primary font-normal leading-[1.5]',
+        shouldApplyLineThrough && 'line-through',
         className
       )}
       style={widthStyle}
@@ -354,21 +411,31 @@ const DataSheetTableCell = React.forwardRef<
 });
 DataSheetTableCell.displayName = 'DataSheetTableCell';
 
-export interface DataSheetTableActionsCellProps
-  extends Omit<DataSheetTableCellProps, 'parts'> {
-  itemId?: string;
+export interface DataSheetTableActionsCellProps<
+  TItem extends DataSheetItemType = string,
+> extends Omit<DataSheetTableCellProps, 'parts'> {
+  item?: TItem;
 }
 
-const DataSheetTableActionsCell = React.forwardRef<
-  HTMLTableCellElement,
-  DataSheetTableActionsCellProps
->(({ className, header, itemId: itemIdProp, children, ...props }, ref) => {
-  const { onEditRow, onRemoveRow, actionsColumnParts } =
-    useDataSheetTableContext();
-  const { itemId: itemIdFromContext } = useDataSheetTableRowContext();
+function DataSheetTableActionsCellInner<
+  TItem extends DataSheetItemType = string,
+>(
+  {
+    className,
+    header,
+    item: itemProp,
+    children,
+    ...props
+  }: DataSheetTableActionsCellProps<TItem>,
+  ref: React.ForwardedRef<HTMLTableCellElement>
+) {
+  const { onEditRow, onRemoveRow, onRestoreRow, actionsColumnParts } =
+    useDataSheetTableContext<TItem>();
+  const { item: itemFromContext, isDeleted } =
+    useDataSheetTableRowContext<TItem>();
 
   // Use explicit prop if provided, otherwise use context
-  const itemId = itemIdProp ?? itemIdFromContext;
+  const item = itemProp ?? itemFromContext;
 
   // Header row - render empty or label
   if (header) {
@@ -386,7 +453,7 @@ const DataSheetTableActionsCell = React.forwardRef<
   }
 
   // Data row - render action buttons
-  const hasActions = onEditRow || onRemoveRow;
+  const hasActions = onEditRow || onRemoveRow || onRestoreRow;
   if (!hasActions) return null;
 
   return (
@@ -396,31 +463,55 @@ const DataSheetTableActionsCell = React.forwardRef<
       className={cn('align-top', className)}
       {...props}
     >
-      <div className="flex">
-        {onEditRow && itemId && (
+      <div className="gap-xs flex">
+        {onEditRow && item && (
           <Button
             size="icon"
             intent="text"
             icon={IconPencil}
-            onClick={() => onEditRow(itemId)}
-            className="text-shape-primary [&_svg]:!size-5"
+            disabled={isDeleted}
+            onClick={() => onEditRow(item)}
+            className={cn(
+              'text-shape-primary [&_svg]:size-5!',
+              isDeleted && 'cursor-not-allowed!'
+            )}
           />
         )}
-        {onRemoveRow && itemId && (
+        {onRemoveRow && item && !isDeleted && (
           <Button
             size="icon"
             intent="text"
             icon={IconTrash}
-            onClick={() => onRemoveRow(itemId)}
+            onClick={() => onRemoveRow(item)}
             danger
             className="[&_svg]:!size-5"
+          />
+        )}
+        {onRestoreRow && item && isDeleted && (
+          <Button
+            size="icon"
+            intent="text"
+            icon={IconRestore}
+            onClick={() => onRestoreRow(item)}
+            className="text-shape-primary [&_svg]:!size-5"
           />
         )}
       </div>
     </DataSheetTableCell>
   );
-});
-DataSheetTableActionsCell.displayName = 'DataSheetTableActionsCell';
+}
+
+const DataSheetTableActionsCell = React.forwardRef(
+  DataSheetTableActionsCellInner
+) as <TItem extends DataSheetItemType = string>(
+  props: DataSheetTableActionsCellProps<TItem> & {
+    ref?: React.ForwardedRef<HTMLTableCellElement>;
+  }
+) => React.ReactElement;
+
+(
+  DataSheetTableActionsCell as unknown as React.ForwardRefExoticComponent<DataSheetTableActionsCellProps>
+).displayName = 'DataSheetTableActionsCell';
 
 export type DataSheetActionProps = ButtonProps;
 
