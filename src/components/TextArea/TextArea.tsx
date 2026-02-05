@@ -40,14 +40,11 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
     },
     ref
   ) => {
-    const [value, setValue] = React.useState(props.value || '');
-
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (characterLimit && event.target.value.length > characterLimit) {
         event.preventDefault();
         return;
       }
-      setValue(event.target.value);
       if (props.onChange) {
         props.onChange(event);
       }
@@ -59,12 +56,11 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           ref={ref}
           className={cn(textareaVariants({ invalid }), className)}
           {...props}
-          value={value}
           onChange={handleChange}
         />
         {Boolean(characterLimit && showCharacterLimit) && (
           <div className="text-body-secondary text-sm text-right">
-            {value.toString().length}/{characterLimit}
+            {props.value?.toString().length || 0}/{characterLimit}
           </div>
         )}
       </div>
