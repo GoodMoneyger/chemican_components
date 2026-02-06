@@ -47,12 +47,12 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
     }, [props.value]);
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setText(event.target.value);
-
       if (characterLimit && event.target.value.length > characterLimit) {
         event.preventDefault();
         return;
       }
+
+      setText(event.target.value);
       if (props.onChange) {
         props.onChange(event);
       }
