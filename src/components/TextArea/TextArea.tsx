@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
@@ -40,14 +40,19 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
     },
     ref
   ) => {
-    const [value, setValue] = React.useState(props.value || '');
+    const [text, setText] = useState(props.value);
+
+    useEffect(() => {
+      setText(props.value);
+    }, [props.value]);
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (characterLimit && event.target.value.length > characterLimit) {
         event.preventDefault();
         return;
       }
-      setValue(event.target.value);
+
+      setText(event.target.value);
       if (props.onChange) {
         props.onChange(event);
       }
@@ -59,12 +64,12 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           ref={ref}
           className={cn(textareaVariants({ invalid }), className)}
           {...props}
-          value={value}
+          value={text}
           onChange={handleChange}
         />
         {Boolean(characterLimit && showCharacterLimit) && (
           <div className="text-body-secondary text-sm text-right">
-            {value.toString().length}/{characterLimit}
+            {text?.toString().length || 0}/{characterLimit}
           </div>
         )}
       </div>
