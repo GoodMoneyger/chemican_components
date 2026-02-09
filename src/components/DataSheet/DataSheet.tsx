@@ -39,9 +39,9 @@ const dataSheetHeaderVariants = cva(
 );
 
 interface AccessibilityProp {
-  edit: string;
-  remove: string;
-  restore: string;
+  edit?: string;
+  remove?: string;
+  restore?: string;
 }
 
 export interface DataSheetHeaderProps
