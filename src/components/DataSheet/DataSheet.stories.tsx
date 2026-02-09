@@ -273,6 +273,16 @@ export const TableWithRemoveRestoreAction: Story = () => {
                 key={item.id}
                 item={item}
                 isDeleted={item.isDeleted}
+                ariaLabels={{
+                  edit: `Edit ${item.label}`,
+                  remove: `Remove ${item.label}`,
+                  restore: `Restore ${item.label}`,
+                }}
+                tooltipMessages={{
+                  edit: 'Edit this row',
+                  remove: 'Remove this row',
+                  restore: 'Restore this row',
+                }}
               >
                 <DataSheet.TableCell>{item.id}</DataSheet.TableCell>
                 <DataSheet.TableCell>{item.label}</DataSheet.TableCell>

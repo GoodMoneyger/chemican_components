@@ -272,6 +272,8 @@ interface DataSheetTableRowContextValue<
   item?: TItem;
   totalParts?: number;
   isDeleted?: boolean;
+  ariaLabels?: AccessibilityProp;
+  tooltipMessages?: AccessibilityProp;
 }
 
 const DataSheetTableRowContext =
@@ -358,6 +360,8 @@ export interface DataSheetTableRowProps<
   header?: boolean;
   item?: TItem;
   isDeleted?: boolean;
+  ariaLabels?: AccessibilityProp;
+  tooltipMessages?: AccessibilityProp;
 }
 
 function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
@@ -366,6 +370,8 @@ function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
     header,
     item,
     isDeleted = false,
+    ariaLabels,
+    tooltipMessages,
     children,
     ...props
   }: DataSheetTableRowProps<TItem>,
@@ -389,6 +395,8 @@ function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
     ...(item !== undefined && { item }),
     ...(totalParts !== undefined && { totalParts }),
     isDeleted,
+    ...(ariaLabels && { ariaLabels }),
+    ...(tooltipMessages && { tooltipMessages }),
   };
 
   return (
@@ -490,8 +498,12 @@ function DataSheetTableActionsCellInner<
 ) {
   const { onEditRow, onRemoveRow, onRestoreRow, actionsColumnParts } =
     useDataSheetTableContext<TItem>();
-  const { item: itemFromContext, isDeleted } =
-    useDataSheetTableRowContext<TItem>();
+  const {
+    item: itemFromContext,
+    isDeleted,
+    ariaLabels,
+    tooltipMessages,
+  } = useDataSheetTableRowContext<TItem>();
 
   // Use explicit prop if provided, otherwise use context
   const item = itemProp ?? itemFromContext;
@@ -522,38 +534,56 @@ function DataSheetTableActionsCellInner<
       className={cn('align-top', className)}
       {...props}
     >
-      <div className="gap-xs flex">
+      <div className="gap-xxs flex">
         {onEditRow && item && (
-          <Button
-            size="icon"
-            intent="text"
-            icon={IconPencil}
-            disabled={isDeleted}
-            onClick={() => onEditRow(item)}
-            className={cn(
-              'text-shape-primary [&_svg]:size-5!',
-              isDeleted && 'cursor-not-allowed!'
-            )}
-          />
+          <Tooltip
+            content={isDeleted ? null : (tooltipMessages?.edit ?? null)}
+            disableHoverableContent
+          >
+            <Button
+              aria-label={ariaLabels?.edit ?? undefined}
+              size="icon"
+              intent="text"
+              icon={IconPencil}
+              disabled={isDeleted}
+              onClick={() => onEditRow(item)}
+              className={cn(
+                'text-shape-primary [&_svg]:size-5!',
+                isDeleted && 'cursor-not-allowed!'
+              )}
+            />
+          </Tooltip>
         )}
         {onRemoveRow && item && !isDeleted && (
-          <Button
-            size="icon"
-            intent="text"
-            icon={IconTrash}
-            onClick={() => onRemoveRow(item)}
-            danger
-            className="[&_svg]:!size-5"
-          />
+          <Tooltip
+            content={tooltipMessages?.remove ?? null}
+            disableHoverableContent
+          >
+            <Button
+              aria-label={ariaLabels?.remove ?? undefined}
+              size="icon"
+              intent="text"
+              icon={IconTrash}
+              onClick={() => onRemoveRow(item)}
+              danger
+              className="[&_svg]:!size-5"
+            />
+          </Tooltip>
         )}
         {onRestoreRow && item && isDeleted && (
-          <Button
-            size="icon"
-            intent="text"
-            icon={IconRestore}
-            onClick={() => onRestoreRow(item)}
-            className="text-shape-primary [&_svg]:!size-5"
-          />
+          <Tooltip
+            content={tooltipMessages?.restore ?? null}
+            disableHoverableContent
+          >
+            <Button
+              aria-label={ariaLabels?.restore ?? undefined}
+              size="icon"
+              intent="text"
+              icon={IconRestore}
+              onClick={() => onRestoreRow(item)}
+              className="text-shape-primary [&_svg]:!size-5"
+            />
+          </Tooltip>
         )}
       </div>
     </DataSheetTableCell>
