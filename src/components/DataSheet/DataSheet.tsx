@@ -40,13 +40,27 @@ const dataSheetHeaderVariants = cva(
 export interface DataSheetHeaderProps
   extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof dataSheetHeaderVariants> {
+  isDeleted?: boolean;
   onEdit?: () => void;
   onRemove?: () => void;
+  onRestore?: () => void;
 }
 
 const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
-  ({ className, variant, children, onEdit, onRemove, ...props }, ref) => {
-    const hasActions = onEdit || onRemove;
+  (
+    {
+      className,
+      variant,
+      children,
+      isDeleted = false,
+      onEdit,
+      onRemove,
+      onRestore,
+      ...props
+    },
+    ref
+  ) => {
+    const hasActions = onEdit || onRemove || onRestore;
 
     return (
       <header
@@ -58,7 +72,10 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
         )}
         {...props}
       >
-        <div>{children}</div>
+        <div className={cn(isDeleted && 'line-through opacity-60')}>
+          {children}
+        </div>
+
         {hasActions && (
           <div className="flex">
             {onEdit && (
@@ -66,11 +83,12 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
                 size="icon"
                 intent="text"
                 icon={IconPencil}
+                disabled={isDeleted}
                 onClick={onEdit}
                 className="text-shape-primary [&_svg]:!size-5"
               />
             )}
-            {onRemove && (
+            {onRemove && !isDeleted && (
               <Button
                 size="icon"
                 intent="text"
@@ -78,6 +96,15 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
                 onClick={onRemove}
                 danger
                 className="[&_svg]:!size-5"
+              />
+            )}
+            {onRestore && isDeleted && (
+              <Button
+                size="icon"
+                intent="text"
+                icon={IconRestore}
+                onClick={onRestore}
+                className="text-shape-primary [&_svg]:!size-5"
               />
             )}
           </div>
