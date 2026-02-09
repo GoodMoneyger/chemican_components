@@ -351,6 +351,16 @@ export const MultipleSections: Story = () => {
             onEdit={() => handleEdit(section)}
             onRemove={() => handleRemove(section)}
             onRestore={() => handleRestore(section)}
+            ariaLabels={{
+              edit: `Edit ${section.name}`,
+              remove: `Remove ${section.name}`,
+              restore: `Restore ${section.name}`,
+            }}
+            tooltipMessages={{
+              edit: 'Edit manufacturer information',
+              remove: 'Remove manufacturer information',
+              restore: 'Restore manufacturer information',
+            }}
           >
             {section.name}
           </DataSheet.Header>

@@ -88,9 +88,12 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
         </div>
 
         {hasActions && (
-          <div className="flex">
+          <div className="gap-xxs flex">
             {onEdit && (
-              <Tooltip content={tooltipMessages?.edit ?? null}>
+              <Tooltip
+                content={isDeleted ? null : (tooltipMessages?.edit ?? null)}
+                disableHoverableContent
+              >
                 <Button
                   aria-label={ariaLabels?.edit ?? undefined}
                   size="icon"
@@ -98,12 +101,18 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
                   icon={IconPencil}
                   disabled={isDeleted}
                   onClick={onEdit}
-                  className="text-shape-primary [&_svg]:!size-5"
+                  className={cn(
+                    'text-shape-primary [&_svg]:!size-5',
+                    isDeleted && 'cursor-not-allowed!'
+                  )}
                 />
               </Tooltip>
             )}
             {onRemove && !isDeleted && (
-              <Tooltip content={tooltipMessages?.edit ?? null}>
+              <Tooltip
+                content={tooltipMessages?.remove ?? null}
+                disableHoverableContent
+              >
                 <Button
                   aria-label={ariaLabels?.remove ?? undefined}
                   size="icon"
@@ -116,7 +125,10 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
               </Tooltip>
             )}
             {onRestore && isDeleted && (
-              <Tooltip content={tooltipMessages?.edit ?? null}>
+              <Tooltip
+                content={tooltipMessages?.restore ?? null}
+                disableHoverableContent
+              >
                 <Button
                   aria-label={ariaLabels?.restore ?? undefined}
                   size="icon"
