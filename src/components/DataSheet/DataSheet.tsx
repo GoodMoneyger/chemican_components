@@ -6,6 +6,7 @@ import { IconPencil, IconRestore, IconTrash } from '@tabler/icons-react';
 import { cn } from '../../utils';
 import { Button } from '../Button/Button';
 import type { ButtonProps } from '../Button/Button';
+import { Tooltip } from '../Tooltip';
 export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
 
 const dataSheetVariants = cva('space-y-md w-full bg-inherit', {
@@ -37,10 +38,18 @@ const dataSheetHeaderVariants = cva(
   }
 );
 
+interface AccessibilityProp {
+  edit: string;
+  remove: string;
+  restore: string;
+}
+
 export interface DataSheetHeaderProps
   extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof dataSheetHeaderVariants> {
   isDeleted?: boolean;
+  ariaLabels?: AccessibilityProp;
+  tooltipMessages?: AccessibilityProp;
   onEdit?: () => void;
   onRemove?: () => void;
   onRestore?: () => void;
@@ -53,6 +62,8 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
       variant,
       children,
       isDeleted = false,
+      ariaLabels,
+      tooltipMessages,
       onEdit,
       onRemove,
       onRestore,
@@ -79,33 +90,42 @@ const DataSheetHeader = React.forwardRef<HTMLElement, DataSheetHeaderProps>(
         {hasActions && (
           <div className="flex">
             {onEdit && (
-              <Button
-                size="icon"
-                intent="text"
-                icon={IconPencil}
-                disabled={isDeleted}
-                onClick={onEdit}
-                className="text-shape-primary [&_svg]:!size-5"
-              />
+              <Tooltip content={tooltipMessages?.edit ?? null}>
+                <Button
+                  aria-label={ariaLabels?.edit ?? undefined}
+                  size="icon"
+                  intent="text"
+                  icon={IconPencil}
+                  disabled={isDeleted}
+                  onClick={onEdit}
+                  className="text-shape-primary [&_svg]:!size-5"
+                />
+              </Tooltip>
             )}
             {onRemove && !isDeleted && (
-              <Button
-                size="icon"
-                intent="text"
-                icon={IconTrash}
-                onClick={onRemove}
-                danger
-                className="[&_svg]:!size-5"
-              />
+              <Tooltip content={tooltipMessages?.edit ?? null}>
+                <Button
+                  aria-label={ariaLabels?.remove ?? undefined}
+                  size="icon"
+                  intent="text"
+                  icon={IconTrash}
+                  onClick={onRemove}
+                  danger
+                  className="[&_svg]:!size-5"
+                />
+              </Tooltip>
             )}
             {onRestore && isDeleted && (
-              <Button
-                size="icon"
-                intent="text"
-                icon={IconRestore}
-                onClick={onRestore}
-                className="text-shape-primary [&_svg]:!size-5"
-              />
+              <Tooltip content={tooltipMessages?.edit ?? null}>
+                <Button
+                  aria-label={ariaLabels?.restore ?? undefined}
+                  size="icon"
+                  intent="text"
+                  icon={IconRestore}
+                  onClick={onRestore}
+                  className="text-shape-primary [&_svg]:!size-5"
+                />
+              </Tooltip>
             )}
           </div>
         )}
