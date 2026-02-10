@@ -13,6 +13,7 @@ import {
   PopoverContent,
 } from '../../lib/components/Popover';
 import { cn } from '../../utils';
+import { useDebounce } from '../../lib/hooks';
 
 import { TextField, type TextFieldProps } from './TextField';
 
@@ -55,25 +56,6 @@ const defaultGetSuggestionKey = (
 ): string => {
   if (typeof item === 'string') return `${item}-${index}`;
   return `${item.value || item}-${index}`;
-};
-
-/**
- * Custom hook for debouncing a value
- */
-const useDebounce = (value: string, delay: number): string => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
 };
 
 /**
@@ -124,6 +106,7 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
     const abortControllerRef = useRef<AbortController | null>(null);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const [isComposing, setIsComposing] = useState(false);
     const debouncedQuery = useDebounce(value, debounceMs);
 
     const filteredSuggestions = useMemo(() => {
@@ -242,6 +225,10 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (isComposing) {
+          return;
+        }
+
         if (!open) {
           onKeyDownProp?.(e);
           return;
@@ -277,7 +264,14 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
 
         onKeyDownProp?.(e);
       },
-      [open, highlightedIndex, filteredSuggestions, handleSelect, onKeyDownProp]
+      [
+        isComposing,
+        open,
+        highlightedIndex,
+        filteredSuggestions,
+        handleSelect,
+        onKeyDownProp,
+      ]
     );
 
     const shouldShowPopover =
@@ -298,6 +292,8 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
             disabled={disabled}
             role="combobox"
             aria-expanded={shouldShowPopover}

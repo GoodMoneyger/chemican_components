@@ -21,7 +21,7 @@ function BasicExample() {
   return (
     <div className="w-96">
       <TextField.TagInput
-        tags={tags}
+        value={tags}
         onChange={setTags}
         placeholder="Add tags (press Enter or comma)..."
         helperText="Add multiple elements using Enter/Comma key"
@@ -42,7 +42,7 @@ function WithMaxTagsExample() {
   return (
     <div className="w-96">
       <TextField.TagInput
-        tags={tags}
+        value={tags}
         onChange={setTags}
         maxTags={5}
         allowDuplicates={false}
@@ -64,7 +64,7 @@ function WithIconExample() {
   return (
     <div className="w-96">
       <TextField.TagInput
-        tags={tags}
+        value={tags}
         onChange={setTags}
         prefixIcon={IconTag}
         placeholder="Add tags..."

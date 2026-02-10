@@ -54,6 +54,9 @@ export const iconVariants = cva(
         false: '',
       },
     },
+    defaultVariants: {
+      interactive: false,
+    },
   }
 );
 

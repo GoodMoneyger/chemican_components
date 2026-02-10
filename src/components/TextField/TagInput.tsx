@@ -17,28 +17,25 @@ export interface TagInputProps
     React.InputHTMLAttributes<HTMLInputElement>,
     'value' | 'onChange' | 'onKeyDown'
   > {
-  tags: string[];
-  onChange: (tags: string[]) => void;
+  value: string[];
+  onChange: (value: string[]) => void;
   maxTags?: number;
   allowDuplicates?: boolean;
   separators?: string[];
-  placeholder?: string;
   inputValue?: string;
-  onInputChange?: (value: string) => void;
+  onInputChange?: (inputValue: string) => void;
   prefixIcon?: IconProp;
   trailingIcon?: IconProp;
-  onTrailingIconClick?: () => void;
   trailingIconSize?: number;
   prefixIconSize?: number;
   invalid?: boolean;
-  className?: string;
-  helperText?: string;
+  helperText?: React.ReactNode;
 }
 
 export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
   (
     {
-      tags,
+      value: tags,
       onChange,
       maxTags,
       allowDuplicates = true,
@@ -49,7 +46,6 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       helperText,
       prefixIcon,
       trailingIcon,
-      onTrailingIconClick,
       trailingIconSize = 14,
       prefixIconSize = 14,
       invalid,
@@ -69,8 +65,14 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Combine refs
     React.useImperativeHandle(ref, () => inputRef.current!);
+
+    const separatorRegex = React.useMemo(() => {
+      const escapedSeparators = separators.map((s) =>
+        s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      );
+      return new RegExp(escapedSeparators.join('|'));
+    }, [separators]);
 
     // Helper: Check if tag is valid
     const isTagValid = useCallback(
@@ -110,10 +112,8 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
 
-        // Check if any separator was just typed
         const lastChar = newValue[newValue.length - 1];
         if (lastChar && separators.includes(lastChar)) {
-          // Remove the separator and add the tag
           const tagValue = newValue.slice(0, -1);
           if (tagValue) {
             addTag(tagValue);
@@ -121,21 +121,15 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           return;
         }
 
-        // Check if value contains separator (paste scenario)
-        const hasSeparator = separators.some((sep) => newValue.includes(sep));
-        if (hasSeparator) {
-          // Split by separators and add all tags
-          const regex = new RegExp(
-            `[${separators.map((s) => `\\${s}`).join('')}]`
-          );
-          const parts = newValue.split(regex).filter(Boolean);
-          parts.forEach((part) => addTag(part));
+        const parts = newValue.split(separatorRegex);
+        if (parts.length > 1) {
+          parts.filter(Boolean).forEach((part) => addTag(part));
           return;
         }
 
         setInputValue(newValue);
       },
-      [separators, addTag, setInputValue]
+      [separators, separatorRegex, addTag, setInputValue]
     );
 
     // Handle key down - Enter and Backspace
@@ -170,7 +164,6 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     const showPlaceholder = tags.length === 0 && !inputValue;
     const hasPrefix = !!prefixIcon;
     const hasTrailing = !!trailingIcon;
-    const isTrailingInteractive = !!onTrailingIconClick;
 
     return (
       <>
@@ -185,7 +178,6 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
             <div
               className={iconVariants({
                 position: 'prefix',
-                interactive: false,
               })}
             >
               {renderIcon(prefixIcon, { size: prefixIconSize })}
@@ -231,9 +223,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
             <div
               className={iconVariants({
                 position: 'trailing',
-                interactive: isTrailingInteractive,
               })}
-              onClick={isTrailingInteractive ? onTrailingIconClick : undefined}
             >
               {renderIcon(trailingIcon, { size: trailingIconSize })}
             </div>
