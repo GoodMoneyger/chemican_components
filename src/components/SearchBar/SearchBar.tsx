@@ -321,7 +321,19 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                 size,
               })
             )}
-            onClick={() => onSearch?.(keywords)}
+            onClick={() => {
+              let finalKeywords = keywords;
+              if (value.trim()) {
+                finalKeywords = [...keywords, value.trim()];
+                setKeywords(finalKeywords);
+                if (onChange) {
+                  onChange({
+                    target: { value: '' },
+                  } as React.ChangeEvent<HTMLInputElement>);
+                }
+              }
+              onSearch?.(finalKeywords);
+            }}
             disabled={disabled}
           >
             {searchButtonText}
