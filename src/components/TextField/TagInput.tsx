@@ -2,6 +2,8 @@ import React, {
   useState,
   useCallback,
   useRef,
+  useMemo,
+  useEffect,
   type KeyboardEvent,
   type ChangeEvent,
 } from 'react';
@@ -9,13 +11,18 @@ import React, {
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 import { Tag } from '../Tag/Tag';
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+} from '../../lib/components/Popover';
 
 import { inputWrapperVariants, iconVariants } from './TextField';
 
 export interface TagInputProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
-    'value' | 'onChange' | 'onKeyDown'
+    'value' | 'onChange' | 'onKeyDown' | 'onSelect'
   > {
   value: string[];
   onChange: (value: string[]) => void;
@@ -30,6 +37,9 @@ export interface TagInputProps
   prefixIconSize?: number;
   invalid?: boolean;
   helperText?: React.ReactNode;
+  suggestions?: string[];
+  renderSuggestion?: (item: string) => React.ReactNode;
+  onSelect?: (value: string) => void;
 }
 
 export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
@@ -51,19 +61,24 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       invalid,
       disabled,
       className,
+      suggestions,
+      renderSuggestion,
+      onSelect,
       ...inputProps
     },
     ref
   ) => {
-    // Internal state for input text
     const [internalInputValue, setInternalInputValue] = useState('');
     const inputValue = controlledInputValue ?? internalInputValue;
     const setInputValue = onInputChange ?? setInternalInputValue;
 
-    // Track focus state for helper text
     const [isFocused, setIsFocused] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
+    const [isComposing, setIsComposing] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     React.useImperativeHandle(ref, () => inputRef.current!);
 
@@ -73,6 +88,29 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       );
       return new RegExp(escapedSeparators.join('|'));
     }, [separators]);
+
+    const filteredSuggestions = useMemo(() => {
+      if (!suggestions || !inputValue) return [];
+
+      const query = inputValue.toLowerCase();
+      return suggestions.filter((item) => {
+        if (tags.includes(item)) return false;
+        return item.toLowerCase().includes(query);
+      });
+    }, [suggestions, tags, inputValue]);
+
+    useEffect(() => {
+      setHighlightedIndex(0);
+      itemRefs.current = [];
+    }, [filteredSuggestions]);
+
+    useEffect(() => {
+      if (open && highlightedIndex >= 0 && itemRefs.current[highlightedIndex]) {
+        itemRefs.current[highlightedIndex]?.scrollIntoView({
+          block: 'nearest',
+        });
+      }
+    }, [highlightedIndex, open]);
 
     // Helper: Check if tag is valid
     const isTagValid = useCallback(
@@ -98,7 +136,6 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       [tags, onChange, isTagValid, setInputValue]
     );
 
-    // Helper: Remove tag
     const removeTag = useCallback(
       (index: number) => {
         const newTags = tags.filter((_, i) => i !== index);
@@ -107,7 +144,15 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       [tags, onChange]
     );
 
-    // Handle input change - check for separators
+    const handleSelectSuggestion = useCallback(
+      (suggestion: string) => {
+        onSelect?.(suggestion);
+        addTag(suggestion);
+        setOpen(false);
+      },
+      [onSelect, addTag]
+    );
+
     const handleInputChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
@@ -128,13 +173,57 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
         }
 
         setInputValue(newValue);
+
+        if (suggestions && newValue && filteredSuggestions.length > 0) {
+          setOpen(true);
+        }
       },
-      [separators, separatorRegex, addTag, setInputValue]
+      [
+        separators,
+        separatorRegex,
+        addTag,
+        setInputValue,
+        suggestions,
+        filteredSuggestions.length,
+      ]
     );
 
-    // Handle key down - Enter and Backspace
     const handleKeyDown = useCallback(
       (e: KeyboardEvent<HTMLInputElement>) => {
+        if (isComposing) {
+          return;
+        }
+
+        if (open && filteredSuggestions.length > 0) {
+          switch (e.key) {
+            case 'Escape':
+              e.preventDefault();
+              setOpen(false);
+              return;
+
+            case 'Enter': {
+              e.preventDefault();
+              const suggestion = filteredSuggestions[highlightedIndex];
+              if (suggestion) {
+                handleSelectSuggestion(suggestion);
+              }
+              return;
+            }
+
+            case 'ArrowDown':
+              e.preventDefault();
+              setHighlightedIndex((prev) =>
+                prev < filteredSuggestions.length - 1 ? prev + 1 : prev
+              );
+              return;
+
+            case 'ArrowUp':
+              e.preventDefault();
+              setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : prev));
+              return;
+          }
+        }
+
         if (e.key === 'Enter' && inputValue.trim()) {
           e.preventDefault();
           addTag(inputValue);
@@ -149,23 +238,48 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           removeTag(tags.length - 1);
         }
       },
-      [inputValue, tags.length, addTag, removeTag]
+      [
+        isComposing,
+        open,
+        filteredSuggestions,
+        highlightedIndex,
+        handleSelectSuggestion,
+        inputValue,
+        tags.length,
+        addTag,
+        removeTag,
+      ]
     );
 
-    // Handle blur - add current value as tag if not empty
     const handleBlur = useCallback(() => {
       if (inputValue.trim()) {
         addTag(inputValue);
       }
       setIsFocused(false);
+      setOpen(false);
     }, [inputValue, addTag]);
+
+    const handleFocus = useCallback(() => {
+      setIsFocused(true);
+      if (suggestions && inputValue && filteredSuggestions.length > 0) {
+        setOpen(true);
+      }
+    }, [suggestions, inputValue, filteredSuggestions.length]);
 
     const isDisabled = disabled || (maxTags ? tags.length >= maxTags : false);
     const showPlaceholder = tags.length === 0 && !inputValue;
     const hasPrefix = !!prefixIcon;
     const hasTrailing = !!trailingIcon;
 
-    return (
+    const shouldShowPopover =
+      !!suggestions && open && !isDisabled && filteredSuggestions.length > 0;
+
+    const activeDescendantId =
+      shouldShowPopover && highlightedIndex >= 0
+        ? `taginput-item-${highlightedIndex}`
+        : undefined;
+
+    const inputContent = (
       <>
         <div
           className={cn(
@@ -206,8 +320,10 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
+              onFocus={handleFocus}
               onBlur={handleBlur}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
               placeholder={showPlaceholder ? placeholder : ''}
               disabled={isDisabled}
               className={cn(
@@ -215,6 +331,13 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
                 'text-body-primary placeholder:text-body-placeholder',
                 'disabled:text-body-disabled py-0 px-0 leading-[100%]'
               )}
+              {...(suggestions && {
+                role: 'combobox',
+                'aria-expanded': shouldShowPopover,
+                'aria-controls': 'taginput-listbox',
+                'aria-activedescendant': activeDescendantId,
+                'aria-autocomplete': 'list',
+              })}
               {...inputProps}
             />
           </div>
@@ -230,7 +353,6 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           )}
         </div>
 
-        {/* Helper text - always takes up space to prevent layout jumps */}
         {helperText && (
           <p
             className={cn(
@@ -243,6 +365,71 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
         )}
       </>
     );
+
+    if (suggestions) {
+      return (
+        <Popover open={shouldShowPopover}>
+          <PopoverAnchor asChild>
+            <div>{inputContent}</div>
+          </PopoverAnchor>
+
+          <PopoverContent
+            align="start"
+            sideOffset={4}
+            className="p-0"
+            style={{
+              width: 'var(--radix-popover-trigger-width)',
+              maxWidth: '600px',
+            }}
+            onOpenAutoFocus={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <div
+              id="taginput-listbox"
+              role="listbox"
+              className="max-h-[calc(40vh-56px)] overflow-x-hidden
+                overflow-y-auto"
+              style={{ overscrollBehaviorY: 'contain' }}
+            >
+              {filteredSuggestions.map((item, index) => {
+                const isHighlighted = index === highlightedIndex;
+                const itemId = `taginput-item-${index}`;
+                return (
+                  <div
+                    key={itemId}
+                    id={itemId}
+                    ref={(el) => {
+                      itemRefs.current[index] = el;
+                    }}
+                    role="option"
+                    aria-selected={isHighlighted}
+                    data-value={item}
+                    onClick={() => handleSelectSuggestion(item)}
+                    onPointerDown={(e) => {
+                      e.preventDefault();
+                      handleSelectSuggestion(item);
+                    }}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    className={cn(
+                      `min-h-10 px-lg py-1.5 relative flex cursor-default
+                      items-center`,
+                      'break-words whitespace-normal outline-none select-none',
+                      'hover:bg-interactive-neutral-hover',
+                      isHighlighted && 'bg-interactive-neutral-hover'
+                    )}
+                  >
+                    {renderSuggestion ? renderSuggestion(item) : item}
+                  </div>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
+      );
+    }
+
+    return inputContent;
   }
 );
 

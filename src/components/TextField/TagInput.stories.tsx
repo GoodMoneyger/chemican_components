@@ -76,3 +76,36 @@ function WithIconExample() {
 export const WithIcon: Story = {
   render: () => <WithIconExample />,
 };
+
+function WithSuggestionsExample() {
+  const [tags, setTags] = useState<string[]>(['react']);
+  return (
+    <div className="w-96">
+      <TextField.TagInput
+        value={tags}
+        onChange={setTags}
+        suggestions={[
+          'react',
+          'vue',
+          'angular',
+          'svelte',
+          'solid',
+          'preact',
+          'typescript',
+          'javascript',
+          'nextjs',
+          'remix',
+        ]}
+        placeholder="Add frameworks..."
+        helperText="Start typing to see suggestions"
+      />
+      <div className="text-body-secondary mt-sm text-sm">
+        Selected: {tags.length > 0 ? tags.join(', ') : 'None'}
+      </div>
+    </div>
+  );
+}
+
+export const WithSuggestions: Story = {
+  render: () => <WithSuggestionsExample />,
+};
