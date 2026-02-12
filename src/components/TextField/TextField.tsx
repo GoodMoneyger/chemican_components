@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
-const inputWrapperVariants = cva(
+export const inputWrapperVariants = cva(
   `border-interactive-default bg-surface-primary
   has-[>input:enabled]:hover:border-interactive-hover
   has-[:disabled]:bg-surface-disabled has-[:focus]:ring-interactive-focused
@@ -23,7 +23,7 @@ const inputWrapperVariants = cva(
   }
 );
 
-const inputVariants = cva(
+export const inputVariants = cva(
   `px-md py-sm text-body-primary placeholder:text-body-placeholder
   disabled:text-body-disabled w-full flex-1 bg-transparent [text-align:inherit]
   outline-none`,
@@ -41,7 +41,7 @@ const inputVariants = cva(
   }
 );
 
-const iconVariants = cva(
+export const iconVariants = cva(
   'text-body-secondary flex items-center justify-center',
   {
     variants: {
@@ -53,6 +53,9 @@ const iconVariants = cva(
         true: 'hover:text-body-primary cursor-pointer transition-colors',
         false: '',
       },
+    },
+    defaultVariants: {
+      interactive: false,
     },
   }
 );
