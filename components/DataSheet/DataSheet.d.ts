@@ -5,9 +5,18 @@ export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
 declare const dataSheetHeaderVariants: (props?: ({
     variant?: "table" | "primary" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
+interface AccessibilityProp {
+    edit?: string;
+    remove?: string;
+    restore?: string;
+}
 export interface DataSheetHeaderProps extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof dataSheetHeaderVariants> {
+    isDeleted?: boolean;
+    ariaLabels?: AccessibilityProp;
+    tooltipMessages?: AccessibilityProp;
     onEdit?: () => void;
     onRemove?: () => void;
+    onRestore?: () => void;
 }
 declare const DataSheetHeader: React.ForwardRefExoticComponent<DataSheetHeaderProps & React.RefAttributes<HTMLElement>>;
 export type DataSheetSectionProps = React.HTMLAttributes<HTMLElement>;
@@ -38,6 +47,8 @@ export interface DataSheetTableRowProps<TItem extends DataSheetItemType = string
     header?: boolean;
     item?: TItem;
     isDeleted?: boolean;
+    ariaLabels?: AccessibilityProp;
+    tooltipMessages?: AccessibilityProp;
 }
 declare const DataSheetTableRow: <TItem extends DataSheetItemType = string>(props: DataSheetTableRowProps<TItem> & {
     ref?: React.ForwardedRef<HTMLTableRowElement>;
