@@ -273,6 +273,16 @@ export const TableWithRemoveRestoreAction: Story = () => {
                 key={item.id}
                 item={item}
                 isDeleted={item.isDeleted}
+                ariaLabels={{
+                  edit: `Edit ${item.label}`,
+                  remove: `Remove ${item.label}`,
+                  restore: `Restore ${item.label}`,
+                }}
+                tooltipMessages={{
+                  edit: 'Edit this row',
+                  remove: 'Remove this row',
+                  restore: 'Restore this row',
+                }}
               >
                 <DataSheet.TableCell>{item.id}</DataSheet.TableCell>
                 <DataSheet.TableCell>{item.label}</DataSheet.TableCell>
@@ -289,57 +299,102 @@ export const TableWithRemoveRestoreAction: Story = () => {
   );
 };
 
-export const MultipleSections: Story = () => (
-  <DataSheet className="w-140">
-    <DataSheet.Section>
-      <DataSheet.Header
-        variant="primary"
-        onEdit={() => alert('Edit Eastman Chemical Company')}
-        onRemove={() => alert('Remove Eastman Chemical Company')}
-      >
-        Eastman Chemical Company
-      </DataSheet.Header>
-      <DataSheet.KeyValue orientation="horizontal" label="住所">
-        200 South Wilcox Drive Kingsport TN 37660-5280
-      </DataSheet.KeyValue>
-      <DataSheet.KeyValue orientation="horizontal" label="拠点・部門">
-        A部門
-      </DataSheet.KeyValue>
-      <DataSheet.KeyValue orientation="horizontal" label="電話番号">
-        423-229-2000
-      </DataSheet.KeyValue>
-      <DataSheet.KeyValue orientation="horizontal" label="メールアドレス">
-        -
-      </DataSheet.KeyValue>
-    </DataSheet.Section>
+export const MultipleSections: Story = () => {
+  interface SectionRecord {
+    id: number;
+    name: string;
+    address: string;
+    department: string;
+    phone: string;
+    email: string;
+    isDeleted: boolean;
+  }
 
-    <DataSheet.Section>
-      <DataSheet.Header
-        variant="primary"
-        onEdit={() => alert('Edit 全国農業協同組合連合会')}
-        onRemove={() => alert('Remove 全国農業協同組合連合会')}
-      >
-        全国農業協同組合連合会
-      </DataSheet.Header>
-      <DataSheet.KeyValue orientation="horizontal" label="住所">
-        200 South Wilcox Drive Kingsport TN 37660-5280
-      </DataSheet.KeyValue>
-      <DataSheet.KeyValue orientation="horizontal" label="拠点・部門">
-        A部門
-      </DataSheet.KeyValue>
-      <DataSheet.KeyValue orientation="horizontal" label="電話番号">
-        423-229-2000
-      </DataSheet.KeyValue>
-      <DataSheet.KeyValue orientation="horizontal" label="メールアドレス">
-        -
-      </DataSheet.KeyValue>
-    </DataSheet.Section>
+  const [sections, setSections] = React.useState<SectionRecord[]>([
+    {
+      id: 1,
+      name: 'Eastman Chemical Company',
+      address: '200 South Wilcox Drive Kingsport TN 37660-5280',
+      department: 'A部門',
+      phone: '423-229-2000',
+      email: '-',
+      isDeleted: false,
+    },
+    {
+      id: 2,
+      name: '全国農業協同組合連合会',
+      address: '200 South Wilcox Drive Kingsport TN 37660-5280',
+      department: 'A部門',
+      phone: '423-229-2000',
+      email: '-',
+      isDeleted: true,
+    },
+  ]);
 
-    <DataSheet.Action size="xs" intent="secondary" icon={IconPlus}>
-      製造者情報を追加する
-    </DataSheet.Action>
-  </DataSheet>
-);
+  const handleEdit = (section: SectionRecord) => {
+    alert(`Edit ${section.name}`);
+  };
+
+  const handleRemove = (section: SectionRecord) => {
+    if (confirm(`Remove ${section.name}?`)) {
+      setSections((prev) =>
+        prev.map((s) => (s.id === section.id ? { ...s, isDeleted: true } : s))
+      );
+    }
+  };
+
+  const handleRestore = (section: SectionRecord) => {
+    if (confirm(`Restore ${section.name}?`)) {
+      setSections((prev) =>
+        prev.map((s) => (s.id === section.id ? { ...s, isDeleted: false } : s))
+      );
+    }
+  };
+
+  return (
+    <DataSheet className="w-140">
+      {sections.map((section) => (
+        <DataSheet.Section key={section.id}>
+          <DataSheet.Header
+            variant="primary"
+            isDeleted={section.isDeleted}
+            onEdit={() => handleEdit(section)}
+            onRemove={() => handleRemove(section)}
+            onRestore={() => handleRestore(section)}
+            ariaLabels={{
+              edit: `Edit ${section.name}`,
+              remove: `Remove ${section.name}`,
+              restore: `Restore ${section.name}`,
+            }}
+            tooltipMessages={{
+              edit: 'Edit manufacturer information',
+              remove: 'Remove manufacturer information',
+              restore: 'Restore manufacturer information',
+            }}
+          >
+            {section.name}
+          </DataSheet.Header>
+          <DataSheet.KeyValue orientation="horizontal" label="住所">
+            {section.address}
+          </DataSheet.KeyValue>
+          <DataSheet.KeyValue orientation="horizontal" label="拠点・部門">
+            {section.department}
+          </DataSheet.KeyValue>
+          <DataSheet.KeyValue orientation="horizontal" label="電話番号">
+            {section.phone}
+          </DataSheet.KeyValue>
+          <DataSheet.KeyValue orientation="horizontal" label="メールアドレス">
+            {section.email}
+          </DataSheet.KeyValue>
+        </DataSheet.Section>
+      ))}
+
+      <DataSheet.Action size="xs" intent="secondary" icon={IconPlus}>
+        製造者情報を追加する
+      </DataSheet.Action>
+    </DataSheet>
+  );
+};
 
 export const SectionDataExampleWithinAccordion: Story = () => (
   <div className="bg-surface-secondary p-md">

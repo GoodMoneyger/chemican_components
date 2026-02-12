@@ -59,6 +59,11 @@ export const Tooltip = React.forwardRef<
     },
     ref
   ) => {
+    // If no content, just render children without tooltip
+    if (!content) {
+      return <>{children}</>;
+    }
+
     return (
       <TooltipPrimitive.Root
         delayDuration={delayDuration}
