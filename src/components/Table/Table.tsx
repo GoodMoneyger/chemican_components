@@ -42,17 +42,17 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <TableContext.Provider value={contextValue}>
-        <div
-          className="border-surface-default bg-surface-primary relative border"
+        <table
+          ref={ref}
+          className={cn(
+            `border-surface-default bg-surface-primary relative w-full
+            caption-bottom border`,
+            className
+          )}
+          {...props}
         >
-          <table
-            ref={ref}
-            className={cn('w-full caption-bottom', className)}
-            {...props}
-          >
-            {children}
-          </table>
-        </div>
+          {children}
+        </table>
       </TableContext.Provider>
     );
   }
@@ -99,6 +99,34 @@ export interface TableBodyProps
   loadingText?: React.ReactNode;
 }
 
+export interface TableCoverMessageProps
+  extends React.HTMLAttributes<HTMLTableRowElement> {
+  children: React.ReactNode;
+}
+
+const TableCoverMessage = React.forwardRef<
+  HTMLTableRowElement,
+  TableCoverMessageProps
+>(({ className, children, ...props }, ref) => (
+  <tr ref={ref} {...props}>
+    <td
+      className="py-sm min-h-12 px-lg sticky
+        left-[calc((100%+var(--cc-side-navigation-width,0px))/2)] min-w-fit
+        text-center align-middle"
+    >
+      <div
+        className={cn(
+          'flex w-max -translate-x-1/2 transform items-center',
+          className
+        )}
+      >
+        {children}
+      </div>
+    </td>
+  </tr>
+));
+TableCoverMessage.displayName = 'TableCoverMessage';
+
 const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
   (
     {
@@ -118,20 +146,9 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
     return (
       <tbody ref={ref} className={className} {...props}>
         {loading ? (
-          <tr>
-            <td
-              className="py-sm h-12 sticky
-                left-[calc((100vw+var(--cc-side-navigation-width,0px))/2)]
-                min-w-fit px-[1.44rem] text-center align-middle"
-            >
-              <div
-                className="top-0 absolute flex h-full w-max -translate-x-1/2
-                  transform items-center"
-              >
-                {loadingText}
-              </div>
-            </td>
-          </tr>
+          <TableCoverMessage className="text-body-secondary">
+            {loadingText}
+          </TableCoverMessage>
         ) : (
           children
         )}
@@ -289,4 +306,5 @@ export {
   TableCell,
   TableCaption,
   TableHeadSortButton,
+  TableCoverMessage,
 };
