@@ -12,6 +12,10 @@ export interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionEle
     loading?: boolean;
     loadingText?: React.ReactNode;
 }
+export interface TableCoverMessageProps extends React.HTMLAttributes<HTMLTableRowElement> {
+    children: React.ReactNode;
+}
+declare const TableCoverMessage: React.ForwardRefExoticComponent<TableCoverMessageProps & React.RefAttributes<HTMLTableRowElement>>;
 declare const TableBody: React.ForwardRefExoticComponent<TableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableFooter: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableRow: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableRowElement> & React.RefAttributes<HTMLTableRowElement>>;
@@ -23,4 +27,4 @@ type TableHeadSortButtonProps = {
     className?: string;
 };
 declare const TableHeadSortButton: React.ForwardRefExoticComponent<React.ButtonHTMLAttributes<HTMLButtonElement> & TableHeadSortButtonProps & React.RefAttributes<HTMLButtonElement>>;
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption, TableHeadSortButton, };
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption, TableHeadSortButton, TableCoverMessage, };
