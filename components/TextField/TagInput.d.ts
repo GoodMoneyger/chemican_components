@@ -14,5 +14,10 @@ export interface TagInputProps extends Omit<React.InputHTMLAttributes<HTMLInputE
     prefixIconSize?: number;
     invalid?: boolean;
     helperText?: React.ReactNode;
+    onValidateTag?: (tag: string) => {
+        valid: boolean;
+        error?: React.ReactNode;
+    };
+    defaultValidationError?: React.ReactNode;
 }
 export declare const TagInput: React.ForwardRefExoticComponent<TagInputProps & React.RefAttributes<HTMLInputElement>>;
