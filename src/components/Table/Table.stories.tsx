@@ -18,6 +18,7 @@ import {
   TableBody,
   TableCell,
   TableHeadSortButton,
+  TableCoverMessage,
 } from './Table';
 import { TableRowOverlay } from './TableRowOverlay';
 
@@ -525,6 +526,155 @@ const LoadingTemplate: StoryFn = () => (
 );
 
 export const Loading = LoadingTemplate.bind({});
+
+const CoverMessageTemplate: StoryFn = () => {
+  const [state, setState] = React.useState<'data' | 'error' | 'empty'>('data');
+
+  return (
+    <div className="gap-md flex flex-col">
+      <div className="gap-xs flex">
+        <Button
+          size="sm"
+          intent={state === 'data' ? 'primary' : 'secondary'}
+          onClick={() => setState('data')}
+        >
+          Show Data
+        </Button>
+        <Button
+          size="sm"
+          intent={state === 'error' ? 'primary' : 'secondary'}
+          onClick={() => setState('error')}
+        >
+          Show Error
+        </Button>
+        <Button
+          size="sm"
+          intent={state === 'empty' ? 'primary' : 'secondary'}
+          onClick={() => setState('empty')}
+        >
+          Show Empty
+        </Button>
+      </div>
+
+      <div className="max-w-4xl overflow-x-auto">
+        <Table className="w-max">
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <Checkbox label="" />
+              </TableHead>
+              <TableHead>SDSファイル名</TableHead>
+              <TableHead>製品名</TableHead>
+              <TableHead>製造者</TableHead>
+              <TableHead>データ化ステータス</TableHead>
+              <TableHead>
+                PDFアップロード日 <TableHeadSortButton sortOrder="asc" />
+              </TableHead>
+              <TableHead>担当ユーザー</TableHead>
+              <TableHead>
+                SDS改訂日 <TableHeadSortButton sortOrder="asc" />
+              </TableHead>
+              <TableHead>改訂ステータス</TableHead>
+              <TableHead>担当部署</TableHead>
+              <TableHead>タグ</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {state === 'error' ? (
+              <TableCoverMessage>
+                <div
+                  className="gap-sm text-body-secondary flex flex-col
+                    items-center"
+                >
+                  <span>データの読み込み中にエラーが発生しました</span>
+                  <Button
+                    size="sm"
+                    intent="tertiary"
+                    onClick={() => setState('data')}
+                  >
+                    リロード
+                  </Button>
+                </div>
+              </TableCoverMessage>
+            ) : state === 'empty' ? (
+              <TableCoverMessage className="text-body-secondary">
+                データがありません
+              </TableCoverMessage>
+            ) : (
+              data.slice(0, 3).map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <Checkbox label="" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="gap-2 inline-flex items-center">
+                      <div className="gap-1 flex items-center">
+                        {row.sdsName}
+                      </div>
+                      <a href="#">
+                        <IconExternalLink
+                          size={20}
+                          className="text-shape-primary"
+                        />
+                      </a>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Tag className="uppercase">{row.productName}</Tag>
+                  </TableCell>
+                  <TableCell>{row.manufacturer}</TableCell>
+                  <TableCell>
+                    <StatusIndicator level={row.dataStatusLevel}>
+                      {row.dataStatus}
+                    </StatusIndicator>
+                  </TableCell>
+                  <TableCell>{row.pdfUploadDate}</TableCell>
+                  <TableCell>
+                    <Tag>{row.assignedUser}</Tag>
+                  </TableCell>
+                  <TableCell>{row.sdsRevisionDate}</TableCell>
+                  <TableCell>
+                    <StatusIndicator level={row.revisionStatusLevel}>
+                      {row.revisionStatus}
+                    </StatusIndicator>
+                  </TableCell>
+                  <TableCell>
+                    <div className="gap-xs flex flex-wrap">
+                      {row.departments.map((dept, i) => (
+                        <Tag key={i}>{dept}</Tag>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="gap-xs flex flex-wrap">
+                      {row.tags.map((tag, i) => (
+                        <Tag key={i} colorCode={tag.colorCode}>
+                          {tag.label}
+                        </Tag>
+                      ))}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
+};
+
+export const WithCoverMessage = CoverMessageTemplate.bind({});
+WithCoverMessage.parameters = {
+  docs: {
+    description: {
+      story:
+        'Demonstrates the TableCoverMessage component for displaying error messages, ' +
+        'empty states, or any custom overlay message. Use conditional rendering to show ' +
+        'the cover message instead of table rows.',
+    },
+  },
+};
 
 const RowOverlayTemplate: StoryFn = () => {
   const [openRowId, setOpenRowId] = React.useState<string | null>(null);
