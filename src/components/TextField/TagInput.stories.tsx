@@ -76,3 +76,53 @@ function WithIconExample() {
 export const WithIcon: Story = {
   render: () => <WithIconExample />,
 };
+
+function WithValidationExample() {
+  const [tags, setTags] = useState<string[]>(['valid-tag']);
+
+  // Example validation: tags must be lowercase and alphanumeric with hyphens
+  const validateTag = (tag: string) => {
+    // Check if tag matches pattern
+    if (!/^[a-z0-9-]+$/.test(tag)) {
+      return {
+        valid: false,
+        error: (
+          <span>
+            Tag must be lowercase alphanumeric (hyphens allowed). Example:
+            "my-tag"
+          </span>
+        ),
+      };
+    }
+
+    // Check if tag starts with number
+    if (/^[0-9]/.test(tag)) {
+      return {
+        valid: false,
+        // Using default error message by not providing error property
+      };
+    }
+
+    return { valid: true };
+  };
+
+  return (
+    <div className="w-96">
+      <TextField.TagInput
+        value={tags}
+        onChange={setTags}
+        onValidateTag={validateTag}
+        defaultValidationError="Tags cannot start with a number"
+        placeholder="Add validated tags..."
+        helperText="Try: 'valid-tag' (✓) or 'Invalid-Tag' (✗) or '123-tag' (✗)"
+      />
+      <div className="text-body-secondary mt-sm text-sm">
+        Current tags: {tags.length > 0 ? tags.join(', ') : 'None'}
+      </div>
+    </div>
+  );
+}
+
+export const WithValidation: Story = {
+  render: () => <WithValidationExample />,
+};

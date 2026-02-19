@@ -30,6 +30,8 @@ export interface TagInputProps
   prefixIconSize?: number;
   invalid?: boolean;
   helperText?: React.ReactNode;
+  onValidateTag?: (tag: string) => { valid: boolean; error?: React.ReactNode };
+  defaultValidationError?: React.ReactNode;
 }
 
 export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
@@ -51,6 +53,8 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       invalid,
       disabled,
       className,
+      onValidateTag,
+      defaultValidationError = 'Invalid tag',
       ...inputProps
     },
     ref
@@ -62,6 +66,13 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
 
     // Track focus state for helper text
     const [isFocused, setIsFocused] = useState(false);
+
+    // Track IME composition state
+    const [isComposing, setIsComposing] = useState(false);
+
+    // Track validation error
+    const [validationError, setValidationError] =
+      useState<React.ReactNode>(null);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -90,12 +101,36 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       (rawTag: string) => {
         const tag = rawTag.trim();
 
-        if (isTagValid(tag)) {
-          onChange([...tags, tag]);
-          setInputValue('');
+        // Check built-in validation first
+        if (!isTagValid(tag)) {
+          return;
         }
+
+        // Run custom validation if provided
+        if (onValidateTag) {
+          const validationResult = onValidateTag(tag);
+          if (!validationResult.valid) {
+            // Set error message (custom or default)
+            setValidationError(
+              validationResult.error ?? defaultValidationError
+            );
+            return;
+          }
+        }
+
+        // All validation passed - add the tag and clear any errors
+        onChange([...tags, tag]);
+        setInputValue('');
+        setValidationError(null);
       },
-      [tags, onChange, isTagValid, setInputValue]
+      [
+        tags,
+        onChange,
+        isTagValid,
+        setInputValue,
+        onValidateTag,
+        defaultValidationError,
+      ]
     );
 
     // Helper: Remove tag
@@ -135,7 +170,8 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     // Handle key down - Enter and Backspace
     const handleKeyDown = useCallback(
       (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && inputValue.trim()) {
+        // Don't process Enter key during IME composition
+        if (e.key === 'Enter' && inputValue.trim() && !isComposing) {
           e.preventDefault();
           addTag(inputValue);
         }
@@ -149,7 +185,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           removeTag(tags.length - 1);
         }
       },
-      [inputValue, tags.length, addTag, removeTag]
+      [inputValue, tags.length, addTag, removeTag, isComposing]
     );
 
     // Handle blur - add current value as tag if not empty
@@ -158,6 +194,8 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
         addTag(inputValue);
       }
       setIsFocused(false);
+      // Clear validation error on blur
+      setValidationError(null);
     }, [inputValue, addTag]);
 
     const isDisabled = disabled || (maxTags ? tags.length >= maxTags : false);
@@ -208,6 +246,8 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
               onKeyDown={handleKeyDown}
               onFocus={() => setIsFocused(true)}
               onBlur={handleBlur}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
               placeholder={showPlaceholder ? placeholder : ''}
               disabled={isDisabled}
               className={cn(
@@ -230,15 +270,16 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           )}
         </div>
 
-        {/* Helper text - always takes up space to prevent layout jumps */}
-        {helperText && (
+        {/* Helper text or error message - always takes up space to prevent layout jumps */}
+        {(helperText || validationError) && (
           <p
             className={cn(
-              'text-body-secondary mt-xxs text-sm',
-              !isFocused && 'invisible'
+              'mt-xxs text-sm',
+              validationError ? 'text-body-alert' : 'text-body-secondary',
+              !validationError && !isFocused && 'invisible'
             )}
           >
-            {helperText}
+            {validationError || helperText}
           </p>
         )}
       </>
