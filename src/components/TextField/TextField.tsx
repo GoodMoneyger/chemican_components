@@ -37,6 +37,10 @@ export const inputVariants = cva(
         true: 'pr-0',
         false: '',
       },
+      isNumeric: {
+        true: 'pr-xxs',
+        false: '',
+      },
     },
   }
 );
@@ -94,6 +98,7 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     const hasPrefix = !!prefixIcon;
     const hasTrailing = !!trailingIcon;
     const isTrailingInteractive = !!onTrailingIconClick;
+    const isNumeric = props.type === 'number';
 
     return (
       <div className={cn(inputWrapperVariants({ invalid }), className)}>
@@ -106,7 +111,7 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
         )}
         <input
           ref={ref}
-          className={inputVariants({ hasPrefix, hasTrailing })}
+          className={inputVariants({ hasPrefix, hasTrailing, isNumeric })}
           {...props}
         />
         {trailingIcon && (
