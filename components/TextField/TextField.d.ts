@@ -7,6 +7,7 @@ export declare const inputWrapperVariants: (props?: ({
 export declare const inputVariants: (props?: ({
     hasPrefix?: boolean | null | undefined;
     hasTrailing?: boolean | null | undefined;
+    isNumeric?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export declare const iconVariants: (props?: ({
     position?: "prefix" | "trailing" | null | undefined;
