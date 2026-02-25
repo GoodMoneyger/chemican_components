@@ -77,3 +77,11 @@ Default.args = {
   disabled: false,
   invalid: false,
 };
+
+export const Numeric = Template.bind({});
+Numeric.args = {
+  type: 'number',
+  placeholder: '最小値',
+  defaultValue: '-0.5',
+  step: '0.1',
+};
