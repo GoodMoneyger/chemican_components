@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
 
 import { SearchBar } from './SearchBar';
@@ -81,3 +81,9 @@ Filled.args = { ...defaultArgs, state: 'filled' };
 
 export const Disabled = Template.bind({});
 Disabled.args = { ...defaultArgs, state: 'disabled' };
+
+export const WithInitialKeywords = Template.bind({});
+WithInitialKeywords.args = {
+  ...defaultArgs,
+  initialKeywords: ['SDS ID', '化学物質名'],
+};
