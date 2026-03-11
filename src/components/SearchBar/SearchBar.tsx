@@ -121,6 +121,7 @@ export interface SearchBarProps
   supportText?: React.ReactNode;
   searchButtonText?: React.ReactNode;
   searchOnKeywordAdd?: boolean;
+  initialKeywords?: string[];
 }
 
 const iconSizeMap = {
@@ -143,13 +144,16 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       supportText,
       searchButtonText = '検索',
       searchOnKeywordAdd = false,
+      initialKeywords,
       ...props
     },
     ref
   ) => {
     const disabled = disabledProp || state === 'disabled';
 
-    const [keywords, setKeywords] = React.useState<string[]>([]);
+    const [keywords, setKeywords] = React.useState<string[]>(
+      initialKeywords ?? []
+    );
 
     let resolvedState: 'default' | 'filled' | 'disabled';
 
