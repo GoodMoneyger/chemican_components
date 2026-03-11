@@ -16,6 +16,7 @@ export interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInput
     supportText?: React.ReactNode;
     searchButtonText?: React.ReactNode;
     searchOnKeywordAdd?: boolean;
+    initialKeywords?: string[];
 }
 export declare const SearchBar: React.ForwardRefExoticComponent<SearchBarProps & React.RefAttributes<HTMLInputElement>>;
 export {};
