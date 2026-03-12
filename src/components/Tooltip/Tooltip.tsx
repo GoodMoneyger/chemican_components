@@ -8,8 +8,8 @@ import { cn } from '../../lib/utils';
 
 // Define tooltip content styles with CVA
 const tooltipVariants = cva(
-  `px-sm py-xs rounded-sm text-sm font-normal min-w-12 max-w-110 z-tooltip
-  w-full leading-[1.5] tracking-[0] break-all`,
+  `px-sm py-xs rounded-sm text-sm font-normal max-w-110 z-tooltip w-full
+  leading-[1.5] tracking-[0] break-all`,
   {
     variants: {
       intent: {
