@@ -8,7 +8,7 @@ import { cn } from '../../lib/utils';
 
 // Define tooltip content styles with CVA
 const tooltipVariants = cva(
-  `px-sm py-xs rounded-sm text-sm font-normal min-w-36 max-w-110 z-tooltip
+  `px-sm py-xs rounded-sm text-sm font-normal min-w-12 max-w-110 z-tooltip
   w-full leading-[1.5] tracking-[0] break-all`,
   {
     variants: {
