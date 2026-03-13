@@ -48,6 +48,7 @@ export interface DropdownItemProps {
   intent?: 'default' | 'danger';
   icon?: IconProp;
   className?: string;
+  asChild?: boolean;
 }
 
 export const DropdownItem = React.forwardRef<
@@ -62,6 +63,7 @@ export const DropdownItem = React.forwardRef<
       intent = 'default',
       icon,
       className,
+      asChild = false,
       ...props
     },
     ref
@@ -70,6 +72,7 @@ export const DropdownItem = React.forwardRef<
       typeof RadixDropdownMenu.Item
     > = {
       ref,
+      asChild,
       className: cn(dropdownItemVariants({ intent }), className),
       ...props,
     };
@@ -80,6 +83,15 @@ export const DropdownItem = React.forwardRef<
 
     if (disabled !== undefined) {
       itemProps.disabled = disabled;
+    }
+
+    // Render without icon if asChild is true, since the child component must handle its own icon rendering
+    if (asChild) {
+      return (
+        <RadixDropdownMenu.Item {...itemProps}>
+          {children}
+        </RadixDropdownMenu.Item>
+      );
     }
 
     return (
