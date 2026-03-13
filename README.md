@@ -100,25 +100,32 @@ This project enforces commit message conventions using [Commitlint](https://comm
 
 **Format:**
 ```
-topic1,topic2: Subject description
+type(scope): Subject description
 ```
 
+Multiple types or scopes can be comma-separated: `type1,type2(scope1,scope2): Subject`
+
 **Rules:**
-- **Topics**: One or more comma-separated topics (component names or general categories)
+- **Type**: Required. One or more of the valid types below
+- **Scope**: Required for `feat`, `fix`, `refactor`, `perf`, `test`, `style` — optional for others
 - **Subject**: Must start with a capital letter
 - **Max length**: 100 characters
 - **No period**: Subject must not end with a period
 
-**Valid topics include:**
-- Component names (automatically detected from `src/components/`): `button`, `input`, `select`, etc.
-- General categories: `multiple`, `tokens`, `dev`, `doc`, `config`, `ci`, `deps`, `release`, `util`, `assets`, `refactor`
+**Valid types:**
+`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`, `release`
+
+**Valid scopes:**
+- Component names (auto-detected from `src/components/`): `button`, `input`, `select`, etc.
+- General categories: `multiple`, `misc`, `general`, `tokens`, `dev`, `doc`, `config`, `ci`, `deps`, `release`, `util`, `assets`
 
 **Examples:**
 ```bash
-button: Add loading state prop
-input,select: Update border styling
-doc: Update installation instructions
-tokens: Regenerate design tokens from Figma
+feat(button): Add loading state prop
+fix(input,select): Update border styling
+docs: Update installation instructions
+chore(tokens): Regenerate design tokens from Figma
+refactor(dialog): Simplify animation logic
 ```
 
 **Setup:**
