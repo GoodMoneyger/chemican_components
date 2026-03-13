@@ -12,6 +12,7 @@ export interface DropdownItemProps {
     intent?: 'default' | 'danger';
     icon?: IconProp;
     className?: string;
+    asChild?: boolean;
 }
 export declare const DropdownItem: React.ForwardRefExoticComponent<DropdownItemProps & React.RefAttributes<HTMLDivElement>>;
 export interface DropdownSeparatorProps {
