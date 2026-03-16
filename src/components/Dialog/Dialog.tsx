@@ -112,30 +112,29 @@ export const Dialog: React.FC<DialogProps> = ({
             onEscapeKeyDown={handleEscapeKeyDown}
             onOpenAutoFocus={onOpenAutoFocus}
             className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
-              min-w-96 fixed top-1/2 left-1/2 flex max-h-[90vh] w-2/3
-              -translate-x-1/2 -translate-y-1/2 transform flex-col
-              overflow-auto"
+              min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
+              -translate-y-1/2 transform"
           >
-            <div
-              className="px-xl py-lg flex flex-shrink-0 items-center
-                justify-between"
-            >
+            <header className="px-xl py-lg">
               {title && (
                 <RadixDialog.Title
-                  className="text-xxl text-body-primary font-bold h-4.5 flex
-                    items-center"
+                  className="text-xxl text-body-primary font-bold flex
+                    items-center leading-[1.2]"
                 >
                   {title}
                 </RadixDialog.Title>
               )}
-            </div>
+            </header>
+
             <div
               className="border-divider-default bg-surface-secondary px-xl pt-md
-                pb-xxl text-body-primary flex-1 border-y-1"
+                pb-xxl text-body-primary max-h-[70vh] flex-1 overflow-hidden
+                overflow-y-auto border-y-1"
             >
               {children}
             </div>
-            <div className="px-xl py-md flex flex-shrink-0 justify-between">
+
+            <footer className="px-xl py-md flex flex-shrink-0 justify-between">
               {cancellable && (
                 <Button
                   intent="tertiary"
@@ -164,7 +163,7 @@ export const Dialog: React.FC<DialogProps> = ({
                   );
                 })}
               </div>
-            </div>
+            </footer>
           </RadixDialog.Content>
         </RadixDialog.Overlay>
       </RadixDialog.Portal>
