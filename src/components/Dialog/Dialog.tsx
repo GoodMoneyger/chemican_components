@@ -26,6 +26,9 @@ export interface DialogProps
   cancellable?: boolean;
   cancelButtonLabel?: ReactNode;
   allowClickOutside?: boolean;
+  onOpenAutoFocus?: React.ComponentProps<
+    typeof RadixDialog.Content
+  >['onOpenAutoFocus'];
 }
 
 const defaultActions: DialogAction[] = [
@@ -47,6 +50,7 @@ export const Dialog: React.FC<DialogProps> = ({
   cancellable = true,
   cancelButtonLabel = 'キャンセル',
   allowClickOutside = true,
+  onOpenAutoFocus,
 }) => {
   const [loading, setLoading] = React.useState<number>(-1);
 
@@ -106,6 +110,7 @@ export const Dialog: React.FC<DialogProps> = ({
             aria-describedby={undefined}
             onPointerDownOutside={handleOutsideClick}
             onEscapeKeyDown={handleEscapeKeyDown}
+            onOpenAutoFocus={onOpenAutoFocus}
             className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
               min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
               -translate-y-1/2 transform"

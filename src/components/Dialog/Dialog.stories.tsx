@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { Button } from '../Button';
+import { TextField } from '../TextField';
 
 import type { DialogProps } from './Dialog';
 import { Dialog } from './Dialog';
@@ -255,6 +256,52 @@ WithOnCancelControl.args = {
     {
       label: 'Save',
       value: 'saved',
+      intent: 'primary',
+    },
+  ],
+};
+
+export const WithPreventedAutoFocus: StoryFn<DialogProps> = (args) => {
+  const [isOpen, setIsOpen] = useState(args.isOpen);
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  return (
+    <>
+      <Button intent="secondary" onClick={() => setIsOpen(true)}>
+        Open Modal
+      </Button>
+      <Dialog
+        {...args}
+        isOpen={isOpen}
+        onClose={handleClose}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        <div className="gap-lg flex flex-col">
+          <p className="text-body-secondary text-sm">
+            This dialog uses <code>onOpenAutoFocus</code> to prevent the input
+            from being focused when the dialog opens.
+          </p>
+          <div className="gap-xs flex flex-col">
+            <label className="text-body-primary text-sm font-medium">
+              Search
+            </label>
+            <TextField placeholder="Type to search..." />
+          </div>
+        </div>
+      </Dialog>
+    </>
+  );
+};
+WithPreventedAutoFocus.args = {
+  isOpen: false,
+  title: 'Search Dialog',
+  actions: [
+    {
+      label: 'Search',
+      value: true,
       intent: 'primary',
     },
   ],
