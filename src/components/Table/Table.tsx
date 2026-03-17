@@ -110,8 +110,8 @@ const TableCoverMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <tr ref={ref} {...props}>
     <td
-      className="py-sm min-h-12 px-lg sticky
-        left-[calc((100%+var(--cc-side-navigation-width,0px))/2)] min-w-fit
+      className="py-sm min-h-12 sticky
+        left-[calc((100%+var(--cc-side-navigation-width,0px))/2)] block w-fit
         text-center align-middle"
     >
       <div
