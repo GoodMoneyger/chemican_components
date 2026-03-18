@@ -45,8 +45,8 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
         <table
           ref={ref}
           className={cn(
-            `border-surface-default bg-surface-primary relative w-full
-            caption-bottom border`,
+            `border-surface-default bg-surface-primary relative caption-bottom
+            border`,
             className
           )}
           {...props}
@@ -197,7 +197,7 @@ const TableHead = React.forwardRef<
       `text-body-secondary font-medium h-10 [&:has([role=checkbox])]:w-9
       [&:has([role=checkbox])]:pt-xs [&:has([role=checkbox])]:pb-xs
       [&:has([role=checkbox])]:pl-xl [&:has([role=checkbox])]:pr-0 px-md
-      max-w-[400px] text-left leading-[1.2] [&:has([role=checkbox])]:max-w-none`,
+      text-left leading-[1.2] [&:has([role=checkbox])]:max-w-none`,
       className
     )}
     {...props}
