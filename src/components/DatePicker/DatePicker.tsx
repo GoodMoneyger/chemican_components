@@ -215,14 +215,13 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
             type="text"
             readOnly
             placeholder={placeholder}
-            value={selectedDate ? formatDate(selectedDate) : undefined}
+            value={selectedDate ? formatDate(selectedDate) : ''}
             disabled={disabled}
             invalid={error}
             trailingIcon={icon || IconCalendarEvent}
             trailingIconSize={iconSize}
             onTrailingIconClick={() => !disabled && handleOpenChange(!isOpen)}
             className={cn(
-              'pl-0 py-md rounded-sm gap-xs text-md min-h-11.5 cursor-pointer',
               isOpen && 'ring-interactive-focused ring-4',
               className
             )}
