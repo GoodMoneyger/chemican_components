@@ -51,6 +51,7 @@ const selectVariants = cva(
 
 const selectContentVariants = cva(
   `bg-surface-primary z-dropdown relative w-full
+  max-w-[var(--radix-select-trigger-width)]
   min-w-[var(--radix-select-trigger-width)] overflow-hidden border`,
   {
     variants: {
@@ -76,9 +77,9 @@ const selectItemVariants = cva(
       variant: {
         default: `gap-xs px-md text-body-primary
         hover:bg-interactive-neutral-hover focus:bg-interactive-neutral-hover
-        active:bg-interactive-neutral-active h-[2.75rem]`,
+        active:bg-interactive-neutral-active py-sm min-h-[2.75rem]`,
         compact: `px-md text-body-primary hover:bg-interactive-neutral-hover
-        focus:bg-interactive-neutral-hover h-10`,
+        focus:bg-interactive-neutral-hover min-h-10 py-sm`,
       },
       isSelected: {
         false: '',
@@ -246,7 +247,7 @@ export const Select = <T extends number | string = string>({
                         }),
                       })}
                       <RadixSelect.ItemText
-                        className={cn('flex-1', {
+                        className={cn('flex-1 break-words whitespace-normal', {
                           'text-interactive-disabled': option.disabled,
                         })}
                       >
