@@ -1,7 +1,7 @@
 {
   "name": "@chemican/components",
   "private": true,
-  "version": "1.0.0-23",
+  "version": "1.0.0-24",
   "type": "module",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
