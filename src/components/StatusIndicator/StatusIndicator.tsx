@@ -23,7 +23,8 @@ export interface StatusIndicatorProps {
 }
 
 const statusVariants = cva(
-  'px-xs py-xxs text-interactive-inverse inline-flex items-center rounded-full',
+  `px-xs py-xxs text-interactive-inverse inline-flex max-w-full items-center
+  rounded-full`,
   {
     variants: {
       size: {
