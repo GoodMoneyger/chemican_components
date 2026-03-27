@@ -227,6 +227,68 @@ export const WithNumericValues: StoryFn = () => {
   );
 };
 
+export const LongOptionLabels: StoryFn = () => (
+  <div className="space-y-8">
+    <div>
+      <h3 className="text-lg font-semibold mb-4">
+        Long Labels (Default Variant)
+      </h3>
+      <Select
+        variant="default"
+        options={[
+          {
+            value: 'short',
+            label: 'Short',
+          },
+          {
+            value: 'long1',
+            label:
+              'This is a very long option label that should wrap to multiple lines in the dropdown',
+          },
+          {
+            value: 'long2',
+            label:
+              '株式会社化学化学化学化学化学化学化学化学化学化学化学化学化学化学化学化学',
+          },
+          {
+            value: 'long3',
+            label:
+              'Another extremely long option that demonstrates how the dropdown handles text wrapping correctly',
+            icon: IconRocket,
+          },
+        ]}
+        placeholder="Select an option"
+      />
+    </div>
+    <div>
+      <h3 className="text-lg font-semibold mb-4">
+        Long Labels (Compact Variant)
+      </h3>
+      <Select
+        variant="compact"
+        icon={IconBuilding}
+        options={[
+          {
+            value: 'short',
+            label: 'Short',
+          },
+          {
+            value: 'long1',
+            label:
+              'This is a very long option label that should wrap to multiple lines',
+          },
+          {
+            value: 'long2',
+            label:
+              '株式会社化学化学化学化学化学化学化学化学化学化学化学化学化学化学化学化学',
+          },
+        ]}
+        placeholder="Select company"
+      />
+    </div>
+  </div>
+);
+
 export const IsolatedVsFormField: StoryFn = () => (
   <div className="space-y-8">
     <div>
