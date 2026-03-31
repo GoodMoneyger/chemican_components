@@ -44,6 +44,10 @@ export interface DatePickerProps
    */
   error?: boolean;
   /**
+   * Whether the date picker input is in an invalid state. Alias for `error`.
+   */
+  invalid?: boolean;
+  /**
    * Custom icon to display in the trigger button.
    */
   icon?: IconProp;
@@ -119,6 +123,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
       maxDate,
       disabled = false,
       error = false,
+      invalid = false,
       icon,
       iconSize = 14,
       placeholder,
@@ -217,7 +222,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
             placeholder={placeholder}
             value={selectedDate ? formatDate(selectedDate) : ''}
             disabled={disabled}
-            invalid={error}
+            invalid={error || invalid}
             trailingIcon={icon || IconCalendarEvent}
             trailingIconSize={iconSize}
             onTrailingIconClick={() => !disabled && handleOpenChange(!isOpen)}
