@@ -1,6 +1,8 @@
+import React from 'react';
 import type { Preview } from '@storybook/react-vite';
 
 import '../src/bundle.css';
+import { TooltipProvider } from '../src/components/Tooltip';
 
 const preview: Preview = {
   parameters: {
@@ -21,6 +23,13 @@ const preview: Preview = {
     },
   },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <TooltipProvider>
+        <Story />
+      </TooltipProvider>
+    ),
+  ],
 };
 
 export default preview;

@@ -5,8 +5,9 @@ import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
 const choiceChipVariants = cva(
-  `px-sm py-xxs text-md h-8 inline-flex cursor-pointer items-center
-  justify-center rounded-full border transition-colors select-none`,
+  `px-sm py-xxs text-md h-8 focus-visible:ring-interactive-focused inline-flex
+  cursor-pointer items-center justify-center rounded-full border
+  transition-colors select-none focus-visible:ring-4 focus-visible:outline-none`,
   {
     variants: {
       selected: {
