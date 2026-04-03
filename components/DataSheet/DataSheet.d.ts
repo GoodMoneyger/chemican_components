@@ -1,7 +1,16 @@
 import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import { ButtonProps } from '../Button/Button';
-export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
+declare const dataSheetVariants: (props?: ({
+    variant?: "default" | "bordered" | null | undefined;
+} & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
+export interface DataSheetProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof dataSheetVariants> {
+    /**
+     * The visual variant of the data sheet
+     * @default 'default'
+     */
+    variant?: 'default' | 'bordered';
+}
 declare const dataSheetHeaderVariants: (props?: ({
     variant?: "table" | "primary" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
