@@ -30,6 +30,10 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
      */
     error?: boolean;
     /**
+     * Whether the date picker input is in an invalid state. Alias for `error`.
+     */
+    invalid?: boolean;
+    /**
      * Custom icon to display in the trigger button.
      */
     icon?: IconProp;
