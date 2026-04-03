@@ -37,10 +37,9 @@ const meta: Meta<typeof FormField> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const MockInput = ({ hasError = false }: { hasError?: boolean }) => (
+const MockInput = () => (
   <TextField
     placeholder="Placeholder"
-    invalid={hasError}
     prefixIcon={undefined}
     trailingIcon={undefined}
     disabled={false}
@@ -79,7 +78,7 @@ export const WithError: Story = {
     label: 'ラベル',
     name: 'error-field',
     error: '数字で入力してください。',
-    children: <MockInput hasError />,
+    children: <MockInput />,
   },
 };
 
@@ -90,7 +89,7 @@ export const WithErrorAndDescription: Story = {
     optional: true,
     error: '数字で入力してください。',
     description: '日中に連絡のつきやすい電話番号を記入します',
-    children: <MockInput hasError />,
+    children: <MockInput />,
   },
 };
 
@@ -99,6 +98,6 @@ export const WithoutLabel: Story = {
     name: 'no-label-field',
     error: '数字で入力してください。',
     description: '日中に連絡のつきやすい電話番号を記入します',
-    children: <MockInput hasError />,
+    children: <MockInput />,
   },
 };

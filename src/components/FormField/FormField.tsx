@@ -25,6 +25,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         {
           id: name,
           name: name,
+          invalid: !!error,
         }
       )
     : children;
