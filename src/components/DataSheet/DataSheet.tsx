@@ -7,15 +7,37 @@ import { cn } from '../../utils';
 import { Button } from '../Button/Button';
 import type { ButtonProps } from '../Button/Button';
 import { Tooltip } from '../Tooltip';
-export type DataSheetProps = React.HTMLAttributes<HTMLDivElement>;
 
-const dataSheetVariants = cva('space-y-md w-full bg-inherit', {
-  variants: {},
+const dataSheetVariants = cva('space-y-md w-full', {
+  variants: {
+    variant: {
+      default: 'bg-inherit',
+      bordered: `rounded-sm border-divider-default bg-surface-primary
+      overflow-hidden border`,
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
 });
 
+export interface DataSheetProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof dataSheetVariants> {
+  /**
+   * The visual variant of the data sheet
+   * @default 'default'
+   */
+  variant?: 'default' | 'bordered';
+}
+
 const DataSheet = React.forwardRef<HTMLDivElement, DataSheetProps>(
-  ({ className, children, ...props }, ref) => (
-    <div ref={ref} className={cn(dataSheetVariants(), className)} {...props}>
+  ({ className, variant, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(dataSheetVariants({ variant }), className)}
+      {...props}
+    >
       {children}
     </div>
   )

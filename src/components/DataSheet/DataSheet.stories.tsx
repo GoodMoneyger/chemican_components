@@ -12,6 +12,13 @@ const meta: Meta<typeof DataSheet> = {
   parameters: {
     layout: 'centered',
   },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['default', 'bordered'],
+      description: 'The visual variant of the data sheet',
+    },
+  },
 };
 
 export default meta;
@@ -25,6 +32,37 @@ export const BasicKeyValue: Story = () => (
       <DataSheet.KeyValue label="SDS改訂日">2025/01/08</DataSheet.KeyValue>
     </DataSheet.Section>
   </DataSheet>
+);
+
+export const BorderedVariant: Story = () => (
+  <div className="bg-surface-secondary p-md">
+    <DataSheet variant="bordered" className="w-140">
+      <DataSheet.Section>
+        <DataSheet.KeyValue
+          orientation="horizontal"
+          className="px-md py-xs"
+          label="概要"
+        >
+          This is a bordered DataSheet variant with rounded corners and a
+          border.
+        </DataSheet.KeyValue>
+        <DataSheet.KeyValue
+          orientation="horizontal"
+          className="px-md py-xs"
+          label="法令データベース"
+        >
+          REACH, RoHS, TSCA
+        </DataSheet.KeyValue>
+        <DataSheet.KeyValue
+          orientation="horizontal"
+          className="px-md py-xs"
+          label="関連リンク"
+        >
+          https://example.com
+        </DataSheet.KeyValue>
+      </DataSheet.Section>
+    </DataSheet>
+  </div>
 );
 
 export const HorizontalKeyValue: Story = () => (
