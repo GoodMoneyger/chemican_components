@@ -102,3 +102,59 @@ export const AllStates: Story = {
     </div>
   ),
 };
+
+// Overflow story - constrained width to trigger overflow
+export const Overflow: Story = {
+  render: (args) => (
+    <div style={{ maxWidth: 400 }}>
+      <TabBar {...args}>
+        <Tab value="tab1" label="タブ1" />
+        <Tab value="tab2" label="タブ2" />
+        <Tab value="tab3" label="タブ3" />
+        <Tab value="tab4" label="タブ4" />
+        <Tab value="tab5" label="タブ5" />
+        <Tab value="tab6" label="タブ6" />
+        <Tab value="tab7" label="タブ7" />
+      </TabBar>
+    </div>
+  ),
+};
+
+// Overflow with controlled state - shows active tab in overflow
+const OverflowWithActiveInDropdownRender = () => {
+  const [value, setValue] = React.useState('tab6');
+  return (
+    <div style={{ maxWidth: 400 }}>
+      <TabBar value={value} onValueChange={setValue}>
+        <Tab value="tab1" label="タブ1" />
+        <Tab value="tab2" label="タブ2" />
+        <Tab value="tab3" label="タブ3" />
+        <Tab value="tab4" label="タブ4" />
+        <Tab value="tab5" label="タブ5" />
+        <Tab value="tab6" label="タブ6" />
+        <Tab value="tab7" label="タブ7" />
+      </TabBar>
+    </div>
+  );
+};
+
+export const OverflowWithActiveInDropdown: Story = {
+  render: () => <OverflowWithActiveInDropdownRender />,
+};
+
+// Overflow with custom label
+export const OverflowCustomLabel: Story = {
+  render: (args) => (
+    <div style={{ maxWidth: 400 }}>
+      <TabBar {...args} moreLabel={(count) => `他${count}件`}>
+        <Tab value="tab1" label="タブ1" />
+        <Tab value="tab2" label="タブ2" />
+        <Tab value="tab3" label="タブ3" />
+        <Tab value="tab4" label="タブ4" />
+        <Tab value="tab5" label="タブ5" />
+        <Tab value="tab6" label="タブ6" />
+        <Tab value="tab7" label="タブ7" />
+      </TabBar>
+    </div>
+  ),
+};
