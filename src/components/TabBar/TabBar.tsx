@@ -12,17 +12,6 @@ import {
   DropdownItem,
 } from '../DropdownMenu';
 
-// TabBar Context for size propagation
-interface TabBarContextValue {
-  size?: 'normal' | 'small';
-}
-
-const TabBarContext = React.createContext<TabBarContextValue>({
-  size: 'normal',
-});
-
-const useTabBarContext = () => React.useContext(TabBarContext);
-
 // TabBar container variants
 const tabBarVariants = cva('inline-flex', {
   variants: {
@@ -79,36 +68,11 @@ const moreButtonVariants = cva(
   }
 );
 
-interface TabChild {
-  value: string;
-  label: React.ReactNode;
-  disabled?: boolean | undefined;
-  asChild?: boolean;
-  childElement?: React.ReactElement<Record<string, unknown>>;
-}
-
-function extractTabChildren(children: React.ReactNode): TabChild[] {
-  const tabs: TabChild[] = [];
+function extractTabs(children: React.ReactNode) {
+  const tabs: React.ReactElement<TabProps>[] = [];
   React.Children.forEach(children, (child) => {
     if (React.isValidElement<TabProps>(child) && child.type === Tab) {
-      const {
-        value,
-        label,
-        disabled,
-        asChild,
-        children: tabChildren,
-      } = child.props;
-      const entry: TabChild = { value, label, disabled };
-
-      if (asChild) {
-        const childElement = React.Children.only(
-          tabChildren
-        ) as React.ReactElement<Record<string, unknown>>;
-        entry.asChild = true;
-        entry.childElement = childElement;
-      }
-
-      tabs.push(entry);
+      tabs.push(child);
     }
   });
   return tabs;
@@ -126,91 +90,66 @@ export const TabBar = React.forwardRef<
   React.ElementRef<typeof RadixTabs.Root>,
   TabBarProps
 >(({ className, size, children, moreLabel, ...props }, ref) => {
-  const contextValue: TabBarContextValue = size ? { size } : {};
   const effectiveSize = size ?? 'normal';
 
   const listRef = React.useRef<HTMLDivElement>(null);
   const moreRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<Map<string, HTMLElement>>(new Map());
-  const tabWidthCache = React.useRef<Map<string, number>>(new Map());
+  // Overflow collapse: all tabs render in the DOM on mount so we can measure
+  // their widths. After the first measurement, tabs that don't fit are set to
+  // display:none and a "more" dropdown appears. A ResizeObserver recalculates
+  // on container resize. Hidden tabs keep their cached width since offsetWidth
+  // reports 0 for display:none elements.
+  const tabWidths = React.useRef<Map<string, number>>(new Map());
 
-  const tabChildren = React.useMemo(
-    () => extractTabChildren(children),
-    [children]
-  );
+  const tabs = React.useMemo(() => extractTabs(children), [children]);
 
-  const [visibleCount, setVisibleCount] = React.useState(tabChildren.length);
+  const [visibleCount, setVisibleCount] = React.useState(tabs.length);
   const [measured, setMeasured] = React.useState(false);
-
-  // Cache tab widths while they are visible (offsetWidth > 0).
-  // Hidden tabs report 0, so we keep the last known width.
-  // Also prunes entries for tabs that no longer exist.
-  const snapshotTabWidths = React.useCallback(() => {
-    const currentKeys = new Set(tabRefs.current.keys());
-
-    // Prune stale entries
-    tabWidthCache.current.forEach((_w, key) => {
-      if (!currentKeys.has(key)) {
-        tabWidthCache.current.delete(key);
-      }
-    });
-
-    // Update widths for visible tabs
-    tabRefs.current.forEach((el, value) => {
-      const w = el.offsetWidth;
-      if (w > 0) {
-        tabWidthCache.current.set(value, w);
-      }
-    });
-  }, []);
 
   const calculateVisibleTabs = React.useCallback(() => {
     const list = listRef.current;
     if (!list) return;
 
-    // Snapshot widths before calculating — visible tabs update the cache,
-    // hidden tabs keep their previously cached width.
-    snapshotTabWidths();
+    // Snapshot widths from DOM — visible tabs update, hidden tabs keep cached value
+    tabRefs.current.forEach((el, key) => {
+      const w = el.offsetWidth;
+      if (w > 0) tabWidths.current.set(key, w);
+    });
 
     const containerWidth = list.clientWidth;
     const moreButton = moreRef.current;
     const moreButtonWidth = moreButton ? moreButton.offsetWidth + 8 : 80;
 
+    // Check if all tabs fit without the more button
+    let allTabsWidth = 0;
+    for (const tab of tabs) {
+      allTabsWidth += tabWidths.current.get(tab.props.value) ?? 0;
+    }
+
+    if (allTabsWidth <= containerWidth) {
+      setVisibleCount(tabs.length);
+      setMeasured(true);
+      return;
+    }
+
+    // Not all fit — calculate how many fit alongside the more button
     let totalWidth = 0;
     let fitCount = 0;
 
-    for (const tab of tabChildren) {
-      const tabWidth = tabWidthCache.current.get(tab.value);
-      if (tabWidth == null) continue;
-      const newTotal = totalWidth + tabWidth;
-
-      if (fitCount < tabChildren.length - 1) {
-        // Not the last tab: must also fit the "more" button
-        if (newTotal + moreButtonWidth <= containerWidth) {
-          totalWidth = newTotal;
-          fitCount++;
-        } else {
-          break;
-        }
+    for (const tab of tabs) {
+      const tabWidth = tabWidths.current.get(tab.props.value) ?? 0;
+      if (totalWidth + tabWidth + moreButtonWidth <= containerWidth) {
+        totalWidth += tabWidth;
+        fitCount++;
       } else {
-        // Last tab: no "more" button needed if all fit
-        if (newTotal <= containerWidth) {
-          totalWidth = newTotal;
-          fitCount++;
-        } else {
-          break;
-        }
+        break;
       }
     }
 
-    // If only 0 tabs fit, show at least 1
-    if (fitCount === 0 && tabChildren.length > 0) {
-      fitCount = 1;
-    }
-
-    setVisibleCount(fitCount);
+    setVisibleCount(Math.max(fitCount, 1));
     setMeasured(true);
-  }, [tabChildren, snapshotTabWidths]);
+  }, [tabs]);
 
   React.useEffect(() => {
     const list = listRef.current;
@@ -226,122 +165,102 @@ export const TabBar = React.forwardRef<
     return () => observer.disconnect();
   }, [calculateVisibleTabs]);
 
-  const overflowTabs = tabChildren.slice(visibleCount);
+  const overflowTabs = tabs.slice(visibleCount);
   const hasOverflow = overflowTabs.length > 0;
 
   const activeValue = props.value ?? props.defaultValue;
   const activeInOverflow = overflowTabs.some(
-    (tab) => tab.value === activeValue
+    (tab) => tab.props.value === activeValue
   );
 
   const formatMoreLabel = moreLabel ?? ((count: number) => `${count} more`);
 
   return (
-    <TabBarContext.Provider value={contextValue}>
-      <RadixTabs.Root ref={ref} className={cn('w-full', className)} {...props}>
-        <RadixTabs.List
-          ref={listRef}
-          className={cn(tabBarVariants({ size: effectiveSize }), 'w-full')}
-          role="tablist"
-        >
-          {tabChildren.map((tab, index) => {
-            const triggerClassName = cn(
-              tabVariants({ size: effectiveSize }),
+    <RadixTabs.Root ref={ref} className={cn('w-full', className)} {...props}>
+      <RadixTabs.List
+        ref={listRef}
+        className={cn(tabBarVariants({ size: effectiveSize }), 'w-full')}
+        role="tablist"
+      >
+        {tabs.map((tab, index) =>
+          React.cloneElement(tab, {
+            key: tab.props.value,
+            size: effectiveSize,
+            ref: (el: HTMLElement | null) => {
+              if (el) {
+                tabRefs.current.set(tab.props.value, el);
+              } else {
+                tabRefs.current.delete(tab.props.value);
+              }
+            },
+            className: cn(
+              tab.props.className,
               measured && index >= visibleCount && 'hidden'
-            );
+            ),
+          } as React.Attributes & Partial<TabProps>)
+        )}
 
-            return (
-              <RadixTabs.Trigger
-                key={tab.value}
-                ref={(el: HTMLElement | null) => {
-                  if (el) {
-                    tabRefs.current.set(tab.value, el);
-                  } else {
-                    tabRefs.current.delete(tab.value);
-                  }
-                }}
-                value={tab.value}
-                disabled={tab.disabled}
-                className={!tab.asChild ? triggerClassName : undefined}
-                asChild={!!tab.asChild}
-              >
-                {tab.asChild && tab.childElement
-                  ? React.cloneElement(
-                      tab.childElement,
-                      {
-                        className: cn(
-                          triggerClassName,
-                          tab.childElement.props.className as string | undefined
-                        ),
-                      },
-                      tab.label
-                    )
-                  : tab.label}
-              </RadixTabs.Trigger>
-            );
-          })}
+        {hasOverflow && measured && (
+          <div ref={moreRef} className="inline-flex shrink-0">
+            <Dropdown>
+              <DropdownTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    moreButtonVariants({ size: effectiveSize }),
+                    activeInOverflow &&
+                      'font-bold text-[var(--chemican-green-800)]'
+                  )}
+                >
+                  <IconDotsVertical
+                    size={effectiveSize === 'small' ? 16 : 20}
+                    className="mr-xxs"
+                  />
+                  {formatMoreLabel(overflowTabs.length)}
+                </button>
+              </DropdownTrigger>
+              <DropdownContent align="end" size="sm">
+                {overflowTabs.map((tab) => {
+                  const { value, disabled, asChild, children } = tab.props;
+                  const itemClassName = cn(
+                    value === activeValue &&
+                      'font-bold text-[var(--chemican-green-800)]'
+                  );
 
-          {hasOverflow && measured && (
-            <div ref={moreRef} className="inline-flex shrink-0">
-              <Dropdown>
-                <DropdownTrigger asChild>
-                  <button
-                    type="button"
-                    className={cn(
-                      moreButtonVariants({ size: effectiveSize }),
-                      activeInOverflow &&
-                        'font-bold text-[var(--chemican-green-800)]'
-                    )}
-                  >
-                    <IconDotsVertical
-                      size={effectiveSize === 'small' ? 16 : 20}
-                      className="mr-xxs"
-                    />
-                    {formatMoreLabel(overflowTabs.length)}
-                  </button>
-                </DropdownTrigger>
-                <DropdownContent align="end" size="sm">
-                  {overflowTabs.map((tab) => {
-                    const itemClassName = cn(
-                      tab.value === activeValue &&
-                        'font-bold text-[var(--chemican-green-800)]'
-                    );
-
-                    if (tab.asChild && tab.childElement) {
-                      return (
-                        <DropdownItem
-                          key={tab.value}
-                          disabled={tab.disabled ?? false}
-                          asChild
-                          className={itemClassName}
-                        >
-                          {React.cloneElement(tab.childElement, {}, tab.label)}
-                        </DropdownItem>
-                      );
-                    }
-
+                  if (asChild && React.isValidElement(children)) {
                     return (
                       <DropdownItem
-                        key={tab.value}
-                        disabled={tab.disabled ?? false}
-                        onSelect={() => {
-                          if (props.onValueChange) {
-                            props.onValueChange(tab.value);
-                          }
-                        }}
+                        key={value}
+                        disabled={disabled ?? false}
+                        asChild
                         className={itemClassName}
                       >
-                        {tab.label}
+                        {children}
                       </DropdownItem>
                     );
-                  })}
-                </DropdownContent>
-              </Dropdown>
-            </div>
-          )}
-        </RadixTabs.List>
-      </RadixTabs.Root>
-    </TabBarContext.Provider>
+                  }
+
+                  return (
+                    <DropdownItem
+                      key={value}
+                      disabled={disabled ?? false}
+                      onSelect={() => {
+                        if (props.onValueChange) {
+                          props.onValueChange(value);
+                        }
+                      }}
+                      className={itemClassName}
+                    >
+                      {children}
+                    </DropdownItem>
+                  );
+                })}
+              </DropdownContent>
+            </Dropdown>
+          </div>
+        )}
+      </RadixTabs.List>
+    </RadixTabs.Root>
   );
 });
 
@@ -350,26 +269,20 @@ TabBar.displayName = 'TabBar';
 // Tab Component
 export interface TabProps
   extends React.ComponentPropsWithoutRef<typeof RadixTabs.Trigger>,
-    VariantProps<typeof tabVariants> {
-  label: React.ReactNode;
-}
+    VariantProps<typeof tabVariants> {}
 
 export const Tab = React.forwardRef<
   React.ElementRef<typeof RadixTabs.Trigger>,
   TabProps
->(({ className, size, label, disabled, ...props }, ref) => {
-  const { size: contextSize } = useTabBarContext();
-  const effectiveSize = size ?? contextSize;
+>(({ className, size, ...props }, ref) => {
+  const effectiveSize = size ?? 'normal';
 
   return (
     <RadixTabs.Trigger
       ref={ref}
       className={cn(tabVariants({ size: effectiveSize }), className)}
-      disabled={disabled}
       {...props}
-    >
-      {label}
-    </RadixTabs.Trigger>
+    />
   );
 });
 
