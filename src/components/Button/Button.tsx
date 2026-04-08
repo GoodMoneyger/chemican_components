@@ -9,9 +9,10 @@ import { cn, renderIcon } from '../../lib/utils';
 
 // Define button styles with CVA
 const buttonVariants = cva(
-  `gap-xxs rounded font-normal box-border inline-flex cursor-pointer
-  items-center justify-center border decoration-1 focus-visible:ring-4
-  focus-visible:outline-none disabled:cursor-not-allowed disabled:no-underline`,
+  `gap-xxs rounded font-normal box-border inline-flex shrink-0 cursor-pointer
+  items-center justify-center border whitespace-nowrap decoration-1
+  focus-visible:ring-4 focus-visible:outline-none disabled:cursor-not-allowed
+  disabled:no-underline`,
   {
     variants: {
       intent: {
