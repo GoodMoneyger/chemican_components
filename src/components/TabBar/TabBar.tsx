@@ -68,6 +68,23 @@ const moreButtonVariants = cva(
   }
 );
 
+function useHasPointerFine() {
+  const [hasFine, setHasFine] = React.useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(pointer: fine)').matches
+  );
+
+  React.useEffect(() => {
+    const mql = window.matchMedia('(pointer: fine)');
+    const onChange = () => setHasFine(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  return hasFine;
+}
+
 function extractTabs(children: React.ReactNode) {
   const tabs: React.ReactElement<TabProps>[] = [];
   React.Children.forEach(children, (child) => {
@@ -91,6 +108,9 @@ export const TabBar = React.forwardRef<
   TabBarProps
 >(({ className, size, children, moreLabel, ...props }, ref) => {
   const effectiveSize = size ?? 'normal';
+  // On touch devices, the tab bar scrolls horizontally instead of collapsing
+  // into a dropdown. The dropdown is only shown on pointer: fine (mouse/trackpad).
+  const useDropdown = useHasPointerFine();
 
   const listRef = React.useRef<HTMLDivElement>(null);
   const moreRef = React.useRef<HTMLDivElement>(null);
@@ -108,6 +128,12 @@ export const TabBar = React.forwardRef<
   const [measured, setMeasured] = React.useState(false);
 
   const calculateVisibleTabs = React.useCallback(() => {
+    if (!useDropdown) {
+      setVisibleCount(tabs.length);
+      setMeasured(true);
+      return;
+    }
+
     const list = listRef.current;
     if (!list) return;
 
@@ -149,7 +175,7 @@ export const TabBar = React.forwardRef<
 
     setVisibleCount(Math.max(fitCount, 1));
     setMeasured(true);
-  }, [tabs]);
+  }, [tabs, useDropdown]);
 
   React.useEffect(() => {
     const list = listRef.current;
@@ -179,7 +205,11 @@ export const TabBar = React.forwardRef<
     <RadixTabs.Root ref={ref} className={cn('w-full', className)} {...props}>
       <RadixTabs.List
         ref={listRef}
-        className={cn(tabBarVariants({ size: effectiveSize }), 'w-full')}
+        className={cn(
+          tabBarVariants({ size: effectiveSize }),
+          'w-full',
+          !useDropdown && 'overflow-x-auto'
+        )}
         role="tablist"
       >
         {tabs.map((tab, index) =>
