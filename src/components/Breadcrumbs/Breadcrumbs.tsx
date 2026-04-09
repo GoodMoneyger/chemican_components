@@ -19,8 +19,8 @@ const breadcrumbsVariants = cva('gap-xxs flex items-center', {
 
 const breadcrumbItemVariants = cva(
   `text-body-primary hover:text-interactive-primary-hover
-  focus-visible:ring-interactive-focused rounded transition-colors
-  focus-visible:ring-2 focus-visible:outline-none`,
+  focus-visible:ring-interactive-focused rounded truncate overflow-hidden
+  transition-colors focus-visible:ring-2 focus-visible:outline-none`,
   {
     variants: {
       isActive: {
@@ -90,14 +90,14 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
         className={cn(breadcrumbsVariants({ size }), className)}
         {...props}
       >
-        <ol className="gap-xxs m-0 p-0 flex list-none items-center">
+        <ol className="gap-xxs m-0 p-0 min-w-0 flex list-none items-center">
           {displayItems.map((item, index) => {
             const isLast = index === displayItems.length - 1;
             const isEllipsis = item.label === '…';
 
             return (
               <React.Fragment key={`${item.label}-${index}`}>
-                <li className="flex items-center">
+                <li className="min-w-0 flex items-center">
                   {isEllipsis ? (
                     <span
                       className={cn(breadcrumbItemVariants({ isActive: true }))}
