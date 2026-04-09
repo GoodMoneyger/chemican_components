@@ -8,10 +8,11 @@ declare const tabVariants: (props?: ({
     size?: "small" | "normal" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface TabBarProps extends React.ComponentPropsWithoutRef<typeof RadixTabs.Root>, VariantProps<typeof tabBarVariants> {
+    /** Label for the overflow "more" button. Receives the count of hidden tabs. Defaults to `(count) => \`${count} more\`` */
+    moreLabel?: (count: number) => React.ReactNode;
 }
 export declare const TabBar: React.ForwardRefExoticComponent<TabBarProps & React.RefAttributes<HTMLDivElement>>;
 export interface TabProps extends React.ComponentPropsWithoutRef<typeof RadixTabs.Trigger>, VariantProps<typeof tabVariants> {
-    label: React.ReactNode;
 }
 export declare const Tab: React.ForwardRefExoticComponent<TabProps & React.RefAttributes<HTMLButtonElement>>;
 export {};
