@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority';
 import {
   IconInfoCircleFilled,
   IconCircleCheckFilled,
+  IconLockFilled,
 } from '@tabler/icons-react';
 import type { TablerIcon } from '@tabler/icons-react';
 
@@ -12,7 +13,7 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const calloutVariants = cva(
-  'rounded-sm gap-xxs flex items-start overflow-hidden border',
+  'rounded-sm gap-xxs py-sm px-md flex items-start overflow-hidden border',
   {
     variants: {
       intent: {
@@ -20,61 +21,57 @@ const calloutVariants = cva(
         success: 'bg-surface-success border-surface-success',
         warning: 'bg-surface-warning border-surface-warning',
         alert: 'bg-surface-alert border-surface-alert',
-      },
-      size: {
-        default: 'pt-xs pr-sm pb-xs pl-xs',
-        large: 'pt-sm pr-lg pb-sm pl-md',
+        paid: 'bg-surface-primary border-surface-success',
       },
     },
     defaultVariants: {
       intent: 'info',
-      size: 'default',
     },
   }
 );
 
-const iconVariants = cva('shrink-0', {
+const iconVariants = cva('size-5 shrink-0', {
   variants: {
     intent: {
       info: 'text-shape-status-info',
       success: 'text-shape-status-success',
       warning: 'text-shape-status-warning',
       alert: 'text-shape-status-alert',
-    },
-    size: {
-      default: 'size-5',
-      large: 'size-5',
+      paid: 'text-shape-status-success',
     },
   },
   defaultVariants: {
     intent: 'info',
-    size: 'default',
   },
 });
 
-const titleVariants = cva('text-body-primary font-bold text-md');
+const titleVariants = cva('font-bold text-md', {
+  variants: {
+    intent: {
+      info: 'text-body-primary',
+      success: 'text-body-primary',
+      warning: 'text-body-primary',
+      alert: 'text-body-primary',
+      paid: 'text-body-success',
+    },
+  },
+  defaultVariants: {
+    intent: 'info',
+  },
+});
 
 const descriptionVariants = cva(
   'text-body-primary font-normal leading-6 text-md'
 );
 
-const contentVariants = cva('min-w-0 flex flex-1 flex-col', {
-  variants: {
-    size: {
-      default: 'gap-xxxs',
-      large: 'gap-xxs',
-    },
-  },
-  defaultVariants: {
-    size: 'default',
-  },
-});
+const contentVariants = cva('min-w-0 gap-xxxs flex flex-1 flex-col');
 
 const intentIcons: Record<string, TablerIcon> = {
   info: IconInfoCircleFilled,
   success: IconCircleCheckFilled,
   warning: IconInfoCircleFilled,
   alert: IconInfoCircleFilled,
+  paid: IconLockFilled,
 };
 
 export interface CalloutProps
@@ -95,7 +92,6 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
     {
       className,
       intent = 'info',
-      size = 'default',
       title,
       description,
       children,
@@ -110,17 +106,20 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
     return (
       <div
         ref={ref}
-        className={cn(calloutVariants({ intent, size }), className)}
+        className={cn(calloutVariants({ intent }), className)}
         {...props}
       >
-        <div className={cn(iconVariants({ intent, size }), 'top-0.5 relative')}>
-          {renderIcon(IconComponent, { className: 'size-full' })}
-        </div>
-
-        <div className={cn(contentVariants({ size }))}>
+        <div className={cn(contentVariants())}>
           {title && (
             <div className="flex items-center justify-between">
-              <div className={cn(titleVariants())}>{title}</div>
+              <div className="gap-xxs flex">
+                <div
+                  className={cn(iconVariants({ intent }), 'top-0.5 relative')}
+                >
+                  {renderIcon(IconComponent, { className: 'size-full' })}
+                </div>
+                <div className={cn(titleVariants({ intent }))}>{title}</div>
+              </div>
               {action && (
                 <TextLink
                   onClick={action.onClick}
