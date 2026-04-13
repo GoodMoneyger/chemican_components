@@ -2,8 +2,7 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const calloutVariants: (props?: ({
-    intent?: "alert" | "info" | "success" | "warning" | null | undefined;
-    size?: "default" | "large" | null | undefined;
+    intent?: "alert" | "info" | "success" | "warning" | "paid" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface CalloutProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>, VariantProps<typeof calloutVariants> {
     title?: React.ReactNode;
