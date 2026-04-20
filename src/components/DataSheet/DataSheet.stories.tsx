@@ -3,6 +3,8 @@ import type { Meta, StoryFn } from 'storybook/react-vite';
 import { IconPlus } from '@tabler/icons-react';
 
 import { Accordion } from '../Accordion';
+import { TextArea } from '../TextArea/TextArea';
+import { TextField } from '../TextField/TextField';
 
 import { DataSheet } from './DataSheet';
 
@@ -609,3 +611,36 @@ export const SectionDataExampleWithinAccordion: Story = () => (
     </Accordion>
   </div>
 );
+
+export const KeyValueWithFormFields: Story = () => (
+  <DataSheet className="w-140">
+    <DataSheet.Section>
+      <DataSheet.KeyValue label="製品名">
+        <TextField defaultValue="塩酸溶液" />
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue label="CAS番号">
+        <TextField defaultValue="7647-01-0" />
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue label="備考">
+        <TextArea
+          defaultValue="取り扱いには十分注意してください。"
+          showCharacterLimit={false}
+        />
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue orientation="horizontal" label="推奨用途">
+        <TextField defaultValue="研究用" />
+      </DataSheet.KeyValue>
+    </DataSheet.Section>
+  </DataSheet>
+);
+KeyValueWithFormFields.parameters = {
+  docs: {
+    description: {
+      story:
+        'DataSheet.KeyValue wires its label to child form fields via ' +
+        '`aria-labelledby`, so screen readers announce the label and ' +
+        '`findByLabelText` queries resolve correctly. Inspect any input — ' +
+        'its `aria-labelledby` points at the sibling label `<div>`.',
+    },
+  },
+};
