@@ -135,6 +135,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
       onOpenChange,
       side = 'bottom',
       locale = 'ja',
+      ...rest
     },
     ref
   ) => {
@@ -216,6 +217,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger asChild>
           <TextField
+            {...rest}
             ref={ref}
             type="text"
             readOnly

@@ -3,6 +3,7 @@ import type { Meta, StoryFn } from 'storybook/react-vite';
 import { IconPlus } from '@tabler/icons-react';
 
 import { Accordion } from '../Accordion';
+import { DatePicker } from '../DatePicker/DatePicker';
 import { TextArea } from '../TextArea/TextArea';
 import { TextField } from '../TextField/TextField';
 
@@ -626,6 +627,9 @@ export const KeyValueWithFormFields: Story = () => (
           defaultValue="取り扱いには十分注意してください。"
           showCharacterLimit={false}
         />
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue label="SDS改訂日">
+        <DatePicker defaultValue={new Date('2025-01-08')} />
       </DataSheet.KeyValue>
       <DataSheet.KeyValue orientation="horizontal" label="推奨用途">
         <TextField defaultValue="研究用" />
