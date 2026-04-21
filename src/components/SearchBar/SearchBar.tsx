@@ -9,7 +9,7 @@ const searchBarWrapperVariants = cva(
   `rounded-sm bg-surface-primary border-interactive-default
   hover:border-interactive-hover focus-within:border-interactive-hover
   focus-within:ring-interactive-focused flex w-auto overflow-hidden border
-  focus-within:ring-4`,
+  transition-all focus-within:ring-4`,
   {
     variants: {
       size: {
@@ -32,27 +32,10 @@ const searchBarWrapperVariants = cva(
 );
 
 const inputWrapperClasses =
-  'gap-xxs px-sm py-xs disabled:bg-input-disabled flex min-h-full flex-1 items-center flex-wrap';
+  'gap-xxs px-sm disabled:bg-input-disabled flex min-h-full flex-1 items-center flex-wrap';
 
 const inputGroupClasses = `rounded-l-sm gap-1 disabled:bg-input-disabled flex min-h-full flex-1 flex-row
   flex-wrap items-center justify-start`;
-
-const searchIconVariants = cva(
-  `text-shape-primary disabled:text-shape-interactive-disabled flex
-  items-center`,
-  {
-    variants: {
-      size: {
-        sm: 'h-4 w-4',
-        md: 'h-5 w-5',
-        lg: 'h-6 w-6',
-      },
-    },
-    defaultVariants: {
-      size: 'md',
-    },
-  }
-);
 
 const inputClasses = `min-w-24 min-h-6 text-md text-body-primary disabled:bg-input-disabled
   disabled:text-body-disabled placeholder:text-body-disabled flex-1
@@ -84,14 +67,14 @@ const buttonVariants = cva(
     },
   }
 );
-const supportTextClasses = 'gap-xs text-sm text-body-secondary flex-row';
+const supportTextClasses = 'gap-xs text-sm text-body-inverse flex-row';
 const chipVariants = cva(
-  `gap-xxs bg-shape-accent-gray-pale px-xs py-xxs text-md
-  text-accent-gray-strong flex items-center rounded-full`,
+  `gap-xxs bg-shape-accent-gray-pale px-xs text-md text-accent-gray-strong flex
+  items-center rounded-full`,
   {
     variants: {
       size: {
-        sm: 'h-5',
+        sm: 'h-5 text-sm',
         md: 'h-6',
         lg: 'h-6',
       },
@@ -124,12 +107,6 @@ export interface SearchBarProps
   initialKeywords?: string[];
 }
 
-const iconSizeMap = {
-  sm: 16, // 50% of h-8 (32px)
-  md: 20, // 50% of h-10 (40px)
-  lg: 24, // 50% of h-12 (48px)
-};
-
 export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
   (
     {
@@ -154,6 +131,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
     const [keywords, setKeywords] = React.useState<string[]>(
       initialKeywords ?? []
     );
+    const [inputFocused, setInputFocused] = React.useState(false);
 
     let resolvedState: 'default' | 'filled' | 'disabled';
 
@@ -233,7 +211,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
     return (
       <div
         className={cn(
-          'gap-xxs group flex flex-col',
+          'group relative flex flex-col',
           disabled ? 'pointer-events-none' : '',
           className
         )}
@@ -251,12 +229,15 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
           {/* Chips + Input area */}
           <div className={cn(inputWrapperClasses)}>
             <div className={cn(chipContainerClasses, inputGroupClasses)}>
-              <span className={cn(searchIconVariants({ size }))}>
-                <IconSearch size={iconSizeMap[size]} />
+              <span
+                className="text-shape-primary
+                  disabled:text-shape-interactive-disabled flex items-center"
+              >
+                <IconSearch size={20} />
               </span>
               {/* Render chips */}
               {keywords.map((kw, idx) => (
-                <span key={idx} className={chipVariants()}>
+                <span key={idx} className={chipVariants({ size })}>
                   <span>{kw}</span>
                   <button
                     type="button"
@@ -287,6 +268,14 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                 value={value}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
+                onFocus={(e) => {
+                  setInputFocused(true);
+                  props.onFocus?.(e);
+                }}
+                onBlur={(e) => {
+                  setInputFocused(false);
+                  props.onBlur?.(e);
+                }}
                 placeholder={
                   resolvedState === 'filled' || keywords.length > 0
                     ? ''
@@ -347,8 +336,9 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
           <div
             className={cn(
               supportTextClasses,
-              'hidden group-focus-within:flex',
-              resolvedState === 'filled' && 'flex'
+              `z-tooltip bg-surface-tooltip-neutral rounded-sm px-xs py-xxs
+              leading-tight left-0 mt-xxs absolute top-full`,
+              inputFocused ? 'flex' : 'hidden'
             )}
           >
             {supportText}
