@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
+import { IconTag, IconStar, IconHeart } from '@tabler/icons-react';
 
 import type { TagProps } from './Tag';
 import { colorCodeToTokenMap, Tag } from './Tag';
@@ -18,6 +19,10 @@ const meta: Meta<typeof Tag> = {
     size: {
       control: 'select',
       options: ['sm', 'md'],
+    },
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary'],
     },
     selected: {
       control: 'boolean',
@@ -77,9 +82,32 @@ WithCustomColors.args = {
   className: 'bg-surface-alert text-body-primary',
 };
 
-export const ColorCodeShowcase: StoryFn<{ selected?: boolean }> = ({
-  selected = false,
-}) => {
+export const WithIcon = TagTemplate.bind({});
+WithIcon.args = {
+  children: 'タグ',
+  colorCode: 8,
+  icon: IconTag,
+};
+
+export const SecondaryVariant = TagTemplate.bind({});
+SecondaryVariant.args = {
+  children: 'セカンダリ',
+  colorCode: 17,
+  variant: 'secondary',
+};
+
+export const SecondaryWithIcon = TagTemplate.bind({});
+SecondaryWithIcon.args = {
+  children: 'アイコン付き',
+  colorCode: 8,
+  variant: 'secondary',
+  icon: IconStar,
+};
+
+export const ColorCodeShowcase: StoryFn<{
+  selected?: boolean;
+  variant?: 'primary' | 'secondary';
+}> = ({ selected = false, variant = 'primary' }) => {
   // Get unique color codes and sort them
   const uniqueColorCodes = Array.from(
     new Set(colorCodeToTokenMap.map((c) => c.code))
@@ -88,7 +116,12 @@ export const ColorCodeShowcase: StoryFn<{ selected?: boolean }> = ({
   return (
     <div className="gap-2 flex flex-wrap">
       {uniqueColorCodes.map((colorCode) => (
-        <Tag key={colorCode} colorCode={colorCode} selected={selected}>
+        <Tag
+          key={colorCode}
+          colorCode={colorCode}
+          selected={selected}
+          variant={variant}
+        >
           カラー {colorCode}
         </Tag>
       ))}
@@ -98,10 +131,87 @@ export const ColorCodeShowcase: StoryFn<{ selected?: boolean }> = ({
 
 ColorCodeShowcase.args = {
   selected: false,
+  variant: 'primary',
 };
 
 ColorCodeShowcase.argTypes = {
   selected: {
     control: 'boolean',
   },
+  variant: {
+    control: 'select',
+    options: ['primary', 'secondary'],
+  },
+};
+
+export const VariantComparison: StoryFn = () => {
+  const sampleColorCodes = [1, 8, 17, 25, 33];
+
+  return (
+    <div className="gap-md flex flex-col">
+      <div>
+        <h3 className="text-body-primary mb-xs text-sm font-medium">
+          Primary Variant (accent background)
+        </h3>
+        <div className="gap-2 flex flex-wrap">
+          {sampleColorCodes.map((colorCode) => (
+            <Tag key={colorCode} colorCode={colorCode} variant="primary">
+              カラー {colorCode}
+            </Tag>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h3 className="text-body-primary mb-xs text-sm font-medium">
+          Secondary Variant (neutral background)
+        </h3>
+        <div className="gap-2 flex flex-wrap">
+          {sampleColorCodes.map((colorCode) => (
+            <Tag key={colorCode} colorCode={colorCode} variant="secondary">
+              カラー {colorCode}
+            </Tag>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const WithIconShowcase: StoryFn = () => {
+  return (
+    <div className="gap-md flex flex-col">
+      <div>
+        <h3 className="text-body-primary mb-xs text-sm font-medium">
+          Primary with Icons
+        </h3>
+        <div className="gap-2 flex flex-wrap">
+          <Tag colorCode={8} icon={IconTag}>
+            タグ
+          </Tag>
+          <Tag colorCode={19} icon={IconStar}>
+            お気に入り
+          </Tag>
+          <Tag colorCode={2} icon={IconHeart}>
+            いいね
+          </Tag>
+        </div>
+      </div>
+      <div>
+        <h3 className="text-body-primary mb-xs text-sm font-medium">
+          Secondary with Icons
+        </h3>
+        <div className="gap-2 flex flex-wrap">
+          <Tag colorCode={8} variant="secondary" icon={IconTag}>
+            タグ
+          </Tag>
+          <Tag colorCode={19} variant="secondary" icon={IconStar}>
+            お気に入り
+          </Tag>
+          <Tag colorCode={2} variant="secondary" icon={IconHeart}>
+            いいね
+          </Tag>
+        </div>
+      </div>
+    </div>
+  );
 };

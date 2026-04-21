@@ -2,7 +2,8 @@ import React from 'react';
 import { cva } from 'class-variance-authority';
 
 import { ColorShapeTokens, ColorTextTokens } from '../../tokens';
-import { cn } from '../../utils';
+import { cn, renderIcon } from '../../utils';
+import type { IconProp } from '../../utils';
 
 // Mapping the color codes for user defined tag colors to our design tokens
 // Reference: https://docs.google.com/spreadsheets/d/14r5PJTfzfESsKypY2cJlR65I2-DkO4RvODa04x_s1dA
@@ -202,12 +203,13 @@ export interface TagProps {
   size?: 'sm' | 'md';
   style?: React.CSSProperties;
   selected?: boolean;
+  variant?: 'primary' | 'secondary';
+  icon?: IconProp;
 }
 
 const tagVariants = cva(
-  `gap-xxs py-xxs px-xs h-5.5 bg-shape-accent-gray-pale text-accent-gray-strong
-  inline-flex max-w-full items-center rounded-full border border-transparent
-  leading-none`,
+  `gap-xxs py-xxs px-xs h-5.5 inline-flex max-w-full items-center rounded-full
+  border border-transparent leading-none`,
   {
     variants: {
       size: {
@@ -221,10 +223,15 @@ const tagVariants = cva(
       interactive: {
         true: 'cursor-pointer select-none',
       },
+      variant: {
+        primary: '',
+        secondary: 'bg-surface-disabled',
+      },
     },
     defaultVariants: {
       size: 'md',
       selected: false,
+      variant: 'primary',
     },
   }
 );
@@ -238,6 +245,8 @@ export const Tag: React.FC<TagProps> = ({
   size = 'md',
   style,
   selected = false,
+  variant = 'primary',
+  icon,
 }) => {
   const colorMapping = colorCodeToTokenMap.find(
     (colorMap) => colorMap.code === colorCode
@@ -246,17 +255,24 @@ export const Tag: React.FC<TagProps> = ({
   return (
     <div
       className={cn(
-        tagVariants({ size, selected, interactive: Boolean(onClick) }),
+        tagVariants({ size, selected, interactive: Boolean(onClick), variant }),
         className
       )}
       style={{
-        backgroundColor: `var(${colorMapping?.backgroundColor})`,
+        // Only apply accent background for primary variant
+        // Secondary variant uses bg-surface-disabled from CVA
+        ...(variant === 'primary' && {
+          backgroundColor: `var(${colorMapping?.backgroundColor})`,
+        }),
         color: `var(${colorMapping?.textColor})`,
         ...style,
       }}
       onClick={onClick}
       role={onClick ? 'button' : undefined}
     >
+      {icon && (
+        <span className="shrink-0">{renderIcon(icon, { size: 14 })}</span>
+      )}
       <div className="truncate">{children}</div>
       {Boolean(onRemove) && (
         <button
