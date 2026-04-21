@@ -33,6 +33,8 @@ export interface SideNavigationProps
   header?: React.ReactNode;
   footer?: React.ReactNode;
   showCollapseButton?: boolean;
+  collapseLabel?: React.ReactNode;
+  expandLabel?: React.ReactNode;
   defaultCollapsed?: boolean;
 }
 
@@ -62,6 +64,8 @@ const SideNavigationContent = React.forwardRef<
       footer,
       children,
       showCollapseButton = false,
+      collapseLabel,
+      expandLabel,
       ...props
     },
     ref
@@ -119,7 +123,12 @@ const SideNavigationContent = React.forwardRef<
           </div>
         )}
 
-        {showCollapseButton && <SideNavigationCollapseButton />}
+        {showCollapseButton && (
+          <SideNavigationCollapseButton
+            collapseLabel={collapseLabel}
+            expandLabel={expandLabel}
+          />
+        )}
       </nav>
     );
   }

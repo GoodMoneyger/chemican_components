@@ -172,6 +172,8 @@ export const Default: Story = {
           header={<Header />}
           footer={<Footer />}
           showCollapseButton
+          collapseLabel="メニューを閉じる"
+          expandLabel="メニューを開く"
         >
           <DefaultContent />
         </SideNavigation>
@@ -278,6 +280,8 @@ export const WithCustomLinks: Story = {
           header={<Header />}
           footer={<Footer />}
           showCollapseButton
+          collapseLabel="メニューを閉じる"
+          expandLabel="メニューを開く"
         >
           <CustomLinksContent />
         </SideNavigation>
