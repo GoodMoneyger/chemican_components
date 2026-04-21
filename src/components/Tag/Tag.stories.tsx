@@ -27,6 +27,9 @@ const meta: Meta<typeof Tag> = {
     selected: {
       control: 'boolean',
     },
+    disabled: {
+      control: 'boolean',
+    },
     onRemove: {
       control: 'boolean',
       defaultValue: false,
@@ -104,6 +107,31 @@ SecondaryWithIcon.args = {
   icon: IconStar,
 };
 
+export const DisabledPrimary = TagTemplate.bind({});
+DisabledPrimary.args = {
+  children: '無効',
+  colorCode: 8,
+  variant: 'primary',
+  disabled: true,
+};
+
+export const DisabledSecondary = TagTemplate.bind({});
+DisabledSecondary.args = {
+  children: '無効',
+  colorCode: 8,
+  variant: 'secondary',
+  disabled: true,
+};
+
+export const DisabledWithIcon = TagTemplate.bind({});
+DisabledWithIcon.args = {
+  children: '無効',
+  colorCode: 8,
+  variant: 'secondary',
+  icon: IconStar,
+  disabled: true,
+};
+
 export const ColorCodeShowcase: StoryFn<{
   selected?: boolean;
   variant?: 'primary' | 'secondary';
@@ -173,6 +201,22 @@ export const VariantComparison: StoryFn = () => {
           ))}
         </div>
       </div>
+      <div>
+        <h3 className="text-body-primary mb-xs text-sm font-medium">
+          Disabled States
+        </h3>
+        <div className="gap-2 flex flex-wrap">
+          <Tag colorCode={8} variant="primary" disabled>
+            Primary 無効
+          </Tag>
+          <Tag colorCode={8} variant="secondary" disabled>
+            Secondary 無効
+          </Tag>
+          <Tag colorCode={8} variant="secondary" icon={IconTag} disabled>
+            Icon 無効
+          </Tag>
+        </div>
+      </div>
     </div>
   );
 };
@@ -182,7 +226,7 @@ export const WithIconShowcase: StoryFn = () => {
     <div className="gap-md flex flex-col">
       <div>
         <h3 className="text-body-primary mb-xs text-sm font-medium">
-          Primary with Icons
+          Primary with Icons (icon inherits text color)
         </h3>
         <div className="gap-2 flex flex-wrap">
           <Tag colorCode={8} icon={IconTag}>
@@ -194,11 +238,14 @@ export const WithIconShowcase: StoryFn = () => {
           <Tag colorCode={2} icon={IconHeart}>
             いいね
           </Tag>
+          <Tag colorCode={25} icon={IconTag}>
+            Cyan
+          </Tag>
         </div>
       </div>
       <div>
         <h3 className="text-body-primary mb-xs text-sm font-medium">
-          Secondary with Icons
+          Secondary with Icons (icon uses distinct accent color)
         </h3>
         <div className="gap-2 flex flex-wrap">
           <Tag colorCode={8} variant="secondary" icon={IconTag}>
@@ -209,6 +256,22 @@ export const WithIconShowcase: StoryFn = () => {
           </Tag>
           <Tag colorCode={2} variant="secondary" icon={IconHeart}>
             いいね
+          </Tag>
+          <Tag colorCode={25} variant="secondary" icon={IconTag}>
+            Cyan
+          </Tag>
+        </div>
+      </div>
+      <div>
+        <h3 className="text-body-primary mb-xs text-sm font-medium">
+          Disabled with Icons
+        </h3>
+        <div className="gap-2 flex flex-wrap">
+          <Tag colorCode={8} variant="primary" icon={IconTag} disabled>
+            Primary 無効
+          </Tag>
+          <Tag colorCode={8} variant="secondary" icon={IconTag} disabled>
+            Secondary 無効
           </Tag>
         </div>
       </div>
