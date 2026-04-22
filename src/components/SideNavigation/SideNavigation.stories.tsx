@@ -22,6 +22,8 @@ import {
   DropdownSeparator,
 } from '../DropdownMenu';
 
+import { TooltipProvider } from '../Tooltip';
+
 import { SideNavigation } from './SideNavigation';
 import { SideNavigationItem } from './SideNavigationItem';
 import { SideNavigationSection } from './SideNavigationSection';
@@ -49,6 +51,13 @@ const meta = {
     },
   },
   args: {},
+  decorators: [
+    (Story) => (
+      <TooltipProvider>
+        <Story />
+      </TooltipProvider>
+    ),
+  ],
 } satisfies Meta<typeof SideNavigation>;
 
 export default meta;
@@ -61,13 +70,13 @@ const Footer = () => {
 
   return (
     <div className="space-y-xxxs">
-      <SideNavigationItem asChild>
+      <SideNavigationItem asChild tooltipLabel="ヘルプセンター">
         <a href="#" className="gap-xs flex items-center">
           <IconInfoCircle size={16} className="shrink-0" />
           {!isCollapsed && 'ヘルプセンター'}
         </a>
       </SideNavigationItem>
-      <SideNavigationItem asChild>
+      <SideNavigationItem asChild tooltipLabel="お問い合わせ">
         <a href="#" className="gap-xs flex items-center">
           <IconHelpCircle size={16} className="shrink-0" />
           {!isCollapsed && 'お問い合わせ'}
@@ -75,7 +84,7 @@ const Footer = () => {
       </SideNavigationItem>
       <Dropdown>
         <DropdownTrigger asChild>
-          <SideNavigationItem asChild>
+          <SideNavigationItem asChild tooltipLabel="各種設定">
             <button className="gap-xs flex items-center">
               <IconSettings size={16} className="shrink-0" />
               {!isCollapsed && '各種設定'}
@@ -114,25 +123,29 @@ export const Default: Story = {
       return (
         <>
           <SideNavigationSection title="SDS管理">
-            <SideNavigationItem asChild variant="selected">
+            <SideNavigationItem
+              asChild
+              variant="selected"
+              tooltipLabel="SDS登録"
+            >
               <a href="#" className="gap-xs flex items-center">
                 <IconUpload size={16} className="shrink-0" />
                 {!isCollapsed && 'SDS登録'}
               </a>
             </SideNavigationItem>
-            <SideNavigationItem asChild>
+            <SideNavigationItem asChild tooltipLabel="全SDS一覧">
               <a href="#" className="gap-xs flex items-center">
                 <IconTable size={16} className="shrink-0" />
                 {!isCollapsed && '全SDS一覧'}
               </a>
             </SideNavigationItem>
-            <SideNavigationItem asChild>
+            <SideNavigationItem asChild tooltipLabel="要確認SDS">
               <a href="#" className="gap-xs flex items-center">
                 <IconFileAlert size={16} className="shrink-0" />
                 {!isCollapsed && '要確認SDS'}
               </a>
             </SideNavigationItem>
-            <SideNavigationItem asChild>
+            <SideNavigationItem asChild tooltipLabel="削除済みSDS">
               <a href="#" className="gap-xs flex items-center">
                 <IconTrashX size={16} className="shrink-0" />
                 {!isCollapsed && '削除済みSDS'}
@@ -141,7 +154,7 @@ export const Default: Story = {
           </SideNavigationSection>
 
           <SideNavigationSection title="チェックリスト" isLast>
-            <SideNavigationItem asChild>
+            <SideNavigationItem asChild tooltipLabel="法令チェックリスト">
               <a href="#" className="gap-xs flex items-center">
                 <IconChecklist size={16} className="shrink-0" />
                 {!isCollapsed && '法令チェックリスト'}
@@ -159,6 +172,8 @@ export const Default: Story = {
           header={<Header />}
           footer={<Footer />}
           showCollapseButton
+          collapseLabel="メニューを閉じる"
+          expandLabel="メニューを開く"
         >
           <DefaultContent />
         </SideNavigation>
@@ -207,7 +222,11 @@ export const WithCustomLinks: Story = {
       return (
         <>
           <SideNavigationSection title="Navigation with Custom Links">
-            <SideNavigationItem asChild variant="selected">
+            <SideNavigationItem
+              asChild
+              variant="selected"
+              tooltipLabel="SDS Registration"
+            >
               <MockNavigationLink
                 to="/sds-upload"
                 className="gap-xs flex items-center"
@@ -216,7 +235,7 @@ export const WithCustomLinks: Story = {
                 {!isCollapsed && 'SDS Registration'}
               </MockNavigationLink>
             </SideNavigationItem>
-            <SideNavigationItem asChild>
+            <SideNavigationItem asChild tooltipLabel="All SDS List">
               <MockNavigationLink
                 to="/sds-list"
                 className="gap-xs flex items-center"
@@ -225,7 +244,7 @@ export const WithCustomLinks: Story = {
                 {!isCollapsed && 'All SDS List'}
               </MockNavigationLink>
             </SideNavigationItem>
-            <SideNavigationItem asChild>
+            <SideNavigationItem asChild tooltipLabel="Alerts">
               <MockNavigationLink
                 to="/sds-alerts"
                 className="gap-xs flex items-center"
@@ -239,7 +258,7 @@ export const WithCustomLinks: Story = {
           </SideNavigationSection>
 
           <SideNavigationSection title="ReactNode Labels" isLast>
-            <SideNavigationItem asChild>
+            <SideNavigationItem asChild tooltipLabel="Checklist">
               <a href="#" className="gap-xs flex items-center">
                 <IconChecklist size={16} className="shrink-0" />
                 {!isCollapsed && (
@@ -261,6 +280,8 @@ export const WithCustomLinks: Story = {
           header={<Header />}
           footer={<Footer />}
           showCollapseButton
+          collapseLabel="メニューを閉じる"
+          expandLabel="メニューを開く"
         >
           <CustomLinksContent />
         </SideNavigation>

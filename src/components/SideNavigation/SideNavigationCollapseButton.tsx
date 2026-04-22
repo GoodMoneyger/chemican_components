@@ -1,20 +1,28 @@
 import React from 'react';
-import { IconChevronLeftPipe, IconChevronRightPipe } from '@tabler/icons-react';
+import {
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+} from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
+import { Tooltip } from '../Tooltip';
 
 import { useSideNavigation } from './SideNavigationContext';
 
-export type SideNavigationCollapseButtonProps =
-  React.ButtonHTMLAttributes<HTMLButtonElement>;
+export interface SideNavigationCollapseButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  collapseLabel?: React.ReactNode;
+  expandLabel?: React.ReactNode;
+}
 
 export const SideNavigationCollapseButton = React.forwardRef<
   HTMLButtonElement,
   SideNavigationCollapseButtonProps
->(({ className, ...props }, ref) => {
+>(({ className, collapseLabel, expandLabel, ...props }, ref) => {
   const { isCollapsed, toggleCollapsed } = useSideNavigation();
+  const tooltipContent = isCollapsed ? expandLabel : collapseLabel;
 
-  return (
+  const button = (
     <button
       ref={ref}
       className={cn(
@@ -30,12 +38,22 @@ export const SideNavigationCollapseButton = React.forwardRef<
       {...props}
     >
       {isCollapsed ? (
-        <IconChevronRightPipe className="size-5" strokeWidth={2} />
+        <IconLayoutSidebarLeftExpand className="size-5" strokeWidth={2} />
       ) : (
-        <IconChevronLeftPipe className="size-5" strokeWidth={2} />
+        <IconLayoutSidebarLeftCollapse className="size-5" strokeWidth={2} />
       )}
     </button>
   );
+
+  if (tooltipContent) {
+    return (
+      <Tooltip content={tooltipContent} side="right" delayDuration={0}>
+        {button}
+      </Tooltip>
+    );
+  }
+
+  return button;
 });
 
 SideNavigationCollapseButton.displayName = 'SideNavigationCollapseButton';

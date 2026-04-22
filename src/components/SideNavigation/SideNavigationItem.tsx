@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 
 import { cn } from '../../lib/utils';
+import { Tooltip } from '../Tooltip';
 
 import { useSideNavigation } from './SideNavigationContext';
 
@@ -43,6 +44,7 @@ export interface SideNavigationItemProps
   asChild?: boolean;
   component?: React.ElementType;
   label?: React.ReactNode;
+  tooltipLabel?: React.ReactNode;
 }
 
 export const SideNavigationItem = React.forwardRef<
@@ -56,6 +58,7 @@ export const SideNavigationItem = React.forwardRef<
       size,
       asChild = false,
       label,
+      tooltipLabel,
       children,
       disabled,
       ...props
@@ -66,7 +69,7 @@ export const SideNavigationItem = React.forwardRef<
     const Comp = asChild ? Slot.Root : 'button';
     const finalVariant = disabled ? 'disabled' : variant;
 
-    return (
+    const item = (
       <Comp
         ref={ref}
         className={cn(
@@ -84,6 +87,16 @@ export const SideNavigationItem = React.forwardRef<
         {children || label}
       </Comp>
     );
+
+    if (isCollapsed && tooltipLabel) {
+      return (
+        <Tooltip content={tooltipLabel} side="right" delayDuration={0}>
+          {item}
+        </Tooltip>
+      );
+    }
+
+    return item;
   }
 );
 
