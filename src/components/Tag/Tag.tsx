@@ -265,7 +265,7 @@ const tagVariants = cva(
         secondary: 'bg-surface-disabled',
       },
       disabled: {
-        true: '',
+        true: 'text-body-disabled',
         false: '',
       },
     },
@@ -306,21 +306,10 @@ export const Tag: React.FC<TagProps> = ({
     (colorMap) => colorMap.code === colorCode
   );
 
-  // Determine text color based on variant and disabled state
-  const getTextColor = () => {
-    if (disabled) {
-      return 'var(--token-color-text-body-disabled)';
-    }
-    return `var(${colorMapping?.textColor})`;
-  };
-
-  // Determine icon color based on variant and disabled state
+  // Determine icon color based on variant
   // For secondary variant, icon uses shape color (distinct from text color)
   // For primary variant, icon inherits text color
   const getIconColor = () => {
-    if (disabled) {
-      return 'var(--token-color-shape-interactive-disabled)';
-    }
     if (variant === 'secondary') {
       return `var(${colorMapping?.iconColor})`;
     }
@@ -346,15 +335,22 @@ export const Tag: React.FC<TagProps> = ({
         ...(variant === 'primary' && {
           backgroundColor: `var(${colorMapping?.backgroundColor})`,
         }),
-        color: getTextColor(),
+        // Only apply inline color when not disabled (Tailwind class handles disabled state)
+        ...(!disabled && { color: `var(${colorMapping?.textColor})` }),
         ...style,
       }}
       onClick={disabled ? undefined : onClick}
-      role={onClick && !disabled ? 'button' : undefined}
+      role={onClick ? 'button' : undefined}
       aria-disabled={disabled || undefined}
     >
       {icon && (
-        <span className="shrink-0" style={{ color: getIconColor() }}>
+        <span
+          className={cn(
+            'shrink-0',
+            disabled && 'text-shape-interactive-disabled'
+          )}
+          style={disabled ? undefined : { color: getIconColor() }}
+        >
           {renderIcon(icon, { size: 14 })}
         </span>
       )}

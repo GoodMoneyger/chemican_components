@@ -107,6 +107,14 @@ SecondaryWithIcon.args = {
   icon: IconStar,
 };
 
+export const SecondaryWithRemoveButton = TagTemplate.bind({});
+SecondaryWithRemoveButton.args = {
+  children: '削除可能',
+  colorCode: 8,
+  variant: 'secondary',
+  onRemove: () => alert('Tag removed!'),
+};
+
 export const DisabledPrimary = TagTemplate.bind({});
 DisabledPrimary.args = {
   children: '無効',
