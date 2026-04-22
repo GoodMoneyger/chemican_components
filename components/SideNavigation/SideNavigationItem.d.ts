@@ -9,6 +9,7 @@ export interface SideNavigationItemProps extends React.ButtonHTMLAttributes<HTML
     asChild?: boolean;
     component?: React.ElementType;
     label?: React.ReactNode;
+    tooltipLabel?: React.ReactNode;
 }
 export declare const SideNavigationItem: React.ForwardRefExoticComponent<SideNavigationItemProps & React.RefAttributes<HTMLButtonElement>>;
 export {};

@@ -7,6 +7,8 @@ export interface SideNavigationProps extends React.HTMLAttributes<HTMLElement>, 
     header?: React.ReactNode;
     footer?: React.ReactNode;
     showCollapseButton?: boolean;
+    collapseLabel?: React.ReactNode;
+    expandLabel?: React.ReactNode;
     defaultCollapsed?: boolean;
 }
 export declare const SideNavigation: React.ForwardRefExoticComponent<SideNavigationProps & React.RefAttributes<HTMLElement>>;
