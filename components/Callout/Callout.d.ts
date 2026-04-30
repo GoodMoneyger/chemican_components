@@ -11,6 +11,9 @@ export interface CalloutProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
     action?: {
         label: React.ReactNode;
         onClick?: () => void;
+        href?: string;
+        target?: React.HTMLAttributeAnchorTarget;
+        rel?: string;
     };
     icon?: IconProp;
 }
