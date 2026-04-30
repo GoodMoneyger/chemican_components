@@ -83,6 +83,9 @@ export interface CalloutProps
   action?: {
     label: React.ReactNode;
     onClick?: () => void;
+    href?: string;
+    target?: React.HTMLAttributeAnchorTarget;
+    rel?: string;
   };
   icon?: IconProp;
 }
@@ -120,18 +123,29 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
                 </div>
                 <div className={cn(titleVariants({ intent }))}>{title}</div>
               </div>
-              {action && (
-                <TextLink
-                  onClick={action.onClick}
-                  intent="primary"
-                  size="sm"
-                  asChild
-                >
-                  <button type="button" className="cursor-pointer">
+              {action &&
+                (action.href ? (
+                  <TextLink
+                    href={action.href}
+                    target={action.target}
+                    rel={action.rel}
+                    intent="primary"
+                    size="sm"
+                  >
                     {action.label}
-                  </button>
-                </TextLink>
-              )}
+                  </TextLink>
+                ) : (
+                  <TextLink
+                    onClick={action.onClick}
+                    intent="primary"
+                    size="sm"
+                    asChild
+                  >
+                    <button type="button" className="cursor-pointer">
+                      {action.label}
+                    </button>
+                  </TextLink>
+                ))}
             </div>
           )}
           {(children || description) && (

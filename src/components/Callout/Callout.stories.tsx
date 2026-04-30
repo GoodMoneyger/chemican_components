@@ -129,6 +129,22 @@ WithDescriptionAndAction.args = {
   intent: 'info',
 };
 
+export const WithLinkAction: StoryFn<typeof Callout> = (args) => (
+  <Callout {...args} />
+);
+
+WithLinkAction.args = {
+  title: 'ヘルプセンター',
+  description: '詳しくはヘルプセンターをご確認ください。',
+  action: {
+    label: 'ヘルプを見る',
+    href: 'https://example.com/help',
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  },
+  intent: 'info',
+};
+
 export const Success: StoryFn<typeof Callout> = (args) => <Callout {...args} />;
 
 Success.args = {
