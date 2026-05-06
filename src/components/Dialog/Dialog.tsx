@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 
+import { cn } from '../../lib/utils';
 import { Button } from '../Button';
 import type { ButtonProps } from '../Button';
 
@@ -29,6 +30,7 @@ export interface DialogProps
   onOpenAutoFocus?: React.ComponentProps<
     typeof RadixDialog.Content
   >['onOpenAutoFocus'];
+  bodyClassName?: string;
 }
 
 const defaultActions: DialogAction[] = [
@@ -51,6 +53,7 @@ export const Dialog: React.FC<DialogProps> = ({
   cancelButtonLabel = 'キャンセル',
   allowClickOutside = true,
   onOpenAutoFocus,
+  bodyClassName,
 }) => {
   const [loading, setLoading] = React.useState<number>(-1);
 
@@ -127,9 +130,12 @@ export const Dialog: React.FC<DialogProps> = ({
             </header>
 
             <div
-              className="border-divider-default bg-surface-secondary px-xl pt-md
-                pb-xxl text-body-primary max-h-[70vh] flex-1 overflow-hidden
-                overflow-y-auto border-y-1"
+              className={cn(
+                `border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
+                text-body-primary max-h-[70vh] flex-1 overflow-hidden
+                overflow-y-auto border-y-1`,
+                bodyClassName
+              )}
             >
               {children}
             </div>
