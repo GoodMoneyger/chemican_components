@@ -19,5 +19,6 @@ export interface DialogProps extends React.ComponentProps<typeof RadixDialog.Roo
     cancelButtonLabel?: ReactNode;
     allowClickOutside?: boolean;
     onOpenAutoFocus?: React.ComponentProps<typeof RadixDialog.Content>['onOpenAutoFocus'];
+    bodyClassName?: string;
 }
 export declare const Dialog: React.FC<DialogProps>;
