@@ -36,8 +36,8 @@ export interface UseCompositionGuardResult<T extends Element> {
  *
  * Browsers fire `compositionend` before `keydown` for the confirming Enter on
  * modern engines, but Safari historically fires `keydown` first; therefore the
- * wrapper additionally checks `event.nativeEvent.isComposing` (and the legacy
- * `keyCode === 229`) to cover both orderings.
+ * wrapper additionally checks `event.nativeEvent.isComposing` to cover both
+ * orderings.
  */
 export const useCompositionGuard = <
   T extends Element = HTMLInputElement,
@@ -59,11 +59,7 @@ export const useCompositionGuard = <
         const native = event.nativeEvent as KeyboardEvent['nativeEvent'] & {
           isComposing?: boolean;
         };
-        if (
-          isComposingRef.current ||
-          native.isComposing === true ||
-          event.keyCode === 229
-        ) {
+        if (isComposingRef.current || native.isComposing === true) {
           return;
         }
         handler(event);
