@@ -3,6 +3,7 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '../../utils';
+import { useCompositionGuard } from '../../lib/hooks';
 
 const textareaVariants = cva(
   `border-interactive-default bg-surface-primary px-md py-sm text-body-primary
@@ -40,11 +41,36 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
     },
     ref
   ) => {
+    const {
+      onKeyDown,
+      onKeyUp,
+      onCompositionStart,
+      onCompositionEnd,
+      onChange,
+      value: _value,
+      ...textareaProps
+    } = props;
+
     const [text, setText] = useState(props.value);
 
     useEffect(() => {
       setText(props.value);
     }, [props.value]);
+
+    const { compositionHandlers, guardKeyHandler } =
+      useCompositionGuard<HTMLTextAreaElement>();
+    const handleCompositionStart: React.CompositionEventHandler<
+      HTMLTextAreaElement
+    > = (event) => {
+      compositionHandlers.onCompositionStart(event);
+      onCompositionStart?.(event);
+    };
+    const handleCompositionEnd: React.CompositionEventHandler<
+      HTMLTextAreaElement
+    > = (event) => {
+      compositionHandlers.onCompositionEnd(event);
+      onCompositionEnd?.(event);
+    };
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (characterLimit && event.target.value.length > characterLimit) {
@@ -53,8 +79,8 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
       }
 
       setText(event.target.value);
-      if (props.onChange) {
-        props.onChange(event);
+      if (onChange) {
+        onChange(event);
       }
     };
 
@@ -63,9 +89,13 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
         <textarea
           ref={ref}
           className={cn(textareaVariants({ invalid }), className)}
-          {...props}
+          {...textareaProps}
           value={text}
           onChange={handleChange}
+          onKeyDown={guardKeyHandler(onKeyDown)}
+          onKeyUp={guardKeyHandler(onKeyUp)}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
         />
         {Boolean(characterLimit && showCharacterLimit) && (
           <div className="text-body-secondary text-sm text-right">

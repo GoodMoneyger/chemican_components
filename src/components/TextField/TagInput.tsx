@@ -8,6 +8,7 @@ import React, {
 
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
+import { useCompositionGuard } from '../../lib/hooks';
 import { Tag } from '../Tag/Tag';
 
 import { inputWrapperVariants, iconVariants } from './TextField';
@@ -67,8 +68,8 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     // Track focus state for helper text
     const [isFocused, setIsFocused] = useState(false);
 
-    // Track IME composition state
-    const [isComposing, setIsComposing] = useState(false);
+    const { compositionHandlers, guardKeyHandler } =
+      useCompositionGuard<HTMLInputElement>();
 
     // Track validation error
     const [validationError, setValidationError] =
@@ -170,8 +171,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     // Handle key down - Enter and Backspace
     const handleKeyDown = useCallback(
       (e: KeyboardEvent<HTMLInputElement>) => {
-        // Don't process Enter key during IME composition
-        if (e.key === 'Enter' && inputValue.trim() && !isComposing) {
+        if (e.key === 'Enter' && inputValue.trim()) {
           e.preventDefault();
           addTag(inputValue);
         }
@@ -185,7 +185,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           removeTag(tags.length - 1);
         }
       },
-      [inputValue, tags.length, addTag, removeTag, isComposing]
+      [inputValue, tags.length, addTag, removeTag]
     );
 
     // Handle blur - add current value as tag if not empty
@@ -243,11 +243,11 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
               ref={inputRef}
               value={inputValue}
               onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
+              onKeyDown={guardKeyHandler(handleKeyDown)}
               onFocus={() => setIsFocused(true)}
               onBlur={handleBlur}
-              onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={() => setIsComposing(false)}
+              onCompositionStart={compositionHandlers.onCompositionStart}
+              onCompositionEnd={compositionHandlers.onCompositionEnd}
               placeholder={showPlaceholder ? placeholder : ''}
               disabled={isDisabled}
               className={cn(

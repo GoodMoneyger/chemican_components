@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority';
 import { IconSearch, IconX } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
+import { useCompositionGuard } from '../../lib/hooks';
 
 const searchBarWrapperVariants = cva(
   `rounded-sm bg-surface-primary border-interactive-default
@@ -146,6 +147,9 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
     }
     const prevResolvedState = React.useRef(resolvedState);
 
+    const { compositionHandlers, guardKeyHandler } =
+      useCompositionGuard<HTMLInputElement>();
+
     useEffect(() => {
       // If transitioning from 'filled' to another state, clear keywords
       if (
@@ -267,7 +271,9 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                 type="text"
                 value={value}
                 onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
+                onKeyDown={guardKeyHandler(handleKeyDown)}
+                onCompositionStart={compositionHandlers.onCompositionStart}
+                onCompositionEnd={compositionHandlers.onCompositionEnd}
                 onFocus={(e) => {
                   setInputFocused(true);
                   props.onFocus?.(e);

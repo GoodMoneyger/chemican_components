@@ -106,7 +106,6 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
     const abortControllerRef = useRef<AbortController | null>(null);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-    const [isComposing, setIsComposing] = useState(false);
     const debouncedQuery = useDebounce(value, debounceMs);
 
     const filteredSuggestions = useMemo(() => {
@@ -225,10 +224,6 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (isComposing) {
-          return;
-        }
-
         if (!open) {
           onKeyDownProp?.(e);
           return;
@@ -264,14 +259,7 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
 
         onKeyDownProp?.(e);
       },
-      [
-        isComposing,
-        open,
-        highlightedIndex,
-        filteredSuggestions,
-        handleSelect,
-        onKeyDownProp,
-      ]
+      [open, highlightedIndex, filteredSuggestions, handleSelect, onKeyDownProp]
     );
 
     const shouldShowPopover =
@@ -292,8 +280,6 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            onCompositionStart={() => setIsComposing(true)}
-            onCompositionEnd={() => setIsComposing(false)}
             disabled={disabled}
             role="combobox"
             aria-expanded={shouldShowPopover}

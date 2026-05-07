@@ -85,3 +85,41 @@ Numeric.args = {
   defaultValue: '-0.5',
   step: '0.1',
 };
+
+/**
+ * IME composition guard demo.
+ *
+ * Switch your OS input source to Japanese (or any IME-based language) and
+ * type into the field. Press Enter to confirm an IME candidate — the submit
+ * counter must NOT increase. Press Enter again with no active composition,
+ * and the counter increments. With ASCII input, every Enter increments
+ * normally.
+ */
+export const ImeCompositionGuard: StoryFn<typeof TextField> = () => {
+  const [value, setValue] = React.useState('');
+  const [submits, setSubmits] = React.useState<string[]>([]);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <TextField
+        placeholder="日本語で入力して Enter で確定 / type and press Enter"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            setSubmits((prev) => [...prev, value]);
+            setValue('');
+          }
+        }}
+      />
+      <div style={{ fontSize: 14 }}>
+        Submits ({submits.length}):
+        <ul>
+          {submits.map((s, i) => (
+            <li key={i}>{s || <em>(empty)</em>}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};

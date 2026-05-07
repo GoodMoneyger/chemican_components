@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority';
 
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
+import { useCompositionGuard } from '../../lib/hooks';
 
 export const inputWrapperVariants = cva(
   `border-interactive-default bg-surface-primary
@@ -91,6 +92,10 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
       trailingIconSize = 14,
       prefixIconSize = 14,
       className,
+      onKeyDown,
+      onKeyUp,
+      onCompositionStart,
+      onCompositionEnd,
       ...props
     },
     ref
@@ -99,6 +104,21 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
     const hasTrailing = !!trailingIcon;
     const isTrailingInteractive = !!onTrailingIconClick;
     const isNumeric = props.type === 'number';
+
+    const { compositionHandlers, guardKeyHandler } =
+      useCompositionGuard<HTMLInputElement>();
+    const handleCompositionStart: React.CompositionEventHandler<
+      HTMLInputElement
+    > = (event) => {
+      compositionHandlers.onCompositionStart(event);
+      onCompositionStart?.(event);
+    };
+    const handleCompositionEnd: React.CompositionEventHandler<
+      HTMLInputElement
+    > = (event) => {
+      compositionHandlers.onCompositionEnd(event);
+      onCompositionEnd?.(event);
+    };
 
     return (
       <div className={cn(inputWrapperVariants({ invalid }), className)}>
@@ -113,6 +133,10 @@ export const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
           ref={ref}
           className={inputVariants({ hasPrefix, hasTrailing, isNumeric })}
           {...props}
+          onKeyDown={guardKeyHandler(onKeyDown)}
+          onKeyUp={guardKeyHandler(onKeyUp)}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
         />
         {trailingIcon && (
           <>
