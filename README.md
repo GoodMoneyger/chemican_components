@@ -153,8 +153,11 @@ npm run release
 This will:
 
 - **Bump the version** in `package.json`
-- **Create a Git tag (`vX.X.X`)**
+- **Generate a changelog** in `CHANGELOG.md` from conventional commits
+- **Create a Git tag (`vX.X.X`)** and a GitHub Release with the changelog
 - **Trigger CI to push a new `release` branch**
 - **Create a `release-X.X.X` tag for installing**
+
+See [VERSIONING.md](./VERSIONING.md) for details on semantic versioning and when to use each bump type.
 
 ---
