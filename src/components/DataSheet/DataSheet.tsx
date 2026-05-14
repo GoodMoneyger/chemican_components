@@ -235,47 +235,92 @@ export interface DataSheetKeyValueProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof dataSheetKeyValueVariants> {
   label: React.ReactNode;
+  /**
+   * Optional content to display on the right side of the row.
+   * Useful for secondary information like dates, user info, or metadata.
+   */
+  trailingContent?: React.ReactNode;
 }
 
 const DataSheetKeyValue = React.forwardRef<
   HTMLDivElement,
   DataSheetKeyValueProps
->(({ className, label, orientation, spacing, children, ...props }, ref) => {
-  const labelId = React.useId();
+>(
+  (
+    {
+      className,
+      label,
+      orientation,
+      spacing,
+      trailingContent,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const labelId = React.useId();
 
-  const labelledChildren = React.Children.map(children, (child) => {
-    if (!React.isValidElement(child)) return child;
-    const childProps = child.props as { 'aria-labelledby'?: string };
-    const existing = childProps['aria-labelledby'];
-    return React.cloneElement(
-      child as React.ReactElement<Record<string, unknown>>,
-      {
-        'aria-labelledby': existing ? `${existing} ${labelId}` : labelId,
-      }
+    const labelledChildren = React.Children.map(children, (child) => {
+      if (!React.isValidElement(child)) return child;
+      const childProps = child.props as { 'aria-labelledby'?: string };
+      const existing = childProps['aria-labelledby'];
+      return React.cloneElement(
+        child as React.ReactElement<Record<string, unknown>>,
+        {
+          'aria-labelledby': existing ? `${existing} ${labelId}` : labelId,
+        }
+      );
+    });
+
+    const mainContent = (
+      <>
+        <div
+          id={labelId}
+          className={cn(dataSheetKeyValueLabelVariants({ orientation }))}
+        >
+          {label}
+        </div>
+        <div className={cn(dataSheetKeyValueValueVariants({ orientation }))}>
+          {labelledChildren}
+        </div>
+      </>
     );
-  });
 
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        dataSheetKeyValueVariants({ orientation, spacing }),
-        className
-      )}
-      {...props}
-    >
+    return (
       <div
-        id={labelId}
-        className={cn(dataSheetKeyValueLabelVariants({ orientation }))}
+        ref={ref}
+        className={cn(
+          dataSheetKeyValueVariants({ orientation, spacing }),
+          trailingContent && 'flex-row! items-start justify-between',
+          className
+        )}
+        {...props}
       >
-        {label}
+        {trailingContent ? (
+          <>
+            <div
+              className={cn(
+                orientation === 'horizontal'
+                  ? 'flex items-center'
+                  : 'gap-xxs flex flex-col',
+                'min-w-0 flex-1'
+              )}
+            >
+              {mainContent}
+            </div>
+            <div
+              className="text-body-secondary ml-md text-sm shrink-0 text-right"
+            >
+              {trailingContent}
+            </div>
+          </>
+        ) : (
+          mainContent
+        )}
       </div>
-      <div className={cn(dataSheetKeyValueValueVariants({ orientation }))}>
-        {labelledChildren}
-      </div>
-    </div>
-  );
-});
+    );
+  }
+);
 DataSheetKeyValue.displayName = 'DataSheetKeyValue';
 
 export type DataSheetItemType = string | number | object;

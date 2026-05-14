@@ -1,8 +1,9 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
-import { IconPlus } from '@tabler/icons-react';
+import { IconExternalLink, IconPlus } from '@tabler/icons-react';
 
 import { Accordion } from '../Accordion';
+import { Button } from '../Button/Button';
 import { DatePicker } from '../DatePicker/DatePicker';
 import { TextArea } from '../TextArea/TextArea';
 import { TextField } from '../TextField/TextField';
@@ -645,6 +646,75 @@ KeyValueWithFormFields.parameters = {
         '`aria-labelledby`, so screen readers announce the label and ' +
         '`findByLabelText` queries resolve correctly. Inspect any input — ' +
         'its `aria-labelledby` points at the sibling label `<div>`.',
+    },
+  },
+};
+
+export const KeyValueWithTrailingContent: Story = () => (
+  <DataSheet className="w-200">
+    <DataSheet.Header>抽出条件更新履歴</DataSheet.Header>
+    <DataSheet.Section>
+      <DataSheet.KeyValue
+        label={
+          <span className="text-md font-bold text-body-primary">
+            v2025-02-18
+          </span>
+        }
+        trailingContent={
+          <div className="gap-xxs flex flex-col items-end">
+            <span>更新日 2025年02月18日</span>
+            <span>更新者 ユーザー クライアント</span>
+          </div>
+        }
+      >
+        <div className="gap-xs flex flex-col">
+          <span>
+            第32次SVHCリストへの対応。抽出条件の最適化を実施しました。
+          </span>
+          <Button
+            size="xs"
+            intent="secondary"
+            icon={IconExternalLink}
+            iconPosition="trailing"
+          >
+            法令データベースで詳細を確認
+          </Button>
+        </div>
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue
+        label={
+          <span className="text-md font-bold text-body-primary">
+            v2025-02-01
+          </span>
+        }
+        trailingContent={
+          <div className="gap-xxs flex flex-col items-end">
+            <span>更新日 2025年02月01日</span>
+            <span>更新者 ユーザー クライアント</span>
+          </div>
+        }
+      >
+        <div className="gap-xs flex flex-col">
+          <span>POPs条約附属書の改正に対応しました。</span>
+          <Button
+            size="xs"
+            intent="secondary"
+            icon={IconExternalLink}
+            iconPosition="trailing"
+          >
+            法令データベースで詳細を確認
+          </Button>
+        </div>
+      </DataSheet.KeyValue>
+    </DataSheet.Section>
+  </DataSheet>
+);
+KeyValueWithTrailingContent.parameters = {
+  docs: {
+    description: {
+      story:
+        'Use `trailingContent` prop to display right-aligned secondary information ' +
+        'like dates, user info, or metadata alongside the main content.',
     },
   },
 };

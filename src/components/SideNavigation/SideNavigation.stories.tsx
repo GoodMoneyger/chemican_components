@@ -21,7 +21,6 @@ import {
   DropdownItem,
   DropdownSeparator,
 } from '../DropdownMenu';
-
 import { TooltipProvider } from '../Tooltip';
 
 import { SideNavigation } from './SideNavigation';
