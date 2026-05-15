@@ -661,25 +661,24 @@ export const KeyValueWithTrailingContent: Story = () => (
           </span>
         }
         trailingContent={
-          <div className="gap-xxs flex flex-col items-end">
+          <div
+            className="text-body-secondary gap-xxs text-sm flex flex-col
+              items-end text-right"
+          >
             <span>更新日 2025年02月18日</span>
             <span>更新者 ユーザー クライアント</span>
           </div>
         }
       >
-        <div className="gap-xs flex flex-col">
-          <span>
-            第32次SVHCリストへの対応。抽出条件の最適化を実施しました。
-          </span>
-          <Button
-            size="xs"
-            intent="secondary"
-            icon={IconExternalLink}
-            iconPosition="trailing"
-          >
-            法令データベースで詳細を確認
-          </Button>
-        </div>
+        <span>第32次SVHCリストへの対応。抽出条件の最適化を実施しました。</span>
+        <Button
+          size="xs"
+          intent="secondary"
+          trailingIcon={IconExternalLink}
+          className="w-full"
+        >
+          法令データベースで詳細を確認
+        </Button>
       </DataSheet.KeyValue>
       <DataSheet.KeyValue
         label={
@@ -688,23 +687,24 @@ export const KeyValueWithTrailingContent: Story = () => (
           </span>
         }
         trailingContent={
-          <div className="gap-xxs flex flex-col items-end">
+          <div
+            className="text-body-secondary gap-xxs text-sm flex flex-col
+              items-end text-right"
+          >
             <span>更新日 2025年02月01日</span>
             <span>更新者 ユーザー クライアント</span>
           </div>
         }
       >
-        <div className="gap-xs flex flex-col">
-          <span>POPs条約附属書の改正に対応しました。</span>
-          <Button
-            size="xs"
-            intent="secondary"
-            icon={IconExternalLink}
-            iconPosition="trailing"
-          >
-            法令データベースで詳細を確認
-          </Button>
-        </div>
+        <span>POPs条約附属書の改正に対応しました。</span>
+        <Button
+          size="xs"
+          intent="secondary"
+          trailingIcon={IconExternalLink}
+          className="w-full"
+        >
+          法令データベースで詳細を確認
+        </Button>
       </DataSheet.KeyValue>
     </DataSheet.Section>
   </DataSheet>

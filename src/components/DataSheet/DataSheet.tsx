@@ -286,37 +286,34 @@ const DataSheetKeyValue = React.forwardRef<
       </>
     );
 
+    if (trailingContent) {
+      return (
+        <section
+          ref={ref}
+          className={cn('gap-xs py-sm flex flex-col', className)}
+          {...props}
+        >
+          <div className="gap-md flex items-start justify-between">
+            <div id={labelId}>{label}</div>
+            <div>{trailingContent}</div>
+          </div>
+          <div className={cn(dataSheetKeyValueValueVariants({ orientation }))}>
+            {labelledChildren}
+          </div>
+        </section>
+      );
+    }
+
     return (
       <div
         ref={ref}
         className={cn(
           dataSheetKeyValueVariants({ orientation, spacing }),
-          trailingContent && 'flex-row! items-start justify-between',
           className
         )}
         {...props}
       >
-        {trailingContent ? (
-          <>
-            <div
-              className={cn(
-                orientation === 'horizontal'
-                  ? 'flex items-center'
-                  : 'gap-xxs flex flex-col',
-                'min-w-0 flex-1'
-              )}
-            >
-              {mainContent}
-            </div>
-            <div
-              className="text-body-secondary ml-md text-sm shrink-0 text-right"
-            >
-              {trailingContent}
-            </div>
-          </>
-        ) : (
-          mainContent
-        )}
+        {mainContent}
       </div>
     );
   }
