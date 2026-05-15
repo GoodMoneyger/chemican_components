@@ -671,12 +671,7 @@ export const KeyValueWithTrailingContent: Story = () => (
         }
       >
         <span>第32次SVHCリストへの対応。抽出条件の最適化を実施しました。</span>
-        <Button
-          size="xs"
-          intent="secondary"
-          trailingIcon={IconExternalLink}
-          className="w-full"
-        >
+        <Button size="xs" intent="secondary" trailingIcon={IconExternalLink}>
           法令データベースで詳細を確認
         </Button>
       </DataSheet.KeyValue>
@@ -703,7 +698,7 @@ export const KeyValueWithTrailingContent: Story = () => (
           trailingIcon={IconExternalLink}
           className="w-full"
         >
-          法令データベースで詳細を確認
+          法令データベースで詳細を確認（フル幅）
         </Button>
       </DataSheet.KeyValue>
     </DataSheet.Section>

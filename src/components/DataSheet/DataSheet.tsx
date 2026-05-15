@@ -286,25 +286,33 @@ const DataSheetKeyValue = React.forwardRef<
       </>
     );
 
-    if (trailingContent) {
-      return (
-        <section
-          ref={ref}
-          className={cn('gap-xs py-sm flex flex-col', className)}
-          {...props}
+    const withTrailingContent = (
+      <section
+        ref={ref}
+        className={cn('gap-xs py-sm flex flex-col', className)}
+        {...props}
+      >
+        <div className="gap-md flex items-start justify-between">
+          <div
+            id={labelId}
+            className={cn(dataSheetKeyValueLabelVariants({ orientation }))}
+          >
+            {label}
+          </div>
+          <div>{trailingContent}</div>
+        </div>
+        <div
+          className={cn(
+            dataSheetKeyValueValueVariants({ orientation }),
+            'gap-xs flex flex-col items-start'
+          )}
         >
-          <div className="gap-md flex items-start justify-between">
-            <div id={labelId}>{label}</div>
-            <div>{trailingContent}</div>
-          </div>
-          <div className={cn(dataSheetKeyValueValueVariants({ orientation }))}>
-            {labelledChildren}
-          </div>
-        </section>
-      );
-    }
+          {labelledChildren}
+        </div>
+      </section>
+    );
 
-    return (
+    const withoutTrailingContent = (
       <div
         ref={ref}
         className={cn(
@@ -316,6 +324,8 @@ const DataSheetKeyValue = React.forwardRef<
         {mainContent}
       </div>
     );
+
+    return trailingContent ? withTrailingContent : withoutTrailingContent;
   }
 );
 DataSheetKeyValue.displayName = 'DataSheetKeyValue';
