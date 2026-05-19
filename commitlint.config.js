@@ -35,6 +35,7 @@ function getComponentTopics() {
       'input',
       'progress',
       'radiobutton',
+      'segmentedcontrol',
       'select',
       'spinner',
       'switch',
