@@ -43,8 +43,8 @@ export interface SegmentedControlGroupProps {
 }
 
 const groupVariants = cva(
-  `rounded [&>*+*]:border-surface-default flex w-full overflow-clip border
-  [&>*+*]:border-l`,
+  `rounded [&>*+*]:border-surface-default [&>*:first-child]:rounded-l
+  [&>*:last-child]:rounded-r flex w-full border [&>*+*]:border-l`,
   {
     variants: {
       invalid: {
@@ -137,8 +137,7 @@ const optionVariants = cva(
   `gap-xxs px-lg py-sm text-md
   has-[input:focus-visible]:ring-interactive-focused flex flex-1 cursor-pointer
   items-center justify-center select-none has-[input:focus-visible]:relative
-  has-[input:focus-visible]:z-10 has-[input:focus-visible]:ring-2
-  has-[input:focus-visible]:ring-inset`,
+  has-[input:focus-visible]:z-10 has-[input:focus-visible]:ring-4`,
   {
     variants: {
       selected: { true: 'font-medium', false: '' },
