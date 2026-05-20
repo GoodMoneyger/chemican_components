@@ -25,13 +25,9 @@ const Frequencies = () => {
       value={value}
       onValueChange={setValue}
     >
-      <SegmentedControl.Option value="daily">Every day</SegmentedControl.Option>
-      <SegmentedControl.Option value="weekly">
-        Every week
-      </SegmentedControl.Option>
-      <SegmentedControl.Option value="monthly">
-        Every month
-      </SegmentedControl.Option>
+      <SegmentedControl.Option value="daily">毎日</SegmentedControl.Option>
+      <SegmentedControl.Option value="weekly">毎週</SegmentedControl.Option>
+      <SegmentedControl.Option value="monthly">毎月</SegmentedControl.Option>
     </SegmentedControl.Group>
   );
 };
@@ -41,13 +37,9 @@ export const Default: Story = { render: () => <Frequencies /> };
 export const Uncontrolled: Story = {
   render: () => (
     <SegmentedControl.Group name="frequency-uncontrolled" defaultValue="weekly">
-      <SegmentedControl.Option value="daily">Every day</SegmentedControl.Option>
-      <SegmentedControl.Option value="weekly">
-        Every week
-      </SegmentedControl.Option>
-      <SegmentedControl.Option value="monthly">
-        Every month
-      </SegmentedControl.Option>
+      <SegmentedControl.Option value="daily">毎日</SegmentedControl.Option>
+      <SegmentedControl.Option value="weekly">毎週</SegmentedControl.Option>
+      <SegmentedControl.Option value="monthly">毎月</SegmentedControl.Option>
     </SegmentedControl.Group>
   ),
 };
@@ -55,13 +47,9 @@ export const Uncontrolled: Story = {
 export const Disabled: Story = {
   render: () => (
     <SegmentedControl.Group name="frequency-disabled" value="daily" disabled>
-      <SegmentedControl.Option value="daily">Every day</SegmentedControl.Option>
-      <SegmentedControl.Option value="weekly">
-        Every week
-      </SegmentedControl.Option>
-      <SegmentedControl.Option value="monthly">
-        Every month
-      </SegmentedControl.Option>
+      <SegmentedControl.Option value="daily">毎日</SegmentedControl.Option>
+      <SegmentedControl.Option value="weekly">毎週</SegmentedControl.Option>
+      <SegmentedControl.Option value="monthly">毎月</SegmentedControl.Option>
     </SegmentedControl.Group>
   ),
 };
@@ -69,12 +57,10 @@ export const Disabled: Story = {
 export const SingleOptionDisabled: Story = {
   render: () => (
     <SegmentedControl.Group name="frequency-partial" defaultValue="daily">
-      <SegmentedControl.Option value="daily">Every day</SegmentedControl.Option>
-      <SegmentedControl.Option value="weekly">
-        Every week
-      </SegmentedControl.Option>
+      <SegmentedControl.Option value="daily">毎日</SegmentedControl.Option>
+      <SegmentedControl.Option value="weekly">毎週</SegmentedControl.Option>
       <SegmentedControl.Option value="monthly" disabled>
-        Every month
+        毎月
       </SegmentedControl.Option>
     </SegmentedControl.Group>
   ),
@@ -87,13 +73,9 @@ export const Invalid: Story = {
       defaultValue="daily"
       invalid
     >
-      <SegmentedControl.Option value="daily">Every day</SegmentedControl.Option>
-      <SegmentedControl.Option value="weekly">
-        Every week
-      </SegmentedControl.Option>
-      <SegmentedControl.Option value="monthly">
-        Every month
-      </SegmentedControl.Option>
+      <SegmentedControl.Option value="daily">毎日</SegmentedControl.Option>
+      <SegmentedControl.Option value="weekly">毎週</SegmentedControl.Option>
+      <SegmentedControl.Option value="monthly">毎月</SegmentedControl.Option>
     </SegmentedControl.Group>
   ),
 };
@@ -102,13 +84,13 @@ export const WithLeadingIcons: Story = {
   render: () => (
     <SegmentedControl.Group name="frequency-icons" defaultValue="daily">
       <SegmentedControl.Option value="daily" leadingIcon={IconCalendar}>
-        Every day
+        毎日
       </SegmentedControl.Option>
       <SegmentedControl.Option value="weekly" leadingIcon={IconCalendarWeek}>
-        Every week
+        毎週
       </SegmentedControl.Option>
       <SegmentedControl.Option value="monthly" leadingIcon={IconCalendarMonth}>
-        Every month
+        毎月
       </SegmentedControl.Option>
     </SegmentedControl.Group>
   ),
