@@ -164,7 +164,7 @@ const optionVariants = cva(
       {
         selected: false,
         disabled: true,
-        class: 'bg-surface-primary/50 text-body-primary opacity-50',
+        class: 'bg-surface-disabled text-body-primary opacity-50',
       },
     ],
     defaultVariants: { selected: false, disabled: false },
