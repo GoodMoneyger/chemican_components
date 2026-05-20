@@ -18,6 +18,7 @@ export * from './Pagination';
 export * from './ProgressIndicator';
 export * from './RadioButton';
 export * from './SearchBar';
+export * from './SegmentedControl';
 export * from './Select';
 export * from './SideNavigation';
 export * from './StatusIndicator';
