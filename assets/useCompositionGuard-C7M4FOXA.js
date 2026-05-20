@@ -1,1 +1,0 @@
-import{r as t}from"./iframe-eoGo0yxG.js";const c=()=>{const o=t.useRef(!1),s=t.useCallback(()=>{o.current=!0},[]),e=t.useCallback(()=>{o.current=!1},[]),i=t.useCallback(r=>{if(r)return n=>{const a=n.nativeEvent;o.current||a.isComposing===!0||r(n)}},[]);return{compositionHandlers:{onCompositionStart:s,onCompositionEnd:e},guardKeyHandler:i,isComposingRef:o}};export{c as u};
