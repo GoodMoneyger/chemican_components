@@ -24,7 +24,7 @@ const dropdownContentVariants = cva(
 );
 
 const dropdownItemVariants = cva(
-  `focus:bg-interactive-neutral-hover px-md h-10 py-1.5 relative flex
+  `focus:bg-interactive-neutral-hover px-md min-h-10 py-1.5 relative flex
   cursor-pointer items-center transition-colors outline-none select-none
   data-[disabled]:pointer-events-none data-[disabled]:opacity-50`,
   {

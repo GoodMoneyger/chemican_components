@@ -124,7 +124,7 @@ const CommandItem = React.forwardRef<
       `hover:bg-interactive-neutral-hover
       data-[selected=true]:bg-interactive-neutral-hover
       data-[selected=true]:text-body-primary px-lg min-h-10 py-1.5 relative flex
-      cursor-default items-center outline-none select-none
+      cursor-default items-center wrap-anywhere outline-none select-none
       data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50`,
       className
     )}

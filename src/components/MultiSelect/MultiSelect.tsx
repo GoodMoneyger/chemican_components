@@ -760,6 +760,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     return {
       minWidth: effectiveMinWidth,
       maxWidth: effectiveMaxWidth,
+      popoverMaxWidth: maxWidth || '32rem',
       width: autoSize ? 'auto' : '100%',
     };
   };
@@ -991,7 +992,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
             popoverClassName
           )}
           style={{
-            maxWidth: `min(${widthConstraints.maxWidth}, 85vw)`,
+            maxWidth: `min(${widthConstraints.popoverMaxWidth}, 85vw)`,
             maxHeight: screenSize === 'mobile' ? '70vh' : '60vh',
             touchAction: 'manipulation',
           }}
@@ -1082,11 +1083,13 @@ const MultiSelectInner = <T extends string | number = string | number>(
                           disabled={Boolean(option.disabled)}
                         >
                           <Checkbox className="mr-xs" checked={isSelected} />
-                          {effectiveRenderOption({
-                            option,
-                            location: 'dropdown',
-                            isSelected,
-                          })}
+                          <span className="min-w-0 overflow-hidden">
+                            {effectiveRenderOption({
+                              option,
+                              location: 'dropdown',
+                              isSelected,
+                            })}
+                          </span>
                         </CommandItem>
                       );
                     })}
@@ -1116,11 +1119,13 @@ const MultiSelectInner = <T extends string | number = string | number>(
                         disabled={Boolean(option.disabled)}
                       >
                         <Checkbox className="mr-xs" checked={isSelected} />
-                        {effectiveRenderOption({
-                          option,
-                          location: 'dropdown',
-                          isSelected,
-                        })}
+                        <span className="min-w-0 overflow-hidden">
+                          {effectiveRenderOption({
+                            option,
+                            location: 'dropdown',
+                            isSelected,
+                          })}
+                        </span>
                       </CommandItem>
                     );
                   })}

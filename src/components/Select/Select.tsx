@@ -19,7 +19,8 @@ const selectVariants = cva(
       variant: {
         default: 'border-interactive-default p-md rounded gap-xs h-11.5 w-full',
         compact: `py-xxs px-xs rounded-sm gap-xxs
-        hover:bg-interactive-neutral-hover h-[26px] w-fit border-transparent`,
+        hover:bg-interactive-neutral-hover max-w-62 h-[26px] w-fit
+        border-transparent`,
       },
       intent: {
         primary: '',
@@ -50,14 +51,14 @@ const selectVariants = cva(
 );
 
 const selectContentVariants = cva(
-  `bg-surface-primary z-dropdown relative w-full
-  max-w-[var(--radix-select-trigger-width)]
-  min-w-[var(--radix-select-trigger-width)] overflow-hidden border`,
+  'bg-surface-primary z-dropdown relative overflow-hidden border',
   {
     variants: {
       variant: {
-        default: 'border-interactive-default max-h-96 rounded',
+        default: `border-interactive-default max-h-96 rounded
+        w-[var(--radix-select-trigger-width)]`,
         compact: `border-divider-default rounded-sm
+        min-w-[max(12rem,var(--radix-select-trigger-width))]
         shadow-[0px_5px_9px_0px_rgba(0,0,0,0.16)]`,
       },
     },
@@ -70,7 +71,7 @@ const selectContentVariants = cva(
 const selectItemVariants = cva(
   `disabled:bg-surface-disabled disabled:text-interactive-disabled
   data-[disabled]:text-interactive-disabled flex cursor-pointer items-center
-  border-0 ring-0 focus:outline-0 disabled:cursor-not-allowed
+  border-0 wrap-anywhere ring-0 focus:outline-0 disabled:cursor-not-allowed
   data-[disabled]:cursor-not-allowed`,
   {
     variants: {
@@ -181,20 +182,22 @@ export const Select = <T extends number | string = string>({
           className
         )}
       >
-        <div className="inline-flex items-center">
+        <div className="inline-flex items-center truncate">
           {renderIcon(Icon, {
-            className: cn('text-body-secondary mr-xxs h-3.5 w-3.5'),
+            className: cn('shrink-0 text-body-secondary mr-xxs h-3.5 w-3.5'),
           })}
-          <RadixSelect.Value
-            placeholder={placeholder || 'Select an option'}
-            className={cn({
-              'text-sm': variant === 'compact',
-            })}
-          />
+          <span className="truncate text-ellipsis">
+            <RadixSelect.Value
+              placeholder={placeholder || 'Select an option'}
+              className={cn('hidden', {
+                'text-sm': variant === 'compact',
+              })}
+            />
+          </span>
         </div>
         {!hideChevron && (
           <RadixSelect.Icon
-            className={cn('text-body-primary h-3.5 w-3.5', {
+            className={cn('text-body-primary h-3.5 w-3.5 shrink-0', {
               'text-body-disabled': props.disabled,
             })}
           >
