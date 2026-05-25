@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { cn } from '../../utils';
+
 export interface FormFieldProps {
   label?: React.ReactNode;
   children?: React.ReactNode;
@@ -31,7 +33,7 @@ export const FormField: React.FC<FormFieldProps> = ({
     : children;
 
   return (
-    <div className={className}>
+    <div className={cn('min-w-0', className)}>
       {label && (
         <label
           htmlFor={name}

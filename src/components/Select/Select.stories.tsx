@@ -228,7 +228,7 @@ export const WithNumericValues: StoryFn = () => {
 };
 
 export const LongOptionLabels: StoryFn = () => (
-  <div className="space-y-8">
+  <div className="max-w-80 space-y-8">
     <div>
       <h3 className="text-lg font-semibold mb-4">
         Long Labels (Default Variant)
