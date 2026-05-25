@@ -1,11 +1,13 @@
 import React from 'react';
 import { Select as RadixSelect } from 'radix-ui';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconSearch } from '@tabler/icons-react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
+
+const SEARCH_ITEM_THRESHOLD = 7;
 
 const selectVariants = cva(
   `bg-surface-primary text-body-primary disabled:border-interactive-disabled
@@ -57,7 +59,7 @@ const selectContentVariants = cva(
       variant: {
         default: `border-interactive-default max-h-96 rounded
         w-[var(--radix-select-trigger-width)]`,
-        compact: `border-divider-default rounded-sm
+        compact: `border-divider-default max-h-96 rounded-sm
         min-w-[max(12rem,var(--radix-select-trigger-width))]
         shadow-[0px_5px_9px_0px_rgba(0,0,0,0.16)]`,
       },
@@ -132,6 +134,7 @@ export interface SelectProps<T extends number | string = string>
   onValueChange?: (value: T) => void;
   intent?: 'primary' | 'secondary';
   hideChevron?: boolean;
+  searchPlaceholder?: string;
 }
 
 export const Select = <T extends number | string = string>({
@@ -145,8 +148,45 @@ export const Select = <T extends number | string = string>({
   value,
   hideChevron = false,
   onValueChange,
+  searchPlaceholder = 'Search...',
   ...props
 }: SelectProps<T>) => {
+  const [searchValue, setSearchValue] = React.useState('');
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
+
+  const selectableOptions = options.filter(
+    (opt) => !('type' in opt) || opt.type === 'Option' || opt.type === undefined
+  );
+  const showSearch = selectableOptions.length >= SEARCH_ITEM_THRESHOLD;
+
+  const getTextContent = (node: React.ReactNode): string => {
+    if (typeof node === 'string') return node;
+    if (typeof node === 'number') return String(node);
+    if (Array.isArray(node)) return node.map(getTextContent).join('');
+    if (React.isValidElement(node)) {
+      const { children } = node.props as { children?: React.ReactNode };
+      if (children) return getTextContent(children);
+    }
+    return '';
+  };
+
+  const filteredOptions =
+    showSearch && searchValue
+      ? options.filter((opt) => {
+          if (
+            'type' in opt &&
+            (opt.type === 'Group' || opt.type === 'Separator')
+          )
+            return true;
+          if ('label' in opt) {
+            return getTextContent(opt.label)
+              .toLowerCase()
+              .includes(searchValue.toLowerCase());
+          }
+          return true;
+        })
+      : options;
+
   const rootProps: React.ComponentProps<typeof RadixSelect.Root> = {
     ...props,
   };
@@ -174,7 +214,13 @@ export const Select = <T extends number | string = string>({
   }
 
   return (
-    <RadixSelect.Root {...rootProps}>
+    <RadixSelect.Root
+      {...rootProps}
+      onOpenChange={(open) => {
+        if (!open) setSearchValue('');
+        rootProps.onOpenChange?.(open);
+      }}
+    >
       <RadixSelect.Trigger
         className={cn(
           selectVariants({ variant, intent, invalid }),
@@ -214,9 +260,26 @@ export const Select = <T extends number | string = string>({
           sideOffset={-1} // Needed to not have the 1px spacing because of the borders.
           className={cn(selectContentVariants({ variant }), className)}
         >
+          {showSearch && (
+            <div
+              className="border-divider-default gap-xs px-md py-xs flex
+                items-center border-b"
+            >
+              <IconSearch className="text-body-secondary h-3.5 w-3.5 shrink-0" />
+              <input
+                ref={searchInputRef}
+                className="text-body-primary placeholder:text-body-placeholder
+                  w-full bg-transparent outline-none"
+                placeholder={searchPlaceholder}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
+              />
+            </div>
+          )}
           <RadixSelect.ScrollUpButton />
           <RadixSelect.Viewport>
-            {options.map((option, index) => {
+            {filteredOptions.map((option, index) => {
               switch (option.type) {
                 case 'Group':
                   return (

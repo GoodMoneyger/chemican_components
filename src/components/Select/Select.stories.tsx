@@ -289,6 +289,68 @@ export const LongOptionLabels: StoryFn = () => (
   </div>
 );
 
+export const WithSearch: StoryFn = () => {
+  const [value, setValue] = React.useState<string>();
+
+  const options = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'dragonfruit', label: 'Dragonfruit' },
+    { value: 'elderberry', label: 'Elderberry' },
+    { value: 'fig', label: 'Fig' },
+    { value: 'grape', label: 'Grape' },
+    { value: 'honeydew', label: 'Honeydew' },
+    { value: 'kiwi', label: 'Kiwi' },
+    { value: 'lemon', label: 'Lemon' },
+    { value: 'mango', label: 'Mango' },
+    { value: 'nectarine', label: 'Nectarine' },
+  ];
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          With Search (12 options, threshold is 7)
+        </h3>
+        <p className="text-sm mb-4">
+          Selected: <strong>{value ?? 'none'}</strong>
+        </p>
+        <Select
+          variant="default"
+          options={options}
+          value={value}
+          onValueChange={setValue}
+          placeholder="Select a fruit"
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          Without Search (fewer than 10 options)
+        </h3>
+        <Select
+          variant="default"
+          options={options.slice(0, 5)}
+          placeholder="Select a fruit"
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">
+          Compact Variant With Search
+        </h3>
+        <Select
+          variant="compact"
+          icon={IconBuilding}
+          options={options}
+          placeholder="Select a fruit"
+        />
+      </div>
+    </div>
+  );
+};
+
 export const IsolatedVsFormField: StoryFn = () => (
   <div className="space-y-8">
     <div>
