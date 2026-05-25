@@ -7,8 +7,6 @@ import { cva } from 'class-variance-authority';
 import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
-const SEARCH_ITEM_THRESHOLD = 7;
-
 const selectVariants = cva(
   `bg-surface-primary text-body-primary disabled:border-interactive-disabled
   disabled:bg-surface-disabled disabled:text-body-disabled
@@ -135,6 +133,7 @@ export interface SelectProps<T extends number | string = string>
   intent?: 'primary' | 'secondary';
   hideChevron?: boolean;
   searchPlaceholder?: string;
+  searchThreshold?: number;
 }
 
 export const Select = <T extends number | string = string>({
@@ -149,6 +148,7 @@ export const Select = <T extends number | string = string>({
   hideChevron = false,
   onValueChange,
   searchPlaceholder = 'Search...',
+  searchThreshold = 7,
   ...props
 }: SelectProps<T>) => {
   const [searchValue, setSearchValue] = React.useState('');
@@ -157,7 +157,7 @@ export const Select = <T extends number | string = string>({
   const selectableOptions = options.filter(
     (opt) => !('type' in opt) || opt.type === 'Option' || opt.type === undefined
   );
-  const showSearch = selectableOptions.length >= SEARCH_ITEM_THRESHOLD;
+  const showSearch = selectableOptions.length >= searchThreshold;
 
   const getTextContent = (node: React.ReactNode): string => {
     if (typeof node === 'string') return node;
@@ -170,22 +170,17 @@ export const Select = <T extends number | string = string>({
     return '';
   };
 
-  const filteredOptions =
-    showSearch && searchValue
-      ? options.filter((opt) => {
-          if (
-            'type' in opt &&
-            (opt.type === 'Group' || opt.type === 'Separator')
-          )
-            return true;
-          if ('label' in opt) {
-            return getTextContent(opt.label)
-              .toLowerCase()
-              .includes(searchValue.toLowerCase());
-          }
-          return true;
-        })
-      : options;
+  const isOptionVisible = (opt: SelectOption<T>): boolean => {
+    if (!showSearch || !searchValue) return true;
+    if ('type' in opt && (opt.type === 'Group' || opt.type === 'Separator'))
+      return true;
+    if ('label' in opt) {
+      return getTextContent(opt.label)
+        .toLowerCase()
+        .includes(searchValue.toLowerCase());
+    }
+    return true;
+  };
 
   const rootProps: React.ComponentProps<typeof RadixSelect.Root> = {
     ...props,
@@ -279,11 +274,15 @@ export const Select = <T extends number | string = string>({
           )}
           <RadixSelect.ScrollUpButton />
           <RadixSelect.Viewport>
-            {filteredOptions.map((option, index) => {
+            {options.map((option, index) => {
+              const visible = isOptionVisible(option);
               switch (option.type) {
                 case 'Group':
                   return (
-                    <RadixSelect.Group key={index}>
+                    <RadixSelect.Group
+                      key={index}
+                      className={cn(!visible && 'hidden')}
+                    >
                       <RadixSelect.Label>{option.label}</RadixSelect.Label>
                     </RadixSelect.Group>
                   );
@@ -291,7 +290,10 @@ export const Select = <T extends number | string = string>({
                   return (
                     <RadixSelect.Separator
                       key={index}
-                      className="border-divider-default h-px border-b"
+                      className={cn(
+                        'border-divider-default h-px border-b',
+                        !visible && 'hidden'
+                      )}
                     />
                   );
                 default:
@@ -300,10 +302,13 @@ export const Select = <T extends number | string = string>({
                       key={index}
                       value={String(option.value)}
                       disabled={option.disabled ?? false}
-                      className={selectItemVariants({
-                        variant,
-                        isSelected: value === option.value,
-                      })}
+                      className={cn(
+                        selectItemVariants({
+                          variant,
+                          isSelected: value === option.value,
+                        }),
+                        !visible && 'hidden'
+                      )}
                     >
                       {renderIcon(option.icon, {
                         className: cn('h-5 w-5', {
