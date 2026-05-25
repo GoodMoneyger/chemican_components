@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.1.0...v1.2.0) (2026-05-25)
+
+### Features
+
+* **select:** Add search bar for selects with many options ([8f6bb91](https://github.com/GoodMoneyger/chemican_components/commit/8f6bb91ca890d11c561e918abad8cecdbe2b99f5))
+
+### Bug Fixes
+
+* **multiple:** Improve content overflow handling in dropdown components ([6b6adb6](https://github.com/GoodMoneyger/chemican_components/commit/6b6adb63602a5456c11f126b4fee975718a5755f))
+* **select:** Hide filtered options via className and add searchThreshold prop ([49a29f1](https://github.com/GoodMoneyger/chemican_components/commit/49a29f1c2f129522b5dcb8ce10a459214906abee))
+
 ## [1.1.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.0.0...v1.1.0) (2026-05-20)
 
 ### Features
