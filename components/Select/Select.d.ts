@@ -29,9 +29,11 @@ export interface SelectProps<T extends number | string = string> extends Variant
     onValueChange?: (value: T) => void;
     intent?: 'primary' | 'secondary';
     hideChevron?: boolean;
+    searchPlaceholder?: string;
+    searchThreshold?: number;
 }
 export declare const Select: {
-    <T extends number | string = string>({ options, placeholder, className, icon: Icon, invalid, variant, intent, value, hideChevron, onValueChange, ...props }: SelectProps<T>): import("react/jsx-runtime").JSX.Element;
+    <T extends number | string = string>({ options, placeholder, className, icon: Icon, invalid, variant, intent, value, hideChevron, onValueChange, searchPlaceholder, searchThreshold, ...props }: SelectProps<T>): import("react/jsx-runtime").JSX.Element;
     displayName: string;
 };
 export {};
