@@ -5,5 +5,6 @@ interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'ref'> {
 }
 export declare const IconAdministratorCustom: ({ size, color, style, ...props }: IconProps) => import("react/jsx-runtime").JSX.Element;
 export declare const IconMyFilterCustom: ({ size, color, style, ...props }: IconProps) => import("react/jsx-runtime").JSX.Element;
+export declare const IconResizeCustom: ({ size, color, style, ...props }: IconProps) => import("react/jsx-runtime").JSX.Element;
 export declare const IconUserListCustom: ({ size, color, style, ...props }: IconProps) => import("react/jsx-runtime").JSX.Element;
 export {};
