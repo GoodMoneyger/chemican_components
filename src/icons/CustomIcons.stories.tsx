@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   IconAdministratorCustom,
   IconMyFilterCustom,
+  IconResizeCustom,
   IconUserListCustom,
 } from './index';
 
@@ -25,6 +26,7 @@ export default meta;
 const customIcons = [
   { name: 'IconAdministratorCustom', Component: IconAdministratorCustom },
   { name: 'IconMyFilterCustom', Component: IconMyFilterCustom },
+  { name: 'IconResizeCustom', Component: IconResizeCustom },
   { name: 'IconUserListCustom', Component: IconUserListCustom },
 ];
 
@@ -81,12 +83,14 @@ export const UsageExample: StoryObj = {
         <code>{`import {
   IconAdministratorCustom,
   IconMyFilterCustom,
+  IconResizeCustom,
   IconUserListCustom
 } from '@chemican/components/tabler-icons';
 
 // Use like any other icon
 <IconAdministratorCustom size={24} />
 <IconMyFilterCustom size={32} className="text-body-primary" />
+<IconResizeCustom size={32} className="text-body-primary" />
 <IconUserListCustom size={48} color="#ef4444" />`}</code>
       </pre>
       <p className="text-sm text-body-secondary">
