@@ -3,6 +3,7 @@ import type { SVGProps } from 'react';
 // Import SVG components
 import AdministratorSvg from '../assets/icons/administrator.svg?react';
 import MyFilterSvg from '../assets/icons/my_filter.svg?react';
+import ResizeSvg from '../assets/icons/resize.svg?react';
 import UserListSvg from '../assets/icons/user_list.svg?react';
 
 // Icon props interface matching Tabler icons
@@ -38,4 +39,5 @@ const createIconComponent = (
 // Order alphabetically, alway with `Icon{MyIcon}Custom`
 export const IconAdministratorCustom = createIconComponent(AdministratorSvg);
 export const IconMyFilterCustom = createIconComponent(MyFilterSvg);
+export const IconResizeCustom = createIconComponent(ResizeSvg);
 export const IconUserListCustom = createIconComponent(UserListSvg);
