@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.2.0...v1.3.0) (2026-05-27)
+
+### Features
+
+* **Icon:** Add custom resize-icon ([#138](https://github.com/GoodMoneyger/chemican_components/issues/138)) ([69b6c4c](https://github.com/GoodMoneyger/chemican_components/commit/69b6c4c1c9821ac635c1d01aa715f605be15b159))
+
 ## [1.2.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.1.0...v1.2.0) (2026-05-25)
 
 ### Features
