@@ -25,8 +25,10 @@ Command.displayName = CommandPrimitive.displayName;
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+    icon?: React.ReactNode;
+  }
+>(({ className, icon, ...props }, ref) => (
   <div
     className="border-divider-default py-sm px-md flex items-center border-b"
     cmdk-input-wrapper=""
@@ -41,7 +43,7 @@ const CommandInput = React.forwardRef<
         has-[:focus]:border-[var(--chemican-green-800)] has-[:focus]:ring-4
         has-[:focus]:outline-0"
     >
-      <IconSearch className="mr-xxs h-3.5 w-3.5 shrink-0" />
+      {icon ?? <IconSearch className="mr-xxs h-3.5 w-3.5 shrink-0" />}
       <CommandPrimitive.Input
         ref={ref}
         className={cn(

@@ -1,6 +1,6 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconPlus } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
 import { Button } from '../Button';
@@ -350,6 +350,34 @@ interface MultiSelectProps<T = string | number>
   onValueChange?: (value: T[]) => void;
 
   /**
+   * If true, allows the user to create new custom values via the search input.
+   * An "Add '{value}'" suggestion appears when typing a value that doesn't exist.
+   * Custom values are shown in a separate group and removed when deselected and applied.
+   * Optional, defaults to false.
+   */
+  creatable?: boolean;
+
+  /**
+   * Label template for the create option suggestion.
+   * Receives the search value as a parameter.
+   * Optional, defaults to (value) => `「${value}」を追加`.
+   */
+  creatableLabel?: (value: string) => React.ReactNode;
+
+  /**
+   * Heading for the group containing custom-created items.
+   * Optional, defaults to "新しい項目".
+   */
+  customGroupLabel?: string;
+
+  /**
+   * Heading for the group containing the original options when custom items exist.
+   * Only shown when there are custom items to distinguish them from existing ones.
+   * Optional, defaults to "既存の項目".
+   */
+  existingGroupLabel?: string;
+
+  /**
    * Callback fired when the Apply button is clicked in the popover footer.
    * Receives the array of currently selected values.
    * Optional, called only when user confirms their selection.
@@ -425,6 +453,10 @@ const MultiSelectInner = <T extends string | number = string | number>(
     customTrigger,
     selectionDisplayMode = 'default',
     hideSelection = false,
+    creatable = false,
+    creatableLabel = (value: string) => `「${value}」を追加`,
+    customGroupLabel = '新しい項目',
+    existingGroupLabel = '既存の項目',
     ...props
   }: MultiSelectProps<T>,
   ref: React.Ref<MultiSelectRef<T>>
@@ -432,6 +464,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
   const [selectedValues, setSelectedValues] = React.useState<T[]>(defaultValue);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
+  const [customOptions, setCustomOptions] = React.useState<
+    MultiSelectOption<T>[]
+  >([]);
 
   const [politeMessage, setPoliteMessage] = React.useState('');
   const [assertiveMessage, setAssertiveMessage] = React.useState('');
@@ -478,6 +513,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
 
   const resetToDefault = React.useCallback(() => {
     setSelectedValues(defaultValue);
+    setCustomOptions([]);
     setIsPopoverOpen(false);
     setSearchValue('');
     onValueChange(defaultValue);
@@ -571,13 +607,18 @@ const MultiSelectInner = <T extends string | number = string | number>(
   const responsiveSettings = getResponsiveSettings();
 
   const getAllOptions = React.useCallback((): MultiSelectOption<T>[] => {
-    if (options.length === 0) return [];
-    let allOptions: MultiSelectOption<T>[];
-    if (isGroupedOptions(options)) {
-      allOptions = options.flatMap((group) => group.options);
+    let baseOptions: MultiSelectOption<T>[];
+    if (options.length === 0) {
+      baseOptions = [];
+    } else if (isGroupedOptions(options)) {
+      baseOptions = options.flatMap((group) => group.options);
     } else {
-      allOptions = options;
+      baseOptions = options as MultiSelectOption<T>[];
     }
+
+    // Include custom options
+    const allOptions = [...baseOptions, ...customOptions];
+
     const valueSet = new Set<T>();
     const duplicates: T[] = [];
     const uniqueOptions: MultiSelectOption<T>[] = [];
@@ -606,7 +647,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
       );
     }
     return deduplicateOptions ? uniqueOptions : allOptions;
-  }, [options, deduplicateOptions, isGroupedOptions]);
+  }, [options, deduplicateOptions, isGroupedOptions, customOptions]);
 
   const getOptionByValue = React.useCallback(
     (value: T): MultiSelectOption<T> | undefined => {
@@ -671,9 +712,36 @@ const MultiSelectInner = <T extends string | number = string | number>(
     }
   };
 
+  const handleCreateOption = (value: string) => {
+    if (disabled || !creatable) return;
+    const typedValue = value as T;
+    const newOption: MultiSelectOption<T> = {
+      value: typedValue,
+      label: value,
+    };
+    setCustomOptions((prev) => [...prev, newOption]);
+    const newSelectedValues = [...selectedValues, typedValue];
+    setSelectedValues(newSelectedValues);
+    onValueChange(newSelectedValues);
+    setSearchValue('');
+    if (closeOnSelect) {
+      setIsPopoverOpen(false);
+    }
+  };
+
+  const purgeUnselectedCustomOptions = React.useCallback(
+    (currentSelected: T[]) => {
+      setCustomOptions((prev) =>
+        prev.filter((opt) => currentSelected.includes(opt.value))
+      );
+    },
+    []
+  );
+
   const handleClear = () => {
     if (disabled) return;
     setSelectedValues([]);
+    setCustomOptions([]);
     onApplySelection([]);
     onValueChange([]);
   };
@@ -741,6 +809,22 @@ const MultiSelectInner = <T extends string | number = string | number>(
 
   // Use provided renderOption or fall back to default
   const effectiveRenderOption = renderOption || defaultRenderOption;
+
+  const showCreateOption = React.useMemo(() => {
+    if (!creatable || !searchValue.trim()) return false;
+    const trimmed = searchValue.trim();
+    const allOpts = getAllOptions();
+    return !allOpts.some(
+      (opt) =>
+        String(opt.value).toLowerCase() === trimmed.toLowerCase() ||
+        opt.label.toLowerCase() === trimmed.toLowerCase()
+    );
+  }, [creatable, searchValue, getAllOptions]);
+
+  const selectedCustomOptions = React.useMemo(
+    () => customOptions.filter((opt) => selectedValues.includes(opt.value)),
+    [customOptions, selectedValues]
+  );
 
   React.useEffect(() => {
     if (!resetOnDefaultValueChange) return;
@@ -1011,6 +1095,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   onValueChange={setSearchValue}
                   aria-label={searchAriaLabel}
                   aria-describedby={`${multiSelectId}-search-help`}
+                  {...(creatable && {
+                    icon: <IconPlus className="mr-xxs h-3.5 w-3.5 shrink-0" />,
+                  })}
                 />
               </header>
             )}
@@ -1022,7 +1109,25 @@ const MultiSelectInner = <T extends string | number = string | number>(
               )}
               style={{ overscrollBehaviorY: 'contain' }}
             >
-              <CommandEmpty>{emptyIndicator}</CommandEmpty>
+              {!showCreateOption && (
+                <CommandEmpty>{emptyIndicator}</CommandEmpty>
+              )}
+
+              {showCreateOption && (
+                <CommandGroup>
+                  <CommandItem
+                    key="__create__"
+                    value={`__create__:${searchValue.trim()}`}
+                    onSelect={() => handleCreateOption(searchValue.trim())}
+                    className="cursor-pointer"
+                  >
+                    <IconPlus className="mr-xs h-4 w-4" />
+                    <span className="italic">
+                      {creatableLabel(searchValue.trim())}
+                    </span>
+                  </CommandItem>
+                </CommandGroup>
+              )}
 
               {!hideSelectAll && !searchValue && (
                 <CommandGroup>
@@ -1058,6 +1163,34 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   </CommandItem>
                 </CommandGroup>
               )}
+
+              {selectedCustomOptions.length > 0 && (
+                <CommandGroup heading={customGroupLabel}>
+                  {selectedCustomOptions.map((option) => {
+                    const isSelected = selectedValues.includes(option.value);
+                    return (
+                      <CommandItem
+                        key={`custom-${option.value}`}
+                        value={`${option.value}:${option.label}`}
+                        onSelect={() => toggleOption(option.value)}
+                        role="option"
+                        aria-selected={isSelected}
+                        className="cursor-pointer"
+                      >
+                        <Checkbox className="mr-xs" checked={isSelected} />
+                        <span className="min-w-0 overflow-hidden">
+                          {effectiveRenderOption({
+                            option,
+                            location: 'dropdown',
+                            isSelected,
+                          })}
+                        </span>
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+              )}
+
               {isGroupedOptions(options) ? (
                 options.map((group) => (
                   <CommandGroup key={group.heading} heading={group.heading}>
@@ -1096,7 +1229,13 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   </CommandGroup>
                 ))
               ) : (
-                <CommandGroup>
+                <CommandGroup
+                  heading={
+                    selectedCustomOptions.length > 0
+                      ? existingGroupLabel
+                      : undefined
+                  }
+                >
                   {options.map((option) => {
                     const isSelected = selectedValues.includes(option.value);
                     return (
@@ -1153,6 +1292,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   size="xs"
                   className="min-w-auto"
                   onClick={() => {
+                    purgeUnselectedCustomOptions(selectedValues);
                     onApplySelection(selectedValues);
                     setIsPopoverOpen(false);
                   }}

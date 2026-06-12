@@ -898,3 +898,35 @@ export const InlineSelectionComparison: Story = {
     },
   },
 };
+
+export const Creatable: Story = {
+  args: {
+    options: basicOptions,
+    placeholder: 'Select or create...',
+    searchPlaceholder: 'Add or search...',
+    creatable: true,
+    creatableLabel: (value: string) => `Add '${value}'`,
+    customGroupLabel: 'New items',
+    existingGroupLabel: 'Existing items',
+    onValueChange: (value: unknown[]) => console.log('Changed:', value),
+    onApplySelection: (value: unknown[]) => console.log('Applied:', value),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `creatable` is enabled, the search input doubles as a creation input. Typing a value that does not exist in the options shows an "Add \'value\'" suggestion at the top. Once selected, the custom item appears in a "New items" group. Custom items are removed when deselected and the selection is applied.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+
+<MultiSelect
+  options={options}
+  placeholder="Select or create..."
+  searchPlaceholder="Add or search..."
+  creatable
+/>`,
+      },
+    },
+  },
+};
