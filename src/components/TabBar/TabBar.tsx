@@ -29,14 +29,14 @@ const tabBarVariants = cva('inline-flex', {
 const tabVariants = cva(
   `text-body-primary border-divider-default data-[state=active]:font-bold
   disabled:text-interactive-disabled after:left-0 after:h-0
-  disabled:hover:after:h-0 relative inline-flex cursor-pointer items-center
-  justify-center border-b leading-[100%] tracking-[0] whitespace-nowrap
-  transition-colors after:absolute after:bottom-[-1px] after:w-full
-  after:transition-all after:content-[''] hover:after:h-[2px]
-  hover:after:bg-[var(--chemican-green-800)] disabled:cursor-not-allowed
-  data-[state=active]:text-[var(--chemican-green-800)]
-  data-[state=active]:after:h-[2px]
-  data-[state=active]:after:bg-[var(--chemican-green-800)]`,
+  disabled:hover:after:h-0 hover:after:bg-shape-interactive-primary-default
+  data-[state=active]:text-interactive-primary-default
+  data-[state=active]:after:bg-shape-interactive-primary-selected relative
+  inline-flex cursor-pointer items-center justify-center border-b leading-[100%]
+  tracking-[0] whitespace-nowrap transition-colors after:absolute
+  after:bottom-[-1px] after:w-full after:transition-all after:content-['']
+  hover:after:h-[2px] disabled:cursor-not-allowed
+  data-[state=active]:after:h-[2px]`,
   {
     variants: {
       size: {
@@ -52,9 +52,9 @@ const tabVariants = cva(
 
 // More button variants
 const moreButtonVariants = cva(
-  `text-body-primary border-divider-default relative inline-flex cursor-pointer
-  items-center justify-center border-b leading-[100%] tracking-[0]
-  whitespace-nowrap transition-colors hover:text-[var(--chemican-green-800)]`,
+  `text-body-primary border-divider-default hover:text-interactive-primary-hover
+  relative inline-flex cursor-pointer items-center justify-center border-b
+  leading-[100%] tracking-[0] whitespace-nowrap transition-colors`,
   {
     variants: {
       size: {
@@ -239,7 +239,7 @@ export const TabBar = React.forwardRef<
                   className={cn(
                     moreButtonVariants({ size: effectiveSize }),
                     activeInOverflow &&
-                      'font-bold text-[var(--chemican-green-800)]'
+                      'font-bold text-interactive-primary-default'
                   )}
                 >
                   <IconDotsVertical
@@ -254,7 +254,7 @@ export const TabBar = React.forwardRef<
                   const { value, disabled, asChild, children } = tab.props;
                   const itemClassName = cn(
                     value === activeValue &&
-                      'font-bold text-[var(--chemican-green-800)]'
+                      'font-bold text-interactive-primary-default'
                   );
 
                   if (asChild && React.isValidElement(children)) {

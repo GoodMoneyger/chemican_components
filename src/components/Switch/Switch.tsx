@@ -26,10 +26,9 @@ const Switch = React.forwardRef<
         data-[state=unchecked]:disabled:bg-interactive-disabled h-6 w-10
         data-[state=checked]:enabled:hover:bg-shape-interactive-primary-hover
         data-[state=unchecked]:enabled:hover:bg-shape-accent-gray-strong
-        inline-flex shrink-0 cursor-pointer items-center rounded-full
-        transition-all outline-none focus-visible:ring-[3px]
-        focus-visible:ring-[var(--token-color-background-interactive-neutral-active)]
-        disabled:cursor-not-allowed`,
+        focus-visible:ring-interactive-focused inline-flex shrink-0
+        cursor-pointer items-center rounded-full transition-all outline-none
+        focus-visible:ring-[3px] disabled:cursor-not-allowed`,
         className
       )}
       {...props}
