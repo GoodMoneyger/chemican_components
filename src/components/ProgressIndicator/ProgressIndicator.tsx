@@ -53,7 +53,7 @@ const Linear = React.forwardRef<HTMLDivElement, LinearProgressProps>(
       >
         <RadixProgress.Indicator
           className={cn(
-            'bg-shape-accent-green-strong h-full transition-transform',
+            'bg-shape-interactive-primary-default h-full transition-transform',
             {
               'animate-indeterminate': indeterminate,
             }
@@ -141,7 +141,7 @@ const Circular = React.forwardRef<HTMLDivElement, CircularProgressProps>(
             cx="50"
             cy="50"
             r={radii[size]}
-            stroke="var(--token-color-shape-accent-green-strong)"
+            stroke="var(--token-color-shape-interactive-primary-default)"
             strokeWidth={strokeWidths[size]}
             strokeLinecap="round"
             strokeDasharray="141.37 282.74"

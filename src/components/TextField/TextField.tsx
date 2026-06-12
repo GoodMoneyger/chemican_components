@@ -10,9 +10,8 @@ export const inputWrapperVariants = cva(
   `border-interactive-default bg-surface-primary
   has-[>input:enabled]:hover:border-interactive-hover
   has-[:disabled]:bg-surface-disabled has-[:focus]:ring-interactive-focused
-  h-11.5 rounded relative flex w-full items-center border
-  has-[:focus]:border-[var(--chemican-green-800)] has-[:focus]:ring-4
-  has-[:focus]:outline-0`,
+  h-11.5 rounded has-[:focus]:border-interactive-primary-default relative flex
+  w-full items-center border has-[:focus]:ring-4 has-[:focus]:outline-0`,
   {
     variants: {
       invalid: {
