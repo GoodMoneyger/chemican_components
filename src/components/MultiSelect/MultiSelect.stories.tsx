@@ -898,3 +898,52 @@ export const InlineSelectionComparison: Story = {
     },
   },
 };
+
+const manyOptions: MultiSelectOption[] = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' },
+  { label: 'Date', value: 'date' },
+  { label: 'Elderberry', value: 'elderberry' },
+  { label: 'Fig', value: 'fig' },
+  { label: 'Grape', value: 'grape' },
+  { label: 'Honeydew', value: 'honeydew' },
+  { label: 'Kiwi', value: 'kiwi' },
+  { label: 'Lemon', value: 'lemon' },
+  { label: 'Mango', value: 'mango' },
+  { label: 'Nectarine', value: 'nectarine' },
+  { label: 'Orange', value: 'orange' },
+  { label: 'Papaya', value: 'papaya' },
+  { label: 'Quince', value: 'quince' },
+  { label: 'Raspberry', value: 'raspberry' },
+  { label: 'Strawberry', value: 'strawberry' },
+  { label: 'Tangerine', value: 'tangerine' },
+  { label: 'Watermelon', value: 'watermelon' },
+  { label: 'Yuzu', value: 'yuzu' },
+];
+
+export const MaxDisplayedOptions: Story = {
+  args: {
+    options: manyOptions,
+    placeholder: 'Select fruits...',
+    maxDisplayedOptions: 5,
+    moreOptionsLabel: (count: number) => `Search to see ${count} more...`,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `maxDisplayedOptions` is set, only the first N options are shown by default. A hint indicates how many more are available. Selected items always remain visible. Typing in the search input reveals all matching options.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+
+<MultiSelect
+  options={options}
+  placeholder="Select fruits..."
+  maxDisplayedOptions={5}
+/>`,
+      },
+    },
+  },
+};
