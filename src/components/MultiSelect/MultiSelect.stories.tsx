@@ -71,6 +71,10 @@ const meta: Meta<typeof MultiSelect> = {
       control: 'boolean',
       description: 'Whether to filter by both value and label when searching',
     },
+    loading: {
+      control: 'boolean',
+      description: 'Whether to show a loading indicator inside the dropdown',
+    },
   },
 };
 
@@ -942,6 +946,166 @@ export const MaxDisplayedOptions: Story = {
   options={options}
   placeholder="Select fruits..."
   maxDisplayedOptions={5}
+/>`,
+      },
+    },
+  },
+};
+
+// Full dataset that lives "on the server" for the server-side search example.
+const serverDataset: MultiSelectOption[] = Array.from(
+  { length: 60 },
+  (_, i) => ({
+    label: `SDS Document ${i + 1}`,
+    value: `sds-${i + 1}`,
+  })
+);
+
+const WithServerSideSearchComponent = () => {
+  // Only the first page of results is loaded initially.
+  const [options, setOptions] = React.useState<MultiSelectOption[]>(
+    serverDataset.slice(0, 10)
+  );
+  const [loading, setLoading] = React.useState(false);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+
+  // Simulate a server query: filter the full dataset after a short delay.
+  // Because onSearchValueChange is provided, the component skips its own
+  // client-side filtering and renders exactly what we pass back in `options`.
+  const handleSearchValueChange = (search: string) => {
+    setLoading(true);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      const filtered = serverDataset.filter((option) =>
+        option.label.toLowerCase().includes(search.toLowerCase())
+      );
+      setOptions(filtered.slice(0, 10));
+      setLoading(false);
+    }, 800);
+  };
+
+  return (
+    <MultiSelect
+      options={options}
+      loading={loading}
+      onSearchValueChange={handleSearchValueChange}
+      hideSelectAll
+      placeholder="Select SDS..."
+      searchPlaceholder="サーバー検索..."
+      emptyIndicator="該当する項目がありません"
+    />
+  );
+};
+
+export const WithServerSideSearch: Story = {
+  render: () => <WithServerSideSearchComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates server-side search. `onSearchValueChange` fires as the user types so the parent can fetch matching options, and `loading` shows a spinner inside the dropdown while the request is in flight. When `onSearchValueChange` is provided the built-in client-side filtering is disabled, so the parent fully controls `options`.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+import { useRef, useState } from 'react';
+
+const [options, setOptions] = useState(initialOptions);
+const [loading, setLoading] = useState(false);
+const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+const handleSearchValueChange = (search: string) => {
+  setLoading(true);
+  if (timerRef.current) clearTimeout(timerRef.current);
+  timerRef.current = setTimeout(async () => {
+    const results = await fetchSdsFromServer(search); // your API call
+    setOptions(results);
+    setLoading(false);
+  }, 300);
+};
+
+<MultiSelect
+  options={options}
+  loading={loading}
+  onSearchValueChange={handleSearchValueChange}
+  hideSelectAll
+  placeholder="Select SDS..."
+/>`,
+      },
+    },
+  },
+};
+
+const WithServerSideSearchAndMaxDisplayedComponent = () => {
+  // Initial page intentionally larger than maxDisplayedOptions so the
+  // truncation hint is visible before the user starts searching.
+  const [options, setOptions] =
+    React.useState<MultiSelectOption[]>(serverDataset);
+  const [loading, setLoading] = React.useState(false);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+
+  const handleSearchValueChange = (search: string) => {
+    setLoading(true);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      const filtered = serverDataset.filter((option) =>
+        option.label.toLowerCase().includes(search.toLowerCase())
+      );
+      setOptions(filtered);
+      setLoading(false);
+    }, 800);
+  };
+
+  return (
+    <MultiSelect
+      options={options}
+      loading={loading}
+      onSearchValueChange={handleSearchValueChange}
+      maxDisplayedOptions={5}
+      moreOptionsLabel={(count) => `検索して他${count}件を表示`}
+      hideSelectAll
+      placeholder="Select SDS..."
+      searchPlaceholder="サーバー検索..."
+      emptyIndicator="該当する項目がありません"
+    />
+  );
+};
+
+export const WithServerSideSearchAndMaxDisplayed: Story = {
+  render: () => <WithServerSideSearchAndMaxDisplayedComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Combines `maxDisplayedOptions` with server-side search. Before searching, only the first N server-returned options are shown with a "type to see more" hint. As soon as the user types, `onSearchValueChange` fetches matching options (with `loading` shown meanwhile) and the truncation is lifted so every returned match is visible.',
+      },
+      source: {
+        code: `import { MultiSelect } from '@chemican/components';
+import { useRef, useState } from 'react';
+
+const [options, setOptions] = useState(initialOptions);
+const [loading, setLoading] = useState(false);
+const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+const handleSearchValueChange = (search: string) => {
+  setLoading(true);
+  if (timerRef.current) clearTimeout(timerRef.current);
+  timerRef.current = setTimeout(async () => {
+    setOptions(await fetchSdsFromServer(search));
+    setLoading(false);
+  }, 300);
+};
+
+<MultiSelect
+  options={options}
+  loading={loading}
+  onSearchValueChange={handleSearchValueChange}
+  maxDisplayedOptions={5}
+  hideSelectAll
+  placeholder="Select SDS..."
 />`,
       },
     },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconLoader2 } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
 import { Button } from '../Button';
@@ -350,6 +350,27 @@ interface MultiSelectProps<T = string | number>
   onValueChange?: (value: T[]) => void;
 
   /**
+   * Callback fired whenever the search input value changes.
+   * Use this to drive server-side search. When provided, the component disables
+   * its built-in client-side filtering so the parent fully controls `options`.
+   * Optional.
+   */
+  onSearchValueChange?: (search: string) => void;
+
+  /**
+   * If true, shows a loading indicator inside the dropdown instead of the
+   * options list. Useful while options are being fetched (e.g. server-side
+   * search). Optional, defaults to false.
+   */
+  loading?: boolean;
+
+  /**
+   * Label displayed next to the spinner while `loading` is true.
+   * Optional, defaults to "読み込み中..." (Loading...).
+   */
+  loadingLabel?: React.ReactNode;
+
+  /**
    * Maximum number of options to display before the user starts searching.
    * When set and the total exceeds this number, only the first N options are shown
    * with an indicator for the remaining items. Selected items always remain visible.
@@ -403,6 +424,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
   {
     options,
     onValueChange = (value) => value,
+    onSearchValueChange,
+    loading = false,
+    loadingLabel = '読み込み中...',
     onApplySelection = (value) => value,
     variant,
     defaultValue = [] as T[],
@@ -762,7 +786,13 @@ const MultiSelectInner = <T extends string | number = string | number>(
   const effectiveRenderOption = renderOption || defaultRenderOption;
 
   const isSearching = Boolean(searchValue.trim());
-  const shouldTruncate = maxDisplayedOptions !== undefined && !isSearching;
+  // In client-side mode, typing reveals every match so truncation is lifted while
+  // searching. In server-side mode (onSearchValueChange) the parent already
+  // returns a limited page, so keep truncating the displayed results even while
+  // searching.
+  const shouldTruncate =
+    maxDisplayedOptions !== undefined &&
+    (!isSearching || Boolean(onSearchValueChange));
 
   React.useEffect(() => {
     if (!resetOnDefaultValueChange) return;
@@ -1020,7 +1050,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
           }}
           align="start"
         >
-          <Command filter={filterItems}>
+          {/* When the parent handles search (onSearchValueChange), disable the
+              built-in client-side filtering so it controls `options` directly. */}
+          <Command filter={filterItems} shouldFilter={!onSearchValueChange}>
             {searchable && (
               <header>
                 <div id={`${multiSelectId}-search-help`} className="sr-only">
@@ -1030,7 +1062,10 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   placeholder={searchPlaceholder}
                   onKeyDown={handleInputKeyDown}
                   value={searchValue}
-                  onValueChange={setSearchValue}
+                  onValueChange={(value) => {
+                    setSearchValue(value);
+                    onSearchValueChange?.(value);
+                  }}
                   aria-label={searchAriaLabel}
                   aria-describedby={`${multiSelectId}-search-help`}
                 />
@@ -1044,9 +1079,20 @@ const MultiSelectInner = <T extends string | number = string | number>(
               )}
               style={{ overscrollBehaviorY: 'contain' }}
             >
-              <CommandEmpty>{emptyIndicator}</CommandEmpty>
+              {loading && (
+                <div
+                  role="status"
+                  className="px-md py-lg text-body-secondary gap-xs text-sm flex
+                    items-center justify-center"
+                >
+                  <IconLoader2 className="h-4 w-4 animate-spin" />
+                  {loadingLabel}
+                </div>
+              )}
 
-              {!hideSelectAll && !searchValue && (
+              {!loading && <CommandEmpty>{emptyIndicator}</CommandEmpty>}
+
+              {!loading && !hideSelectAll && !searchValue && (
                 <CommandGroup>
                   <CommandItem
                     key="all"
@@ -1080,131 +1126,77 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   </CommandItem>
                 </CommandGroup>
               )}
-              {isGroupedOptions(options) ? (
-                (() => {
-                  let rendered = 0;
-                  const totalOptions = options.reduce(
-                    (sum, g) => sum + g.options.length,
-                    0
-                  );
-                  const groups = options.map((group) => {
-                    const visibleOptions = shouldTruncate
-                      ? group.options.filter(
-                          (opt) =>
-                            rendered++ < maxDisplayedOptions! ||
-                            selectedValues.includes(opt.value)
-                        )
-                      : group.options;
-                    return { ...group, options: visibleOptions };
-                  });
-                  const visibleCount = groups.reduce(
-                    (sum, g) => sum + g.options.length,
-                    0
-                  );
-                  const hiddenCount = totalOptions - visibleCount;
-                  return (
-                    <>
-                      {groups.map((group) => {
-                        if (group.options.length === 0) return null;
-                        return (
-                          <CommandGroup
-                            key={group.heading}
-                            heading={group.heading}
-                          >
-                            {group.options.map((option) => {
-                              const isSelected = selectedValues.includes(
-                                option.value
-                              );
-                              return (
-                                <CommandItem
-                                  key={option.value}
-                                  value={`${option.value}:${option.label}`}
-                                  onSelect={() => toggleOption(option.value)}
-                                  role="option"
-                                  aria-selected={isSelected}
-                                  aria-disabled={option.disabled ?? false}
-                                  aria-label={`${option.label}${
-                                    isSelected ? ', selected' : ', not selected'
-                                  }${option.disabled ? ', disabled' : ''}`}
-                                  className={cn(
-                                    'cursor-pointer',
-                                    option.disabled &&
-                                      `text-interactive-disabled cursor-not-allowed opacity-100 data-[disabled=true]:opacity-100`
-                                  )}
-                                  disabled={Boolean(option.disabled)}
-                                >
-                                  <Checkbox
-                                    className="mr-xs"
-                                    checked={isSelected}
-                                  />
-                                  <span className="min-w-0 overflow-hidden">
-                                    {effectiveRenderOption({
-                                      option,
-                                      location: 'dropdown',
-                                      isSelected,
-                                    })}
-                                  </span>
-                                </CommandItem>
-                              );
-                            })}
-                          </CommandGroup>
-                        );
-                      })}
-                      {shouldTruncate && hiddenCount > 0 && (
-                        <div className="text-body-secondary px-lg py-sm text-sm italic">
-                          {moreOptionsLabel(hiddenCount)}
-                        </div>
-                      )}
-                    </>
-                  );
-                })()
-              ) : (
-                <CommandGroup>
-                  {(() => {
-                    const visibleOptions = shouldTruncate
-                      ? options.filter(
-                          (opt, i) =>
-                            i < maxDisplayedOptions! ||
-                            selectedValues.includes(opt.value)
-                        )
-                      : options;
-                    const hiddenCount = options.length - visibleOptions.length;
+              {!loading &&
+                (isGroupedOptions(options) ? (
+                  (() => {
+                    let rendered = 0;
+                    const totalOptions = options.reduce(
+                      (sum, g) => sum + g.options.length,
+                      0
+                    );
+                    const groups = options.map((group) => {
+                      const visibleOptions = shouldTruncate
+                        ? group.options.filter(
+                            (opt) =>
+                              rendered++ < maxDisplayedOptions! ||
+                              selectedValues.includes(opt.value)
+                          )
+                        : group.options;
+                      return { ...group, options: visibleOptions };
+                    });
+                    const visibleCount = groups.reduce(
+                      (sum, g) => sum + g.options.length,
+                      0
+                    );
+                    const hiddenCount = totalOptions - visibleCount;
                     return (
                       <>
-                        {visibleOptions.map((option) => {
-                          const isSelected = selectedValues.includes(
-                            option.value
-                          );
+                        {groups.map((group) => {
+                          if (group.options.length === 0) return null;
                           return (
-                            <CommandItem
-                              key={option.value}
-                              value={`${option.value}:${option.label}`}
-                              onSelect={() => toggleOption(option.value)}
-                              role="option"
-                              aria-selected={isSelected}
-                              aria-disabled={option.disabled ?? false}
-                              aria-label={`${option.label}${
-                                isSelected ? ', selected' : ', not selected'
-                              }${option.disabled ? ', disabled' : ''}`}
-                              className={cn(
-                                'cursor-pointer',
-                                option.disabled &&
-                                  `text-interactive-disabled cursor-not-allowed opacity-100 data-[disabled=true]:opacity-100`
-                              )}
-                              disabled={Boolean(option.disabled)}
+                            <CommandGroup
+                              key={group.heading}
+                              heading={group.heading}
                             >
-                              <Checkbox
-                                className="mr-xs"
-                                checked={isSelected}
-                              />
-                              <span className="min-w-0 overflow-hidden">
-                                {effectiveRenderOption({
-                                  option,
-                                  location: 'dropdown',
-                                  isSelected,
-                                })}
-                              </span>
-                            </CommandItem>
+                              {group.options.map((option) => {
+                                const isSelected = selectedValues.includes(
+                                  option.value
+                                );
+                                return (
+                                  <CommandItem
+                                    key={option.value}
+                                    value={`${option.value}:${option.label}`}
+                                    onSelect={() => toggleOption(option.value)}
+                                    role="option"
+                                    aria-selected={isSelected}
+                                    aria-disabled={option.disabled ?? false}
+                                    aria-label={`${option.label}${
+                                      isSelected
+                                        ? ', selected'
+                                        : ', not selected'
+                                    }${option.disabled ? ', disabled' : ''}`}
+                                    className={cn(
+                                      'cursor-pointer',
+                                      option.disabled &&
+                                        `text-interactive-disabled cursor-not-allowed opacity-100 data-[disabled=true]:opacity-100`
+                                    )}
+                                    disabled={Boolean(option.disabled)}
+                                  >
+                                    <Checkbox
+                                      className="mr-xs"
+                                      checked={isSelected}
+                                    />
+                                    <span className="min-w-0 overflow-hidden">
+                                      {effectiveRenderOption({
+                                        option,
+                                        location: 'dropdown',
+                                        isSelected,
+                                      })}
+                                    </span>
+                                  </CommandItem>
+                                );
+                              })}
+                            </CommandGroup>
                           );
                         })}
                         {shouldTruncate && hiddenCount > 0 && (
@@ -1214,9 +1206,67 @@ const MultiSelectInner = <T extends string | number = string | number>(
                         )}
                       </>
                     );
-                  })()}
-                </CommandGroup>
-              )}
+                  })()
+                ) : (
+                  <CommandGroup>
+                    {(() => {
+                      const visibleOptions = shouldTruncate
+                        ? options.filter(
+                            (opt, i) =>
+                              i < maxDisplayedOptions! ||
+                              selectedValues.includes(opt.value)
+                          )
+                        : options;
+                      const hiddenCount =
+                        options.length - visibleOptions.length;
+                      return (
+                        <>
+                          {visibleOptions.map((option) => {
+                            const isSelected = selectedValues.includes(
+                              option.value
+                            );
+                            return (
+                              <CommandItem
+                                key={option.value}
+                                value={`${option.value}:${option.label}`}
+                                onSelect={() => toggleOption(option.value)}
+                                role="option"
+                                aria-selected={isSelected}
+                                aria-disabled={option.disabled ?? false}
+                                aria-label={`${option.label}${
+                                  isSelected ? ', selected' : ', not selected'
+                                }${option.disabled ? ', disabled' : ''}`}
+                                className={cn(
+                                  'cursor-pointer',
+                                  option.disabled &&
+                                    `text-interactive-disabled cursor-not-allowed opacity-100 data-[disabled=true]:opacity-100`
+                                )}
+                                disabled={Boolean(option.disabled)}
+                              >
+                                <Checkbox
+                                  className="mr-xs"
+                                  checked={isSelected}
+                                />
+                                <span className="min-w-0 overflow-hidden">
+                                  {effectiveRenderOption({
+                                    option,
+                                    location: 'dropdown',
+                                    isSelected,
+                                  })}
+                                </span>
+                              </CommandItem>
+                            );
+                          })}
+                          {shouldTruncate && hiddenCount > 0 && (
+                            <div className="text-body-secondary px-lg py-sm text-sm italic">
+                              {moreOptionsLabel(hiddenCount)}
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </CommandGroup>
+                ))}
             </CommandList>
 
             <footer
