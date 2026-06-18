@@ -380,6 +380,15 @@ interface MultiSelectProps<T = string | number>
   maxDisplayedOptions?: number;
 
   /**
+   * Total number of options available, used to compute the truncation indicator
+   * count. Set this when `options` is only a server-provided subset (e.g.
+   * server-side search returns a page) so the "+N more" hint reflects the true
+   * total instead of just the loaded options.
+   * Optional, defaults to the number of loaded options.
+   */
+  totalOptionsCount?: number;
+
+  /**
    * Label template for the truncation indicator shown when options exceed maxDisplayedOptions.
    * Receives the number of hidden items as a parameter.
    * Optional, defaults to (count) => `検索テキストを入力して他${count}件を表示`.
@@ -466,6 +475,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     selectionDisplayMode = 'default',
     hideSelection = false,
     maxDisplayedOptions,
+    totalOptionsCount,
     moreOptionsLabel = (count: number) =>
       `検索テキストを入力して他${count}件を表示`,
     ...props
@@ -997,16 +1007,20 @@ const MultiSelectInner = <T extends string | number = string | number>(
                     return null;
                   }
 
-                  // Always use the render function (either custom or default)
+                  // Always use the render function (either custom or default).
+                  // Render through a keyed Fragment rather than a wrapper div so
+                  // the Tag stays a direct flex child and its `max-w-full` +
+                  // `truncate` resolve against the badge row, not an
+                  // unconstrained wrapper that grows to fit its content.
                   return (
-                    <div key={value}>
+                    <React.Fragment key={value}>
                       {effectiveRenderOption({
                         option,
                         location: 'badge',
                         onRemove: () => toggleOption(value),
                         disabled,
                       })}
-                    </div>
+                    </React.Fragment>
                   );
                 })
                 .filter(Boolean)}
@@ -1148,7 +1162,10 @@ const MultiSelectInner = <T extends string | number = string | number>(
                       (sum, g) => sum + g.options.length,
                       0
                     );
-                    const hiddenCount = totalOptions - visibleCount;
+                    // Use the server total when provided so the hint reflects
+                    // every available option, not just the loaded subset.
+                    const hiddenCount =
+                      (totalOptionsCount ?? totalOptions) - visibleCount;
                     return (
                       <>
                         {groups.map((group) => {
@@ -1217,8 +1234,11 @@ const MultiSelectInner = <T extends string | number = string | number>(
                               selectedValues.includes(opt.value)
                           )
                         : options;
+                      // Use the server total when provided so the hint reflects
+                      // every available option, not just the loaded subset.
                       const hiddenCount =
-                        options.length - visibleOptions.length;
+                        (totalOptionsCount ?? options.length) -
+                        visibleOptions.length;
                       return (
                         <>
                           {visibleOptions.map((option) => {
