@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.3.0...v1.4.0) (2026-06-19)
+
+### Features
+
+* **dev:** Add global theme switcher to Storybook toolbar ([023a6dd](https://github.com/GoodMoneyger/chemican_components/commit/023a6dd280c214c9fca2fbdea929d634cc7ad384))
+* **MultiSelect:** Add async search with loading and its stories ([627f166](https://github.com/GoodMoneyger/chemican_components/commit/627f166f2028efc7f2ba1c982f631288c5f7d9d4))
+* **multiselect:** Add maxDisplayedOptions to truncate long lists ([a570970](https://github.com/GoodMoneyger/chemican_components/commit/a5709700f15495837ce5a79a7388fb99e39d1b2b))
+
+### Bug Fixes
+
+* **multiple:** Replace hardcoded green tokens with semantic theme-aware tokens ([6b383f0](https://github.com/GoodMoneyger/chemican_components/commit/6b383f091e9739721a26cab67b1d0545f8347c0e))
+* **MultiSelect:** Correct the truncate selected list for Multiselect ([f7bd25a](https://github.com/GoodMoneyger/chemican_components/commit/f7bd25a90a139d15e6747b2228ada52690197e92))
+
+### Refactoring
+
+* **MultiSelect:** Use progress indicator ([2e7475b](https://github.com/GoodMoneyger/chemican_components/commit/2e7475b3818cedd5b3fd37ede1219a1cb7fdf4ad))
+
 ## [1.3.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.2.0...v1.3.0) (2026-05-27)
 
 ### Features
