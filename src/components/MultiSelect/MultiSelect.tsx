@@ -1,10 +1,11 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { IconChevronDown, IconLoader2 } from '@tabler/icons-react';
+import { IconChevronDown } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
 import { Button } from '../Button';
 import { Tag } from '../Tag';
+import { ProgressIndicator } from '../ProgressIndicator';
 import {
   Popover,
   PopoverContent,
@@ -1099,8 +1100,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   className="px-md py-lg text-body-secondary gap-xs text-sm flex
                     items-center justify-center"
                 >
-                  <IconLoader2 className="h-4 w-4 animate-spin" />
-                  {loadingLabel}
+                  <ProgressIndicator.Circular size="sm">
+                    {loadingLabel}
+                  </ProgressIndicator.Circular>
                 </div>
               )}
 
