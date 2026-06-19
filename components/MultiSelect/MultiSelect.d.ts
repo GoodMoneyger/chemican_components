@@ -272,6 +272,46 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      */
     onValueChange?: (value: T[]) => void;
     /**
+     * Callback fired whenever the search input value changes.
+     * Use this to drive server-side search. When provided, the component disables
+     * its built-in client-side filtering so the parent fully controls `options`.
+     * Optional.
+     */
+    onSearchValueChange?: (search: string) => void;
+    /**
+     * If true, shows a loading indicator inside the dropdown instead of the
+     * options list. Useful while options are being fetched (e.g. server-side
+     * search). Optional, defaults to false.
+     */
+    loading?: boolean;
+    /**
+     * Label displayed next to the spinner while `loading` is true.
+     * Optional, defaults to "読み込み中..." (Loading...).
+     */
+    loadingLabel?: React.ReactNode;
+    /**
+     * Maximum number of options to display before the user starts searching.
+     * When set and the total exceeds this number, only the first N options are shown
+     * with an indicator for the remaining items. Selected items always remain visible.
+     * All matching options are shown when searching.
+     * Optional, defaults to undefined (show all).
+     */
+    maxDisplayedOptions?: number;
+    /**
+     * Total number of options available, used to compute the truncation indicator
+     * count. Set this when `options` is only a server-provided subset (e.g.
+     * server-side search returns a page) so the "+N more" hint reflects the true
+     * total instead of just the loaded options.
+     * Optional, defaults to the number of loaded options.
+     */
+    totalOptionsCount?: number;
+    /**
+     * Label template for the truncation indicator shown when options exceed maxDisplayedOptions.
+     * Receives the number of hidden items as a parameter.
+     * Optional, defaults to (count) => `検索テキストを入力して他${count}件を表示`.
+     */
+    moreOptionsLabel?: (count: number) => React.ReactNode;
+    /**
      * Callback fired when the Apply button is clicked in the popover footer.
      * Receives the array of currently selected values.
      * Optional, called only when user confirms their selection.
