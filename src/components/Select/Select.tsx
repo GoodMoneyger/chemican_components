@@ -134,6 +134,11 @@ export interface SelectProps<T extends number | string = string>
   hideChevron?: boolean;
   searchPlaceholder?: string;
   searchThreshold?: number;
+  /**
+   * Forces the options list to match the width of the trigger exactly,
+   * overriding any minimum-width constraints from the variant.
+   */
+  fullWidthOptions?: boolean;
 }
 
 export const Select = <T extends number | string = string>({
@@ -149,6 +154,7 @@ export const Select = <T extends number | string = string>({
   onValueChange,
   searchPlaceholder = 'Search...',
   searchThreshold = 7,
+  fullWidthOptions = false,
   ...props
 }: SelectProps<T>) => {
   const [searchValue, setSearchValue] = React.useState('');
@@ -253,7 +259,12 @@ export const Select = <T extends number | string = string>({
         <RadixSelect.Content
           position="popper"
           sideOffset={-1} // Needed to not have the 1px spacing because of the borders.
-          className={cn(selectContentVariants({ variant }), className)}
+          className={cn(
+            selectContentVariants({ variant }),
+            fullWidthOptions &&
+              'min-w-0 w-[var(--radix-select-trigger-width)] max-w-none',
+            className
+          )}
         >
           {showSearch && (
             <div
