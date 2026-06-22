@@ -56,9 +56,9 @@ const selectContentVariants = cva(
     variants: {
       variant: {
         default: `border-interactive-default max-h-96 rounded
-        w-[var(--radix-select-trigger-width)]`,
+        min-w-[var(--radix-select-trigger-width)]`,
         compact: `border-divider-default max-h-96 rounded-sm
-        min-w-[max(12rem,var(--radix-select-trigger-width))]
+        min-w-[var(--radix-select-trigger-width)]
         shadow-[0px_5px_9px_0px_rgba(0,0,0,0.16)]`,
       },
     },
