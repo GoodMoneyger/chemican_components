@@ -127,19 +127,6 @@ UserSelector.args = {
   placeholder: 'ユーザーを選択',
 };
 
-export const FullWidthOptions = Template.bind({});
-FullWidthOptions.args = {
-  variant: 'default',
-  icon: IconBuilding,
-  fullWidthOptions: true,
-  options: [
-    { value: 'chemican', label: 'Chemican inc.' },
-    { value: 'long-company', label: '株式会社化学化学化学化学' },
-    { value: 'aaa-company', label: 'AAA企業' },
-  ],
-  placeholder: 'Select company',
-};
-
 export const DisabledStates = Template.bind({});
 DisabledStates.args = {
   variant: 'default',

@@ -56,9 +56,9 @@ const selectContentVariants = cva(
     variants: {
       variant: {
         default: `border-interactive-default max-h-96 rounded
-        w-[var(--radix-select-trigger-width)]`,
+        min-w-[var(--radix-select-trigger-width)]`,
         compact: `border-divider-default max-h-96 rounded-sm
-        min-w-[max(12rem,var(--radix-select-trigger-width))]
+        min-w-[var(--radix-select-trigger-width)]
         shadow-[0px_5px_9px_0px_rgba(0,0,0,0.16)]`,
       },
     },
@@ -134,11 +134,6 @@ export interface SelectProps<T extends number | string = string>
   hideChevron?: boolean;
   searchPlaceholder?: string;
   searchThreshold?: number;
-  /**
-   * Forces the options list to match the width of the trigger exactly,
-   * overriding any minimum-width constraints from the variant.
-   */
-  fullWidthOptions?: boolean;
 }
 
 export const Select = <T extends number | string = string>({
@@ -154,7 +149,6 @@ export const Select = <T extends number | string = string>({
   onValueChange,
   searchPlaceholder = 'Search...',
   searchThreshold = 7,
-  fullWidthOptions = false,
   ...props
 }: SelectProps<T>) => {
   const [searchValue, setSearchValue] = React.useState('');
@@ -259,12 +253,7 @@ export const Select = <T extends number | string = string>({
         <RadixSelect.Content
           position="popper"
           sideOffset={-1} // Needed to not have the 1px spacing because of the borders.
-          className={cn(
-            selectContentVariants({ variant }),
-            fullWidthOptions &&
-              'min-w-0 w-[var(--radix-select-trigger-width)] max-w-none',
-            className
-          )}
+          className={cn(selectContentVariants({ variant }), className)}
         >
           {showSearch && (
             <div
