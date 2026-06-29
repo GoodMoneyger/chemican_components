@@ -72,7 +72,10 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
     return (
       <thead
         ref={ref}
-        className={cn('text-sm bg-surface-tertiary top-0 sticky', className)}
+        className={cn(
+          'text-sm bg-surface-tertiary top-0 z-slight sticky',
+          className
+        )}
         {...props}
       >
         {children}
