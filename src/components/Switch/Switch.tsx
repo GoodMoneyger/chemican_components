@@ -37,7 +37,8 @@ const Switch = React.forwardRef<
         data-slot="switch-thumb"
         className={cn(
           `data-[state=checked]:bg-shape-interactive-inverse size-4
-          data-[state=unchecked]:bg-shape-accent-gray-pale
+          data-[state=unchecked]:not-data-disabled:bg-shape-accent-gray-pale
+          data-[state=unchecked]:data-disabled:bg-shape-interactive-inverse
           data-[state=checked]:translate-x-5
           data-[state=unchecked]:translate-x-1 pointer-events-none block
           rounded-full ring-0 transition-transform`
