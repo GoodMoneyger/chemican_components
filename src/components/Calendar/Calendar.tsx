@@ -125,6 +125,17 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       return parsedMinDate <= parsedMaxDate;
     }, [parsedMinDate, parsedMaxDate]);
 
+    // Upper bound of the year/month dropdown navigation range.
+    // maxDate (when provided) drives both selectability and the dropdown range.
+    // Without it, react-day-picker caps the year dropdown at the current year,
+    // which blocks future dates (e.g. contract renewal dates), so we default
+    // the upper bound to 10 years ahead.
+    const navEndMonth = React.useMemo(() => {
+      if (parsedMaxDate) return parsedMaxDate;
+      const now = new Date();
+      return new Date(now.getFullYear() + 10, 11, 31);
+    }, [parsedMaxDate]);
+
     // Handle date selection
     const handleDateChange = (date: Date | undefined) => {
       const newDate = date || null;
@@ -166,6 +177,8 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                   ...(disabled ? [{ before: new Date('3000-01-01') }] : []),
                 ]
           }
+          {...(parsedMinDate ? { startMonth: parsedMinDate } : {})}
+          endMonth={navEndMonth}
           showOutsideDays={showOutsideDays}
           fixedWeeks={fixedWeeks}
           defaultMonth={defaultMonth || selectedDate || new Date()}
