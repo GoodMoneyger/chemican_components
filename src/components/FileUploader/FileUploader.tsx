@@ -174,6 +174,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
           <Button
             size="xs"
             intent="tertiary"
+            className={!isDragging ? 'z-10' : ''}
             icon={IconFolderFilled}
             onClick={(e) => {
               e.stopPropagation();
@@ -188,7 +189,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
 
     const renderLargeContent = () => {
       return (
-        <div className="text-center">
+        <div className="flex flex-col items-center text-center">
           {renderIcon()}
           <p className="text-body-secondary font-normal mb-2">
             {dropFilesText} <span className="text-sm">{orText}</span>
@@ -196,7 +197,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
           <Button
             size="xs"
             intent="tertiary"
-            className="self-center"
+            className={!isDragging ? 'z-10' : ''}
             icon={IconFolderFilled}
             onClick={(e) => {
               e.stopPropagation();
@@ -208,32 +209,6 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
         </div>
       );
     };
-
-    // Helper function to render the upload box
-    const renderUploadBox = () => (
-      <div
-        className={cn(uploadVariants({ size, state: 'default', disabled }))}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        onClick={handleClick}
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        aria-disabled={disabled}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          className="sr-only"
-          accept={accept}
-          multiple={multiple}
-          onChange={handleInputChange}
-          disabled={disabled}
-        />
-        {size === 'small' ? renderSmallContent() : renderLargeContent()}
-      </div>
-    );
 
     // Helper function to render status info below the upload box
     const renderStatusInfo = () => {
@@ -312,48 +287,52 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
       return size === 'small' ? renderSmallContent() : renderLargeContent();
     };
 
-    // Special layouts for states that show status info below the upload box
-    if (
-      (currentState === 'inProgress' && progress !== undefined) ||
-      currentState === 'success' ||
-      currentState === 'error'
-    ) {
+    const renderDropzone = () => {
       return (
-        <div ref={ref} className={cn(className)} {...props}>
-          {renderUploadBox()}
-          {renderStatusInfo()}
-        </div>
+        <div
+          className="top-0 left-0 absolute h-full w-full"
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        />
       );
-    }
+    };
 
     return (
-      <div
-        ref={ref}
-        className={cn(
-          uploadVariants({ size, state: currentState, disabled }),
-          className
-        )}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        onClick={handleClick}
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        aria-disabled={disabled}
-        {...props}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          className="sr-only"
-          accept={accept}
-          multiple={multiple}
-          onChange={handleInputChange}
-          disabled={disabled}
-        />
-        {renderContent()}
-      </div>
+      <>
+        <div
+          ref={ref}
+          className={cn(
+            'relative',
+            uploadVariants({ size, state: currentState, disabled }),
+            className
+          )}
+          onClick={handleClick}
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          aria-disabled={disabled}
+          {...props}
+        >
+          <input
+            ref={inputRef}
+            type="file"
+            className="sr-only"
+            accept={accept}
+            multiple={multiple}
+            onChange={handleInputChange}
+            disabled={disabled}
+          />
+          {renderDropzone()}
+          {renderContent()}
+        </div>
+
+        {/* Special layouts for states that show status info below the upload box */}
+        {((currentState === 'inProgress' && progress !== undefined) ||
+          currentState === 'success' ||
+          currentState === 'error') &&
+          renderStatusInfo()}
+      </>
     );
   }
 );
