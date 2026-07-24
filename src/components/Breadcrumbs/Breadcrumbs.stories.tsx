@@ -119,3 +119,24 @@ SingleItem.args = {
   items: [{ label: 'Current Page' }],
   size: 'sm',
 };
+
+// Stand-in for a router link component such as Next.js Link
+const CustomLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = ({
+  children,
+  ...props
+}) => (
+  <a {...props} onClick={(e) => e.preventDefault()} data-custom-link>
+    {children}
+  </a>
+);
+
+export const WithLinkComponent = Template.bind({});
+WithLinkComponent.args = {
+  items: [
+    { label: 'ホーム', href: '/' },
+    { label: '製品', href: '/products' },
+    { label: '現在のページ' },
+  ],
+  linkComponent: CustomLink,
+  size: 'sm',
+};

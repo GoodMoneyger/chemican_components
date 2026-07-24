@@ -59,6 +59,13 @@ export interface BreadcrumbsProps
   separator?: React.ComponentType<{ className?: string }>;
   maxItems?: number;
   'aria-label'?: string;
+  /**
+   * Component used to render crumb links instead of a plain anchor
+   * (useful for Next.js Link). Applied to items with an `href`.
+   */
+  linkComponent?: React.ElementType<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>
+  >;
 }
 
 export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
@@ -70,6 +77,7 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
       maxItems,
       className,
       'aria-label': ariaLabel = 'breadcrumb',
+      linkComponent,
       ...props
     },
     ref
@@ -94,6 +102,9 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
           {displayItems.map((item, index) => {
             const isLast = index === displayItems.length - 1;
             const isEllipsis = item.label === '…';
+            // Custom link components (e.g. Next.js Link) require an href,
+            // so onClick-only items keep the plain anchor
+            const LinkComp = (item.href && linkComponent) || 'a';
 
             return (
               <React.Fragment key={`${item.label}-${index}`}>
@@ -105,7 +116,7 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
                       {item.label}
                     </span>
                   ) : item.href || item.onClick ? (
-                    <a
+                    <LinkComp
                       href={item.href}
                       onClick={item.onClick}
                       className={cn(
@@ -114,7 +125,7 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
                       aria-current={isLast ? 'page' : undefined}
                     >
                       {item.label}
-                    </a>
+                    </LinkComp>
                   ) : (
                     <span
                       className={cn(breadcrumbItemVariants({ isActive: true }))}
