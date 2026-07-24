@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 
+import { cn } from '../../lib/utils';
 import { Button } from '../Button';
 import type { ButtonProps } from '../Button';
 
@@ -130,7 +131,7 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
             <RadixDialog.Content
               className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
                 min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
-                -translate-y-1/2 transform overflow-auto"
+                -translate-y-1/2 transform"
               onPointerDownOutside={handleOutsideClick}
               onEscapeKeyDown={handleEscapeKeyDown}
             >
@@ -161,14 +162,14 @@ export interface MultiStepDialogHeaderProps {
 
 const Header: React.FC<MultiStepDialogHeaderProps> = ({ children }) => {
   return (
-    <div className="px-xl py-lg flex items-center justify-between">
+    <header className="px-xl py-lg">
       <RadixDialog.Title
-        className="text-xxl text-body-primary font-bold min-h-4.5 flex
-          items-center leading-none"
+        className="text-xxl text-body-primary font-bold flex items-center
+          leading-[1.2]"
       >
         {children}
       </RadixDialog.Title>
-    </div>
+    </header>
   );
 };
 
@@ -181,8 +182,13 @@ export interface MultiStepDialogBodyProps {
 const Body: React.FC<MultiStepDialogBodyProps> = ({ children, className }) => {
   return (
     <div
-      className={`border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
-        text-body-primary flex-grow-0 border-y-1 ${className || ''}`}
+      // max-h-[calc(100vh-40px-68px-78px)] → viewport full height - 20px top and bottom - header - footer
+      className={cn(
+        `border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
+        text-body-primary max-h-[calc(100vh-40px-68px-78px)] overflow-hidden
+        overflow-y-auto border-y-1`,
+        className
+      )}
     >
       {children}
     </div>
@@ -213,7 +219,7 @@ const Footer: React.FC<MultiStepDialogFooterProps> = ({
   };
 
   return (
-    <div className="px-xl py-md flex justify-between">
+    <footer className="px-xl py-md flex justify-between">
       <div className="gap-xs flex">
         {showCancel && cancellable && (
           <Button intent="tertiary" onClick={handleCancelClick}>
@@ -222,7 +228,7 @@ const Footer: React.FC<MultiStepDialogFooterProps> = ({
         )}
       </div>
       {children && <div className="gap-xs ml-auto flex">{children}</div>}
-    </div>
+    </footer>
   );
 };
 
