@@ -195,5 +195,10 @@ export interface TagProps {
     variant?: 'primary' | 'secondary';
     icon?: IconProp;
     disabled?: boolean;
+    /**
+     * Whether to render as a child element, e.g. a link (useful for Next.js Link).
+     * The child element receives the tag styling; `icon` and `onRemove` render inside it.
+     */
+    asChild?: boolean;
 }
 export declare const Tag: React.FC<TagProps>;
