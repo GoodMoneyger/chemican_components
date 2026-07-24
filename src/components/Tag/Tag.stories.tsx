@@ -140,6 +140,20 @@ DisabledWithIcon.args = {
   disabled: true,
 };
 
+export const AsChild: StoryFn = () => (
+  <div className="gap-2 flex flex-wrap">
+    <Tag colorCode={8} asChild>
+      <a href="#link">リンクタグ</a>
+    </Tag>
+    <Tag colorCode={2} variant="secondary" asChild>
+      <a href="#link">セカンダリリンク</a>
+    </Tag>
+    <Tag colorCode={19} icon={IconStar} asChild>
+      <a href="#link">アイコン付きリンク</a>
+    </Tag>
+  </div>
+);
+
 export const ColorCodeShowcase: StoryFn<{
   selected?: boolean;
   variant?: 'primary' | 'secondary';

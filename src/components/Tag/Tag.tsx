@@ -1,4 +1,5 @@
 import React from 'react';
+import { Slot } from 'radix-ui';
 import { cva } from 'class-variance-authority';
 
 import { ColorShapeTokens, ColorTextTokens } from '../../tokens';
@@ -242,6 +243,11 @@ export interface TagProps {
   variant?: 'primary' | 'secondary';
   icon?: IconProp;
   disabled?: boolean;
+  /**
+   * Whether to render as a child element, e.g. a link (useful for Next.js Link).
+   * The child element receives the tag styling; `icon` and `onRemove` render inside it.
+   */
+  asChild?: boolean;
 }
 
 const tagVariants = cva(
@@ -301,6 +307,7 @@ export const Tag: React.FC<TagProps> = ({
   variant = 'primary',
   icon,
   disabled = false,
+  asChild = false,
 }) => {
   const colorMapping = colorCodeToTokenMap.find(
     (colorMap) => colorMap.code === colorCode
@@ -317,30 +324,36 @@ export const Tag: React.FC<TagProps> = ({
     return `var(${colorMapping?.textColor})`;
   };
 
+  const tagClassName = cn(
+    tagVariants({
+      size,
+      selected: disabled ? false : selected,
+      interactive: Boolean(onClick) && !disabled,
+      variant,
+      disabled,
+    }),
+    className
+  );
+
+  const tagStyle: React.CSSProperties = {
+    // Only apply accent background for primary variant
+    // Secondary variant uses bg-surface-disabled from CVA (or bg-interactive-disabled when disabled)
+    ...(variant === 'primary' && {
+      backgroundColor: `var(${colorMapping?.backgroundColor})`,
+    }),
+    // Only apply inline color when not disabled (Tailwind class handles disabled state)
+    ...(!disabled && { color: `var(${colorMapping?.textColor})` }),
+    ...style,
+  };
+
+  const Comp = asChild ? Slot.Slot : 'div';
+
   return (
-    <div
-      className={cn(
-        tagVariants({
-          size,
-          selected: disabled ? false : selected,
-          interactive: Boolean(onClick) && !disabled,
-          variant,
-          disabled,
-        }),
-        className
-      )}
-      style={{
-        // Only apply accent background for primary variant
-        // Secondary variant uses bg-surface-disabled from CVA (or bg-interactive-disabled when disabled)
-        ...(variant === 'primary' && {
-          backgroundColor: `var(${colorMapping?.backgroundColor})`,
-        }),
-        // Only apply inline color when not disabled (Tailwind class handles disabled state)
-        ...(!disabled && { color: `var(${colorMapping?.textColor})` }),
-        ...style,
-      }}
+    <Comp
+      className={tagClassName}
+      style={tagStyle}
       onClick={disabled ? undefined : onClick}
-      role={onClick ? 'button' : undefined}
+      role={!asChild && onClick ? 'button' : undefined}
       aria-disabled={disabled || undefined}
     >
       {icon && (
@@ -354,7 +367,11 @@ export const Tag: React.FC<TagProps> = ({
           {renderIcon(icon, { size: 14 })}
         </span>
       )}
-      <div className="pt-0.5 relative h-full truncate">{children}</div>
+      {asChild ? (
+        <Slot.Slottable>{children}</Slot.Slottable>
+      ) : (
+        <div className="pt-0.5 relative h-full truncate">{children}</div>
+      )}
       {Boolean(onRemove) && !disabled && (
         <button
           className={cn(
@@ -378,6 +395,6 @@ export const Tag: React.FC<TagProps> = ({
           </svg>
         </button>
       )}
-    </div>
+    </Comp>
   );
 };
