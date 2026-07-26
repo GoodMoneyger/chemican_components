@@ -1,4 +1,5 @@
 import React from 'react';
+import { Slot } from 'radix-ui';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import { IconChevronRight } from '@tabler/icons-react';
@@ -50,6 +51,13 @@ export interface BreadcrumbItem {
   label: React.ReactNode;
   href?: string;
   onClick?: () => void;
+  /**
+   * Render `label` as the crumb element itself via Radix Slot. Useful for
+   * router links, e.g. `{ label: <Link to="/">ホーム</Link>, asChild: true }`.
+   * The element receives the crumb styling and `aria-current`; `href` is
+   * ignored since the element provides its own navigation.
+   */
+  asChild?: boolean;
 }
 
 export interface BreadcrumbsProps
@@ -59,13 +67,6 @@ export interface BreadcrumbsProps
   separator?: React.ComponentType<{ className?: string }>;
   maxItems?: number;
   'aria-label'?: string;
-  /**
-   * Component used to render crumb links instead of a plain anchor
-   * (useful for Next.js Link). Applied to items with an `href`.
-   */
-  linkComponent?: React.ElementType<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>
-  >;
 }
 
 export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
@@ -77,7 +78,6 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
       maxItems,
       className,
       'aria-label': ariaLabel = 'breadcrumb',
-      linkComponent,
       ...props
     },
     ref
@@ -102,9 +102,6 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
           {displayItems.map((item, index) => {
             const isLast = index === displayItems.length - 1;
             const isEllipsis = item.label === '…';
-            // Custom link components (e.g. Next.js Link) require an href,
-            // so onClick-only items keep the plain anchor
-            const LinkComp = (item.href && linkComponent) || 'a';
 
             return (
               <React.Fragment key={`${item.label}-${index}`}>
@@ -115,8 +112,18 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
                     >
                       {item.label}
                     </span>
+                  ) : item.asChild ? (
+                    <Slot.Slot
+                      onClick={item.onClick}
+                      className={cn(
+                        breadcrumbItemVariants({ isActive: isLast })
+                      )}
+                      aria-current={isLast ? 'page' : undefined}
+                    >
+                      {item.label}
+                    </Slot.Slot>
                   ) : item.href || item.onClick ? (
-                    <LinkComp
+                    <a
                       href={item.href}
                       onClick={item.onClick}
                       className={cn(
@@ -125,7 +132,7 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
                       aria-current={isLast ? 'page' : undefined}
                     >
                       {item.label}
-                    </LinkComp>
+                    </a>
                   ) : (
                     <span
                       className={cn(breadcrumbItemVariants({ isActive: true }))}

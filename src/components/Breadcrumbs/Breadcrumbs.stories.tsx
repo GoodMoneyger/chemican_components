@@ -120,23 +120,22 @@ SingleItem.args = {
   size: 'sm',
 };
 
-// Stand-in for a router link component such as Next.js Link
-const CustomLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = ({
-  children,
-  ...props
-}) => (
-  <a {...props} onClick={(e) => e.preventDefault()} data-custom-link>
+// Stand-in for a router link component such as Next.js Link or
+// React Router / TanStack Router Link
+const CustomLink: React.FC<
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }
+> = ({ children, to, ...props }) => (
+  <a {...props} href={to} onClick={(e) => e.preventDefault()} data-custom-link>
     {children}
   </a>
 );
 
-export const WithLinkComponent = Template.bind({});
-WithLinkComponent.args = {
+export const WithAsChildItems = Template.bind({});
+WithAsChildItems.args = {
   items: [
-    { label: 'ホーム', href: '/' },
-    { label: '製品', href: '/products' },
+    { label: <CustomLink to="/">ホーム</CustomLink>, asChild: true },
+    { label: <CustomLink to="/products">製品</CustomLink>, asChild: true },
     { label: '現在のページ' },
   ],
-  linkComponent: CustomLink,
   size: 'sm',
 };
