@@ -7,6 +7,13 @@ export interface BreadcrumbItem {
     label: React.ReactNode;
     href?: string;
     onClick?: () => void;
+    /**
+     * Render `label` as the crumb element itself via Radix Slot. Useful for
+     * router links, e.g. `{ label: <Link to="/">ホーム</Link>, asChild: true }`.
+     * The element receives the crumb styling and `aria-current`; `href` is
+     * ignored since the element provides its own navigation.
+     */
+    asChild?: boolean;
 }
 export interface BreadcrumbsProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'>, VariantProps<typeof breadcrumbsVariants> {
     items: BreadcrumbItem[];
