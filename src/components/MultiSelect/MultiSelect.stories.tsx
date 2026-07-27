@@ -421,16 +421,21 @@ export const Disabled: Story = {
   },
 };
 
+export const NoOptions: Story = {
+  args: {
+    options: [],
+    placeholder: 'No options...',
+    onValueChange: (values) => console.log('Selected values:', values),
+  },
+};
+
 export const CustomEmptyState: Story = {
   args: {
     options: [],
-    emptyIndicator: (
+    noOptionsIndicator: (
       <div className="py-6 flex flex-col items-center text-center">
         <IconStar className="h-12 w-12 text-body-secondary mb-2" />
         <p className="text-body-secondary">No options available</p>
-        <p className="text-xs text-body-secondary mt-1">
-          Try a different search term
-        </p>
       </div>
     ),
     placeholder: 'Custom empty state...',
