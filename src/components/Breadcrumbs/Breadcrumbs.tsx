@@ -1,4 +1,5 @@
 import React from 'react';
+import { Slot } from 'radix-ui';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import { IconChevronRight } from '@tabler/icons-react';
@@ -50,6 +51,13 @@ export interface BreadcrumbItem {
   label: React.ReactNode;
   href?: string;
   onClick?: () => void;
+  /**
+   * Render `label` as the crumb element itself via Radix Slot. Useful for
+   * router links, e.g. `{ label: <Link to="/">ホーム</Link>, asChild: true }`.
+   * The element receives the crumb styling and `aria-current`; `href` is
+   * ignored since the element provides its own navigation.
+   */
+  asChild?: boolean;
 }
 
 export interface BreadcrumbsProps
@@ -104,6 +112,16 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(
                     >
                       {item.label}
                     </span>
+                  ) : item.asChild ? (
+                    <Slot.Slot
+                      onClick={item.onClick}
+                      className={cn(
+                        breadcrumbItemVariants({ isActive: isLast })
+                      )}
+                      aria-current={isLast ? 'page' : undefined}
+                    >
+                      {item.label}
+                    </Slot.Slot>
                   ) : item.href || item.onClick ? (
                     <a
                       href={item.href}

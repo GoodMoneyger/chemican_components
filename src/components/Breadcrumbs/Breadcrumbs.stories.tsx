@@ -119,3 +119,23 @@ SingleItem.args = {
   items: [{ label: 'Current Page' }],
   size: 'sm',
 };
+
+// Stand-in for a router link component such as Next.js Link or
+// React Router / TanStack Router Link
+const CustomLink: React.FC<
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }
+> = ({ children, to, ...props }) => (
+  <a {...props} href={to} onClick={(e) => e.preventDefault()} data-custom-link>
+    {children}
+  </a>
+);
+
+export const WithAsChildItems = Template.bind({});
+WithAsChildItems.args = {
+  items: [
+    { label: <CustomLink to="/">ホーム</CustomLink>, asChild: true },
+    { label: <CustomLink to="/products">製品</CustomLink>, asChild: true },
+    { label: '現在のページ' },
+  ],
+  size: 'sm',
+};
