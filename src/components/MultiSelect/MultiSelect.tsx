@@ -175,6 +175,13 @@ interface MultiSelectProps<T = string | number>
   emptyIndicator?: React.ReactNode;
 
   /**
+   * Message shown in the popover when the component has no options at all.
+   * In that case the select-all option is not rendered either.
+   * Optional, defaults to "No options available."
+   */
+  noOptionsIndicator?: React.ReactNode;
+
+  /**
    * Placeholder text shown in the search input when search is enabled.
    * Optional, defaults to "Search options...".
    */
@@ -459,6 +466,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     hideSelectAll = false,
     searchable = true,
     emptyIndicator = '結果が見つかりません。',
+    noOptionsIndicator = '利用可能なオプションがありません。',
     autoSize = false,
     singleLine = false,
     popoverClassName,
@@ -796,6 +804,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
   // Use provided renderOption or fall back to default
   const effectiveRenderOption = renderOption || defaultRenderOption;
 
+  const hasOptions = getAllOptions().length > 0;
   const isSearching = Boolean(searchValue.trim());
   // In client-side mode, typing reveals every match so truncation is lifted while
   // searching. In server-side mode (onSearchValueChange) the parent already
@@ -1106,9 +1115,21 @@ const MultiSelectInner = <T extends string | number = string | number>(
                 </div>
               )}
 
-              {!loading && <CommandEmpty>{emptyIndicator}</CommandEmpty>}
+              {!loading && (hasOptions || isSearching) && (
+                <CommandEmpty>{emptyIndicator}</CommandEmpty>
+              )}
 
-              {!loading && !hideSelectAll && !searchValue && (
+              {!loading && !hasOptions && !isSearching && (
+                <div
+                  role="status"
+                  className="px-md py-lg text-body-secondary text-sm flex
+                    items-center justify-center"
+                >
+                  {noOptionsIndicator}
+                </div>
+              )}
+
+              {!loading && !hideSelectAll && !searchValue && hasOptions && (
                 <CommandGroup>
                   <CommandItem
                     key="all"
