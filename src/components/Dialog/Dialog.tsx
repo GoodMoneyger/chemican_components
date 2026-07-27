@@ -130,17 +130,18 @@ export const Dialog: React.FC<DialogProps> = ({
             </header>
 
             <div
+              // max-h-[calc(100vh-40px-68px-78px)] → viewport full height - 20px top and bottom - header - footer
               className={cn(
                 `border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
-                text-body-primary max-h-[70vh] flex-1 overflow-hidden
-                overflow-y-auto border-y-1`,
+                text-body-primary max-h-[calc(100vh-40px-68px-78px)]
+                overflow-hidden overflow-y-auto border-y-1`,
                 bodyClassName
               )}
             >
               {children}
             </div>
 
-            <footer className="px-xl py-md flex flex-shrink-0 justify-between">
+            <footer className="px-xl py-md flex justify-between">
               {cancellable && (
                 <Button
                   intent="tertiary"
