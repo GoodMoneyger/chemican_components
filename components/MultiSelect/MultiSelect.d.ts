@@ -121,6 +121,12 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      */
     emptyIndicator?: React.ReactNode;
     /**
+     * Message shown in the popover when the component has no options at all.
+     * In that case the select-all option is not rendered either.
+     * Optional, defaults to "No options available."
+     */
+    noOptionsIndicator?: React.ReactNode;
+    /**
      * Placeholder text shown in the search input when search is enabled.
      * Optional, defaults to "Search options...".
      */
