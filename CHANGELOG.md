@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.6.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.5.0...v1.6.0) (2026-07-27)
+
+### Features
+
+* **Breadcrumbs:** Add linkComponent prop for custom link rendering ([51b24da](https://github.com/GoodMoneyger/chemican_components/commit/51b24daf1ef7f04bc910031916980233c6fc9c72))
+* **Tag:** Add asChild prop to render tags as links ([209fc96](https://github.com/GoodMoneyger/chemican_components/commit/209fc968fd22533289b4624228f226e273664a99))
+
+### Bug Fixes
+
+* **FileUploader:** [V2QA-283] Correct layout and dropzone ([#155](https://github.com/GoodMoneyger/chemican_components/issues/155)) ([4ff93a5](https://github.com/GoodMoneyger/chemican_components/commit/4ff93a5e1f2ef376836a0b666819cf0106241b7f))
+* **MultiSelect:** Show no-options message instead of select-all when empty ([45eb68d](https://github.com/GoodMoneyger/chemican_components/commit/45eb68d0f570b495e08440f7f022f7b75680caac))
+
+### Refactoring
+
+* **Breadcrumbs:** Replace linkComponent with per-item asChild ([2cf786c](https://github.com/GoodMoneyger/chemican_components/commit/2cf786c4dc7981701dfe3914d6b3652d442548e3))
+* **Dialog:** [V2QA-258] Make it it fit the viewport height ([#158](https://github.com/GoodMoneyger/chemican_components/issues/158)) ([9a71836](https://github.com/GoodMoneyger/chemican_components/commit/9a71836fccc6a1ccfe22e0451daf2729bb6c435a))
+
+### Build
+
+* **deps:** bump fast-uri from 3.1.2 to 3.1.4 ([6514f12](https://github.com/GoodMoneyger/chemican_components/commit/6514f12452da586668458863565bb79cce493fdb))
+* **deps:** bump lodash, @figma/code-connect and @microsoft/api-extractor ([d844d66](https://github.com/GoodMoneyger/chemican_components/commit/d844d6630bb73bf8622a93915bce7b5c0c803d9e))
+* **deps:** bump tar from 7.5.16 to 7.5.20 ([0590b9a](https://github.com/GoodMoneyger/chemican_components/commit/0590b9ae3320db494a9d8a1193984bb167ae30d8))
+* **deps:** bump undici and release-it ([7210e46](https://github.com/GoodMoneyger/chemican_components/commit/7210e467857a0dc90538ba6dd09253b7269db45e))
+
 ## [1.5.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.3.0...v1.5.0) (2026-07-21)
 
 ### Features
