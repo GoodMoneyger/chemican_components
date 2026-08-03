@@ -3,9 +3,9 @@
   --cc-side-navigation-width-collapsed: 3.25rem;
 }
 
-/* Fallback before SideNavigation's effect runs (SSR / first paint); the
-   component overrides this inline on <html>. Scoped via :has so pages
-   without a side navigation keep the variable unset. */
+/* Global width of a rendered SideNavigation, switching on its collapsed
+   state. Scoped via :has so pages without a side navigation keep the
+   variable unset. */
 :root:has(nav[data-collapsed]) {
   --cc-side-navigation-width: var(--cc-side-navigation-width-expanded);
 }
