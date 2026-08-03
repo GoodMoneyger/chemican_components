@@ -17,8 +17,8 @@ const sideNavigationVariants = cva(
   {
     variants: {
       width: {
-        expanded: 'w-50',
-        collapsed: 'gap-sm w-13',
+        expanded: 'w-(--cc-side-navigation-width-expanded)',
+        collapsed: 'gap-sm w-(--cc-side-navigation-width-collapsed)',
       },
     },
     defaultVariants: {
@@ -74,7 +74,9 @@ const SideNavigationContent = React.forwardRef<
 
     // Set global CSS variable for sidebar width
     React.useEffect(() => {
-      const widthValue = isCollapsed ? '3.25rem' : '12.5rem';
+      const widthValue = isCollapsed
+        ? 'var(--cc-side-navigation-width-collapsed)'
+        : 'var(--cc-side-navigation-width-expanded)';
       document.documentElement.style.setProperty(
         // Using a chemican component prefix to avoid conflicts in consuming projects
         '--cc-side-navigation-width',
