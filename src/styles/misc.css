@@ -3,6 +3,17 @@
   --cc-side-navigation-width-collapsed: 3.25rem;
 }
 
+/* Fallback before SideNavigation's effect runs (SSR / first paint); the
+   component overrides this inline on <html>. Scoped via :has so pages
+   without a side navigation keep the variable unset. */
+:root:has(nav[data-collapsed]) {
+  --cc-side-navigation-width: var(--cc-side-navigation-width-expanded);
+}
+
+:root:has(nav[data-collapsed='true']) {
+  --cc-side-navigation-width: var(--cc-side-navigation-width-collapsed);
+}
+
 @theme inline {
   --z-index-slight: 1;
   --z-index-navigation: 10;
