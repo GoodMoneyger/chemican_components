@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.7.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.6.0...v1.7.0) (2026-08-04)
+
+### Features
+
+* **sidenavigation:** Make side navigation width themable via CSS variables ([4328105](https://github.com/GoodMoneyger/chemican_components/commit/43281050a82c57aeb8f243bfaf1175211b3b0bb3))
+* **sidenavigation:** Provide CSS fallback for --cc-side-navigation-width ([e8e67de](https://github.com/GoodMoneyger/chemican_components/commit/e8e67de6e1e9fd1aefb659af6a5ca1951c7e3b7f))
+
+### Bug Fixes
+
+* **sidenavigation:** Scope width selectors and sync data-collapsed ([16dce04](https://github.com/GoodMoneyger/chemican_components/commit/16dce04138d0ddd1e8e523e61330a51e0fdfce11))
+
+### Refactoring
+
+* **sidenavigation:** Drop JS effect for --cc-side-navigation-width ([edd3df9](https://github.com/GoodMoneyger/chemican_components/commit/edd3df9608005b27411a6177e69b4f01b1fe44af))
+
+### Build
+
+* **deps:** bump fast-uri from 3.1.4 to 3.1.5 ([bc3336b](https://github.com/GoodMoneyger/chemican_components/commit/bc3336b48a24558e9cc1b48cc44f507e71c53b63))
+* **deps:** bump ip-address from 10.2.0 to 10.4.0 ([9ac25df](https://github.com/GoodMoneyger/chemican_components/commit/9ac25df4114e0425b0767974bed6978b9f3c1109))
+* **deps:** bump postcss from 8.5.14 to 8.5.25 ([59571bb](https://github.com/GoodMoneyger/chemican_components/commit/59571bb1f9ca6d58bbf724a9e14a576f0d457e1c))
+* **deps:** bump tar from 7.5.20 to 7.5.22 ([c354f4d](https://github.com/GoodMoneyger/chemican_components/commit/c354f4d05bf8eafc0d272364664cd458e8f18cb7))
+* **deps:** bump undici, @release-it/conventional-changelog and release-it ([ea16f72](https://github.com/GoodMoneyger/chemican_components/commit/ea16f72edf5a730858fa083d070239b7b375167a))
+
 ## [1.6.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.5.0...v1.6.0) (2026-07-27)
 
 ### Features
