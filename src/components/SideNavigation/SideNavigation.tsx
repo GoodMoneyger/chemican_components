@@ -83,7 +83,8 @@ const SideNavigationContent = React.forwardRef<
           'group',
           className
         )}
-        data-collapsed={isCollapsed}
+        data-cc-side-navigation=""
+        data-collapsed={effectiveWidth === 'collapsed'}
         {...props}
       >
         {header && (
