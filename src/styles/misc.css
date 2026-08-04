@@ -1,3 +1,19 @@
+:root {
+  --cc-side-navigation-width-expanded: 13.5rem;
+  --cc-side-navigation-width-collapsed: 3.25rem;
+}
+
+/* Global width of a rendered SideNavigation, switching on its collapsed
+   state. Scoped via :has so pages without a side navigation keep the
+   variable unset. */
+:root:has(nav[data-cc-side-navigation]) {
+  --cc-side-navigation-width: var(--cc-side-navigation-width-expanded);
+}
+
+:root:has(nav[data-cc-side-navigation][data-collapsed='true']) {
+  --cc-side-navigation-width: var(--cc-side-navigation-width-collapsed);
+}
+
 @theme inline {
   --z-index-slight: 1;
   --z-index-navigation: 10;
