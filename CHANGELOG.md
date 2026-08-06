@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.8.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.7.0...v1.8.0) (2026-08-06)
+
+### Features
+
+* **general:** Re-export Radix Slot for consuming apps ([e3159b8](https://github.com/GoodMoneyger/chemican_components/commit/e3159b81cf36b30874fdbbb691aa7f07327229c8))
+
+### Bug Fixes
+
+* **util:** Register custom z-index tokens with tailwind-merge ([d43cc58](https://github.com/GoodMoneyger/chemican_components/commit/d43cc583654f09cdbf30da9ec11ffa9c80736cd0))
+
+### Build
+
+* **deps:** Bump conventionalcommits preset to v10 for release-it ([e311146](https://github.com/GoodMoneyger/chemican_components/commit/e3111461c02c74e0641ff73045f6405dda8a079e))
+* **deps:** Fix vulnerabilities ([46d9be0](https://github.com/GoodMoneyger/chemican_components/commit/46d9be0a919b53a5a657c20e66385375783a3c81))
+* **deps:** Fix vulnerabilities via npm audit fix ([8bb87d3](https://github.com/GoodMoneyger/chemican_components/commit/8bb87d3a839810a46b30260d0f91d900172aae22))
+
 ## [1.7.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.6.0...v1.7.0) (2026-08-04)
 
 ### Features
