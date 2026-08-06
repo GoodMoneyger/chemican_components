@@ -9,6 +9,21 @@ const twMerge = extendTailwindMerge({
     theme: {
       spacing: ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxxl'],
     },
+    classGroups: {
+      z: [
+        {
+          z: [
+            'slight',
+            'navigation',
+            'drawer',
+            'dialog',
+            'dropdown',
+            'tooltip',
+            'max',
+          ],
+        },
+      ],
+    },
   },
 });
 
