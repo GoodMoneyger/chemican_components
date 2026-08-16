@@ -12,7 +12,7 @@ const meta: Meta<typeof Badge> = {
   argTypes: {
     intent: {
       control: 'select',
-      options: ['default', 'new', 'danger'],
+      options: ['default', 'new', 'danger', 'autofill'],
     },
     icon: {
       control: false,
@@ -49,6 +49,13 @@ export const Danger: Story = {
   },
 };
 
+export const Autofill: Story = {
+  args: {
+    children: '自動入力',
+    intent: 'autofill',
+  },
+};
+
 export const AsChild: Story = {
   render: () => (
     <div className="space-y-6">
@@ -60,6 +67,9 @@ export const AsChild: Story = {
           </Badge>
           <Badge asChild intent="new">
             <button>Clickable New Badge</button>
+          </Badge>
+          <Badge asChild intent="autofill">
+            <button>Clickable Autofill Badge</button>
           </Badge>
         </div>
       </div>
@@ -77,6 +87,11 @@ export const AsChild: Story = {
               New Link
             </a>
           </Badge>
+          <Badge asChild intent="autofill">
+            <a href="#" className="cursor-pointer">
+              Autofill Link
+            </a>
+          </Badge>
         </div>
       </div>
     </div>
@@ -92,6 +107,7 @@ export const UseCases: Story = {
           <Badge intent="default">承認済み</Badge>
           <Badge intent="new">新規</Badge>
           <Badge intent="danger">要注意</Badge>
+          <Badge intent="autofill">自動入力</Badge>
         </div>
       </div>
 
@@ -164,6 +180,10 @@ export const AllVariants: Story = {
           <div className="space-y-1">
             <Badge intent="danger">With Icon</Badge>
           </div>
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium">Autofill</h3>
+          <Badge intent="autofill">Autofill Badge</Badge>
         </div>
       </div>
     </div>
