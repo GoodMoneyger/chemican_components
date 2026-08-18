@@ -16,6 +16,8 @@ const badgeVariants = cva(
         default: `rounded-sm bg-shape-accent-lime-pale
         text-shape-interactive-primary-selected`,
         new: 'rounded-sm text-accent-purple-soft bg-shape-accent-purple-pale',
+        autofill:
+          'rounded-sm bg-shape-accent-green-pale text-accent-green-soft',
         danger: `rounded-sm border-interactive-alert-default text-body-alert
         pl-4.5 border border-dashed`,
       },
@@ -33,7 +35,7 @@ export interface BadgeProps
    * The intent of the badge
    * @default 'default'
    */
-  intent?: 'default' | 'new' | 'danger';
+  intent?: 'default' | 'new' | 'danger' | 'autofill';
   /**
    * Icon to display (only for danger intent in regular mode)
    * Note: Icons are not rendered when using asChild mode
