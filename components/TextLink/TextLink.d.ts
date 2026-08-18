@@ -2,8 +2,9 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const textLinkVariants: (props?: ({
-    intent?: "primary" | "secondary" | "tertiary" | null | undefined;
+    intent?: "primary" | "secondary" | "tertiary" | "inverse" | null | undefined;
     size?: "xs" | "sm" | "md" | "lg" | "inherit" | null | undefined;
+    disabled?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface TextLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'color'>, VariantProps<typeof textLinkVariants> {
     /**
@@ -25,11 +26,15 @@ export interface TextLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAncho
     /**
      * Link intent
      */
-    intent?: 'primary' | 'secondary' | 'tertiary';
+    intent?: 'primary' | 'secondary' | 'tertiary' | 'inverse';
     /**
      * Link size
      */
     size?: 'lg' | 'md' | 'sm' | 'xs' | 'inherit';
+    /**
+     * Disabled state of the link
+     */
+    disabled?: boolean;
 }
 export declare const TextLink: React.ForwardRefExoticComponent<TextLinkProps & React.RefAttributes<HTMLAnchorElement>>;
 export {};
