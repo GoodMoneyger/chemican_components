@@ -2,14 +2,14 @@ import { default as React } from '../../../node_modules/react';
 import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const badgeVariants: (props?: ({
-    intent?: "default" | "danger" | "new" | null | undefined;
+    intent?: "default" | "danger" | "new" | "autofill" | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
     /**
      * The intent of the badge
      * @default 'default'
      */
-    intent?: 'default' | 'new' | 'danger';
+    intent?: 'default' | 'new' | 'danger' | 'autofill';
     /**
      * Icon to display (only for danger intent in regular mode)
      * Note: Icons are not rendered when using asChild mode
