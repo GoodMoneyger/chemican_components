@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.9.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.8.0...v1.9.0) (2026-08-18)
+
+### Features
+
+* **Badge:** Add autofill intent ([57675ad](https://github.com/GoodMoneyger/chemican_components/commit/57675ad6aecaf1d876e506af304817293e77ee31))
+* **textlink:** Add disabled state and inverse intent ([635368a](https://github.com/GoodMoneyger/chemican_components/commit/635368a7e57d180eade53174ba1b536e419c7e0d))
+
+### CI
+
+* Fix vulnerability and use node 24 throughout ([26b62d2](https://github.com/GoodMoneyger/chemican_components/commit/26b62d247be21d4e9da3a8da41afbd8607e3312c))
+
 ## [1.8.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.7.0...v1.8.0) (2026-08-06)
 
 ### Features
