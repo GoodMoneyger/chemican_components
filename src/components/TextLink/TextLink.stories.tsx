@@ -19,7 +19,7 @@ const meta: Meta<typeof TextLink> = {
   argTypes: {
     intent: {
       control: 'select',
-      options: ['primary', 'secondary', 'tertiary'],
+      options: ['primary', 'secondary', 'tertiary', 'inverse'],
     },
     size: {
       control: 'select',
@@ -32,6 +32,9 @@ const meta: Meta<typeof TextLink> = {
       control: false,
     },
     asChild: {
+      control: 'boolean',
+    },
+    disabled: {
       control: 'boolean',
     },
   },
@@ -70,6 +73,60 @@ export const WithBothIcons: Story = {
     leadingIcon: IconDownload,
     trailingIcon: IconArrowRight,
   },
+};
+
+export const Inverse: Story = {
+  render: () => (
+    <div className="space-y-4 rounded-md bg-interactive-primary-default p-6">
+      <div>
+        <TextLink href="#" intent="inverse">
+          Inverse Link
+        </TextLink>
+      </div>
+      <div>
+        <TextLink href="#" intent="inverse" leadingIcon={IconMail}>
+          Leading Icon
+        </TextLink>{' '}
+        <TextLink href="#" intent="inverse" trailingIcon={IconExternalLink}>
+          Trailing Icon
+        </TextLink>
+      </div>
+    </div>
+  ),
+};
+
+export const Disabled: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-sm font-medium mb-2">Primary Disabled</h3>
+        <TextLink href="#" intent="primary" disabled>
+          Primary Link
+        </TextLink>
+      </div>
+      <div>
+        <h3 className="text-sm font-medium mb-2">Secondary Disabled</h3>
+        <TextLink href="#" intent="secondary" disabled>
+          Secondary Link
+        </TextLink>
+      </div>
+      <div>
+        <h3 className="text-sm font-medium mb-2">Tertiary Disabled</h3>
+        <TextLink href="#" intent="tertiary" disabled>
+          Tertiary Link
+        </TextLink>
+      </div>
+      <div>
+        <h3 className="text-sm font-medium mb-2">With Icons</h3>
+        <TextLink href="#" disabled leadingIcon={IconMail}>
+          Leading Icon
+        </TextLink>{' '}
+        <TextLink href="#" disabled trailingIcon={IconExternalLink}>
+          Trailing Icon
+        </TextLink>
+      </div>
+    </div>
+  ),
 };
 
 export const Intents: Story = {
@@ -347,11 +404,8 @@ export const UseCases: Story = {
         <h3 className="text-lg font-medium mb-4">Inline Links in Text</h3>
         <p className="text-body-primary">
           For more information, please{' '}
-          <TextLink href="/contact" size="sm">
-            contact us
-          </TextLink>{' '}
-          or{' '}
-          <TextLink href="/docs" size="sm" trailingIcon={IconExternalLink}>
+          <TextLink href="/contact">contact us</TextLink> or{' '}
+          <TextLink href="/docs" trailingIcon={IconExternalLink}>
             read the documentation
           </TextLink>
           .

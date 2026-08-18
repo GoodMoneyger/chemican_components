@@ -7,9 +7,9 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 
 const textLinkVariants = cva(
-  `font-normal inline-flex items-center justify-center border border-transparent
-  decoration-solid decoration-from-font underline-offset-[3px] transition-colors
-  duration-75`,
+  `font-normal inline-flex items-baseline justify-center border
+  border-transparent decoration-solid decoration-from-font
+  underline-offset-[3px] transition-colors duration-75`,
   {
     variants: {
       intent: {
@@ -18,20 +18,26 @@ const textLinkVariants = cva(
         active:text-interactive-primary-active
         [:not(:hover):not(:active)]:underline`,
         secondary: 'text-body-primary [:not(:hover):not(:active)]:underline',
-        tertiary: `text-body-primary [&_svg]:text-shape-primary hover:underline
-        active:underline`,
+        tertiary: `text-body-secondary [&_svg]:text-shape-primary
+        hover:underline active:underline`,
+        inverse: `text-shape-interactive-inverse
+        [&_svg]:text-shape-interactive-inverse not-[:hover]:underline`,
       },
       size: {
         lg: 'gap-xxs text-lg',
         md: 'gap-xxxs text-md',
         sm: 'gap-xxxs text-sm',
         xs: 'gap-xxxs text-xs',
-        inherit: '',
+        inherit: 'gap-xxxs',
+      },
+      disabled: {
+        true: `text-body-disabled [&_svg]:text-shape-interactive-disabled
+        pointer-events-none`,
       },
     },
     defaultVariants: {
       intent: 'primary',
-      size: 'md',
+      size: 'inherit',
     },
   }
 );
@@ -65,11 +71,15 @@ export interface TextLinkProps
   /**
    * Link intent
    */
-  intent?: 'primary' | 'secondary' | 'tertiary';
+  intent?: 'primary' | 'secondary' | 'tertiary' | 'inverse';
   /**
    * Link size
    */
   size?: 'lg' | 'md' | 'sm' | 'xs' | 'inherit';
+  /**
+   * Disabled state of the link
+   */
+  disabled?: boolean;
 }
 
 export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
@@ -79,6 +89,7 @@ export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
       intent = 'primary',
       size = 'inherit',
       asChild = false,
+      disabled,
       leadingIcon,
       trailingIcon,
       children,
@@ -95,7 +106,10 @@ export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
       return (
         <Comp
           ref={ref}
-          className={cn(textLinkVariants({ intent, size }), className)}
+          className={cn(
+            textLinkVariants({ intent, size, disabled }),
+            className
+          )}
           {...props}
         >
           {children}
@@ -106,17 +120,17 @@ export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
     return (
       <Comp
         ref={ref}
-        className={cn(textLinkVariants({ intent, size }), className)}
+        className={cn(textLinkVariants({ intent, size, disabled }), className)}
         {...props}
       >
         {leadingIcon && (
-          <span className="flex-shrink-0">
+          <span className="flex flex-shrink-0 items-center self-center">
             {renderIcon(leadingIcon, { size: iconSize })}
           </span>
         )}
         {children}
         {trailingIcon && (
-          <span className="flex-shrink-0">
+          <span className="flex flex-shrink-0 items-center self-center">
             {renderIcon(trailingIcon, { size: iconSize })}
           </span>
         )}
