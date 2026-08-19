@@ -13,11 +13,11 @@ Our **React component library** built with **Radix UI, TailwindCSS, and TypeScri
 Install directly from GitHub:
 
 ```sh
-npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-1.9.0
+npm install --save @chemican/components@git+ssh://git@github.com:GoodMoneyger/chemican_components.git#release-1.9.1
 ```
 
 > [!NOTE]
-> `#release-1.9.0` points to a specific version. You should set versions manually to avoid breaking changes.
+> `#release-1.9.1` points to a specific version. You should set versions manually to avoid breaking changes.
 
 ---
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.9.0...v1.9.1) (2026-08-19)
+
+### Refactoring
+
+* **MultiSelect:** enhance component to be more flexible ([#170](https://github.com/GoodMoneyger/chemican_components/issues/170)) ([bc42ddf](https://github.com/GoodMoneyger/chemican_components/commit/bc42ddf943f8d0881e6a4edc6e17681204efeca6))
+
 ## [1.9.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.8.0...v1.9.0) (2026-08-18)
 
 ### Features
