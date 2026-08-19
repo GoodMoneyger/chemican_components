@@ -80,7 +80,10 @@ export interface RenderOptionContext<T = string | number> {
  * Props for MultiSelect component
  */
 interface MultiSelectProps<T = string | number>
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'defaultValue'>,
+  extends Omit<
+      React.ButtonHTMLAttributes<HTMLButtonElement>,
+      'defaultValue' | 'value'
+    >,
     VariantProps<typeof multiSelectVariants> {
   /**
    * Array of options or grouped options to display in the dropdown.
@@ -90,9 +93,26 @@ interface MultiSelectProps<T = string | number>
 
   /**
    * Initial selected values when the component mounts.
+   * Ignored when `value` is provided.
    * Optional, defaults to an empty array.
    */
   defaultValue?: T[];
+
+  /**
+   * Selected values. Providing this makes the component controlled: it renders
+   * exactly what is passed and never changes the selection on its own, so every
+   * mutation has to be applied by the parent from `onValueChange`.
+   *
+   * Use this when the selection has to stay in sync with state the parent also
+   * writes to (resetting a draft when a popover reopens, confirming a
+   * destructive change before applying it), instead of pushing values in
+   * through the ref.
+   *
+   * When omitted, the component keeps its own selection state and `defaultValue`
+   * seeds it.
+   * Optional.
+   */
+  value?: T[];
 
   /**
    * Content displayed in the trigger button when no options are selected.
@@ -141,6 +161,22 @@ interface MultiSelectProps<T = string | number>
    * Optional, defaults to 3.
    */
   maxCount?: number;
+
+  /**
+   * Maximum number of options that can be selected at once.
+   * Once the limit is reached, unselected options render disabled (they stay
+   * visible, so the user can see what they would have to deselect first) and
+   * select-all is hidden when it would overshoot the limit.
+   * Optional, defaults to undefined (no limit).
+   */
+  maxSelected?: number;
+
+  /**
+   * Message announced to screen readers when the user tries to select past
+   * `maxSelected`.
+   * Optional, defaults to "選択できる上限に達しました。" (Selection limit reached).
+   */
+  maxSelectedReachedLabel?: string;
 
   /**
    * The modality of the popover. When set to true, interaction with outside elements
@@ -210,6 +246,15 @@ interface MultiSelectProps<T = string | number>
    * Optional, defaults to "閉じる" (Close).
    */
   closeLabel?: React.ReactNode;
+
+  /**
+   * Content rendered in the popover footer, above the clear/close actions.
+   * It sits outside the scroll container, so it stays visible while the user
+   * scrolls or searches - use it for counters, limits and hints that have to
+   * remain readable for the whole session (e.g. "3 / 15 seats used").
+   * Optional.
+   */
+  footerContent?: React.ReactNode;
 
   /**
    * Label appended to the overflow badge when more selections exist than can be shown.
@@ -312,8 +357,26 @@ interface MultiSelectProps<T = string | number>
    * If true, filters options by both value and label when searching.
    * If false, only filters by label.
    * Optional, defaults to false.
+   * Ignored when `filterOption` is provided.
    */
   filterByValueAndLabel?: boolean;
+
+  /**
+   * Custom match predicate used to filter options as the user searches.
+   * Receives the whole option object, so it can match on fields the built-in
+   * filter never sees (secondary text, ids, tags) - return true to keep the
+   * option. `search` is passed trimmed but with its original casing.
+   *
+   * Takes precedence over both the built-in filter and `filterByValueAndLabel`.
+   * Do not combine it with `onSearchValueChange`-driven server-side search: the
+   * predicate filters the options the parent already narrowed down.
+   *
+   * Because the component then knows the real match count, `maxDisplayedOptions`
+   * keeps truncating while searching and `moreOptionsLabel` reports how many
+   * matches are hidden.
+   * Optional.
+   */
+  filterOption?: (option: MultiSelectOption<T>, search: string) => boolean;
 
   /**
    * Custom trigger element to replace the default button trigger.
@@ -447,6 +510,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     onApplySelection = (value) => value,
     variant,
     defaultValue = [] as T[],
+    value: controlledValue,
     placeholder = '選択してください',
     placeholderAriaLabel = '選択してください',
     triggerDescription = 'マルチセレクトドロップダウン。矢印キーでナビゲート、Enterで選択、Escapeで閉じます。',
@@ -458,9 +522,12 @@ const MultiSelectInner = <T extends string | number = string | number>(
     selectAllCountLabel = 'オプション',
     clearAllLabel = 'すべてクリア',
     closeLabel = '閉じる',
+    footerContent,
     moreSelectedLabel = 'その他',
     searchPlaceholder = 'オプションを検索...',
     maxCount = 10,
+    maxSelected,
+    maxSelectedReachedLabel = '選択できる上限に達しました。',
     modalPopover = false,
     className,
     hideSelectAll = false,
@@ -479,6 +546,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     resetOnDefaultValueChange = true,
     closeOnSelect = false,
     filterByValueAndLabel = false,
+    filterOption,
     renderOption,
     customTrigger,
     selectionDisplayMode = 'default',
@@ -491,9 +559,20 @@ const MultiSelectInner = <T extends string | number = string | number>(
   }: MultiSelectProps<T>,
   ref: React.Ref<MultiSelectRef<T>>
 ) => {
-  const [selectedValues, setSelectedValues] = React.useState<T[]>(defaultValue);
+  const [internalSelectedValues, setInternalSelectedValues] =
+    React.useState<T[]>(defaultValue);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
+
+  // Controlled when `value` is passed: the parent owns the selection and the
+  // internal state is left untouched, so nothing can drift between the two.
+  const isControlled = controlledValue !== undefined;
+  const selectedValues = isControlled
+    ? controlledValue
+    : internalSelectedValues;
+
+  const isSelectionFull =
+    maxSelected !== undefined && selectedValues.length >= maxSelected;
 
   const [politeMessage, setPoliteMessage] = React.useState('');
   const [assertiveMessage, setAssertiveMessage] = React.useState('');
@@ -512,6 +591,18 @@ const MultiSelectInner = <T extends string | number = string | number>(
       }
     },
     []
+  );
+
+  // Single write path for the selection: keeps the uncontrolled state in step
+  // while staying a no-op on the internal state when the parent controls it.
+  const commitValues = React.useCallback(
+    (values: T[]) => {
+      if (!isControlled) {
+        setInternalSelectedValues(values);
+      }
+      onValueChange(values);
+    },
+    [isControlled, onValueChange]
   );
 
   const multiSelectId = React.useId();
@@ -539,11 +630,10 @@ const MultiSelectInner = <T extends string | number = string | number>(
   }, []);
 
   const resetToDefault = React.useCallback(() => {
-    setSelectedValues(defaultValue);
     setIsPopoverOpen(false);
     setSearchValue('');
-    onValueChange(defaultValue);
-  }, [defaultValue, onValueChange]);
+    commitValues(defaultValue);
+  }, [defaultValue, commitValues]);
 
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
@@ -552,14 +642,8 @@ const MultiSelectInner = <T extends string | number = string | number>(
     () => ({
       reset: resetToDefault,
       getSelectedValues: () => selectedValues,
-      setSelectedValues: (values: T[]) => {
-        setSelectedValues(values);
-        onValueChange(values);
-      },
-      clear: () => {
-        setSelectedValues([]);
-        onValueChange([]);
-      },
+      setSelectedValues: commitValues,
+      clear: () => commitValues([] as T[]),
       focus: () => {
         if (buttonRef.current) {
           buttonRef.current.focus();
@@ -576,7 +660,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
         }
       },
     }),
-    [resetToDefault, selectedValues, onValueChange]
+    [resetToDefault, selectedValues, commitValues]
   );
 
   const [screenSize, setScreenSize] = React.useState<
@@ -714,8 +798,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     } else if (event.key === 'Backspace' && !event.currentTarget.value) {
       const newSelectedValues = [...selectedValues];
       newSelectedValues.pop();
-      setSelectedValues(newSelectedValues);
-      onValueChange(newSelectedValues);
+      commitValues(newSelectedValues);
     }
   };
 
@@ -723,21 +806,29 @@ const MultiSelectInner = <T extends string | number = string | number>(
     if (disabled) return;
     const option = getOptionByValue(optionValue);
     if (option?.disabled) return;
-    const newSelectedValues = selectedValues.includes(optionValue)
+    const isSelected = selectedValues.includes(optionValue);
+    // Deselecting is always allowed - the limit only blocks growing the
+    // selection, otherwise a full selection could not be edited at all.
+    if (!isSelected && isSelectionFull) {
+      announce(maxSelectedReachedLabel, 'assertive');
+      return;
+    }
+    const newSelectedValues = isSelected
       ? selectedValues.filter((value) => value !== optionValue)
       : [...selectedValues, optionValue];
-    setSelectedValues(newSelectedValues);
-    onValueChange(newSelectedValues);
+    commitValues(newSelectedValues);
     if (closeOnSelect) {
       setIsPopoverOpen(false);
     }
   };
 
+  // Clearing edits the pending selection like any other toggle does; it is the
+  // close action that commits it. Clearing used to fire `onApplySelection` too,
+  // which committed an empty selection behind a popover that stayed open, with
+  // no way to back out of it.
   const handleClear = () => {
     if (disabled) return;
-    setSelectedValues([]);
-    onApplySelection([]);
-    onValueChange([]);
+    commitValues([] as T[]);
   };
 
   const handleTogglePopover = () => {
@@ -751,19 +842,17 @@ const MultiSelectInner = <T extends string | number = string | number>(
       0,
       responsiveSettings.maxCount
     );
-    setSelectedValues(newSelectedValues);
-    onValueChange(newSelectedValues);
+    commitValues(newSelectedValues);
   };
 
   const toggleAll = () => {
     if (disabled) return;
     const allOptions = getAllOptions().filter((option) => !option.disabled);
+    if (maxSelected !== undefined && allOptions.length > maxSelected) return;
     if (selectedValues.length === allOptions.length) {
       handleClear();
     } else {
-      const allValues = allOptions.map((option) => option.value);
-      setSelectedValues(allValues);
-      onValueChange(allValues);
+      commitValues(allOptions.map((option) => option.value));
     }
 
     if (closeOnSelect) {
@@ -805,25 +894,69 @@ const MultiSelectInner = <T extends string | number = string | number>(
   const effectiveRenderOption = renderOption || defaultRenderOption;
 
   const hasOptions = getAllOptions().length > 0;
-  const isSearching = Boolean(searchValue.trim());
+  const searchTerm = searchValue.trim();
+  const isSearching = Boolean(searchTerm);
+
+  // With `filterOption` the component does the filtering itself instead of
+  // handing the search string to cmdk, which only ever sees `value:label`.
+  const isLocallyFiltered = Boolean(filterOption) && isSearching;
+  const displayOptions = React.useMemo(():
+    | MultiSelectOption<T>[]
+    | MultiSelectGroup<T>[] => {
+    if (!filterOption || !searchTerm) return options;
+    if (isGroupedOptions(options)) {
+      return options.map((group) => ({
+        ...group,
+        options: group.options.filter((option) =>
+          filterOption(option, searchTerm)
+        ),
+      }));
+    }
+    return options.filter((option) => filterOption(option, searchTerm));
+  }, [options, filterOption, searchTerm, isGroupedOptions]);
+
   // In client-side mode, typing reveals every match so truncation is lifted while
   // searching. In server-side mode (onSearchValueChange) the parent already
   // returns a limited page, so keep truncating the displayed results even while
-  // searching.
+  // searching. Same for `filterOption`: the component knows how many options
+  // matched, so it can keep truncating and still report an honest hidden count.
   const shouldTruncate =
     maxDisplayedOptions !== undefined &&
-    (!isSearching || Boolean(onSearchValueChange));
+    (!isSearching || Boolean(onSearchValueChange) || Boolean(filterOption));
+
+  // Options past the limit stay listed but unselectable, so the user can see
+  // what exists and which selections they would have to give up first.
+  const isOptionDisabled = React.useCallback(
+    (option: MultiSelectOption<T>) =>
+      Boolean(option.disabled) ||
+      (isSelectionFull && !selectedValues.includes(option.value)),
+    [isSelectionFull, selectedValues]
+  );
+
+  // Select-all cannot honour a limit it would overshoot, so it is hidden rather
+  // than silently selecting an arbitrary subset.
+  const isSelectAllBlocked =
+    maxSelected !== undefined &&
+    getAllOptions().filter((option) => !option.disabled).length > maxSelected;
 
   React.useEffect(() => {
-    if (!resetOnDefaultValueChange) return;
+    // A controlled component takes its selection from `value` only; syncing
+    // `defaultValue` in as well would fight the parent for ownership.
+    if (!resetOnDefaultValueChange || isControlled) return;
     const prevDefaultValue = prevDefaultValueRef.current;
     if (!arraysEqual(prevDefaultValue, defaultValue)) {
       if (!arraysEqual(selectedValues, defaultValue)) {
-        setSelectedValues(defaultValue);
+        setInternalSelectedValues(defaultValue);
       }
       prevDefaultValueRef.current = [...defaultValue];
     }
-  }, [defaultValue, selectedValues, arraysEqual, resetOnDefaultValueChange]);
+  }, [
+    defaultValue,
+    selectedValues,
+    arraysEqual,
+    resetOnDefaultValueChange,
+    isControlled,
+  ]);
 
   const getWidthConstraints = () => {
     const defaultMinWidth = screenSize === 'mobile' ? '0px' : '200px';
@@ -1074,9 +1207,13 @@ const MultiSelectInner = <T extends string | number = string | number>(
           }}
           align="start"
         >
-          {/* When the parent handles search (onSearchValueChange), disable the
-              built-in client-side filtering so it controls `options` directly. */}
-          <Command filter={filterItems} shouldFilter={!onSearchValueChange}>
+          {/* Built-in client-side filtering is off when the parent handles
+              search itself (onSearchValueChange) or supplies its own match
+              predicate (filterOption). */}
+          <Command
+            filter={filterItems}
+            shouldFilter={!onSearchValueChange && !filterOption}
+          >
             {searchable && (
               <header>
                 <div id={`${multiSelectId}-search-help`} className="sr-only">
@@ -1129,49 +1266,53 @@ const MultiSelectInner = <T extends string | number = string | number>(
                 </div>
               )}
 
-              {!loading && !hideSelectAll && !searchValue && hasOptions && (
-                <CommandGroup>
-                  <CommandItem
-                    key="all"
-                    value="select-all"
-                    onSelect={toggleAll}
-                    role="option"
-                    aria-selected={
-                      selectedValues.length ===
-                      getAllOptions().filter((opt) => !opt.disabled).length
-                    }
-                    aria-label={`Select all ${getAllOptions().length} options`}
-                    className="cursor-pointer"
-                  >
-                    <Checkbox
-                      className="mr-xs"
-                      checked={
+              {!loading &&
+                !hideSelectAll &&
+                !isSelectAllBlocked &&
+                !searchValue &&
+                hasOptions && (
+                  <CommandGroup>
+                    <CommandItem
+                      key="all"
+                      value="select-all"
+                      onSelect={toggleAll}
+                      role="option"
+                      aria-selected={
                         selectedValues.length ===
                         getAllOptions().filter((opt) => !opt.disabled).length
                       }
-                    />
-                    <span>
-                      ({selectAllLabel}
-                      {getAllOptions().length > 20 ? (
-                        <>
-                          {' - '}
-                          {getAllOptions().length} {selectAllCountLabel}
-                        </>
-                      ) : null}
-                      )
-                    </span>
-                  </CommandItem>
-                </CommandGroup>
-              )}
+                      aria-label={`Select all ${getAllOptions().length} options`}
+                      className="cursor-pointer"
+                    >
+                      <Checkbox
+                        className="mr-xs"
+                        checked={
+                          selectedValues.length ===
+                          getAllOptions().filter((opt) => !opt.disabled).length
+                        }
+                      />
+                      <span>
+                        ({selectAllLabel}
+                        {getAllOptions().length > 20 ? (
+                          <>
+                            {' - '}
+                            {getAllOptions().length} {selectAllCountLabel}
+                          </>
+                        ) : null}
+                        )
+                      </span>
+                    </CommandItem>
+                  </CommandGroup>
+                )}
               {!loading &&
-                (isGroupedOptions(options) ? (
+                (isGroupedOptions(displayOptions) ? (
                   (() => {
                     let rendered = 0;
-                    const totalOptions = options.reduce(
+                    const totalOptions = displayOptions.reduce(
                       (sum, g) => sum + g.options.length,
                       0
                     );
-                    const groups = options.map((group) => {
+                    const groups = displayOptions.map((group) => {
                       const visibleOptions = shouldTruncate
                         ? group.options.filter(
                             (opt) =>
@@ -1186,9 +1327,12 @@ const MultiSelectInner = <T extends string | number = string | number>(
                       0
                     );
                     // Use the server total when provided so the hint reflects
-                    // every available option, not just the loaded subset.
+                    // every available option, not just the loaded subset. It
+                    // does not apply once a local search narrowed the list down.
                     const hiddenCount =
-                      (totalOptionsCount ?? totalOptions) - visibleCount;
+                      (isLocallyFiltered
+                        ? totalOptions
+                        : (totalOptionsCount ?? totalOptions)) - visibleCount;
                     return (
                       <>
                         {groups.map((group) => {
@@ -1202,6 +1346,8 @@ const MultiSelectInner = <T extends string | number = string | number>(
                                 const isSelected = selectedValues.includes(
                                   option.value
                                 );
+                                const isDisabledOption =
+                                  isOptionDisabled(option);
                                 return (
                                   <CommandItem
                                     key={option.value}
@@ -1209,18 +1355,18 @@ const MultiSelectInner = <T extends string | number = string | number>(
                                     onSelect={() => toggleOption(option.value)}
                                     role="option"
                                     aria-selected={isSelected}
-                                    aria-disabled={option.disabled ?? false}
+                                    aria-disabled={isDisabledOption}
                                     aria-label={`${option.label}${
                                       isSelected
                                         ? ', selected'
                                         : ', not selected'
-                                    }${option.disabled ? ', disabled' : ''}`}
+                                    }${isDisabledOption ? ', disabled' : ''}`}
                                     className={cn(
                                       'cursor-pointer',
-                                      option.disabled &&
+                                      isDisabledOption &&
                                         `text-interactive-disabled cursor-not-allowed opacity-100 data-[disabled=true]:opacity-100`
                                     )}
-                                    disabled={Boolean(option.disabled)}
+                                    disabled={isDisabledOption}
                                   >
                                     <Checkbox
                                       className="mr-xs"
@@ -1251,16 +1397,20 @@ const MultiSelectInner = <T extends string | number = string | number>(
                   <CommandGroup>
                     {(() => {
                       const visibleOptions = shouldTruncate
-                        ? options.filter(
+                        ? displayOptions.filter(
                             (opt, i) =>
                               i < maxDisplayedOptions! ||
                               selectedValues.includes(opt.value)
                           )
-                        : options;
+                        : displayOptions;
                       // Use the server total when provided so the hint reflects
-                      // every available option, not just the loaded subset.
+                      // every available option, not just the loaded subset. It
+                      // does not apply once a local search narrowed the list
+                      // down.
                       const hiddenCount =
-                        (totalOptionsCount ?? options.length) -
+                        (isLocallyFiltered
+                          ? displayOptions.length
+                          : (totalOptionsCount ?? displayOptions.length)) -
                         visibleOptions.length;
                       return (
                         <>
@@ -1268,6 +1418,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
                             const isSelected = selectedValues.includes(
                               option.value
                             );
+                            const isDisabledOption = isOptionDisabled(option);
                             return (
                               <CommandItem
                                 key={option.value}
@@ -1275,16 +1426,16 @@ const MultiSelectInner = <T extends string | number = string | number>(
                                 onSelect={() => toggleOption(option.value)}
                                 role="option"
                                 aria-selected={isSelected}
-                                aria-disabled={option.disabled ?? false}
+                                aria-disabled={isDisabledOption}
                                 aria-label={`${option.label}${
                                   isSelected ? ', selected' : ', not selected'
-                                }${option.disabled ? ', disabled' : ''}`}
+                                }${isDisabledOption ? ', disabled' : ''}`}
                                 className={cn(
                                   'cursor-pointer',
-                                  option.disabled &&
+                                  isDisabledOption &&
                                     `text-interactive-disabled cursor-not-allowed opacity-100 data-[disabled=true]:opacity-100`
                                 )}
-                                disabled={Boolean(option.disabled)}
+                                disabled={isDisabledOption}
                               >
                                 <Checkbox
                                   className="mr-xs"
@@ -1313,11 +1464,15 @@ const MultiSelectInner = <T extends string | number = string | number>(
             </CommandList>
 
             <footer
-              className="px-md py-sm bg-surface-primary bottom-0
-                border-t-divider-default flex items-center justify-between
+              className="bg-surface-primary bottom-0 border-t-divider-default
                 border-t"
             >
-              <>
+              {footerContent && (
+                <div className="px-md pt-sm text-body-secondary text-sm">
+                  {footerContent}
+                </div>
+              )}
+              <div className="px-md py-sm flex items-center justify-between">
                 <Button
                   intent="text"
                   size="xs"
@@ -1338,7 +1493,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
                 >
                   {closeLabel}
                 </Button>
-              </>
+              </div>
             </footer>
           </Command>
         </PopoverContent>

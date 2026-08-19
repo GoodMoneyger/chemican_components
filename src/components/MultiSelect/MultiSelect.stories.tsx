@@ -8,6 +8,7 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 
+import { Button } from '../Button';
 import { StatusIndicator } from '../StatusIndicator';
 import type { StatusLevel } from '../StatusIndicator/StatusIndicator';
 import { Tag } from '../Tag';
@@ -74,6 +75,10 @@ const meta: Meta<typeof MultiSelect> = {
     loading: {
       control: 'boolean',
       description: 'Whether to show a loading indicator inside the dropdown',
+    },
+    maxSelected: {
+      control: 'number',
+      description: 'Maximum number of options that can be selected at once',
     },
   },
 };
@@ -1111,6 +1116,281 @@ const handleSearchValueChange = (search: string) => {
   maxDisplayedOptions={5}
   hideSelectAll
   placeholder="Select SDS..."
+/>`,
+      },
+    },
+  },
+};
+
+const seatUsers: MultiSelectOption[] = [
+  {
+    label: 'aoki@example.com',
+    value: 'aoki@example.com',
+    name: 'Aoki Haruka',
+    department: 'Quality Assurance',
+  },
+  {
+    label: 'baba@example.com',
+    value: 'baba@example.com',
+    name: 'Baba Ren',
+    department: 'Manufacturing',
+  },
+  {
+    label: 'chiba@example.com',
+    value: 'chiba@example.com',
+    name: 'Chiba Sora',
+    department: 'Research',
+  },
+  {
+    label: 'doi@example.com',
+    value: 'doi@example.com',
+    name: 'Doi Kaede',
+    department: 'Manufacturing',
+  },
+  {
+    label: 'endo@example.com',
+    value: 'endo@example.com',
+    name: 'Endo Tsubasa',
+    department: 'Logistics',
+  },
+  {
+    label: 'fujii@example.com',
+    value: 'fujii@example.com',
+    name: 'Fujii Nao',
+    department: 'Quality Assurance',
+  },
+  {
+    label: 'goto@example.com',
+    value: 'goto@example.com',
+    name: 'Goto Rin',
+    department: 'Research',
+  },
+  {
+    label: 'hara@example.com',
+    value: 'hara@example.com',
+    name: 'Hara Yuu',
+    department: 'Logistics',
+  },
+];
+
+const matchUserFields = (option: MultiSelectOption, search: string) =>
+  [option.label, option.name as string, option.department as string]
+    .join(' ')
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+const renderUserOption = ({ option }: RenderOptionContext) => (
+  <span className="flex flex-col items-start">
+    <span>{option.label}</span>
+    <span className="text-body-secondary text-xs">
+      {option.name as string} · {option.department as string}
+    </span>
+  </span>
+);
+
+const ControlledSelectionComponent = () => {
+  // The committed assignment, and the draft the dropdown is editing.
+  const [assigned, setAssigned] = React.useState<string[]>([
+    'aoki@example.com',
+    'chiba@example.com',
+  ]);
+  const [draft, setDraft] = React.useState<string[]>(assigned);
+  const [pendingRemoval, setPendingRemoval] = React.useState<string[] | null>(
+    null
+  );
+
+  const commit = (values: string[]) => {
+    setAssigned(values);
+    setDraft(values);
+  };
+
+  const handleApplySelection = (values: string[]) => {
+    // Taking an assignment away needs a confirmation, so the change is held
+    // instead of applied. Holding it is only possible because the parent owns
+    // the selection: the dropdown keeps showing the pending values and either
+    // outcome is a plain state update.
+    if (assigned.some((email) => !values.includes(email))) {
+      setPendingRemoval(values);
+      return;
+    }
+    commit(values);
+  };
+
+  const removedByPending = pendingRemoval
+    ? assigned.filter((email) => !pendingRemoval.includes(email))
+    : [];
+
+  return (
+    <div className="gap-4 flex flex-col items-start">
+      <MultiSelect
+        options={seatUsers}
+        value={draft}
+        onValueChange={setDraft}
+        onApplySelection={handleApplySelection}
+        customTrigger={
+          // Reopening starts from the committed assignment, so a draft that was
+          // dismissed instead of closed cannot be applied later by accident.
+          <Button size="xs" onClick={() => setDraft(assigned)}>
+            Assign users
+          </Button>
+        }
+        hideSelection
+        hideSelectAll
+        autoSize
+        closeLabel="Done"
+        clearAllLabel="Clear all"
+      />
+
+      {pendingRemoval && (
+        <div
+          className="gap-3 border-divider-default p-3 rounded flex items-center
+            border"
+        >
+          <span className="text-sm">
+            Unassign {removedByPending.join(', ')}?
+          </span>
+          <Button
+            size="xs"
+            danger
+            onClick={() => {
+              commit(pendingRemoval);
+              setPendingRemoval(null);
+            }}
+          >
+            Unassign
+          </Button>
+          <Button
+            size="xs"
+            intent="secondary"
+            onClick={() => {
+              // Rejecting the change puts the dropdown back on the assignment.
+              setDraft(assigned);
+              setPendingRemoval(null);
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
+
+      <p className="text-body-secondary text-sm">
+        Draft: {draft.join(', ') || '(none)'}
+      </p>
+      <p className="text-body-primary text-sm">
+        Committed: {assigned.join(', ') || '(none)'}
+      </p>
+    </div>
+  );
+};
+
+export const ControlledSelection: Story = {
+  render: () => <ControlledSelectionComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Passing `value` makes the component controlled: it renders exactly what the parent passes and never changes the selection itself. That is what lets the parent reset a draft (reopening the dropdown starts from the committed assignment, so an abandoned draft cannot be applied later) or hold a change behind a confirmation and reject it - both as plain state updates, with no imperative `ref` calls. `onValueChange` reports every edit, `onApplySelection` fires when the user closes the popover.',
+      },
+      source: {
+        code: `import { Button, MultiSelect } from '@chemican/components';
+import { useState } from 'react';
+
+const [assigned, setAssigned] = useState<string[]>([]);
+const [draft, setDraft] = useState<string[]>(assigned);
+
+<MultiSelect
+  options={users}
+  value={draft}
+  onValueChange={setDraft}
+  onApplySelection={handleApplySelection}
+  customTrigger={
+    // Discard an abandoned draft: plain state, no ref needed.
+    <Button onClick={() => setDraft(assigned)}>Assign users</Button>
+  }
+/>`,
+      },
+    },
+  },
+};
+
+export const WithCustomFilterOption: Story = {
+  args: {
+    options: seatUsers,
+    filterOption: matchUserFields,
+    renderOption: renderUserOption,
+    hideSelectAll: true,
+    placeholder: 'Select users...',
+    searchPlaceholder: 'Search name, email or department...',
+    emptyIndicator: 'No matching users',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The built-in filter only ever sees an option\'s value and label. `filterOption` receives the whole option object instead, so search can match on anything the option carries - here the person\'s name and department, neither of which is in the label. Try searching "logistics" or "sora".',
+      },
+      source: {
+        code: `<MultiSelect
+  options={users}
+  filterOption={(option, search) =>
+    [option.label, option.name, option.department]
+      .join(' ')
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  }
+  renderOption={renderUserOption}
+/>`,
+      },
+    },
+  },
+};
+
+const WithFooterContentComponent = () => {
+  const [selected, setSelected] = React.useState<string[]>([]);
+  const seatCount = 3;
+
+  return (
+    <MultiSelect
+      options={seatUsers}
+      value={selected}
+      onValueChange={setSelected}
+      maxSelected={seatCount}
+      maxDisplayedOptions={4}
+      moreOptionsLabel={(count) => `Search to see ${count} more`}
+      footerContent={
+        <span className="flex justify-end">
+          {selected.length} / {seatCount} seats used
+        </span>
+      }
+      filterOption={matchUserFields}
+      hideSelection
+      autoSize
+      placeholder="Assign seats..."
+      closeLabel="Done"
+      clearAllLabel="Clear all"
+    />
+  );
+};
+
+export const WithFooterContentAndMaxSelected: Story = {
+  render: () => <WithFooterContentComponent />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`footerContent` renders above the clear/close actions and outside the scroll container, so a counter or limit hint stays readable while the user scrolls and searches. `maxSelected` caps the selection: once it is reached, unselected options render disabled (still listed, so the user can see what to free up first) and select-all is hidden because it would overshoot the cap. Deselecting always stays possible.',
+      },
+      source: {
+        code: `<MultiSelect
+  options={users}
+  value={selected}
+  onValueChange={setSelected}
+  maxSelected={3}
+  footerContent={
+    <span className="flex justify-end">
+      {selected.length} / 3 seats used
+    </span>
+  }
 />`,
       },
     },
