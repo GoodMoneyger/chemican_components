@@ -42,7 +42,7 @@ export interface RenderOptionContext<T = string | number> {
 /**
  * Props for MultiSelect component
  */
-interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'defaultValue'>, VariantProps<typeof multiSelectVariants> {
+interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'defaultValue' | 'value'>, VariantProps<typeof multiSelectVariants> {
     /**
      * Array of options or grouped options to display in the dropdown.
      * Can be a flat array of options or an array of groups with nested options.
@@ -50,9 +50,25 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
     options: MultiSelectOption<T>[] | MultiSelectGroup<T>[];
     /**
      * Initial selected values when the component mounts.
+     * Ignored when `value` is provided.
      * Optional, defaults to an empty array.
      */
     defaultValue?: T[];
+    /**
+     * Selected values. Providing this makes the component controlled: it renders
+     * exactly what is passed and never changes the selection on its own, so every
+     * mutation has to be applied by the parent from `onValueChange`.
+     *
+     * Use this when the selection has to stay in sync with state the parent also
+     * writes to (resetting a draft when a popover reopens, confirming a
+     * destructive change before applying it), instead of pushing values in
+     * through the ref.
+     *
+     * When omitted, the component keeps its own selection state and `defaultValue`
+     * seeds it.
+     * Optional.
+     */
+    value?: T[];
     /**
      * Content displayed in the trigger button when no options are selected.
      * Optional, defaults to "選択してください" (Please select).
@@ -93,6 +109,20 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      * Optional, defaults to 3.
      */
     maxCount?: number;
+    /**
+     * Maximum number of options that can be selected at once.
+     * Once the limit is reached, unselected options render disabled (they stay
+     * visible, so the user can see what they would have to deselect first) and
+     * select-all is hidden when it would overshoot the limit.
+     * Optional, defaults to undefined (no limit).
+     */
+    maxSelected?: number;
+    /**
+     * Message announced to screen readers when the user tries to select past
+     * `maxSelected`.
+     * Optional, defaults to "選択できる上限に達しました。" (Selection limit reached).
+     */
+    maxSelectedReachedLabel?: string;
     /**
      * The modality of the popover. When set to true, interaction with outside elements
      * will be disabled and only popover content will be visible to screen readers.
@@ -151,6 +181,14 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      * Optional, defaults to "閉じる" (Close).
      */
     closeLabel?: React.ReactNode;
+    /**
+     * Content rendered in the popover footer, above the clear/close actions.
+     * It sits outside the scroll container, so it stays visible while the user
+     * scrolls or searches - use it for counters, limits and hints that have to
+     * remain readable for the whole session (e.g. "3 / 15 seats used").
+     * Optional.
+     */
+    footerContent?: React.ReactNode;
     /**
      * Label appended to the overflow badge when more selections exist than can be shown.
      * Optional, defaults to "more".
@@ -238,8 +276,25 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      * If true, filters options by both value and label when searching.
      * If false, only filters by label.
      * Optional, defaults to false.
+     * Ignored when `filterOption` is provided.
      */
     filterByValueAndLabel?: boolean;
+    /**
+     * Custom match predicate used to filter options as the user searches.
+     * Receives the whole option object, so it can match on fields the built-in
+     * filter never sees (secondary text, ids, tags) - return true to keep the
+     * option. `search` is passed trimmed but with its original casing.
+     *
+     * Takes precedence over both the built-in filter and `filterByValueAndLabel`.
+     * Do not combine it with `onSearchValueChange`-driven server-side search: the
+     * predicate filters the options the parent already narrowed down.
+     *
+     * Because the component then knows the real match count, `maxDisplayedOptions`
+     * keeps truncating while searching and `moreOptionsLabel` reports how many
+     * matches are hidden.
+     * Optional.
+     */
+    filterOption?: (option: MultiSelectOption<T>, search: string) => boolean;
     /**
      * Custom trigger element to replace the default button trigger.
      * Allows complete customization of the trigger component.
