@@ -351,6 +351,33 @@ export const WithSearch: StoryFn = () => {
   );
 };
 
+export const WithRenderValue: StoryFn = () => {
+  const [value, setValue] = React.useState<string>('2');
+
+  const options = Array.from({ length: 5 }, (_, i) => ({
+    value: String(i + 1),
+    label: `${i + 1} / 5`,
+  }));
+
+  return (
+    <div>
+      <h3 className="text-lg font-semibold mb-4">
+        Custom Trigger Content (renderValue)
+      </h3>
+      <p className="text-sm mb-4">
+        The trigger shows extra context that the option labels omit.
+      </p>
+      <Select
+        variant="default"
+        options={options}
+        value={value}
+        onValueChange={setValue}
+        renderValue={`${value} / 5（全213件）`}
+      />
+    </div>
+  );
+};
+
 export const IsolatedVsFormField: StoryFn = () => (
   <div className="space-y-8">
     <div>
