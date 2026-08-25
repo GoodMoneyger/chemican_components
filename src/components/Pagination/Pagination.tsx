@@ -47,6 +47,14 @@ export interface PaginationProps
     totalItems: number
   ) => React.ReactNode;
 
+  // Trigger label formatter for the page select (for internationalization).
+  // Unlike formatPageOption, this is only shown in the closed trigger.
+  formatPageValue?: (
+    page: number,
+    totalPages: number,
+    totalItems: number
+  ) => React.ReactNode;
+
   // Navigation control
   showNavigation?: boolean;
 }
@@ -63,7 +71,8 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
       onRowsPerPageChange,
       rowsPerPageLabel = '表示行数',
       pageSelectLabel = 'ページ選択',
-      formatPageOption = (page, totalPages, totalItems) =>
+      formatPageOption = (page, totalPages) => `${page} / ${totalPages}`,
+      formatPageValue = (page, totalPages, totalItems) =>
         `${page} / ${totalPages}（全${totalItems}件）`,
       showNavigation = true,
       size,
@@ -138,6 +147,12 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
             onValueChange={handlePageChange}
             options={pageSelectOptions}
             disabled={totalItems === 0}
+            renderValue={formatPageValue(
+              currentPage,
+              effectiveTotalPages,
+              totalItems
+            )}
+            searchThreshold={Infinity}
           />
         </div>
 

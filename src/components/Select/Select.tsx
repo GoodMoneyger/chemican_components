@@ -134,6 +134,11 @@ export interface SelectProps<T extends number | string = string>
   hideChevron?: boolean;
   searchPlaceholder?: string;
   searchThreshold?: number;
+  /**
+   * Custom content for the trigger. When set, it replaces the selected
+   * option's label in the trigger (options keep their own labels).
+   */
+  renderValue?: React.ReactNode;
 }
 
 export const Select = <T extends number | string = string>({
@@ -149,6 +154,7 @@ export const Select = <T extends number | string = string>({
   onValueChange,
   searchPlaceholder = 'Search...',
   searchThreshold = 7,
+  renderValue,
   ...props
 }: SelectProps<T>) => {
   const [searchValue, setSearchValue] = React.useState('');
@@ -233,7 +239,9 @@ export const Select = <T extends number | string = string>({
               className={cn('hidden', {
                 'text-sm': variant === 'compact',
               })}
-            />
+            >
+              {renderValue}
+            </RadixSelect.Value>
           </span>
         </div>
         {!hideChevron && (
