@@ -31,9 +31,14 @@ export interface SelectProps<T extends number | string = string> extends Variant
     hideChevron?: boolean;
     searchPlaceholder?: string;
     searchThreshold?: number;
+    /**
+     * Custom content for the trigger. When set, it replaces the selected
+     * option's label in the trigger (options keep their own labels).
+     */
+    renderValue?: React.ReactNode;
 }
 export declare const Select: {
-    <T extends number | string = string>({ options, placeholder, className, icon: Icon, invalid, variant, intent, value, hideChevron, onValueChange, searchPlaceholder, searchThreshold, ...props }: SelectProps<T>): import("react/jsx-runtime").JSX.Element;
+    <T extends number | string = string>({ options, placeholder, className, icon: Icon, invalid, variant, intent, value, hideChevron, onValueChange, searchPlaceholder, searchThreshold, renderValue, ...props }: SelectProps<T>): import("react/jsx-runtime").JSX.Element;
     displayName: string;
 };
 export {};

@@ -14,6 +14,7 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLDivElemen
     rowsPerPageLabel?: React.ReactNode;
     pageSelectLabel?: React.ReactNode;
     formatPageOption?: (page: number, totalPages: number, totalItems: number) => React.ReactNode;
+    formatPageValue?: (page: number, totalPages: number, totalItems: number) => React.ReactNode;
     showNavigation?: boolean;
 }
 export declare const Pagination: React.ForwardRefExoticComponent<PaginationProps & React.RefAttributes<HTMLDivElement>>;
