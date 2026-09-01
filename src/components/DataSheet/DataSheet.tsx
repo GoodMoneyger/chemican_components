@@ -207,7 +207,7 @@ const dataSheetKeyValueLabelVariants = cva(
     variants: {
       orientation: {
         vertical: 'leading-none',
-        horizontal: 'w-[120px] shrink-0 leading-[1.5]',
+        horizontal: 'w-[7.5rem] shrink-0 leading-[1.5]',
       },
     },
     defaultVariants: {
@@ -447,7 +447,7 @@ function DataSheetTableRowInner<TItem extends DataSheetItemType = string>(
       <tr
         ref={ref}
         className={cn(
-          header ? 'h-[18px]' : 'border-surface-default border-t',
+          header ? 'h-[1.125rem]' : 'border-surface-default border-t',
           isDeleted && 'opacity-60',
           className
         )}

@@ -31,7 +31,7 @@ const radioButtonVariants = cva(
   `border-shape-interactive-neutral-default
   focus:border-shape-interactive-primary-hover text-body-primary
   data-[state=checked]:text-body-secondary
-  focus-visible:ring-interactive-focused group size-[19px] cursor-[inherit]
+  focus-visible:ring-interactive-focused group size-[1.1875rem] cursor-[inherit]
   rounded-full border-[1.5px] outline-none focus-visible:ring-4`,
   {
     variants: {

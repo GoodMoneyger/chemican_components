@@ -874,7 +874,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
           className={cn(
             multiSelectVariants({ variant }),
             responsiveSettings.compactMode && 'text-xs px-1.5 py-0.5',
-            screenSize === 'mobile' && 'max-w-[120px] truncate',
+            screenSize === 'mobile' && 'max-w-[7.5rem] truncate',
             singleLine && 'flex-shrink-0 whitespace-nowrap',
             '[&>svg]:pointer-events-auto',
             isDisabled && 'cursor-not-allowed'
@@ -959,7 +959,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
   ]);
 
   const getWidthConstraints = () => {
-    const defaultMinWidth = screenSize === 'mobile' ? '0px' : '200px';
+    const defaultMinWidth = screenSize === 'mobile' ? '0px' : '12.5rem';
     const effectiveMinWidth = minWidth || defaultMinWidth;
     const effectiveMaxWidth = maxWidth || '100%';
     return {
@@ -1195,9 +1195,9 @@ const MultiSelectInner = <T extends string | number = string | number>(
           aria-label={optionsListAriaLabel}
           className={cn(
             'p-0 w-auto',
-            screenSize === 'mobile' && 'w-[85vw] max-w-[280px]',
+            screenSize === 'mobile' && 'w-[85vw] max-w-[17.5rem]',
             screenSize === 'tablet' && 'max-w-md w-[70vw]',
-            screenSize === 'desktop' && 'min-w-[300px]',
+            screenSize === 'desktop' && 'min-w-[18.75rem]',
             popoverClassName
           )}
           style={{

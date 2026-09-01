@@ -296,7 +296,7 @@ export const AutoSuggest = React.forwardRef<HTMLInputElement, AutoSuggestProps>(
           className="p-0"
           style={{
             width: 'var(--radix-popover-trigger-width)',
-            maxWidth: '600px',
+            maxWidth: '37.5rem',
           }}
           onOpenAutoFocus={(e) => {
             e.preventDefault();

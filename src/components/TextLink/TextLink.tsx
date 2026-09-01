@@ -9,7 +9,7 @@ import { cn, renderIcon } from '../../lib/utils';
 const textLinkVariants = cva(
   `font-normal inline-flex items-baseline justify-center border
   border-transparent decoration-solid decoration-from-font
-  underline-offset-[3px] transition-colors duration-75`,
+  underline-offset-[0.1875rem] transition-colors duration-75`,
   {
     variants: {
       intent: {

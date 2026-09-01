@@ -211,7 +211,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               month_grid: `col-span-2 row-start-2`,
 
               weekdays: `mb-xs`,
-              weekday: `text-body-secondary text-[13px] font-normal leading-5 tracking-normal text-center`,
+              weekday: `text-body-secondary text-[0.8125rem] font-normal leading-5 tracking-normal text-center`,
               button_previous: `${navigationButton} flex items-center justify-center`,
               button_next: `${navigationButton} flex items-center justify-center`,
               chevron: `fill-current text-interactive-primary-default w-5 h-5`,
