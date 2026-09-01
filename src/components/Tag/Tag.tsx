@@ -375,23 +375,31 @@ export const Tag: React.FC<TagProps> = ({
       {Boolean(onRemove) && !disabled && (
         <button
           className={cn(
-            `bg-interactive-neutral-default h-3 w-3 flex shrink-0 cursor-pointer
-            items-center justify-center rounded-full leading-none`
+            `bg-interactive-neutral-default hover:border-interactive-hover h-3.5
+            w-3.5 box-border flex shrink-0 cursor-pointer items-center
+            justify-center rounded-full border border-transparent leading-none
+            transition-colors`
           )}
           onClick={onRemove}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="text-shape-primary h-2 w-2"
-            viewBox="0 0 24 24"
+            className="text-shape-primary h-1.25 w-1.25"
+            viewBox="0 0 5 5"
             fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
           >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M4.54884 0.117831C4.70594 0.274938 4.70594 0.52966 4.54884 0.686767L0.686767 4.54884C0.52966 4.70594 0.274938 4.70594 0.117831 4.54884C-0.0392769 4.39173 -0.0392769 4.13701 0.117831 3.9799L3.9799 0.117831C4.13701 -0.0392769 4.39173 -0.0392769 4.54884 0.117831Z"
+              fill="currentColor"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M0.117831 0.117831C0.274938 -0.0392769 0.52966 -0.0392769 0.686767 0.117831L4.54884 3.9799C4.70594 4.13701 4.70594 4.39173 4.54884 4.54884C4.39173 4.70594 4.13701 4.70594 3.9799 4.54884L0.117831 0.686767C-0.0392769 0.52966 -0.0392769 0.274938 0.117831 0.117831Z"
+              fill="currentColor"
+            />
           </svg>
         </button>
       )}
