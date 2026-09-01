@@ -208,7 +208,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
         <div
           className={cn(
             inputWrapperVariants({ invalid }),
-            'min-h-11.5 !h-auto max-h-[200px] overflow-y-auto',
+            'min-h-11.5 !h-auto max-h-[12.5rem] overflow-y-auto',
             className
           )}
         >

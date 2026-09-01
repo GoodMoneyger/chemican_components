@@ -19,7 +19,7 @@ const paginationVariants = cva('gap-md flex items-center justify-start', {
 });
 
 const labelVariants = cva(
-  'text-md text-body-primary text-right leading-[14px] whitespace-nowrap'
+  'text-md text-body-primary text-right leading-[0.875rem] whitespace-nowrap'
 );
 
 export interface PaginationProps

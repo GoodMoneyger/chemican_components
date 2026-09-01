@@ -13,14 +13,14 @@ export const Logo: React.FC = () => {
       <img
         src={logoSvg}
         alt="SDS管理"
-        className={`h-[22px] w-[93px] ${
+        className={`h-auto w-[5.8125rem] ${
           isCollapsed ? 'absolute opacity-0' : 'opacity-100'
         }`}
       />
       <img
         src={logoCollapsedSvg}
         alt="SDS管理"
-        className={`h-[22px] w-[22px] ${
+        className={`h-auto w-[1.375rem] ${
           isCollapsed ? 'opacity-100' : 'absolute opacity-0'
         }`}
       />

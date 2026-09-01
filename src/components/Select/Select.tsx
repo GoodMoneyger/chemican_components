@@ -19,7 +19,7 @@ const selectVariants = cva(
       variant: {
         default: 'border-interactive-default p-md rounded gap-xs h-11.5 w-full',
         compact: `py-xxs px-xs rounded-sm gap-xxs
-        hover:bg-interactive-neutral-hover max-w-62 h-[26px] w-fit
+        hover:bg-interactive-neutral-hover max-w-62 h-[1.625rem] w-fit
         border-transparent`,
       },
       intent: {
