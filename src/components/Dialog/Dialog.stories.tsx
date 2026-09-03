@@ -57,6 +57,35 @@ Default.args = {
   ],
 };
 
+export const Large = Template.bind({});
+Large.args = {
+  isOpen: false,
+  size: 'lg',
+  title: 'Wide Dialog',
+  children: (
+    <div className="gap-xl grid grid-cols-2">
+      <section>
+        <h3 className="pb-xs font-bold">Left column</h3>
+        <p>
+          Use the large size for dialogs laid out in columns, which do not read
+          well at the default width.
+        </p>
+      </section>
+      <section>
+        <h3 className="pb-xs font-bold">Right column</h3>
+        <p>Both columns keep a comfortable measure at this width.</p>
+      </section>
+    </div>
+  ),
+  actions: [
+    {
+      label: 'Apply',
+      value: true,
+      intent: 'primary',
+    },
+  ],
+};
+
 export const MultipleActions = Template.bind({});
 MultipleActions.args = {
   isOpen: false,
