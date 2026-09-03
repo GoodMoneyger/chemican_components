@@ -31,7 +31,17 @@ export interface DialogProps
     typeof RadixDialog.Content
   >['onOpenAutoFocus'];
   bodyClassName?: string;
+  /**
+   * Maximum width of the dialog. Use `lg` for content laid out in columns,
+   * which does not read well at the default width.
+   */
+  size?: 'md' | 'lg';
 }
+
+const sizeClasses: Record<NonNullable<DialogProps['size']>, string> = {
+  md: 'max-w-screen-sm',
+  lg: 'max-w-screen-lg',
+};
 
 const defaultActions: DialogAction[] = [
   {
@@ -54,6 +64,7 @@ export const Dialog: React.FC<DialogProps> = ({
   allowClickOutside = true,
   onOpenAutoFocus,
   bodyClassName,
+  size = 'md',
 }) => {
   const [loading, setLoading] = React.useState<number>(-1);
 
@@ -114,9 +125,11 @@ export const Dialog: React.FC<DialogProps> = ({
             onPointerDownOutside={handleOutsideClick}
             onEscapeKeyDown={handleEscapeKeyDown}
             onOpenAutoFocus={onOpenAutoFocus}
-            className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
-              min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
-              -translate-y-1/2 transform"
+            className={cn(
+              `bg-surface-primary rounded-lg z-dialog min-w-96 fixed top-1/2
+              left-1/2 w-2/3 -translate-x-1/2 -translate-y-1/2 transform`,
+              sizeClasses[size]
+            )}
           >
             <header className="px-xl py-lg">
               {title && (
