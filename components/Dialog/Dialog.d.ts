@@ -20,5 +20,10 @@ export interface DialogProps extends React.ComponentProps<typeof RadixDialog.Roo
     allowClickOutside?: boolean;
     onOpenAutoFocus?: React.ComponentProps<typeof RadixDialog.Content>['onOpenAutoFocus'];
     bodyClassName?: string;
+    /**
+     * Maximum width of the dialog. Use `lg` for content laid out in columns,
+     * which does not read well at the default width.
+     */
+    size?: 'md' | 'lg';
 }
 export declare const Dialog: React.FC<DialogProps>;
