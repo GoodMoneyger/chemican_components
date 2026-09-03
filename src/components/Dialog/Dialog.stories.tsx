@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
 
 import { Button } from '../Button';
+import { Select } from '../Select';
+import { TextArea } from '../TextArea';
 import { TextField } from '../TextField';
 
 import type { DialogProps } from './Dialog';
@@ -335,3 +337,140 @@ WithPreventedAutoFocus.args = {
     },
   ],
 };
+
+/**
+ * Auto focus on open.
+ *
+ * The dialog focuses the first field only when it is an empty plain text
+ * input or textarea, so the user can start typing straight away. In every
+ * other case the dialog itself takes the focus, so the keyboard stays inside
+ * the dialog without the caret landing in text the user did not ask to edit
+ * and without a menu popping open.
+ */
+const AutoFocusTemplate: StoryFn<DialogProps & { note: string }> = ({
+  note,
+  children,
+  ...args
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button intent="secondary" onClick={() => setIsOpen(true)}>
+        Open Modal
+      </Button>
+      <Dialog {...args} isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <div className="gap-lg flex flex-col">
+          <p className="text-body-secondary text-sm">{note}</p>
+          {children}
+        </div>
+      </Dialog>
+    </>
+  );
+};
+
+const FIELD_LABEL_CLASS = 'text-body-primary text-sm font-medium';
+
+const MATERIALS = ['Acetone', 'Ethanol', 'Toluene'];
+
+export const AutoFocusEmptyTextField = AutoFocusTemplate.bind({});
+AutoFocusEmptyTextField.storyName = 'Auto focus: empty text field';
+AutoFocusEmptyTextField.args = {
+  title: 'Add product',
+  note: 'The first field is an empty text input, so it takes the focus and you can type immediately.',
+  children: (
+    <div className="gap-xs flex flex-col">
+      <label className={FIELD_LABEL_CLASS}>Product name</label>
+      <TextField placeholder="Product name" />
+    </div>
+  ),
+  actions: [{ label: 'Add', value: true, intent: 'primary' }],
+};
+
+export const AutoFocusEmptyTextArea = AutoFocusTemplate.bind({});
+AutoFocusEmptyTextArea.storyName = 'Auto focus: empty textarea';
+AutoFocusEmptyTextArea.args = {
+  title: 'Request re-digitization',
+  note: 'A textarea counts as a plain text field, so an empty one is focused too.',
+  children: (
+    <div className="gap-xs flex flex-col">
+      <label className={FIELD_LABEL_CLASS}>Comment</label>
+      <TextArea placeholder="What went wrong?" />
+    </div>
+  ),
+  actions: [{ label: 'Send', value: true, intent: 'primary' }],
+};
+
+export const AutoFocusSkippedWhenPrefilled = AutoFocusTemplate.bind({});
+AutoFocusSkippedWhenPrefilled.storyName = 'No auto focus: prefilled field';
+AutoFocusSkippedWhenPrefilled.args = {
+  title: 'Edit product name',
+  note: 'The first field already has a value, as in every edit dialog, so it is left alone rather than dropping the caret in the middle of the existing text. The dialog holds the focus.',
+  children: (
+    <div className="gap-xs flex flex-col">
+      <label className={FIELD_LABEL_CLASS}>Product name</label>
+      <TextField defaultValue="Acetone 99.5%" />
+    </div>
+  ),
+  actions: [{ label: 'Save', value: true, intent: 'primary' }],
+};
+
+export const AutoFocusSkippedForAutoSuggest = AutoFocusTemplate.bind({});
+AutoFocusSkippedForAutoSuggest.storyName = 'No auto focus: auto suggest';
+AutoFocusSkippedForAutoSuggest.args = {
+  title: 'Add material',
+  note: 'An auto suggest is an input, but focusing it opens its suggestion list. It is skipped even while empty.',
+  children: <AutoSuggestField />,
+  actions: [{ label: 'Add', value: true, intent: 'primary' }],
+};
+
+export const AutoFocusSkippedForSelect = AutoFocusTemplate.bind({});
+AutoFocusSkippedForSelect.storyName = 'No auto focus: select';
+AutoFocusSkippedForSelect.args = {
+  title: 'Add exposure limit',
+  note: 'The first field is a select, which the user cannot type into, so the focus stays on the dialog. Note the text field below it is not focused either: only the FIRST field is considered.',
+  children: (
+    <>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>Organization</label>
+        <Select
+          options={[
+            { value: 'acgih', label: 'ACGIH' },
+            { value: 'jsoh', label: 'JSOH' },
+          ]}
+          placeholder="Select an organization"
+        />
+      </div>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>Amount</label>
+        <TextField placeholder="Amount" />
+      </div>
+    </>
+  ),
+  actions: [{ label: 'Add', value: true, intent: 'primary' }],
+};
+
+export const AutoFocusNoFields = AutoFocusTemplate.bind({});
+AutoFocusNoFields.storyName = 'No auto focus: dialog without fields';
+AutoFocusNoFields.args = {
+  title: 'Delete SDS',
+  note: 'A confirmation dialog has no field to focus, so the dialog itself takes the focus and Escape and Tab keep working.',
+  children: <p>This cannot be undone.</p>,
+  actions: [{ label: 'Delete', value: true, intent: 'primary' }],
+};
+
+function AutoSuggestField() {
+  const [value, setValue] = useState('');
+
+  return (
+    <div className="gap-xs flex flex-col">
+      <label className={FIELD_LABEL_CLASS}>Material name</label>
+      <TextField.AutoSuggest
+        value={value}
+        onChange={setValue}
+        suggestions={MATERIALS}
+        placeholder="Start typing a material"
+      />
+    </div>
+  );
+}
