@@ -57,6 +57,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@dnd-kit/helpers": "^0.5.0",
+    "@dnd-kit/react": "^0.5.0",
     "@figma/code-connect": "^1.4.9",
     "@tabler/icons-react": "^3.34.1",
     "@tailwindcss/vite": "^4.1.11",
