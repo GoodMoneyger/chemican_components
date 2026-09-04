@@ -404,8 +404,29 @@ AutoFocusEmptyTextArea.args = {
 export const AutoFocusSkippedWhenPrefilled = AutoFocusTemplate.bind({});
 AutoFocusSkippedWhenPrefilled.storyName = 'No auto focus: prefilled field';
 AutoFocusSkippedWhenPrefilled.args = {
-  title: 'Edit product name',
+  title: 'Edit product',
   note: 'The first field already has a value, as in every edit dialog, so it is left alone rather than dropping the caret in the middle of the existing text. The dialog holds the focus.',
+  children: (
+    <>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>Product name</label>
+        <TextField defaultValue="Acetone 99.5%" />
+      </div>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>Manufacturer</label>
+        <TextField defaultValue="Example Chemicals" />
+      </div>
+    </>
+  ),
+  actions: [{ label: 'Save', value: true, intent: 'primary' }],
+};
+
+export const AutoFocusOnlyFieldPrefilled = AutoFocusTemplate.bind({});
+AutoFocusOnlyFieldPrefilled.storyName =
+  'Auto focus: only field, even prefilled';
+AutoFocusOnlyFieldPrefilled.args = {
+  title: 'Edit product name',
+  note: "A filled field is normally skipped, but when it is the dialog's only field there is nothing else to reach for, so it takes the focus and saves the user a click.",
   children: (
     <div className="gap-xs flex flex-col">
       <label className={FIELD_LABEL_CLASS}>Product name</label>
