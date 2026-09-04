@@ -35,8 +35,8 @@ function isVisible(element: HTMLElement): boolean {
 
 /**
  * True for a control the user can actually act on. A disabled or read only
- * field is not a field the user can do anything with, so it is not counted
- * as the dialog's first field.
+ * field is not somewhere the focus should land, so it is passed over when
+ * picking the dialog's first field.
  */
 function isInteractive(element: HTMLElement): boolean {
   if (element.getAttribute('aria-disabled') === 'true') return false;
@@ -69,22 +69,23 @@ function isPlainTextControl(
  * The first field of the dialog, but only when it is a plain text field the
  * user can start typing into right away.
  *
- * Disabled and read only controls are ignored entirely, so a dialog opening
- * with a disabled field on top — a reference value the user cannot change —
- * still starts at the first field they can act on.
+ * Disabled and read only controls are skipped when picking that field, so a
+ * dialog opening with a disabled field on top — a reference value the user
+ * cannot change — still starts at the first field they can act on. They
+ * still count as fields of the dialog, though: a dialog showing a value
+ * alongside the field is not a one-field dialog, so the exception below does
+ * not apply to it.
  *
  * A filled field is skipped, so an edit dialog does not drop the caret into
- * text the user did not ask to edit — unless it is the only field the user
- * can act on, in which case there is nothing else to reach for and focusing
- * it saves a click.
+ * text the user did not ask to edit — unless it is the dialog's only field,
+ * in which case there is nothing else to reach for and focusing it saves a
+ * click.
  */
 function findFieldToFocus(root: HTMLElement): HTMLElement | null {
   const controls = Array.from(
     root.querySelectorAll<HTMLElement>(FORM_CONTROL_SELECTOR)
-  )
-    .filter(isVisible)
-    .filter(isInteractive);
-  const firstControl = controls[0];
+  ).filter(isVisible);
+  const firstControl = controls.find(isInteractive);
 
   if (!firstControl || !isPlainTextControl(firstControl)) return null;
   if (firstControl.value.trim() !== '' && controls.length > 1) return null;
@@ -96,10 +97,11 @@ function findFieldToFocus(root: HTMLElement): HTMLElement | null {
  * Default `onOpenAutoFocus` handler of `Dialog`.
  *
  * Focuses the first field the user can act on, and only when it is a plain
- * text input or textarea that is either empty or the only such field.
- * Disabled and read only controls are ignored. Otherwise the dialog itself
- * takes the focus, so the keyboard stays inside the dialog without a field
- * being touched.
+ * text input or textarea that is either empty or the dialog's only field.
+ * Disabled and read only controls are skipped when picking that field, but
+ * still count as fields of the dialog. Otherwise the dialog itself takes the
+ * focus, so the keyboard stays inside the dialog without a field being
+ * touched.
  *
  * Exported so that a dialog passing its own handler can still fall back to
  * this behaviour.

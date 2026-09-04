@@ -456,12 +456,12 @@ AutoFocusSkipsDisabledField.args = {
   actions: [{ label: 'Add', value: true, intent: 'primary' }],
 };
 
-export const AutoFocusOnlyEnabledFieldPrefilled = AutoFocusTemplate.bind({});
-AutoFocusOnlyEnabledFieldPrefilled.storyName =
-  'Auto focus: only enabled field, even prefilled';
-AutoFocusOnlyEnabledFieldPrefilled.args = {
+export const AutoFocusSkippedBesideDisabledField = AutoFocusTemplate.bind({});
+AutoFocusSkippedBesideDisabledField.storyName =
+  'No auto focus: prefilled beside a disabled field';
+AutoFocusSkippedBesideDisabledField.args = {
   title: 'Edit IP address name',
-  note: "The disabled field does not count towards the dialog's fields, so the prefilled name below it is the only field the user can act on and takes the focus.",
+  note: 'The focus passes over the disabled field, but the field it lands on is prefilled and the dialog shows more than one field, so it is left alone. A disabled field is skipped, not discounted.',
   children: (
     <>
       <div className="gap-xs flex flex-col">
