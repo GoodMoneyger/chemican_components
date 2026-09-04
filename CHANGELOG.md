@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.10.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.9.1...v1.10.0) (2026-09-04)
+
+### Features
+
+* **Dialog:** Auto focus the first field only when it is an empty plain text field ([#178](https://github.com/GoodMoneyger/chemican_components/issues/178)) ([1384b18](https://github.com/GoodMoneyger/chemican_components/commit/1384b18b3f6f14ba342385f1e298aaa1efc5ef1a))
+* **select,pagination:** Separate page select trigger label and drop page search ([6de2c84](https://github.com/GoodMoneyger/chemican_components/commit/6de2c841240d63f0773dd32cf972b65410ceda1b))
+
+### Bug Fixes
+
+* **multiple:** Convert px stylings to rem so components scale with root font size ([d416415](https://github.com/GoodMoneyger/chemican_components/commit/d416415766881f9c15999265249dccffe7703540))
+* **tag:** Enlarge close icon and add hover state ([520a72f](https://github.com/GoodMoneyger/chemican_components/commit/520a72fac682db94174c40e6a7cb660e3cd140ee))
+
+### Refactoring
+
+* **Dialog:** Add a new props for dialog size ([#177](https://github.com/GoodMoneyger/chemican_components/issues/177)) ([2434ce6](https://github.com/GoodMoneyger/chemican_components/commit/2434ce6bd949bc12b9de7d7aa8514d2d6dc81b55))
+
+### Build
+
+* **deps-dev:** bump @humanfs/node from 0.16.7 to 0.16.8 ([b7adeeb](https://github.com/GoodMoneyger/chemican_components/commit/b7adeeb846b86aef3a4e1fae484f21fd66eb8410))
+* **deps:** bump fast-uri from 3.1.5 to 3.1.7 ([a5abebb](https://github.com/GoodMoneyger/chemican_components/commit/a5abebb3f614741c185e64fc0d46079721865f6c))
+* **deps:** Sync package-lock with package.json ([7bdcb46](https://github.com/GoodMoneyger/chemican_components/commit/7bdcb468a204940fcbb57d39903ab08a098a6438))
+
 ## [1.9.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.9.0...v1.9.1) (2026-08-19)
 
 ### Refactoring
