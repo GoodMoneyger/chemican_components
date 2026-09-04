@@ -18,6 +18,13 @@ export interface DialogProps extends React.ComponentProps<typeof RadixDialog.Roo
     cancellable?: boolean;
     cancelButtonLabel?: ReactNode;
     allowClickOutside?: boolean;
+    /**
+     * Focus handling when the dialog opens. Defaults to focusing the first
+     * field only when it is a plain text input or textarea that is either
+     * empty or the only field, and focusing the dialog itself otherwise. Pass
+     * a handler to override, e.g. `(e) => e.preventDefault()` to never move
+     * the focus into the content.
+     */
     onOpenAutoFocus?: React.ComponentProps<typeof RadixDialog.Content>['onOpenAutoFocus'];
     bodyClassName?: string;
     /**
