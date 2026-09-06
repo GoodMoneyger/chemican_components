@@ -9,10 +9,11 @@
 /**
  * Default `onOpenAutoFocus` handler of `Dialog`.
  *
- * Focuses the first field only when it is a plain text input or textarea
- * that is either empty or the dialog's only field. Otherwise the dialog
- * itself takes the focus, so the keyboard stays inside the dialog without a
- * field being touched.
+ * Focuses the first field the user can act on, and only when it is a plain
+ * text input or textarea that is either empty or the only such field.
+ * Disabled and read only controls are ignored. Otherwise the dialog itself
+ * takes the focus, so the keyboard stays inside the dialog without a field
+ * being touched.
  *
  * Exported so that a dialog passing its own handler can still fall back to
  * this behaviour.
