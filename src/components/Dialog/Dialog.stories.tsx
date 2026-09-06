@@ -436,6 +436,47 @@ AutoFocusOnlyFieldPrefilled.args = {
   actions: [{ label: 'Save', value: true, intent: 'primary' }],
 };
 
+export const AutoFocusSkipsDisabledField = AutoFocusTemplate.bind({});
+AutoFocusSkipsDisabledField.storyName = 'Auto focus: skips a disabled field';
+AutoFocusSkipsDisabledField.args = {
+  title: 'Add exposure limit',
+  note: 'The first field is disabled, so it is not a field the user can act on. The focus goes to the first one they can, which is the empty text field below it.',
+  children: (
+    <>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>CAS number</label>
+        <TextField disabled defaultValue="67-64-1" />
+      </div>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>Amount</label>
+        <TextField placeholder="Amount" />
+      </div>
+    </>
+  ),
+  actions: [{ label: 'Add', value: true, intent: 'primary' }],
+};
+
+export const AutoFocusOnlyEnabledFieldPrefilled = AutoFocusTemplate.bind({});
+AutoFocusOnlyEnabledFieldPrefilled.storyName =
+  'Auto focus: only enabled field, even prefilled';
+AutoFocusOnlyEnabledFieldPrefilled.args = {
+  title: 'Edit IP address name',
+  note: "The disabled field does not count towards the dialog's fields, so the prefilled name below it is the only field the user can act on and takes the focus.",
+  children: (
+    <>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>IP address</label>
+        <TextField disabled defaultValue="192.0.2.1" />
+      </div>
+      <div className="gap-xs flex flex-col">
+        <label className={FIELD_LABEL_CLASS}>Name</label>
+        <TextField defaultValue="Tokyo office" />
+      </div>
+    </>
+  ),
+  actions: [{ label: 'Save', value: true, intent: 'primary' }],
+};
+
 export const AutoFocusSkippedForAutoSuggest = AutoFocusTemplate.bind({});
 AutoFocusSkippedForAutoSuggest.storyName = 'No auto focus: auto suggest';
 AutoFocusSkippedForAutoSuggest.args = {
