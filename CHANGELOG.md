@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.10.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.10.0...v1.10.1) (2026-09-06)
+
+### Bug Fixes
+
+* **dialog:** Ignore disabled fields when picking the field to auto focus ([#179](https://github.com/GoodMoneyger/chemican_components/issues/179)) ([3dbe090](https://github.com/GoodMoneyger/chemican_components/commit/3dbe090a931cbb74a17eea811232d203562f12e8))
+
 ## [1.10.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.9.1...v1.10.0) (2026-09-04)
 
 ### Features
