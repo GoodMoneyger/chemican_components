@@ -21,6 +21,7 @@ export * from './SearchBar';
 export * from './SegmentedControl';
 export * from './Select';
 export * from './SideNavigation';
+export * from './Sortable';
 export * from './StatusIndicator';
 export * from './Stepper';
 export * from './Switch';
