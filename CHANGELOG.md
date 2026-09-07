@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.11.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.11.0...v1.11.1) (2026-09-07)
+
+### Bug Fixes
+
+* **dialog:** Select the value when auto focusing a field that has one ([#181](https://github.com/GoodMoneyger/chemican_components/issues/181)) ([2b99e88](https://github.com/GoodMoneyger/chemican_components/commit/2b99e8891c780477f0b4a59dc82f21f287cc5a92))
+
 ## [1.11.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.10.1...v1.11.0) (2026-09-07)
 
 ### Features
