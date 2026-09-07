@@ -78,7 +78,9 @@ function isPlainTextControl(
  * can act on, in which case there is nothing else to reach for and focusing
  * it saves a click.
  */
-function findFieldToFocus(root: HTMLElement): HTMLElement | null {
+function findFieldToFocus(
+  root: HTMLElement
+): HTMLInputElement | HTMLTextAreaElement | null {
   const controls = Array.from(
     root.querySelectorAll<HTMLElement>(FORM_CONTROL_SELECTOR)
   )
@@ -115,6 +117,20 @@ export function focusFirstTextField(event: Event): void {
       : event.target;
   if (!(root instanceof HTMLElement)) return;
 
-  // The dialog element is focusable itself (Radix gives it tabIndex -1).
-  (findFieldToFocus(root) ?? root).focus();
+  const field = findFieldToFocus(root);
+
+  if (!field) {
+    // The dialog element is focusable itself (Radix gives it tabIndex -1).
+    root.focus();
+    return;
+  }
+
+  field.focus();
+
+  // Select what is already there, so typing replaces the value rather than
+  // appending to it. This is what a rename dialog is for, and it matches
+  // the focus behaviour Radix applies by default.
+  if (field.value !== '') {
+    field.select();
+  }
 }
