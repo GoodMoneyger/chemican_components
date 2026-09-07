@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.11.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.10.1...v1.11.0) (2026-09-07)
+
+### Features
+
+* **Sortable:** Create sortable component ([#176](https://github.com/GoodMoneyger/chemican_components/issues/176)) ([591f6fb](https://github.com/GoodMoneyger/chemican_components/commit/591f6fb7539df6e5f4395df18056ee312a0a6898))
+
 ## [1.10.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.10.0...v1.10.1) (2026-09-06)
 
 ### Bug Fixes
