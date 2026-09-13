@@ -171,3 +171,33 @@ const PinnedList = () => {
 };
 
 export const WithPinnedLabel: Story = { render: () => <PinnedList /> };
+
+const CustomLabelsList = () => {
+  const [items, setItems] = useState<Task[]>([
+    { id: 'draft', label: '下書き' },
+    { id: 'review', label: 'レビュー' },
+    { id: 'approve', label: '承認' },
+  ]);
+
+  return (
+    <Sortable.Container
+      value={items}
+      onValueChange={setItems}
+      getItemValue={(item) => item.id}
+    >
+      {items.map((item) => (
+        <Sortable.Item
+          key={item.id}
+          value={item.id}
+          ariaLabels={{ moveUp: '上に移動', moveDown: '下に移動' }}
+        >
+          {item.label}
+        </Sortable.Item>
+      ))}
+    </Sortable.Container>
+  );
+};
+
+export const WithCustomMoveLabels: Story = {
+  render: () => <CustomLabelsList />,
+};
