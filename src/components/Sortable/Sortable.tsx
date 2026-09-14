@@ -10,6 +10,7 @@ import {
 } from '@tabler/icons-react';
 
 import { Button } from '../Button';
+import { Tooltip } from '../Tooltip';
 import { cn } from '../../lib/utils';
 
 export type SortableItemId = string | number;
@@ -182,6 +183,8 @@ const SortableItem = React.forwardRef<HTMLLIElement, SortableItemProps>(
       index,
       disabled: isDisabled,
     });
+    const moveUpLabel = ariaLabels?.moveUp ?? 'Move up';
+    const moveDownLabel = ariaLabels?.moveDown ?? 'Move down';
 
     return (
       <li
@@ -207,24 +210,28 @@ const SortableItem = React.forwardRef<HTMLLIElement, SortableItemProps>(
           <div className="gap-xxs flex shrink-0 items-center">
             {showMoveButtons && (
               <>
-                <Button
-                  intent="tertiary"
-                  size="icon"
-                  icon={IconChevronUp}
-                  aria-label={ariaLabels?.moveUp ?? 'Move up'}
-                  className="h-6 w-6"
-                  disabled={isDisabled || index <= 0}
-                  onClick={() => moveItem(value, -1)}
-                />
-                <Button
-                  intent="tertiary"
-                  size="icon"
-                  icon={IconChevronDown}
-                  aria-label={ariaLabels?.moveDown ?? 'Move down'}
-                  className="h-6 w-6"
-                  disabled={isDisabled || index < 0 || index >= count - 1}
-                  onClick={() => moveItem(value, 1)}
-                />
+                <Tooltip content={moveUpLabel} disableHoverableContent>
+                  <Button
+                    intent="tertiary"
+                    size="icon"
+                    icon={IconChevronUp}
+                    aria-label={moveUpLabel}
+                    className="h-6 w-6"
+                    disabled={isDisabled || index <= 0}
+                    onClick={() => moveItem(value, -1)}
+                  />
+                </Tooltip>
+                <Tooltip content={moveDownLabel} disableHoverableContent>
+                  <Button
+                    intent="tertiary"
+                    size="icon"
+                    icon={IconChevronDown}
+                    aria-label={moveDownLabel}
+                    className="h-6 w-6"
+                    disabled={isDisabled || index < 0 || index >= count - 1}
+                    onClick={() => moveItem(value, 1)}
+                  />
+                </Tooltip>
               </>
             )}
             {actions}
