@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.11.3](https://github.com/GoodMoneyger/chemican_components/compare/v1.11.2...v1.11.3) (2026-09-30)
+
+### Bug Fixes
+
+* **tag:** Reduce top padding of tag content to 1px ([3ab065a](https://github.com/GoodMoneyger/chemican_components/commit/3ab065a2dd7719ce6ee4ae23ef78259729bc3638))
+
 ## [1.11.2](https://github.com/GoodMoneyger/chemican_components/compare/v1.11.0...v1.11.2) (2026-09-30)
 
 ### Bug Fixes
