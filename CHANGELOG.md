@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.11.2](https://github.com/GoodMoneyger/chemican_components/compare/v1.11.0...v1.11.2) (2026-09-30)
+
+### Bug Fixes
+
+* **checkbox,radiobutton:** Restore 18px checkbox and 20px radio size ([0a6e160](https://github.com/GoodMoneyger/chemican_components/commit/0a6e160f38f347708581146cdc5cb151312042e1))
+* **dialog:** Select the value when auto focusing a field that has one ([#181](https://github.com/GoodMoneyger/chemican_components/issues/181)) ([2b99e88](https://github.com/GoodMoneyger/chemican_components/commit/2b99e8891c780477f0b4a59dc82f21f287cc5a92))
+
+### Refactoring
+
+* **Sortable:** Add tooltips for move up/down buttons based on aria-labels ([#184](https://github.com/GoodMoneyger/chemican_components/issues/184)) ([57ff474](https://github.com/GoodMoneyger/chemican_components/commit/57ff4740a60980e0cc137741f3098b1b550ae728))
+
+### Build
+
+* **deps-dev:** bump js-yaml from 4.3.1 to 4.3.2 ([90073ec](https://github.com/GoodMoneyger/chemican_components/commit/90073ec4b222f2cbfd3e22d663d4b3597a9bb37e))
+
+### Chores
+
+* Require main branch for releases ([5f19ec6](https://github.com/GoodMoneyger/chemican_components/commit/5f19ec663d1eff6973cc4d5681a92bd4338c6cde))
+
 ## [1.11.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.10.1...v1.11.0) (2026-09-07)
 
 ### Features
