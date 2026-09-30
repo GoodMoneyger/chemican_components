@@ -370,7 +370,7 @@ export const Tag: React.FC<TagProps> = ({
       {asChild ? (
         <Slot.Slottable>{children}</Slot.Slottable>
       ) : (
-        <div className="pt-0.5 relative h-full truncate">{children}</div>
+        <div className="pt-0.25 relative h-full truncate">{children}</div>
       )}
       {Boolean(onRemove) && !disabled && (
         <button
