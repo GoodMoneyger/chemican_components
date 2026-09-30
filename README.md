@@ -144,7 +144,7 @@ This project is setup to work well in AI assisted workflows, specifically using 
 ## **🔄 Release Process**
 
 This library follows **Semantic Versioning**.
-To release a new version:
+Releases must be made from `main`. Make sure your `main` is up to date, then run:
 
 ```bash
 npm run release
