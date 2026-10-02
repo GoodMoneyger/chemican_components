@@ -50,7 +50,7 @@ export const Tooltip = React.forwardRef<
       sideOffset = 4,
       align = 'center',
       alignOffset,
-      delayDuration = 700,
+      delayDuration,
       disableHoverableContent,
       open,
       onOpenChange,
@@ -66,7 +66,7 @@ export const Tooltip = React.forwardRef<
 
     return (
       <TooltipPrimitive.Root
-        delayDuration={delayDuration}
+        {...(delayDuration !== undefined && { delayDuration })}
         {...(open !== undefined && { open })}
         {...(onOpenChange !== undefined && { onOpenChange })}
         {...(disableHoverableContent !== undefined && {
