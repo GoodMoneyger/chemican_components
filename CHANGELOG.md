@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.12.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.11.3...v1.12.0) (2026-10-06)
+
+### Bug Fixes
+
+* **Tooltip:** Let TooltipProvider control the delay ([6e9495b](https://github.com/GoodMoneyger/chemican_components/commit/6e9495b5b395fb3722599b062a25f3ece200fc80))
+
+### Build
+
+* **deps-dev:** bump brace-expansion from 1.1.18 to 1.1.21 ([70084cc](https://github.com/GoodMoneyger/chemican_components/commit/70084cc5fd104dbac50cf15278cfb6acfc3de043))
+* **deps:** bump ip-address from 10.4.0 to 10.7.2 ([463d34f](https://github.com/GoodMoneyger/chemican_components/commit/463d34f22bd173d9975bf76ffa5ddff2bd87c13c))
+
 ## [1.11.3](https://github.com/GoodMoneyger/chemican_components/compare/v1.11.2...v1.11.3) (2026-09-30)
 
 ### Bug Fixes
