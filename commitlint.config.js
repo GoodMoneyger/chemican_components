@@ -58,6 +58,8 @@ function getComponentTopics() {
       'textlink',
       'toast',
       'tooltip',
+      'treelist',
+      'treeview',
     ];
   }
 }
