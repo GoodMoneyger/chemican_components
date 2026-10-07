@@ -382,6 +382,52 @@ export const Sortable: Story = {
   },
 };
 
+const READ_ONLY_FOLDER = 'regulations';
+
+const SortableWithValidationExample = () => {
+  const [nodes, setNodes] = useState<SortableNode[]>(() =>
+    documents.map(toSortableNode)
+  );
+  const [message, setMessage] = useState<string | null>(null);
+
+  return (
+    <div className="gap-md flex flex-col">
+      <TreeView
+        aria-label="ドキュメント"
+        sortable
+        onMove={(event) => {
+          const parent = event.to.parentValue as SortableNode | undefined;
+          if (parent?.id === READ_ONLY_FOLDER) {
+            setMessage(
+              `${(event.value as SortableNode).name} は ${parent.name} の下へ移動できません。`
+            );
+            return;
+          }
+          setNodes((current) =>
+            applyTreeViewMove(current, event, sortableAccessors)
+          );
+          setMessage(describeMove(event));
+        }}
+      >
+        {renderSortableNodes(nodes)}
+      </TreeView>
+      <p className="text-md text-body-secondary">{message ?? 'なし'}</p>
+    </div>
+  );
+};
+
+export const SortableWithValidation: Story = {
+  render: () => <SortableWithValidationExample />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`onMove` decides whether a drop is applied. Drops under 法規制 are rejected here, so the row snaps back to where it came from because the data did not change; every other drop is applied as usual. Update the data synchronously inside `onMove` for the row to settle in its new place.',
+      },
+    },
+  },
+};
+
 const documentAccessors: TreeViewMoveAccessors<TreeNode> = {
   getKey: (node) => node.id,
   getChildren: (node) => (isFolder(node) ? node.children : undefined),

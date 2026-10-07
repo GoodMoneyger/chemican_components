@@ -22,7 +22,8 @@ export default tseslint.config(
       globals: globals.browser,
       parser: eslintParserTypeScript,
       parserOptions: {
-        project: true,
+        project: ['./tsconfig.json', './tsconfig.node.json'],
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
@@ -75,7 +76,11 @@ export default tseslint.config(
   },
   // Override configuration for Storybook files
   {
-    files: ['**/*.story.{ts,tsx}', '**/*.stories.{ts,tsx}'],
+    files: [
+      '**/*.story.{ts,tsx}',
+      '**/*.stories.{ts,tsx}',
+      '**/*.test.{ts,tsx}',
+    ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,

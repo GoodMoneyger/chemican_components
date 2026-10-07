@@ -14,7 +14,6 @@ import { TreeView, resolveTreeViewItemValue } from '../TreeView';
 import type {
   TreeViewExpandedState,
   TreeViewHandle,
-  TreeViewMoveEvent,
   TreeViewNodeKey,
   TreeViewProps,
 } from '../TreeView';
@@ -47,9 +46,16 @@ export interface TreeListLabels {
 
 export interface TreeListProps<T>
   extends Omit<TreeViewProps<T>, 'children' | 'size' | 'onExpandedChange'> {
-  /** Flat list of nodes. Nesting comes from `getParentKey`. */
+  /**
+   * Flat list of nodes. Nesting comes from `getParentKey`. The list is
+   * grouped again whenever it or one of the accessors changes identity, so
+   * pass stable accessors for long lists.
+   */
   items: T[];
-  /** Key of the parent node, or null for a top-level node. */
+  /**
+   * Key of the parent node, or null for a top-level node. Keys are compared
+   * with `===`, so return the same primitive type as `getItemValue`.
+   */
   getParentKey: (item: T) => TreeViewNodeKey | null | undefined;
   getLabel: (item: T) => React.ReactNode;
   /** Sort key among siblings. Items keep their array order when omitted. */
@@ -110,10 +116,14 @@ function TreeListInner<T>(
   const labelled =
     treeProps['aria-label'] !== undefined ||
     treeProps['aria-labelledby'] !== undefined;
-  React.useImperativeHandle(ref, () => ({
-    collapseAll: () => treeRef.current?.collapseAll(),
-    expandAll: () => treeRef.current?.expandAll(),
-  }));
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      collapseAll: () => treeRef.current?.collapseAll(),
+      expandAll: () => treeRef.current?.expandAll(),
+    }),
+    []
+  );
 
   const [expanded, setExpanded] = React.useState<TreeViewExpandedState>({
     expandable: 0,
@@ -123,6 +133,7 @@ function TreeListInner<T>(
   const childrenByParent = React.useMemo(() => {
     const keys = new Set<TreeViewNodeKey>();
     items.forEach((item) => keys.add(getItemValue(item)));
+
     const groups = new Map<TreeViewNodeKey | null, T[]>();
     items.forEach((item) => {
       const parent = getParentKey(item) ?? null;
@@ -132,11 +143,27 @@ function TreeListInner<T>(
       if (siblings) siblings.push(item);
       else groups.set(group, [item]);
     });
+
     if (getOrder) {
       groups.forEach((siblings) =>
         siblings.sort((a, b) => getOrder(a) - getOrder(b))
       );
     }
+
+    let reachable = 0;
+    const visit = (parent: TreeViewNodeKey | null) =>
+      (groups.get(parent) ?? []).forEach((item) => {
+        reachable += 1;
+        visit(getItemValue(item));
+      });
+    visit(null);
+
+    if (reachable < items.length) {
+      console.warn(
+        `TreeList: ${items.length - reachable} item(s) cannot be reached from the top level. Check \`getParentKey\` for cycles.`
+      );
+    }
+
     return groups;
   }, [items, getItemValue, getParentKey, getOrder]);
 
@@ -207,7 +234,7 @@ function TreeListInner<T>(
             disabled={!canExpand}
             onClick={() => treeRef.current?.expandAll()}
           >
-            {labels?.expandAll ?? 'Expand all'}
+            {labels?.expandAll ?? '全てを開く'}
           </button>
         </TextLink>
         <span aria-hidden>|</span>
@@ -217,7 +244,7 @@ function TreeListInner<T>(
             disabled={!canCollapse}
             onClick={() => treeRef.current?.collapseAll()}
           >
-            {labels?.collapseAll ?? 'Collapse all'}
+            {labels?.collapseAll ?? '全てを閉じる'}
           </button>
         </TextLink>
       </div>
@@ -257,59 +284,5 @@ export const TreeList = React.forwardRef(TreeListInner) as TreeListComponent & {
 };
 TreeList.displayName = 'TreeList';
 
-/* -------------------------------------------------------------------------- */
-/*                                Move helper                                 */
-/* -------------------------------------------------------------------------- */
-
-export interface TreeListMoveAccessors<T> {
-  getItemValue: (item: T) => TreeViewNodeKey;
-  getParentKey: (item: T) => TreeViewNodeKey | null | undefined;
-  getOrder: (item: T) => number;
-  /** Returns the item with its new parent and order. */
-  withPlacement: (
-    item: T,
-    parentKey: TreeViewNodeKey | null,
-    order: number
-  ) => T;
-}
-
-/**
- * Applies a `TreeViewMoveEvent` to a flat list: the moved item gets its new
- * parent, and the siblings of both the old and the new parent are numbered
- * again from zero. Untouched items keep their identity.
- */
-export const applyTreeListMove = <T,>(
-  items: T[],
-  event: TreeViewMoveEvent,
-  accessors: TreeListMoveAccessors<T>
-): T[] => {
-  const { getItemValue, getParentKey, getOrder, withPlacement } = accessors;
-  const moved = items.find((item) => getItemValue(item) === event.key);
-  if (!moved) return items;
-  const siblingsOf = (parent: TreeViewNodeKey | null) =>
-    items
-      .filter(
-        (item) =>
-          (getParentKey(item) ?? null) === parent &&
-          getItemValue(item) !== event.key
-      )
-      .sort((a, b) => getOrder(a) - getOrder(b));
-  const placements = new Map<
-    TreeViewNodeKey,
-    [TreeViewNodeKey | null, number]
-  >();
-  const target = siblingsOf(event.to.parentKey);
-  target.splice(event.to.index, 0, moved);
-  target.forEach((item, index) =>
-    placements.set(getItemValue(item), [event.to.parentKey, index])
-  );
-  if (event.from.parentKey !== event.to.parentKey) {
-    siblingsOf(event.from.parentKey).forEach((item, index) =>
-      placements.set(getItemValue(item), [event.from.parentKey, index])
-    );
-  }
-  return items.map((item) => {
-    const placement = placements.get(getItemValue(item));
-    return placement ? withPlacement(item, placement[0], placement[1]) : item;
-  });
-};
+export { applyTreeListMove } from './applyTreeListMove';
+export type { TreeListMoveAccessors } from './applyTreeListMove';

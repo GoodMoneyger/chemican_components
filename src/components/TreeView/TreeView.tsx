@@ -8,15 +8,38 @@ import type {
   DragMoveEvent,
   DragOverEvent,
 } from '@dnd-kit/react';
-import { isSortable, useSortable } from '@dnd-kit/react/sortable';
+import { useSortable } from '@dnd-kit/react/sortable';
 import { IconChevronRight, IconGripVertical } from '@tabler/icons-react';
 
 import { Checkbox } from '../Checkbox';
 import { cn } from '../../lib/utils';
 
-export type TreeViewNodeKey = string | number;
+import {
+  DWELL_MS,
+  PLACEHOLDER_ATTRIBUTE,
+  locateGap,
+  restoreRow,
+  rowsOf,
+  syncIndexes,
+} from './dragAndDrop';
+import type { DragSnapshot } from './dragAndDrop';
+import { byDocumentPosition, collectLeaves, hasValue } from './registry';
+import type { Leaf, Registry, TreeNode } from './registry';
+import type {
+  TreeViewMoveEvent,
+  TreeViewMovePlacement,
+  TreeViewNodeKey,
+  TreeViewNodeKind,
+} from './types';
 
-export type TreeViewNodeKind = 'root' | 'item';
+export type {
+  TreeViewMoveEvent,
+  TreeViewMovePlacement,
+  TreeViewNodeKey,
+  TreeViewNodeKind,
+} from './types';
+export { applyTreeViewMove } from './applyTreeViewMove';
+export type { TreeViewMoveAccessors } from './applyTreeViewMove';
 
 export type TreeViewSize = 'md' | 'lg';
 
@@ -35,25 +58,6 @@ export interface TreeViewExpandedState {
   open: number;
 }
 
-export interface TreeViewMovePlacement {
-  /** Key of the parent Root as resolved by `getItemValue`, or null at the top level. */
-  parentKey: TreeViewNodeKey | null;
-  /** The parent Root's value. Undefined at the top level or when the Root has no value. */
-  parentValue: unknown;
-  /** Position among the siblings of that parent. */
-  index: number;
-}
-
-export interface TreeViewMoveEvent {
-  /** Key of the moved node as resolved by `getItemValue`. */
-  key: TreeViewNodeKey;
-  kind: TreeViewNodeKind;
-  value: unknown;
-  from: TreeViewMovePlacement;
-  /** Destination, with `index` counted after the node left its previous place. */
-  to: TreeViewMovePlacement;
-}
-
 /** Default `getItemValue`: the value itself for strings and numbers, or its `id`. */
 export const resolveTreeViewItemValue = (item: unknown): TreeViewNodeKey => {
   if (typeof item === 'string' || typeof item === 'number') return item;
@@ -65,27 +69,6 @@ export const resolveTreeViewItemValue = (item: unknown): TreeViewNodeKey => {
     'TreeView: values must be strings, numbers, or objects with a string or number `id`. Pass `getItemValue` for any other shape.'
   );
 };
-
-/** A mounted Root or Item. */
-interface TreeNode {
-  /** Unique within the tree. Roots with a value are prefixed so they never collide with Items. */
-  key: TreeViewNodeKey;
-  /** Key of `value` as resolved by `getItemValue`. Undefined for nodes without a value. */
-  valueKey: TreeViewNodeKey | undefined;
-  parentKey: TreeViewNodeKey | null;
-  kind: TreeViewNodeKind;
-  disabled: boolean;
-  hasChildren: boolean;
-  defaultOpen: boolean | undefined;
-  element: HTMLLIElement;
-  getValue: () => unknown;
-}
-
-type Registry = Map<TreeViewNodeKey, TreeNode>;
-
-type Leaf = TreeNode & { valueKey: TreeViewNodeKey };
-
-const hasValue = (node: TreeNode): node is Leaf => node.valueKey !== undefined;
 
 interface RootSelection {
   state: 'all' | 'some' | 'none';
@@ -136,167 +119,6 @@ const useTreeViewContext = () => {
   return ctx;
 };
 
-const byDocumentPosition = (a: TreeNode, b: TreeNode) =>
-  a.element.compareDocumentPosition(b.element) &
-  Node.DOCUMENT_POSITION_FOLLOWING
-    ? -1
-    : 1;
-
-/**
- * Selectable leaves under every Root: the Items with a value nested anywhere
- * inside it, or the Root itself when it has a value and nothing selectable
- * inside.
- */
-const collectLeaves = (registry: Registry) => {
-  const children = new Map<TreeViewNodeKey | null, TreeNode[]>();
-  registry.forEach((node) => {
-    const siblings = children.get(node.parentKey);
-    if (siblings) siblings.push(node);
-    else children.set(node.parentKey, [node]);
-  });
-
-  const leavesByRoot = new Map<TreeViewNodeKey, Leaf[]>();
-  const collect = (root: TreeNode): Leaf[] => {
-    const leaves: Leaf[] = [];
-    (children.get(root.key) ?? []).forEach((child) => {
-      if (child.kind === 'root') leaves.push(...collect(child));
-      else if (hasValue(child)) leaves.push(child);
-    });
-    const own = leaves.length === 0 && hasValue(root) ? [root] : leaves;
-    leavesByRoot.set(root.key, own);
-    return own;
-  };
-  (children.get(null) ?? []).forEach((node) => {
-    if (node.kind === 'root') collect(node);
-  });
-  return leavesByRoot;
-};
-
-/* -------------------------------------------------------------------------- */
-/*                                Drag and drop                               */
-/* -------------------------------------------------------------------------- */
-
-const DWELL_MS = 600;
-const PLACEHOLDER_ATTRIBUTE = 'data-dnd-placeholder';
-
-interface DragSnapshot {
-  node: TreeNode;
-  originList: Element;
-  originIndex: number;
-  /** The dragged Root was open and is collapsed for the duration of the drag. */
-  reopen: boolean;
-}
-
-/** Rows of a list in DOM order, without dnd-kit's placeholder that marks the gap. */
-const rowsOf = (list: Element, except?: Element) =>
-  Array.from(list.children).filter(
-    (child) => child !== except && !child.hasAttribute(PLACEHOLDER_ATTRIBUTE)
-  );
-
-const nextRowAfter = (row: Element, except: Element) => {
-  let next = row.nextElementSibling;
-  while (
-    next &&
-    (next === except || next.hasAttribute(PLACEHOLDER_ATTRIBUTE))
-  ) {
-    next = next.nextElementSibling;
-  }
-  return next;
-};
-
-/**
- * Numbers every row's sortable instance from the DOM so dnd-kit animates the
- * siblings into place whenever the gap moves. The dragged row is left alone.
- * Parents go first: a row measures itself after its parent has started
- * moving, so it compensates and stays put while the parent animates.
- */
-const syncIndexes = (
-  manager: DragDropManager,
-  registry: Registry,
-  dragged?: TreeNode
-) => {
-  const nodes = Array.from(registry.values()).sort(byDocumentPosition);
-  nodes.forEach((node) => {
-    const list = node.element.parentElement;
-    const droppable = manager.registry.droppables.get(node.key);
-    if (node !== dragged && list && droppable && isSortable(droppable)) {
-      droppable.sortable.index = rowsOf(list).indexOf(node.element);
-    }
-  });
-};
-
-/** Moves the dragged row, and with it the gap, in front of `before` in `list`. */
-const placeGap = (
-  manager: DragDropManager,
-  registry: Registry,
-  snapshot: DragSnapshot,
-  list: Element,
-  before: Element | null
-) => {
-  const { element } = snapshot.node;
-  if (before === element) return;
-  if (
-    element.parentElement === list &&
-    nextRowAfter(element, element) === before
-  ) {
-    return;
-  }
-  list.insertBefore(element, before);
-  syncIndexes(manager, registry, snapshot.node);
-  // dnd-kit only refreshes a row's cached rectangle when that row's own index
-  // changes, so refresh them all once the placeholder has followed the element.
-  window.requestAnimationFrame(() => {
-    registry.forEach((node) => {
-      manager.registry.droppables.get(node.key)?.refreshShape();
-    });
-  });
-};
-
-/**
- * Tree rules for where the gap goes relative to the hovered row: the top half
- * places before it; the bottom half of an open group makes it the first child;
- * the middle of a childless group nests inside it; otherwise after it.
- */
-const locateGap = (
-  manager: DragDropManager,
-  registry: Registry,
-  snapshot: DragSnapshot,
-  pointerY: number
-) => {
-  const { source, target } = manager.dragOperation;
-  const node =
-    source && target && target.id !== source.id
-      ? registry.get(target.id)
-      : undefined;
-  const list = node?.element.parentElement;
-  const rect = node?.element.firstElementChild?.getBoundingClientRect();
-  if (!node || !list || !rect || rect.height === 0) return;
-
-  const rel = (pointerY - rect.top) / rect.height;
-  const group =
-    node.kind === 'root' ? node.element.querySelector(':scope > ul') : null;
-  const expanded = node.element.getAttribute('aria-expanded');
-  const dragged = snapshot.node.element;
-  const place = (into: Element, before: Element | null) =>
-    placeGap(manager, registry, snapshot, into, before);
-
-  if (group && expanded === 'true') {
-    if (rel < 0.5) place(list, node.element);
-    else place(group, rowsOf(group, dragged)[0] ?? null);
-  } else if (group && expanded === null && rel >= 0.25 && rel <= 0.75) {
-    place(group, null);
-  } else if (rel < 0.5) {
-    place(list, node.element);
-  } else {
-    place(list, nextRowAfter(node.element, dragged));
-  }
-};
-
-const restoreRow = ({ node, originList, originIndex }: DragSnapshot) => {
-  const before = rowsOf(originList, node.element)[originIndex] ?? null;
-  originList.insertBefore(node.element, before);
-};
-
 /* -------------------------------------------------------------------------- */
 /*                                  Keyboard                                  */
 /* -------------------------------------------------------------------------- */
@@ -338,9 +160,11 @@ export interface TreeViewProps<T>
   defaultSelected?: T[];
   onSelectedChange?: (items: T[]) => void;
   /**
-   * Derives a unique key from a node value. Applied to Root values as well as
-   * Item values. Defaults to the value itself for strings and numbers, or its
-   * `id` for objects.
+   * Derives a unique key from a node value. Defaults to the value itself for
+   * strings and numbers, or its `id` for objects. It is applied to Root
+   * values as well as Item values, so when Roots hold a different type than
+   * `T` the callback receives both at runtime: write it for the union, e.g.
+   * `(node: Folder | File) => node.id`.
    */
   getItemValue?: (item: T) => TreeViewNodeKey;
   /**
@@ -397,20 +221,23 @@ function TreeViewInner<T>(
   ref: React.ForwardedRef<TreeViewHandle>
 ) {
   const registryRef = React.useRef<Registry>(new Map());
-  const [, bumpVersion] = React.useReducer((v: number) => v + 1, 0);
+  // Wrapped again on every registration so memos can depend on the registry.
+  const [registryState, setRegistryState] = React.useState<{ nodes: Registry }>(
+    () => ({ nodes: registryRef.current })
+  );
 
   const register = React.useCallback((node: TreeNode) => {
-    const registry = registryRef.current;
-    if (process.env.NODE_ENV === 'development' && registry.has(node.key)) {
+    const nodes = registryRef.current;
+    if (nodes.has(node.key)) {
       console.warn(
         `TreeView: duplicate node key "${String(node.key)}". Item values must resolve to unique keys across the whole tree.`
       );
     }
-    registry.set(node.key, node);
-    bumpVersion();
+    nodes.set(node.key, node);
+    setRegistryState({ nodes });
     return () => {
-      if (registry.get(node.key) === node) registry.delete(node.key);
-      bumpVersion();
+      if (nodes.get(node.key) === node) nodes.delete(node.key);
+      setRegistryState({ nodes });
     };
   }, []);
 
@@ -418,18 +245,21 @@ function TreeViewInner<T>(
     overrides: new Map(),
   }));
 
-  const isOpen = (key: TreeViewNodeKey, defaultOpen?: boolean) =>
-    openState.overrides.get(key) ??
-    openState.all ??
-    defaultOpen ??
-    !allCollapsed;
+  const isOpen = React.useCallback(
+    (key: TreeViewNodeKey, defaultOpen?: boolean) =>
+      openState.overrides.get(key) ??
+      openState.all ??
+      defaultOpen ??
+      !allCollapsed,
+    [openState, allCollapsed]
+  );
 
-  const setOpen = (key: TreeViewNodeKey, open: boolean) => {
+  const setOpen = React.useCallback((key: TreeViewNodeKey, open: boolean) => {
     setOpenState((state) => ({
       ...state,
       overrides: new Map(state.overrides).set(key, open),
     }));
-  };
+  }, []);
 
   React.useImperativeHandle(
     ref,
@@ -462,16 +292,19 @@ function TreeViewInner<T>(
     return true;
   };
 
+  const firstTopLevelKey = React.useMemo(
+    () =>
+      Array.from(registryState.nodes.values())
+        .filter((node) => node.parentKey === null)
+        .sort(byDocumentPosition)[0]?.key ?? null,
+    [registryState]
+  );
   // The tree has one tab stop: the row focused last, or the first row while
   // that one is gone or hidden.
   const focused =
-    focusKey === null ? undefined : registryRef.current.get(focusKey);
+    focusKey === null ? undefined : registryState.nodes.get(focusKey);
   const activeKey =
-    focused && isShown(focused)
-      ? focused.key
-      : (Array.from(registryRef.current.values())
-          .filter((node) => node.parentKey === null)
-          .sort(byDocumentPosition)[0]?.key ?? null);
+    focused && isShown(focused) ? focused.key : firstTopLevelKey;
 
   const expandedRef = React.useRef<TreeViewExpandedState | null>(null);
   React.useEffect(() => {
@@ -494,58 +327,91 @@ function TreeViewInner<T>(
     () => defaultSelected ?? []
   );
   const currentSelected = selected ?? internalSelected;
-  const selectedKeys = new Set(
-    currentSelected.map((item) => getItemValue(item))
+  const selectedKeys = React.useMemo(
+    () => new Set(currentSelected.map((item) => getItemValue(item))),
+    [currentSelected, getItemValue]
   );
-  const leavesByRoot = selectable
-    ? collectLeaves(registryRef.current)
-    : new Map<TreeViewNodeKey, Leaf[]>();
+  const leavesByRoot = React.useMemo(
+    () =>
+      selectable
+        ? collectLeaves(registryState.nodes)
+        : new Map<TreeViewNodeKey, Leaf[]>(),
+    [selectable, registryState]
+  );
 
-  const select = (leaves: Leaf[], checked: boolean) => {
-    let next: T[];
-    if (checked) {
-      const added = leaves
-        .filter((leaf) => !selectedKeys.has(leaf.valueKey))
-        .sort(byDocumentPosition);
-      if (added.length === 0) return;
-      next = [...currentSelected, ...added.map((leaf) => leaf.getValue() as T)];
-    } else {
-      const removed = new Set(leaves.map((leaf) => leaf.valueKey));
-      next = currentSelected.filter((item) => !removed.has(getItemValue(item)));
-      if (next.length === currentSelected.length) return;
-    }
-    if (!isControlled) setInternalSelected(next);
-    onSelectedChange?.(next);
-  };
+  const select = React.useCallback(
+    (leaves: Leaf[], checked: boolean) => {
+      let next: T[];
+      if (checked) {
+        const added = leaves
+          .filter((leaf) => !selectedKeys.has(leaf.valueKey))
+          .sort(byDocumentPosition);
+        if (added.length === 0) return;
+        next = [
+          ...currentSelected,
+          ...added.map((leaf) => leaf.getValue() as T),
+        ];
+      } else {
+        const removed = new Set(leaves.map((leaf) => leaf.valueKey));
+        next = currentSelected.filter(
+          (item) => !removed.has(getItemValue(item))
+        );
+        if (next.length === currentSelected.length) return;
+      }
+      if (!isControlled) setInternalSelected(next);
+      onSelectedChange?.(next);
+    },
+    [
+      selectedKeys,
+      currentSelected,
+      getItemValue,
+      isControlled,
+      onSelectedChange,
+    ]
+  );
 
-  const getRootSelection = (key: TreeViewNodeKey): RootSelection => {
-    const leaves = leavesByRoot.get(key) ?? [];
-    const enabled = leaves.filter((leaf) => !leaf.disabled);
-    const countSelected = (list: Leaf[]) =>
-      list.filter((leaf) => selectedKeys.has(leaf.valueKey)).length;
-    const selectedCount = countSelected(leaves);
-    const state =
-      selectedCount === 0
-        ? 'none'
-        : selectedCount === leaves.length ||
-            (enabled.length > 0 && countSelected(enabled) === enabled.length)
-          ? 'all'
-          : 'some';
-    return { state, selectable: enabled.length > 0 };
-  };
+  const isSelected = React.useCallback(
+    (valueKey: TreeViewNodeKey) => selectedKeys.has(valueKey),
+    [selectedKeys]
+  );
 
-  const toggleItem = (key: TreeViewNodeKey) => {
-    const node = registryRef.current.get(key);
-    if (node && hasValue(node)) {
-      select([node], !selectedKeys.has(node.valueKey));
-    }
-  };
+  const getRootSelection = React.useCallback(
+    (key: TreeViewNodeKey): RootSelection => {
+      const leaves = leavesByRoot.get(key) ?? [];
+      const enabled = leaves.filter((leaf) => !leaf.disabled);
+      const countSelected = (list: Leaf[]) =>
+        list.filter((leaf) => selectedKeys.has(leaf.valueKey)).length;
+      const selectedCount = countSelected(leaves);
+      const state =
+        selectedCount === 0
+          ? 'none'
+          : selectedCount === leaves.length ||
+              (enabled.length > 0 && countSelected(enabled) === enabled.length)
+            ? 'all'
+            : 'some';
+      return { state, selectable: enabled.length > 0 };
+    },
+    [leavesByRoot, selectedKeys]
+  );
 
-  const setRootSelected = (key: TreeViewNodeKey, checked: boolean) =>
-    select(
-      (leavesByRoot.get(key) ?? []).filter((leaf) => !leaf.disabled),
-      checked
-    );
+  const toggleItem = React.useCallback(
+    (key: TreeViewNodeKey) => {
+      const node = registryRef.current.get(key);
+      if (node && hasValue(node)) {
+        select([node], !selectedKeys.has(node.valueKey));
+      }
+    },
+    [select, selectedKeys]
+  );
+
+  const setRootSelected = React.useCallback(
+    (key: TreeViewNodeKey, checked: boolean) =>
+      select(
+        (leavesByRoot.get(key) ?? []).filter((leaf) => !leaf.disabled),
+        checked
+      ),
+    [select, leavesByRoot]
+  );
 
   const handleFocus = (event: React.FocusEvent<HTMLUListElement>) => {
     const node = nodeOf(
@@ -619,17 +485,20 @@ function TreeViewInner<T>(
     dwellRef.current = null;
   };
 
-  const canDrop = (sourceKey: TreeViewNodeKey, targetKey: TreeViewNodeKey) => {
-    const registry = registryRef.current;
-    for (
-      let node = registry.get(targetKey);
-      node;
-      node = node.parentKey === null ? undefined : registry.get(node.parentKey)
-    ) {
-      if (node.key === sourceKey) return false;
-    }
-    return true;
-  };
+  const canDrop = React.useCallback(
+    (sourceKey: TreeViewNodeKey, targetKey: TreeViewNodeKey) => {
+      const nodes = registryRef.current;
+      for (
+        let node = nodes.get(targetKey);
+        node;
+        node = node.parentKey === null ? undefined : nodes.get(node.parentKey)
+      ) {
+        if (node.key === sourceKey) return false;
+      }
+      return true;
+    },
+    []
+  );
 
   /** The Root owning a list, null for the tree itself, undefined for an unknown list. */
   const ownerOf = (list: Element): TreeNode | null | undefined =>
@@ -717,6 +586,11 @@ function TreeViewInner<T>(
     const from = ownerOf(originList);
     const to = list ? ownerOf(list) : undefined;
     const moved = list !== originList || toIndex !== originIndex;
+    // The row goes back to where React left it, and the consumer's update is
+    // flushed at once so React lays the rows out in the new order before the
+    // drop animation measures its target. If `onMove` leaves the data as it
+    // is, the row simply stays where it was.
+    restoreRow(snapshot);
     if (
       event.canceled ||
       !onMove ||
@@ -724,37 +598,57 @@ function TreeViewInner<T>(
       from === undefined ||
       to === undefined
     ) {
-      // Nothing will re-render, so put the row back ourselves.
-      restoreRow(snapshot);
       return;
     }
-    // React re-parents the node itself; it must find it where it left it.
-    if (list !== originList) restoreRow(snapshot);
-    onMove({
+    const moveEvent: TreeViewMoveEvent = {
       key: node.valueKey ?? node.key,
       kind: node.kind,
       value: node.getValue(),
       from: placement(from, originIndex),
       to: placement(to, toIndex),
-    });
+    };
+    flushSync(() => onMove(moveEvent));
   };
 
-  const contextValue: TreeViewContextValue = {
-    selectable,
-    sortable,
-    size,
-    ariaLabels: { dragHandle: ariaLabels?.dragHandle ?? 'Drag to reorder' },
-    activeKey,
-    resolveKey: (value) => getItemValue(value as T),
-    register,
-    isOpen,
-    setOpen,
-    isSelected: (valueKey) => selectedKeys.has(valueKey),
-    getRootSelection,
-    toggleItem,
-    setRootSelected,
-    canDrop,
-  };
+  const dragHandleLabel = ariaLabels?.dragHandle ?? 'Drag to reorder';
+  const resolveKey = React.useCallback(
+    (value: unknown) => getItemValue(value as T),
+    [getItemValue]
+  );
+  const contextValue = React.useMemo<TreeViewContextValue>(
+    () => ({
+      selectable,
+      sortable,
+      size,
+      ariaLabels: { dragHandle: dragHandleLabel },
+      activeKey,
+      resolveKey,
+      register,
+      isOpen,
+      setOpen,
+      isSelected,
+      getRootSelection,
+      toggleItem,
+      setRootSelected,
+      canDrop,
+    }),
+    [
+      selectable,
+      sortable,
+      size,
+      dragHandleLabel,
+      activeKey,
+      resolveKey,
+      register,
+      isOpen,
+      setOpen,
+      isSelected,
+      getRootSelection,
+      toggleItem,
+      setRootSelected,
+      canDrop,
+    ]
+  );
 
   const tree = (
     <TreeViewContext.Provider value={contextValue}>
@@ -799,75 +693,6 @@ const TreeViewContainer = React.forwardRef(
   TreeViewInner
 ) as TreeViewComponent & { displayName?: string };
 TreeViewContainer.displayName = 'TreeView';
-
-/* -------------------------------------------------------------------------- */
-/*                                Move helper                                 */
-/* -------------------------------------------------------------------------- */
-
-export interface TreeViewMoveAccessors<N> {
-  getKey: (node: N) => TreeViewNodeKey;
-  /** Return undefined for leaf nodes so Roots and Items sharing a key stay apart. */
-  getChildren: (node: N) => N[] | undefined;
-  withChildren: (node: N, children: N[]) => N;
-}
-
-/**
- * Applies a `TreeViewMoveEvent` to nested data and returns the new nodes.
- * Untouched branches keep their identity.
- */
-export const applyTreeViewMove = <N,>(
-  nodes: N[],
-  event: TreeViewMoveEvent,
-  accessors: TreeViewMoveAccessors<N>
-): N[] => {
-  const { getKey, getChildren, withChildren } = accessors;
-  const isRoot = event.kind === 'root';
-  let moved: N | undefined;
-
-  const replaceAt = (list: N[], index: number, node: N) =>
-    list.map((current, i) => (i === index ? node : current));
-
-  const remove = (list: N[]): N[] => {
-    for (let i = 0; i < list.length; i += 1) {
-      const node = list[i] as N;
-      const children = getChildren(node);
-      if (getKey(node) === event.key && (children !== undefined) === isRoot) {
-        moved = node;
-        return list.filter((_, j) => j !== i);
-      }
-      if (children) {
-        const nextChildren = remove(children);
-        if (nextChildren !== children) {
-          return replaceAt(list, i, withChildren(node, nextChildren));
-        }
-      }
-    }
-    return list;
-  };
-
-  const insert = (list: N[], node: N): N[] => {
-    const { parentKey, index } = event.to;
-    if (parentKey === null) {
-      return [...list.slice(0, index), node, ...list.slice(index)];
-    }
-    for (let i = 0; i < list.length; i += 1) {
-      const candidate = list[i] as N;
-      const children = getChildren(candidate);
-      if (children === undefined) continue;
-      const nextChildren =
-        getKey(candidate) === parentKey
-          ? [...children.slice(0, index), node, ...children.slice(index)]
-          : insert(children, node);
-      if (nextChildren !== children) {
-        return replaceAt(list, i, withChildren(candidate, nextChildren));
-      }
-    }
-    return list;
-  };
-
-  const withoutNode = remove(nodes);
-  return moved === undefined ? nodes : insert(withoutNode, moved);
-};
 
 /* -------------------------------------------------------------------------- */
 /*                                   Overlay                                  */
@@ -1025,7 +850,9 @@ const TreeViewSortableRow = ({
     // Rows are numbered from the DOM while dragging; see `syncIndexes`.
     index: 0,
     accept: (source) => canDrop(source.id, nodeKey),
-    disabled,
+    // A disabled row cannot be dragged but stays a drop target, so the gap
+    // can still be placed next to it.
+    disabled: { draggable: disabled, droppable: false },
     element: elementRef,
     // The tree moves rows itself, so dnd-kit's optimistic and keyboard sorting stay off.
     plugins: [],
@@ -1071,6 +898,18 @@ const TreeViewRow = (props: TreeViewRowProps) => {
 /* -------------------------------------------------------------------------- */
 /*                                    Nodes                                   */
 /* -------------------------------------------------------------------------- */
+
+/** Children that render as nodes, looking through fragments. */
+const countNodes = (children: React.ReactNode): number =>
+  React.Children.toArray(children).reduce<number>(
+    (count, child) =>
+      count +
+      (React.isValidElement<{ children?: React.ReactNode }>(child) &&
+      child.type === React.Fragment
+        ? countNodes(child.props.children)
+        : 1),
+    0
+  );
 
 interface TreeViewNodeInput<T> {
   kind: TreeViewNodeKind;
@@ -1190,12 +1029,20 @@ function TreeViewRootInner<T>(
   }: TreeViewRootProps<T>,
   ref: React.ForwardedRef<HTMLLIElement>
 ) {
-  const hasChildren = React.Children.toArray(children).length > 0;
+  const hasChildren = countNodes(children) > 0;
   const { ctx, depth, key, isDisabled, id, setElement, elementRef } =
     useTreeViewNode(
       { kind: 'root', value, disabled, hasChildren, defaultOpen },
       ref
     );
+  const hasOwnValue = value !== undefined;
+  React.useEffect(() => {
+    if (ctx.sortable && !hasOwnValue) {
+      console.warn(
+        'TreeView.Root: give every Root a `value` in a sortable tree, so `onMove` can name it as a parent.'
+      );
+    }
+  }, [ctx.sortable, hasOwnValue]);
   const labelId = `${id}-label`;
   const groupId = `${id}-group`;
   const open = !hasChildren || ctx.isOpen(key, defaultOpen);
