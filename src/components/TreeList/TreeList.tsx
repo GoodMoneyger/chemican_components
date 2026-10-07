@@ -66,7 +66,8 @@ export interface TreeListProps<T>
   actions?: TreeListActions<T>;
   /**
    * Marks items pending deletion. They look disabled, cannot be dragged or
-   * selected, and their action bar shows only `actions.restore`.
+   * selected, and their action bar shows only `actions.restore`. The items
+   * under them show no actions at all.
    */
   isDeleted?: (item: T) => boolean;
   labels?: TreeListLabels;
@@ -150,56 +151,79 @@ function TreeListInner<T>(
       );
     }
 
+    return groups;
+  }, [items, getItemValue, getParentKey, getOrder]);
+
+  const warnedItemsRef = React.useRef<T[] | null>(null);
+  React.useEffect(() => {
+    if (warnedItemsRef.current === items) return;
     let reachable = 0;
     const visit = (parent: TreeViewNodeKey | null) =>
-      (groups.get(parent) ?? []).forEach((item) => {
+      (childrenByParent.get(parent) ?? []).forEach((item) => {
         reachable += 1;
         visit(getItemValue(item));
       });
     visit(null);
-
     if (reachable < items.length) {
+      warnedItemsRef.current = items;
       console.warn(
         `TreeList: ${items.length - reachable} item(s) cannot be reached from the top level. Check \`getParentKey\` for cycles.`
       );
     }
+  }, [items, childrenByParent, getItemValue]);
 
-    return groups;
-  }, [items, getItemValue, getParentKey, getOrder]);
+  /** Keys of the items under a deleted one, which offer no actions. */
+  const underDeleted = React.useMemo(() => {
+    const keys = new Set<TreeViewNodeKey>();
+    if (!isDeleted) return keys;
+    const mark = (parent: TreeViewNodeKey | null, inherited: boolean) =>
+      (childrenByParent.get(parent) ?? []).forEach((item) => {
+        const key = getItemValue(item);
+        if (inherited) keys.add(key);
+        mark(key, inherited || isDeleted(item));
+      });
+    mark(null, false);
+    return keys;
+  }, [childrenByParent, getItemValue, isDeleted]);
 
   const present = actionOrder.filter((name) => actions?.[name]);
-  const actionsFor = (item: T) =>
-    present.filter((name) =>
-      isDeleted?.(item) ? name === 'restore' : name !== 'restore'
-    );
+  const actionsFor = (item: T) => {
+    if (isDeleted?.(item)) return present.filter((name) => name === 'restore');
+    if (underDeleted.has(getItemValue(item))) return [];
+    return present.filter((name) => name !== 'restore');
+  };
 
   const renderRowOverlay =
     present.length > 0
-      ? (item: T) => (
-          <>
-            {actionsFor(item).map((name) => {
-              const action = actions?.[name];
-              if (!action) return null;
-              const ariaLabel =
-                action.ariaLabel ??
-                (typeof action.label === 'string' ? action.label : name);
-              return (
-                <Tooltip key={name} content={action.label}>
-                  <Button
-                    type="button"
-                    intent="tertiary"
-                    size="xs"
-                    icon={action.icon ?? defaultIcons[name]}
-                    danger={name === 'delete'}
-                    aria-label={ariaLabel}
-                    disabled={action.disabled?.(item) ?? false}
-                    onClick={() => action.onAction(item)}
-                  />
-                </Tooltip>
-              );
-            })}
-          </>
-        )
+      ? (item: T) => {
+          const names = actionsFor(item);
+          if (names.length === 0) return null;
+          return (
+            <>
+              {names.map((name) => {
+                const action = actions?.[name];
+                if (!action) return null;
+                const ariaLabel =
+                  action.ariaLabel ??
+                  (typeof action.label === 'string' ? action.label : name);
+                return (
+                  <Tooltip key={name} content={action.label}>
+                    <Button
+                      type="button"
+                      intent="tertiary"
+                      size="xs"
+                      icon={action.icon ?? defaultIcons[name]}
+                      danger={name === 'delete'}
+                      aria-label={ariaLabel}
+                      disabled={action.disabled?.(item) ?? false}
+                      onClick={() => action.onAction(item)}
+                    />
+                  </Tooltip>
+                );
+              })}
+            </>
+          );
+        }
       : undefined;
 
   const renderLevel = (parentKey: TreeViewNodeKey | null): React.ReactNode =>

@@ -1,6 +1,10 @@
 import React from 'react';
 import { flushSync } from 'react-dom';
-import { DragDropProvider } from '@dnd-kit/react';
+import {
+  DragDropProvider,
+  KeyboardSensor,
+  PointerSensor,
+} from '@dnd-kit/react';
 import type {
   BeforeDragStartEvent,
   DragDropManager,
@@ -17,13 +21,15 @@ import { cn } from '../../lib/utils';
 import {
   DROP_SETTLE_TIMEOUT_MS,
   DWELL_MS,
+  GAP_SETTLE_MS,
   PLACEHOLDER_ATTRIBUTE,
   locateGap,
   restoreRow,
   rowsOf,
+  stepGap,
   syncIndexes,
 } from './dragAndDrop';
-import type { DragSnapshot } from './dragAndDrop';
+import type { DragSnapshot, Pointer } from './dragAndDrop';
 import { byDocumentPosition, collectLeaves, hasValue } from './registry';
 import type { Leaf, Registry, TreeNode } from './registry';
 import type {
@@ -82,9 +88,7 @@ interface TreeViewContextValue {
   sortable: boolean;
   size: TreeViewSize;
   ariaLabels: Required<TreeViewAriaLabels>;
-  /** Key of the row that holds the tree's single tab stop. */
-  activeKey: TreeViewNodeKey | null;
-  resolveKey: (value: unknown) => TreeViewNodeKey | null | undefined;
+  resolveKey: (value: unknown) => TreeViewNodeKey;
   /** Returns the matching unregister function. */
   register: (node: TreeNode) => () => void;
   isOpen: (key: TreeViewNodeKey, defaultOpen?: boolean) => boolean;
@@ -199,7 +203,10 @@ interface OpenState {
  * The rows form a single tab stop: arrow keys move between visible rows and
  * open or close groups, Home and End jump to the ends, Enter toggles a group
  * and Space toggles a checkbox. Controls rendered inside a row, such as the
- * drag handle or overlay actions, keep their own tab stops.
+ * drag handle or overlay actions, keep their own tab stops. In a sortable
+ * tree, Enter or Space on the drag handle picks the row up, ArrowUp and
+ * ArrowDown move it one slot at a time through the tree, Enter or Space
+ * drops it and Escape cancels.
  */
 function TreeViewInner<T>(
   {
@@ -229,17 +236,22 @@ function TreeViewInner<T>(
     () => ({ nodes: registryRef.current })
   );
 
+  const elementsRef = React.useRef(new WeakMap<Element, TreeNode>());
+
   const register = React.useCallback((node: TreeNode) => {
     const nodes = registryRef.current;
+    const elements = elementsRef.current;
     if (nodes.has(node.key)) {
       console.warn(
         `TreeView: duplicate node key "${String(node.key)}". Item values must resolve to unique keys across the whole tree.`
       );
     }
     nodes.set(node.key, node);
+    elements.set(node.element, node);
     setRegistryState({ nodes });
     return () => {
       if (nodes.get(node.key) === node) nodes.delete(node.key);
+      if (elements.get(node.element) === node) elements.delete(node.element);
       setRegistryState({ nodes });
     };
   }, []);
@@ -273,27 +285,29 @@ function TreeViewInner<T>(
     []
   );
 
-  const [focusKey, setFocusKey] = React.useState<TreeViewNodeKey | null>(null);
-
-  const nodeOf = (element: Element | null | undefined) =>
-    Array.from(registryRef.current.values()).find(
-      (node) => node.element === element
-    );
+  const nodeOf = React.useCallback(
+    (element: Element | null | undefined) =>
+      element ? elementsRef.current.get(element) : undefined,
+    []
+  );
 
   /** Whether every group above the node is open. */
-  const isShown = (node: TreeNode) => {
-    const registry = registryRef.current;
-    for (
-      let parent =
-        node.parentKey === null ? undefined : registry.get(node.parentKey);
-      parent;
-      parent =
-        parent.parentKey === null ? undefined : registry.get(parent.parentKey)
-    ) {
-      if (!isOpen(parent.key, parent.defaultOpen)) return false;
-    }
-    return true;
-  };
+  const isShown = React.useCallback(
+    (node: TreeNode) => {
+      const nodes = registryRef.current;
+      for (
+        let parent =
+          node.parentKey === null ? undefined : nodes.get(node.parentKey);
+        parent;
+        parent =
+          parent.parentKey === null ? undefined : nodes.get(parent.parentKey)
+      ) {
+        if (!isOpen(parent.key, parent.defaultOpen)) return false;
+      }
+      return true;
+    },
+    [isOpen]
+  );
 
   const firstTopLevelKey = React.useMemo(
     () =>
@@ -302,19 +316,37 @@ function TreeViewInner<T>(
         .sort(byDocumentPosition)[0]?.key ?? null,
     [registryState]
   );
+
   // The tree has one tab stop: the row focused last, or the first row while
-  // that one is gone or hidden.
-  const focused =
-    focusKey === null ? undefined : registryState.nodes.get(focusKey);
-  const activeKey =
-    focused && isShown(focused) ? focused.key : firstTopLevelKey;
+  // that one is gone or hidden. Rows render with tabIndex -1 and the active
+  // one is switched to 0 here, so moving focus never re-renders the rows.
+  const focusKeyRef = React.useRef<TreeViewNodeKey | null>(null);
+  const activeRowRef = React.useRef<HTMLLIElement | null>(null);
+  const activateRow = React.useCallback((element: HTMLLIElement | null) => {
+    const previous = activeRowRef.current;
+    if (previous && previous !== element) previous.tabIndex = -1;
+    if (element) element.tabIndex = 0;
+    activeRowRef.current = element;
+  }, []);
+  React.useLayoutEffect(() => {
+    const nodes = registryState.nodes;
+    const key = focusKeyRef.current;
+    const focused = key === null ? undefined : nodes.get(key);
+    const active =
+      focused && isShown(focused)
+        ? focused
+        : firstTopLevelKey === null
+          ? undefined
+          : nodes.get(firstTopLevelKey);
+    activateRow(active?.element ?? null);
+  }, [registryState, isShown, firstTopLevelKey, activateRow]);
 
   const expandedRef = React.useRef<TreeViewExpandedState | null>(null);
   React.useEffect(() => {
     if (!onExpandedChange) return;
     let expandable = 0;
     let open = 0;
-    registryRef.current.forEach((node) => {
+    registryState.nodes.forEach((node) => {
       if (node.kind !== 'root' || !node.hasChildren) return;
       expandable += 1;
       if (isOpen(node.key, node.defaultOpen)) open += 1;
@@ -323,7 +355,7 @@ function TreeViewInner<T>(
     if (previous?.expandable === expandable && previous.open === open) return;
     expandedRef.current = { expandable, open };
     onExpandedChange({ expandable, open });
-  });
+  }, [onExpandedChange, registryState, isOpen]);
 
   const isControlled = selected !== undefined;
   const [internalSelected, setInternalSelected] = React.useState<T[]>(
@@ -421,7 +453,9 @@ function TreeViewInner<T>(
     const node = nodeOf(
       (event.target as HTMLElement).closest('[role="treeitem"]')
     );
-    if (node) setFocusKey(node.key);
+    if (!node) return;
+    focusKeyRef.current = node.key;
+    activateRow(node.element);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
@@ -484,11 +518,19 @@ function TreeViewInner<T>(
     key: TreeViewNodeKey;
     timer: number;
   } | null>(null);
-  const pointerYRef = React.useRef<number | null>(null);
+  const pointerRef = React.useRef<Pointer | null>(null);
+  const settleTimerRef = React.useRef<number | null>(null);
 
   const clearDwell = () => {
     if (dwellRef.current) window.clearTimeout(dwellRef.current.timer);
     dwellRef.current = null;
+  };
+
+  const clearSettle = () => {
+    if (settleTimerRef.current !== null) {
+      window.clearTimeout(settleTimerRef.current);
+      settleTimerRef.current = null;
+    }
   };
 
   const pendingDropRef = React.useRef<(() => void) | null>(null);
@@ -530,6 +572,9 @@ function TreeViewInner<T>(
   React.useEffect(
     () => () => {
       if (dwellRef.current) window.clearTimeout(dwellRef.current.timer);
+      if (settleTimerRef.current !== null) {
+        window.clearTimeout(settleTimerRef.current);
+      }
       if (settleFrameRef.current !== null) {
         window.cancelAnimationFrame(settleFrameRef.current);
       }
@@ -584,26 +629,51 @@ function TreeViewInner<T>(
       originList,
       originIndex: rowsOf(originList).indexOf(node.element),
       reopen,
+      nodeOf,
+      keyboard: false,
     };
-    pointerYRef.current = null;
+    pointerRef.current = null;
+    clearSettle();
     syncIndexes(manager, registryRef.current);
   };
 
   const handleDragMove = (event: DragMoveEvent, manager: DragDropManager) => {
     const snapshot = dragRef.current;
-    if (!snapshot) return;
+    const tree = treeRef.current;
+    if (!snapshot || !tree) return;
+    if (event.by) {
+      // The keyboard sensor moves by deltas: one press steps the gap one slot.
+      snapshot.keyboard = true;
+      if (event.by.y !== 0) {
+        const direction = event.by.y > 0 ? 1 : -1;
+        stepGap(manager, registryRef.current, snapshot, tree, direction);
+      }
+      return;
+    }
     // The operation's position is applied after this event, so use the
     // coordinates the event carries.
-    const { y } = manager.dragOperation.position.current;
-    const pointerY = event.to ? event.to.y : event.by ? y + event.by.y : y;
-    pointerYRef.current = pointerY;
-    locateGap(manager, registryRef.current, snapshot, pointerY);
+    const { x, y } = event.to ?? manager.dragOperation.position.current;
+    const pointer = { x, y };
+    pointerRef.current = pointer;
+    locateGap(manager, registryRef.current, snapshot, pointer);
+    // Rows slide into place after the gap moves, so a decision taken while
+    // they move can differ from the settled layout. Look again once they
+    // have settled, with the last pointer position.
+    clearSettle();
+    settleTimerRef.current = window.setTimeout(() => {
+      settleTimerRef.current = null;
+      const current = dragRef.current;
+      const last = pointerRef.current;
+      if (current === snapshot && !current.keyboard && last) {
+        locateGap(manager, registryRef.current, current, last);
+      }
+    }, GAP_SETTLE_MS);
   };
 
   const handleDragOver = (event: DragOverEvent, manager: DragDropManager) => {
     const { source, target } = event.operation;
     const snapshot = dragRef.current;
-    if (!source || !target || !snapshot) {
+    if (!source || !target || !snapshot || snapshot.keyboard) {
       clearDwell();
       return;
     }
@@ -613,7 +683,7 @@ function TreeViewInner<T>(
       manager,
       registryRef.current,
       snapshot,
-      pointerYRef.current ?? manager.dragOperation.position.current.y
+      pointerRef.current ?? manager.dragOperation.position.current
     );
     if (target.id === source.id || dwellRef.current?.key === target.id) return;
     clearDwell();
@@ -632,6 +702,7 @@ function TreeViewInner<T>(
     const snapshot = dragRef.current;
     dragRef.current = null;
     clearDwell();
+    clearSettle();
     if (!snapshot) return;
     const { node, originList, originIndex, reopen } = snapshot;
     // A re-render during the drag may have removed the row or its list; React
@@ -681,6 +752,16 @@ function TreeViewInner<T>(
   };
 
   const dragHandleLabel = ariaLabels?.dragHandle ?? 'Drag to reorder';
+  // Keyboard presses move the dragged row by one row height, in step with
+  // the gap moving one slot.
+  const rowHeight = size === 'lg' ? 48 : 40;
+  const sensors = React.useMemo(
+    () => [
+      PointerSensor,
+      KeyboardSensor.configure({ offset: { x: 0, y: rowHeight } }),
+    ],
+    [rowHeight]
+  );
   const resolveKey = React.useCallback(
     (value: unknown) => getItemValue(value as T),
     [getItemValue]
@@ -691,7 +772,6 @@ function TreeViewInner<T>(
       sortable,
       size,
       ariaLabels: { dragHandle: dragHandleLabel },
-      activeKey,
       resolveKey,
       register,
       isOpen,
@@ -707,7 +787,6 @@ function TreeViewInner<T>(
       sortable,
       size,
       dragHandleLabel,
-      activeKey,
       resolveKey,
       register,
       isOpen,
@@ -745,6 +824,7 @@ function TreeViewInner<T>(
 
   return (
     <DragDropProvider
+      sensors={sensors}
       onBeforeDragStart={handleBeforeDragStart}
       onDragMove={handleDragMove}
       onDragOver={handleDragOver}
@@ -1002,9 +1082,13 @@ const useTreeViewNode = <T,>(
   const ctx = useTreeViewContext();
   const branch = React.useContext(BranchContext);
   const id = React.useId();
-  const valueKey =
-    value === undefined ? undefined : (ctx.resolveKey(value) ?? undefined);
-  if (kind === 'item' && value !== undefined && valueKey === undefined) {
+  const valueKey = value === undefined ? undefined : ctx.resolveKey(value);
+  if (
+    kind === 'item' &&
+    value !== undefined &&
+    typeof valueKey !== 'string' &&
+    typeof valueKey !== 'number'
+  ) {
     throw new Error(
       'TreeView.Item: `getItemValue` must return a string or number for every Item value.'
     );
@@ -1085,7 +1169,6 @@ export interface TreeViewRootProps<T>
   defaultOpen?: boolean;
   /** Disables selection and dragging for this Root and every nested node. Expanding still works. */
   disabled?: boolean;
-  className?: string;
   children?: React.ReactNode;
 }
 
@@ -1135,7 +1218,7 @@ function TreeViewRootInner<T>(
       }
       data-state={hasChildren ? (open ? 'open' : 'closed') : undefined}
       {...props}
-      tabIndex={ctx.activeKey === key ? 0 : -1}
+      tabIndex={-1}
       className={cn(treeItemClassName, className)}
     >
       <TreeViewRow
@@ -1220,7 +1303,6 @@ export interface TreeViewItemProps<T>
   value?: T;
   renderRowOverlay?: (value: T) => React.ReactNode;
   disabled?: boolean;
-  className?: string;
   children: React.ReactNode;
 }
 
@@ -1251,7 +1333,7 @@ function TreeViewItemInner<T>(
       aria-disabled={isDisabled || undefined}
       aria-checked={showCheckbox ? isSelected : undefined}
       {...props}
-      tabIndex={ctx.activeKey === key ? 0 : -1}
+      tabIndex={-1}
       className={cn(treeItemClassName, className)}
     >
       <TreeViewRow

@@ -7,6 +7,13 @@ import type { Registry, TreeNode } from './registry';
 export const DWELL_MS = 600;
 /** Upper bound on waiting for dnd-kit to finish a drop before the tree moves on. */
 export const DROP_SETTLE_TIMEOUT_MS = 2000;
+/** How long rows take to slide into place after the gap moves, plus a margin. */
+export const GAP_SETTLE_MS = 300;
+
+export interface Pointer {
+  x: number;
+  y: number;
+}
 export const PLACEHOLDER_ATTRIBUTE = 'data-dnd-placeholder';
 
 export interface DragSnapshot {
@@ -15,6 +22,10 @@ export interface DragSnapshot {
   originIndex: number;
   /** The dragged Root was open and is collapsed for the duration of the drag. */
   reopen: boolean;
+  /** Registered node of a row element, or of a list's parent to find its owner. */
+  nodeOf: (element: Element | null) => TreeNode | undefined;
+  /** Set once the drag is moved with the keyboard; the gap then steps slot by slot. */
+  keyboard: boolean;
 }
 
 /** Rows of a list in DOM order, without dnd-kit's placeholder that marks the gap. */
@@ -82,39 +93,47 @@ const placeGap = (
   });
 };
 
-/** The Root whose group is `list`, or undefined for the tree's own list. */
-const ownerOf = (registry: Registry, list: Element) => {
-  const element = list.parentElement;
-  let owner: TreeNode | undefined;
+/** The visible row under the pointer, leaving out the dragged row itself. */
+const rowAt = (registry: Registry, pointer: Pointer, dragged: TreeNode) => {
+  let found: TreeNode | undefined;
   registry.forEach((node) => {
-    if (node.element === element) owner = node;
+    if (node === dragged) return;
+    const rect = node.element.firstElementChild?.getBoundingClientRect();
+    if (
+      rect &&
+      rect.height > 0 &&
+      pointer.y >= rect.top &&
+      pointer.y < rect.bottom &&
+      pointer.x >= rect.left &&
+      pointer.x < rect.right
+    ) {
+      found = node;
+    }
   });
-  return owner;
+  return found;
 };
 
 /**
- * Tree rules for where the gap goes relative to the hovered row: the top half
- * places before it; the bottom half of an open group makes it the first child;
- * the middle of a childless group nests inside it; otherwise after it.
+ * Tree rules for where the gap goes relative to the row under the pointer:
+ * the top half places before it; the bottom half of an open group makes it
+ * the first child; the middle of a childless group nests inside it; otherwise
+ * after it. Rows are hit-tested from the pointer, so the decision follows what
+ * the pointer is over rather than dnd-kit's clone-based collision target.
  */
 export const locateGap = (
   manager: DragDropManager,
   registry: Registry,
   snapshot: DragSnapshot,
-  pointerY: number
+  pointer: Pointer
 ) => {
-  const { source, target } = manager.dragOperation;
-  const node =
-    source && target && target.id !== source.id
-      ? registry.get(target.id)
-      : undefined;
+  const node = rowAt(registry, pointer, snapshot.node);
   const list = node?.element.parentElement;
   const rect = node?.element.firstElementChild?.getBoundingClientRect();
   if (!node || !list || !rect || rect.height === 0) return;
   // A disabled Root takes no new children, so its list takes no gap either.
-  if (ownerOf(registry, list)?.disabled) return;
+  if (snapshot.nodeOf(list.parentElement)?.disabled) return;
 
-  const rel = (pointerY - rect.top) / rect.height;
+  const rel = (pointer.y - rect.top) / rect.height;
   const group =
     node.kind === 'root' ? node.element.querySelector(':scope > ul') : null;
   const expanded = node.element.getAttribute('aria-expanded');
@@ -140,6 +159,57 @@ export const locateGap = (
   } else {
     place(list, nextRowAfter(node.element, dragged));
   }
+};
+
+interface GapSlot {
+  list: Element;
+  before: Element | null;
+}
+
+/**
+ * Every spot the gap can take, in document order: before each visible row,
+ * at the end of each list, and inside a childless Root that can take
+ * children. Lists owned by a disabled Root are left out, as is the dragged
+ * subtree.
+ */
+const gapSlots = (tree: Element, snapshot: DragSnapshot): GapSlot[] => {
+  const slots: GapSlot[] = [];
+  const dragged = snapshot.node.element;
+  const walk = (list: Element) => {
+    if (snapshot.nodeOf(list.parentElement)?.disabled) return;
+    rowsOf(list, dragged).forEach((row) => {
+      slots.push({ list, before: row });
+      const node = snapshot.nodeOf(row);
+      const group = row.querySelector(':scope > ul');
+      if (!node || !group || node.disabled) return;
+      const expanded = row.getAttribute('aria-expanded');
+      if (expanded === 'true') walk(group);
+      else if (expanded === null) slots.push({ list: group, before: null });
+    });
+    slots.push({ list, before: null });
+  };
+  walk(tree);
+  return slots;
+};
+
+/** Moves the gap to the previous or next slot, for keyboard-driven drags. */
+export const stepGap = (
+  manager: DragDropManager,
+  registry: Registry,
+  snapshot: DragSnapshot,
+  tree: Element,
+  direction: 1 | -1
+) => {
+  const element = snapshot.node.element;
+  const list = element.parentElement;
+  if (!list) return;
+  const before = nextRowAfter(element, element);
+  const slots = gapSlots(tree, snapshot);
+  const index = slots.findIndex(
+    (slot) => slot.list === list && slot.before === before
+  );
+  const next = index === -1 ? undefined : slots[index + direction];
+  if (next) placeGap(manager, registry, snapshot, next.list, next.before);
 };
 
 export const restoreRow = ({ node, originList, originIndex }: DragSnapshot) => {
