@@ -5,6 +5,8 @@ import { byDocumentPosition } from './registry';
 import type { Registry, TreeNode } from './registry';
 
 export const DWELL_MS = 600;
+/** Upper bound on waiting for dnd-kit to finish a drop before the tree moves on. */
+export const DROP_SETTLE_TIMEOUT_MS = 2000;
 export const PLACEHOLDER_ATTRIBUTE = 'data-dnd-placeholder';
 
 export interface DragSnapshot {
@@ -62,7 +64,7 @@ const placeGap = (
   before: Element | null
 ) => {
   const { element } = snapshot.node;
-  if (before === element) return;
+  if (!element.isConnected || before === element) return;
   if (
     element.parentElement === list &&
     nextRowAfter(element, element) === before
@@ -78,6 +80,16 @@ const placeGap = (
       manager.registry.droppables.get(node.key)?.refreshShape();
     });
   });
+};
+
+/** The Root whose group is `list`, or undefined for the tree's own list. */
+const ownerOf = (registry: Registry, list: Element) => {
+  const element = list.parentElement;
+  let owner: TreeNode | undefined;
+  registry.forEach((node) => {
+    if (node.element === element) owner = node;
+  });
+  return owner;
 };
 
 /**
@@ -99,6 +111,8 @@ export const locateGap = (
   const list = node?.element.parentElement;
   const rect = node?.element.firstElementChild?.getBoundingClientRect();
   if (!node || !list || !rect || rect.height === 0) return;
+  // A disabled Root takes no new children, so its list takes no gap either.
+  if (ownerOf(registry, list)?.disabled) return;
 
   const rel = (pointerY - rect.top) / rect.height;
   const group =

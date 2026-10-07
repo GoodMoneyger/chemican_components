@@ -15,6 +15,7 @@ import { Checkbox } from '../Checkbox';
 import { cn } from '../../lib/utils';
 
 import {
+  DROP_SETTLE_TIMEOUT_MS,
   DWELL_MS,
   PLACEHOLDER_ATTRIBUTE,
   locateGap,
@@ -213,6 +214,8 @@ function TreeViewInner<T>(
     size = 'md',
     onExpandedChange,
     ariaLabels,
+    onFocus,
+    onKeyDown,
     className,
     style,
     children,
@@ -414,6 +417,7 @@ function TreeViewInner<T>(
   );
 
   const handleFocus = (event: React.FocusEvent<HTMLUListElement>) => {
+    onFocus?.(event);
     const node = nodeOf(
       (event.target as HTMLElement).closest('[role="treeitem"]')
     );
@@ -421,6 +425,8 @@ function TreeViewInner<T>(
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented) return;
     const row = event.target as HTMLElement;
     const node =
       row.getAttribute('role') === 'treeitem' ? nodeOf(row) : undefined;
@@ -485,6 +491,53 @@ function TreeViewInner<T>(
     dwellRef.current = null;
   };
 
+  const pendingDropRef = React.useRef<(() => void) | null>(null);
+  const settleFrameRef = React.useRef<number | null>(null);
+
+  /** Runs the step still waiting for the previous drop, if any. */
+  const flushPendingDrop = () => {
+    if (settleFrameRef.current !== null) {
+      window.cancelAnimationFrame(settleFrameRef.current);
+      settleFrameRef.current = null;
+    }
+    const pending = pendingDropRef.current;
+    pendingDropRef.current = null;
+    pending?.();
+  };
+
+  /**
+   * Runs `callback` once dnd-kit has played the drop animation and removed
+   * its placeholder, so React can take the row over without anything of the
+   * drag still on screen.
+   */
+  const afterDrop = (manager: DragDropManager, callback: () => void) => {
+    flushPendingDrop();
+    pendingDropRef.current = callback;
+    const deadline = performance.now() + DROP_SETTLE_TIMEOUT_MS;
+    const poll = () => {
+      settleFrameRef.current = null;
+      if (pendingDropRef.current !== callback) return;
+      if (manager.dragOperation.status.idle || performance.now() > deadline) {
+        pendingDropRef.current = null;
+        callback();
+      } else {
+        settleFrameRef.current = window.requestAnimationFrame(poll);
+      }
+    };
+    settleFrameRef.current = window.requestAnimationFrame(poll);
+  };
+
+  React.useEffect(
+    () => () => {
+      if (dwellRef.current) window.clearTimeout(dwellRef.current.timer);
+      if (settleFrameRef.current !== null) {
+        window.cancelAnimationFrame(settleFrameRef.current);
+      }
+      pendingDropRef.current = null;
+    },
+    []
+  );
+
   const canDrop = React.useCallback(
     (sourceKey: TreeViewNodeKey, targetKey: TreeViewNodeKey) => {
       const nodes = registryRef.current;
@@ -517,6 +570,7 @@ function TreeViewInner<T>(
     event: BeforeDragStartEvent,
     manager: DragDropManager
   ) => {
+    flushPendingDrop();
     const source = event.operation.source;
     const node = source ? registryRef.current.get(source.id) : undefined;
     const originList = node?.element.parentElement;
@@ -574,23 +628,23 @@ function TreeViewInner<T>(
     dwellRef.current = { key: target.id, timer };
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = (event: DragEndEvent, manager: DragDropManager) => {
     const snapshot = dragRef.current;
     dragRef.current = null;
     clearDwell();
     if (!snapshot) return;
     const { node, originList, originIndex, reopen } = snapshot;
-    if (reopen) setOpen(node.key, true);
+    // A re-render during the drag may have removed the row or its list; React
+    // owns whatever is left, so there is nothing to restore or report.
+    if (!node.element.isConnected || !originList.isConnected) return;
     const list = node.element.parentElement;
     const toIndex = list ? rowsOf(list).indexOf(node.element) : -1;
     const from = ownerOf(originList);
     const to = list ? ownerOf(list) : undefined;
     const moved = list !== originList || toIndex !== originIndex;
-    // The row goes back to where React left it, and the consumer's update is
-    // flushed at once so React lays the rows out in the new order before the
-    // drop animation measures its target. If `onMove` leaves the data as it
-    // is, the row simply stays where it was.
-    restoreRow(snapshot);
+    const reopenRoot = () => {
+      if (reopen) setOpen(node.key, true);
+    };
     if (
       event.canceled ||
       !onMove ||
@@ -598,6 +652,10 @@ function TreeViewInner<T>(
       from === undefined ||
       to === undefined
     ) {
+      // Nothing changes: the row goes straight back so the drop animation
+      // returns it to its place, and a dragged group reopens afterwards.
+      restoreRow(snapshot);
+      afterDrop(manager, reopenRoot);
       return;
     }
     const moveEvent: TreeViewMoveEvent = {
@@ -607,7 +665,19 @@ function TreeViewInner<T>(
       from: placement(from, originIndex),
       to: placement(to, toIndex),
     };
-    flushSync(() => onMove(moveEvent));
+    // The row keeps the spot dnd-kit animates it into until that is over.
+    // Only then does it go back to where React left it, with the consumer's
+    // update flushed in the same step, so React lays the rows out in the new
+    // order without a frame in between and a dragged group reopens in place.
+    // If `onMove` leaves the data as it is, the row snaps back.
+    afterDrop(manager, () => {
+      if (!node.element.isConnected || !originList.isConnected) return;
+      restoreRow(snapshot);
+      flushSync(() => {
+        reopenRoot();
+        onMove(moveEvent);
+      });
+    });
   };
 
   const dragHandleLabel = ariaLabels?.dragHandle ?? 'Drag to reorder';
@@ -655,9 +725,9 @@ function TreeViewInner<T>(
       <ul
         ref={treeRef}
         role="tree"
+        {...props}
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
-        {...props}
         className={cn(
           `border-divider-default divide-divider-default bg-surface-primary
           rounded-sm divide-y overflow-hidden border`,
@@ -1003,7 +1073,10 @@ const useTreeViewNode = <T,>(
 };
 
 export interface TreeViewRootProps<T>
-  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, 'value' | 'children'> {
+  extends Omit<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    'value' | 'children' | 'tabIndex'
+  > {
   label: React.ReactNode;
   /** Identifies the node and is passed back to `renderRowOverlay`. */
   value?: T;
@@ -1060,9 +1133,9 @@ function TreeViewRootInner<T>(
       aria-checked={
         selection?.selectable ? ariaChecked(selection.state) : undefined
       }
-      tabIndex={ctx.activeKey === key ? 0 : -1}
       data-state={hasChildren ? (open ? 'open' : 'closed') : undefined}
       {...props}
+      tabIndex={ctx.activeKey === key ? 0 : -1}
       className={cn(treeItemClassName, className)}
     >
       <TreeViewRow
@@ -1139,7 +1212,10 @@ const TreeViewRoot = React.forwardRef(
 TreeViewRoot.displayName = 'TreeView.Root';
 
 export interface TreeViewItemProps<T>
-  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, 'value' | 'children'> {
+  extends Omit<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    'value' | 'children' | 'tabIndex'
+  > {
   /** Identifies the node for selection and is passed back to `renderRowOverlay`. */
   value?: T;
   renderRowOverlay?: (value: T) => React.ReactNode;
@@ -1174,8 +1250,8 @@ function TreeViewItemInner<T>(
       aria-level={depth + 1}
       aria-disabled={isDisabled || undefined}
       aria-checked={showCheckbox ? isSelected : undefined}
-      tabIndex={ctx.activeKey === key ? 0 : -1}
       {...props}
+      tabIndex={ctx.activeKey === key ? 0 : -1}
       className={cn(treeItemClassName, className)}
     >
       <TreeViewRow
