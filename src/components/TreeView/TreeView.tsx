@@ -852,14 +852,14 @@ export interface TreeViewRootOverlayProps
 const TreeViewRootOverlay = React.forwardRef<
   HTMLDivElement,
   TreeViewRootOverlayProps
->(({ forceVisible = false, className, style, children, ...props }, ref) => (
+>(({ forceVisible = false, className, children, ...props }, ref) => (
   <div
     ref={ref}
     data-force-visible={forceVisible || undefined}
     {...props}
     className={cn(
-      `right-0 top-0 bottom-0 pr-md pl-16 z-slight pointer-events-none absolute
-      flex w-max items-center`,
+      `right-0 top-0 bottom-0 pr-md pl-16 z-slight bg-row-overlay-fade
+      pointer-events-none absolute flex w-max items-center`,
       forceVisible
         ? 'opacity-100'
         : `opacity-0 transition-opacity group-hover:opacity-100
@@ -867,11 +867,6 @@ const TreeViewRootOverlay = React.forwardRef<
           [li:focus-visible>div>&]:opacity-100`,
       className
     )}
-    style={{
-      background:
-        'linear-gradient(to right, transparent 0rem, var(--token-color-background-interactive-neutral-hover) 3rem, var(--token-color-background-interactive-neutral-hover) 100%)',
-      ...style,
-    }}
   >
     <div className="gap-xs pointer-events-auto flex items-center">
       {children}

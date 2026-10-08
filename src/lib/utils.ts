@@ -10,6 +10,7 @@ const twMerge = extendTailwindMerge({
       spacing: ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxxl'],
     },
     classGroups: {
+      'bg-image': [{ bg: ['row-overlay-fade'] }],
       z: [
         {
           z: [

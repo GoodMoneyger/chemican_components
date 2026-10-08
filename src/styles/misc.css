@@ -22,4 +22,11 @@
   --z-index-dropdown: 40;
   --z-index-tooltip: 50;
   --z-index-max: 9999;
+
+  --background-image-row-overlay-fade: linear-gradient(
+    to right,
+    transparent 0rem,
+    var(--token-color-background-interactive-neutral-hover) 3rem,
+    var(--token-color-background-interactive-neutral-hover) 100%
+  );
 }

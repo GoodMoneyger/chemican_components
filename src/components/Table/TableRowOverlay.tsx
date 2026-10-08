@@ -41,16 +41,14 @@ const TableRowOverlay = React.forwardRef<
         'pr-md pl-16 w-max',
         // Z-index above other cells
         'z-slight',
+        // Fade from transparent into the row hover background
+        'bg-row-overlay-fade',
         // Visibility control
         forceVisible
           ? 'opacity-100'
           : 'opacity-0 transition-opacity group-hover:opacity-100',
         className
       )}
-      style={{
-        background:
-          'linear-gradient(to right, transparent 0rem, var(--token-color-background-interactive-neutral-hover) 3rem, var(--token-color-background-interactive-neutral-hover) 100%)',
-      }}
     >
       <div className="gap-xs flex items-center">{children}</div>
     </div>
