@@ -19,6 +19,12 @@ export type Registry = Map<TreeViewNodeKey, TreeNode>;
 
 export type Leaf = TreeNode & { valueKey: TreeViewNodeKey };
 
+export interface RootSelection {
+  state: 'all' | 'some' | 'none';
+  /** Whether the Root's checkbox can change anything. */
+  selectable: boolean;
+}
+
 export const hasValue = (node: TreeNode): node is Leaf =>
   node.valueKey !== undefined;
 
@@ -56,4 +62,27 @@ export const collectLeaves = (registry: Registry) => {
     if (node.kind === 'root') collect(node);
   });
   return leavesByRoot;
+};
+
+/**
+ * Checkbox state of a Root from its leaves. Disabled leaves count towards
+ * `all` only when every enabled leaf is selected, so a Root whose enabled
+ * leaves are all checked reads as fully selected.
+ */
+export const rootSelectionOf = (
+  leaves: Leaf[],
+  isSelected: (valueKey: TreeViewNodeKey) => boolean
+): RootSelection => {
+  const enabled = leaves.filter((leaf) => !leaf.disabled);
+  const countSelected = (list: Leaf[]) =>
+    list.filter((leaf) => isSelected(leaf.valueKey)).length;
+  const selectedCount = countSelected(leaves);
+  const state =
+    selectedCount === 0
+      ? 'none'
+      : selectedCount === leaves.length ||
+          (enabled.length > 0 && countSelected(enabled) === enabled.length)
+        ? 'all'
+        : 'some';
+  return { state, selectable: enabled.length > 0 };
 };

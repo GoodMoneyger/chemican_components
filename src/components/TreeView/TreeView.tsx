@@ -30,8 +30,13 @@ import {
   syncIndexes,
 } from './dragAndDrop';
 import type { DragSnapshot, Pointer } from './dragAndDrop';
-import { byDocumentPosition, collectLeaves, hasValue } from './registry';
-import type { Leaf, Registry, TreeNode } from './registry';
+import {
+  byDocumentPosition,
+  collectLeaves,
+  hasValue,
+  rootSelectionOf,
+} from './registry';
+import type { Leaf, Registry, RootSelection, TreeNode } from './registry';
 import type {
   TreeViewMoveEvent,
   TreeViewMovePlacement,
@@ -76,12 +81,6 @@ export const resolveTreeViewItemValue = (item: unknown): TreeViewNodeKey => {
     'TreeView: values must be strings, numbers, or objects with a string or number `id`. Pass `getItemValue` for any other shape.'
   );
 };
-
-interface RootSelection {
-  state: 'all' | 'some' | 'none';
-  /** Whether the Root's checkbox can change anything. */
-  selectable: boolean;
-}
 
 interface TreeViewContextValue {
   selectable: boolean;
@@ -411,21 +410,10 @@ function TreeViewInner<T>(
   );
 
   const getRootSelection = React.useCallback(
-    (key: TreeViewNodeKey): RootSelection => {
-      const leaves = leavesByRoot.get(key) ?? [];
-      const enabled = leaves.filter((leaf) => !leaf.disabled);
-      const countSelected = (list: Leaf[]) =>
-        list.filter((leaf) => selectedKeys.has(leaf.valueKey)).length;
-      const selectedCount = countSelected(leaves);
-      const state =
-        selectedCount === 0
-          ? 'none'
-          : selectedCount === leaves.length ||
-              (enabled.length > 0 && countSelected(enabled) === enabled.length)
-            ? 'all'
-            : 'some';
-      return { state, selectable: enabled.length > 0 };
-    },
+    (key: TreeViewNodeKey): RootSelection =>
+      rootSelectionOf(leavesByRoot.get(key) ?? [], (valueKey) =>
+        selectedKeys.has(valueKey)
+      ),
     [leavesByRoot, selectedKeys]
   );
 
