@@ -102,6 +102,17 @@ describe('applyTreeViewMove', () => {
     ).toBe(nodes);
   });
 
+  it('returns the same array when the destination parent has no children array', () => {
+    const nodes = tree();
+    expect(
+      applyTreeViewMove(
+        nodes,
+        move('a1', 'item', ['a', 0], ['c', 0]),
+        accessors
+      )
+    ).toBe(nodes);
+  });
+
   it('keeps untouched branches identical', () => {
     const nodes = tree();
     const result = applyTreeViewMove(

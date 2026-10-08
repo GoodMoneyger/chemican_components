@@ -41,7 +41,8 @@ export const applyTreeViewMove = <N>(
     return list;
   };
 
-  const insert = (list: N[], node: N): N[] => {
+  /** Returns undefined when no node in `list` has the destination key. */
+  const insert = (list: N[], node: N): N[] | undefined => {
     const { parentKey, index } = event.to;
     if (parentKey === null) {
       return [...list.slice(0, index), node, ...list.slice(index)];
@@ -54,13 +55,16 @@ export const applyTreeViewMove = <N>(
         getKey(candidate) === parentKey
           ? [...children.slice(0, index), node, ...children.slice(index)]
           : insert(children, node);
-      if (nextChildren !== children) {
+      if (nextChildren !== undefined) {
         return replaceAt(list, i, withChildren(candidate, nextChildren));
       }
     }
-    return list;
+    return undefined;
   };
 
   const withoutNode = remove(nodes);
-  return moved === undefined ? nodes : insert(withoutNode, moved);
+  if (moved === undefined) return nodes;
+  // The destination can be missing from the data, for instance a Root whose
+  // `getChildren` returns undefined. Keep the node rather than dropping it.
+  return insert(withoutNode, moved) ?? nodes;
 };
