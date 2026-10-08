@@ -8,8 +8,8 @@ import {
 } from '@tabler/icons-react';
 
 import { Button } from '../Button';
+import type { ButtonProps } from '../Button';
 import { TextLink } from '../TextLink';
-import { Tooltip } from '../Tooltip';
 import { TreeView, resolveTreeViewItemValue } from '../TreeView';
 import type {
   TreeViewExpandedState,
@@ -22,7 +22,7 @@ import { cn } from '../../lib/utils';
 
 export interface TreeListAction<T> {
   onAction: (item: T) => void;
-  /** Tooltip content. It is also the accessible name when it is a string. */
+  /** Button text. It is also the accessible name when it is a string. */
   label: React.ReactNode;
   /** Accessible name, required when `label` is not a plain string. */
   ariaLabel?: string;
@@ -62,7 +62,7 @@ export interface TreeListProps<T>
   getOrder?: (item: T) => number;
   /** Title shown in the header bar above the rows. */
   header: React.ReactNode;
-  /** Row actions, each shown as an icon button with a tooltip when present. */
+  /** Row actions, each shown as a button with its icon and label when present. */
   actions?: TreeListActions<T>;
   /**
    * Marks items pending deletion. They look disabled, cannot be dragged or
@@ -83,6 +83,14 @@ const defaultIcons: Record<ActionName, IconProp> = {
   move: IconFolderSymlink,
   delete: IconTrash,
   restore: IconRestore,
+};
+
+const actionIntents: Record<ActionName, ButtonProps['intent']> = {
+  add: 'primary',
+  edit: 'secondary',
+  move: 'secondary',
+  delete: 'primary',
+  restore: 'secondary',
 };
 
 const indentVariables = {
@@ -207,18 +215,19 @@ function TreeListInner<T>(
                   action.ariaLabel ??
                   (typeof action.label === 'string' ? action.label : name);
                 return (
-                  <Tooltip key={name} content={action.label}>
-                    <Button
-                      type="button"
-                      intent="tertiary"
-                      size="xs"
-                      icon={action.icon ?? defaultIcons[name]}
-                      danger={name === 'delete'}
-                      aria-label={ariaLabel}
-                      disabled={action.disabled?.(item) ?? false}
-                      onClick={() => action.onAction(item)}
-                    />
-                  </Tooltip>
+                  <Button
+                    key={name}
+                    type="button"
+                    intent={actionIntents[name]}
+                    size="xs"
+                    icon={action.icon ?? defaultIcons[name]}
+                    danger={name === 'delete'}
+                    aria-label={ariaLabel}
+                    disabled={action.disabled?.(item) ?? false}
+                    onClick={() => action.onAction(item)}
+                  >
+                    {action.label}
+                  </Button>
                 );
               })}
             </>
