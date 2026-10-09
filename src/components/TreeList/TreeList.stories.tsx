@@ -12,8 +12,7 @@ import { Select } from '../Select';
 import { TextField } from '../TextField';
 import type { TreeViewMoveEvent } from '../TreeView';
 
-import { TreeList, applyTreeListMove } from './TreeList';
-import type { TreeListMoveAccessors } from './TreeList';
+import { TreeList } from './TreeList';
 
 const meta: Meta<typeof TreeList> = {
   title: 'Components/TreeList',
@@ -75,17 +74,6 @@ const departments: Department[] = [
   },
   { uuid: 'kenkyu', name: '研究開発部', parent_id: 'honsha', display_order: 2 },
 ];
-
-const accessors: TreeListMoveAccessors<Department> = {
-  getItemValue: (d) => d.uuid,
-  getParentKey: (d) => d.parent_id,
-  getOrder: (d) => d.display_order,
-  withPlacement: (d, parentKey, order) => ({
-    ...d,
-    parent_id: parentKey === null ? null : String(parentKey),
-    display_order: order,
-  }),
-};
 
 const labels = { expandAll: '全てを開く', collapseAll: '全てを閉じる' };
 
@@ -540,8 +528,13 @@ const WithActionsExample = () => {
         labels={labels}
         aria-label="部署一覧"
         sortable
+        withPlacement={(d, parentKey, order) => ({
+          ...d,
+          parent_id: parentKey === null ? null : String(parentKey),
+          display_order: order,
+        })}
+        onItemsChange={setItems}
         onMove={(event: TreeViewMoveEvent) => {
-          setItems((current) => applyTreeListMove(current, event, accessors));
           setLastAction(`${(event.value as Department).name} を移動`);
         }}
         isDeleted={(d) => deletedIds.has(d.uuid)}
@@ -745,7 +738,7 @@ export const WithActions: Story = {
     docs: {
       description: {
         story:
-          'Hover a row to reveal the optional add, edit, move and delete actions, each a text button showing its `label`. Every action is optional. The button above the list opens a dialog to add a department at the top level or under any department picked from a list, the row action opens the same dialog asking only for the name of the department created under that row, edit opens a dialog to rename it, and move opens a dialog listing the top level and every other department by path, leaving out the department itself, its descendants and its current parent. Delete asks for confirmation; when the department has children it also asks whether to delete them as well or move them to a department picked from the same list. Deleting only marks the department through `isDeleted`: it stays in the list looking disabled, its action bar shows the `restore` action alone, and it is removed once the changes are saved. The list is also `sortable`, with `applyTreeListMove` keeping `parent_id` and `display_order` of the flat list in step after a drop. Nothing is saved until the primary save button is pressed: it stays disabled while the list matches the last saved state, and opens a confirmation listing every pending addition, move, deletion and rename grouped by type before applying them all at once. A secondary reset button appears next to it as soon as there are unsaved changes and, after a confirmation warning that they will be lost, restores the last saved version.',
+          'Hover a row to reveal the optional add, edit, move and delete actions, each a text button showing its `label`. Every action is optional. The button above the list opens a dialog to add a department at the top level or under any department picked from a list, the row action opens the same dialog asking only for the name of the department created under that row, edit opens a dialog to rename it, and move opens a dialog listing the top level and every other department by path, leaving out the department itself, its descendants and its current parent. Delete asks for confirmation; when the department has children it also asks whether to delete them as well or move them to a department picked from the same list. Deleting only marks the department through `isDeleted`: it stays in the list looking disabled, its action bar shows the `restore` action alone, and it is removed once the changes are saved. The list is also `sortable`, with `onItemsChange` handing back the flat list after a drop, `parent_id` and `display_order` updated through `withPlacement`. Nothing is saved until the primary save button is pressed: it stays disabled while the list matches the last saved state, and opens a confirmation listing every pending addition, move, deletion and rename grouped by type before applying them all at once. A secondary reset button appears next to it as soon as there are unsaved changes and, after a confirmation warning that they will be lost, restores the last saved version.',
       },
     },
   },

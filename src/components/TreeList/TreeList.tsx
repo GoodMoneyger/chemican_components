@@ -7,10 +7,14 @@ import { TreeView, resolveTreeViewItemValue } from '../TreeView';
 import type {
   TreeViewExpandedState,
   TreeViewHandle,
+  TreeViewMoveEvent,
   TreeViewNodeKey,
   TreeViewProps,
 } from '../TreeView';
 import { cn } from '../../lib/utils';
+
+import { applyTreeListMove } from './applyTreeListMove';
+import type { TreeListMoveAccessors } from './applyTreeListMove';
 
 export interface TreeListAction<T> {
   onAction: (item: T) => void;
@@ -35,7 +39,7 @@ export interface TreeListLabels {
   collapseAll?: React.ReactNode;
 }
 
-export interface TreeListProps<T>
+interface TreeListBaseProps<T>
   extends Omit<TreeViewProps<T>, 'children' | 'size' | 'onExpandedChange'> {
   /**
    * Flat list of nodes. Nesting comes from `getParentKey`. The list is
@@ -63,6 +67,26 @@ export interface TreeListProps<T>
   isDeleted?: (item: T) => boolean;
   labels?: TreeListLabels;
 }
+
+interface TreeListUncontrolledMoveProps {
+  onItemsChange?: never;
+  withPlacement?: never;
+}
+
+interface TreeListControlledMoveProps<T> {
+  /**
+   * Called once per drop with `items` after the move, where the moved item
+   * has its new parent and the siblings it left and joined are numbered again
+   * from zero. `onMove` still fires after it.
+   */
+  onItemsChange: (items: T[]) => void;
+  getOrder: (item: T) => number;
+  /** Returns the item with its new parent and order. */
+  withPlacement: TreeListMoveAccessors<T>['withPlacement'];
+}
+
+export type TreeListProps<T> = TreeListBaseProps<T> &
+  (TreeListUncontrolledMoveProps | TreeListControlledMoveProps<T>);
 
 type ActionName = keyof TreeListActions<unknown>;
 
@@ -96,6 +120,9 @@ function TreeListInner<T>(
     actions,
     isDeleted,
     labels,
+    onItemsChange,
+    withPlacement,
+    onMove,
     getItemValue = resolveTreeViewItemValue,
     className,
     style,
@@ -233,6 +260,20 @@ function TreeListInner<T>(
       );
     });
 
+  const handleMove = onItemsChange
+    ? (event: TreeViewMoveEvent) => {
+        onItemsChange(
+          applyTreeListMove(items, event, {
+            getItemValue,
+            getParentKey,
+            getOrder,
+            withPlacement,
+          })
+        );
+        onMove?.(event);
+      }
+    : onMove;
+
   const canExpand =
     expanded.expandable > 0 && expanded.open < expanded.expandable;
   const canCollapse = expanded.open > 0;
@@ -278,6 +319,7 @@ function TreeListInner<T>(
           aria-labelledby={labelled ? undefined : headerId}
           getItemValue={getItemValue}
           onExpandedChange={setExpanded}
+          {...(handleMove && { onMove: handleMove })}
           className="border-surface-default divide-surface-default rounded-none
             border-x-0 border-t border-b-0"
           style={indentVariables}
