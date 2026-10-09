@@ -35,8 +35,8 @@ export interface TreeListActions<T> {
 }
 
 export interface TreeListLabels {
-  expandAll?: React.ReactNode;
-  collapseAll?: React.ReactNode;
+  expandAll: React.ReactNode;
+  collapseAll: React.ReactNode;
 }
 
 interface TreeListBaseProps<T>
@@ -68,7 +68,7 @@ interface TreeListBaseProps<T>
    * under them show no actions at all.
    */
   isDeleted?: (item: T) => boolean;
-  labels?: TreeListLabels;
+  labels: TreeListLabels;
 }
 
 interface TreeListUncontrolledMoveProps {
@@ -293,7 +293,7 @@ function TreeListInner<T>(
             disabled={!canExpand}
             onClick={() => treeRef.current?.expandAll()}
           >
-            {labels?.expandAll ?? '全てを開く'}
+            {labels.expandAll}
           </button>
         </TextLink>
         <span aria-hidden>|</span>
@@ -303,7 +303,7 @@ function TreeListInner<T>(
             disabled={!canCollapse}
             onClick={() => treeRef.current?.collapseAll()}
           >
-            {labels?.collapseAll ?? '全てを閉じる'}
+            {labels.collapseAll}
           </button>
         </TextLink>
       </div>
