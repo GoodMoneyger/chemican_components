@@ -13,3 +13,5 @@ export interface IconRenderOptions {
  * If a React node is passed, it will be rendered as-is.
  */
 export declare const renderIcon: (icon: IconProp | undefined, options?: IconRenderOptions) => React.ReactNode;
+/** Default `getItemValue`: the value itself for strings and numbers, or its `id`. */
+export declare const resolveValueKey: (value: unknown, owner: string) => string | number;
