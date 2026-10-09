@@ -110,7 +110,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
     <RadixToast.Provider swipeDirection={swipeDirection} {...rest}>
       {children}
       <RadixToast.Viewport
-        className="gap-md bottom-0 right-0 m-0 fixed z-[100] flex max-w-[100vw]
+        className="gap-md bottom-0 right-0 m-0 z-toast fixed flex max-w-[100vw]
           flex-col p-[var(--viewport-padding)] [--viewport-padding:_16px]"
       />
     </RadixToast.Provider>

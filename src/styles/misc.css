@@ -15,12 +15,35 @@
 }
 
 @theme inline {
+  /* Stacking order. Every layer that needs its own position in the stack
+     owns a token: pick the one that names the layer, never offset another
+     one. Bands are spaced so a new layer can be slotted in without
+     renumbering the ones above it.
+
+       1-99   raised within its own component
+       100s   sticky page chrome, bottom to top
+       200s   surfaces floating over the page
+       300s   modal surfaces
+       400s   popovers, which can be opened from a modal
+       500s   notifications */
   --z-index-slight: 1;
-  --z-index-navigation: 10;
-  --z-index-drawer: 20;
-  --z-index-dialog: 30;
-  --z-index-dropdown: 40;
-  --z-index-tooltip: 50;
+
+  --z-index-sticky-content: 100;
+  --z-index-sticky-bar: 110;
+  --z-index-page-header: 120;
+  --z-index-navigation: 130;
+
+  --z-index-floating: 200;
+  --z-index-action-bar: 210;
+
+  --z-index-drawer: 300;
+  --z-index-dialog: 310;
+
+  --z-index-dropdown: 400;
+  --z-index-tooltip: 410;
+
+  --z-index-toast: 500;
+
   --z-index-max: 9999;
 
   --background-image-row-overlay-fade: linear-gradient(

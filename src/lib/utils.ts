@@ -15,11 +15,17 @@ const twMerge = extendTailwindMerge({
         {
           z: [
             'slight',
+            'sticky-content',
+            'sticky-bar',
+            'page-header',
             'navigation',
+            'floating',
+            'action-bar',
             'drawer',
             'dialog',
             'dropdown',
             'tooltip',
+            'toast',
             'max',
           ],
         },
