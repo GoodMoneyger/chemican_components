@@ -315,14 +315,12 @@ function TreeListInner<T>(
             {header}
           </div>
         </div>
-        <Tree
+        <Tree<T>
           ref={treeRef}
           size="lg"
           aria-labelledby={labelled ? undefined : headerId}
           getItemValue={getItemValue as (value: unknown) => TreeNodeKey}
-          {...(onSelectedChange && {
-            onSelectedChange: onSelectedChange as (values: unknown[]) => void,
-          })}
+          {...(onSelectedChange && { onSelectedChange })}
           onExpandedCountChange={setExpanded}
           {...(handleMove && { onMove: handleMove })}
           className="border-surface-default divide-surface-default rounded-none

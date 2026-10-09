@@ -146,7 +146,7 @@ const focusRowOf = (event: React.FocusEvent<HTMLElement>) => {
 /*                                  Container                                 */
 /* -------------------------------------------------------------------------- */
 
-export interface TreeProps
+export interface TreeProps<TSelected = unknown>
   extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children'> {
   /**
    * Collapses every Group that has no `defaultOpen` and has not been toggled.
@@ -162,9 +162,9 @@ export interface TreeProps
    * Values of the selected Items. A Group with no selectable Item inside is
    * selectable itself, so its value can appear here as well.
    */
-  selected?: unknown[];
-  defaultSelected?: unknown[];
-  onSelectedChange?: (values: unknown[]) => void;
+  selected?: TSelected[];
+  defaultSelected?: TSelected[];
+  onSelectedChange?: (values: TSelected[]) => void;
   /**
    * Derives a unique key from a Group or Item value. Defaults to the value
    * itself for strings and numbers, or its `id` for objects.
@@ -214,7 +214,7 @@ interface OpenState {
  * ArrowDown move it one slot at a time through the tree, Enter or Space
  * drops it and Escape cancels.
  */
-function TreeInner(
+function TreeInner<TSelected = unknown>(
   {
     defaultCollapsed = false,
     selectable = false,
@@ -235,7 +235,7 @@ function TreeInner(
     style,
     children,
     ...props
-  }: TreeProps,
+  }: TreeProps<TSelected>,
   ref: React.ForwardedRef<TreeHandle>
 ) {
   const registryRef = React.useRef<Registry>(new Map());
@@ -403,7 +403,7 @@ function TreeInner(
         if (next.length === currentSelected.length) return;
       }
       if (!isControlled) setInternalSelected(next);
-      onSelectedChange?.(next);
+      onSelectedChange?.(next as TSelected[]);
     },
     [
       selectedKeys,
@@ -839,7 +839,13 @@ function TreeInner(
   );
 }
 
-const TreeContainer = React.forwardRef(TreeInner);
+type TreeComponent = <TSelected = unknown>(
+  props: TreeProps<TSelected> & { ref?: React.ForwardedRef<TreeHandle> }
+) => React.ReactElement;
+
+const TreeContainer = React.forwardRef(TreeInner) as TreeComponent & {
+  displayName?: string;
+};
 TreeContainer.displayName = 'Tree';
 
 /* -------------------------------------------------------------------------- */

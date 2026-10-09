@@ -236,7 +236,7 @@ const WithSelectionExample = () => {
         aria-label="ドキュメント"
         selectable
         selected={selected}
-        onSelectedChange={(values) => setSelected(values as TreeNode[])}
+        onSelectedChange={setSelected}
       >
         {renderNodes(documents, { disabledIds: ['ghs', 'sds-2024'] })}
       </Tree>
@@ -268,7 +268,7 @@ const WithStringItemsExample = () => {
         aria-label="食材"
         selectable
         selected={selected}
-        onSelectedChange={(values) => setSelected(values as string[])}
+        onSelectedChange={setSelected}
       >
         <Tree.Group label="果物">
           <Tree.Item value="りんご">りんご</Tree.Item>
@@ -505,7 +505,7 @@ const AllFeaturesExample = () => {
         selectable
         sortable
         selected={selected}
-        onSelectedChange={(values) => setSelected(values as TreeNode[])}
+        onSelectedChange={setSelected}
         onMove={(event) =>
           setNodes((current) =>
             applyTreeMove(current, event, documentAccessors)
