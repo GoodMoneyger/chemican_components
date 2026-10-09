@@ -17,21 +17,22 @@ import { applyTreeListMove } from './applyTreeListMove';
 import type { TreeListMoveAccessors } from './applyTreeListMove';
 
 export interface TreeListAction<T> {
-  onAction: (item: T) => void;
+  /** Unique among the actions of one row. */
+  key: string;
   /** Button text. It is also the accessible name when it is a string. */
   label: React.ReactNode;
   /** Accessible name, required when `label` is not a plain string. */
   ariaLabel?: string;
-  disabled?: (item: T) => boolean;
+  /** Defaults to `secondary`. */
+  intent?: ButtonProps['intent'];
+  danger?: boolean;
+  disabled?: boolean;
+  onAction: (item: T) => void;
 }
 
-export interface TreeListActions<T> {
-  add?: TreeListAction<T>;
-  edit?: TreeListAction<T>;
-  move?: TreeListAction<T>;
-  delete?: TreeListAction<T>;
-  /** The only action shown on items that `isDeleted` marks. */
-  restore?: TreeListAction<T>;
+export interface TreeListActionContext {
+  /** Whether `isItemDisabled` marks any ancestor of the item. */
+  ancestorDisabled: boolean;
 }
 
 export interface TreeListLabels {
@@ -60,14 +61,16 @@ interface TreeListBaseProps<T>
   getOrder?: (item: T) => number;
   /** Title shown in the header bar above the rows. */
   header: React.ReactNode;
-  /** Row actions, each shown as a text button with its label. */
-  actions?: TreeListActions<T>;
   /**
-   * Marks items pending deletion. They look disabled, cannot be dragged or
-   * selected, and their action bar shows only `actions.restore`. The items
-   * under them show no actions at all.
+   * Row actions, shown as buttons in the order returned. Called for every
+   * row; return an empty array to show none.
    */
-  isDeleted?: (item: T) => boolean;
+  actions?: (item: T, context: TreeListActionContext) => TreeListAction<T>[];
+  /**
+   * Marks items that look disabled and cannot be dragged or selected. Their
+   * actions still come from `actions`.
+   */
+  isItemDisabled?: (item: T) => boolean;
   labels: TreeListLabels;
 }
 
@@ -91,18 +94,6 @@ interface TreeListControlledMoveProps<T> {
 export type TreeListProps<T> = TreeListBaseProps<T> &
   (TreeListUncontrolledMoveProps | TreeListControlledMoveProps<T>);
 
-type ActionName = keyof TreeListActions<unknown>;
-
-const actionOrder: ActionName[] = ['add', 'edit', 'move', 'delete', 'restore'];
-
-const actionIntents: Record<ActionName, ButtonProps['intent']> = {
-  add: 'primary',
-  edit: 'secondary',
-  move: 'secondary',
-  delete: 'primary',
-  restore: 'secondary',
-};
-
 const indentVariables = {
   '--tree-indent-base': 'var(--token-spacing-xl)',
   '--tree-indent-step': 'var(--token-spacing-lg)',
@@ -121,7 +112,7 @@ function TreeListInner<T>(
     getOrder,
     header,
     actions,
-    isDeleted,
+    isItemDisabled,
     labels,
     onItemsChange,
     withPlacement,
@@ -193,59 +184,48 @@ function TreeListInner<T>(
     }
   }, [items, childrenByParent, getItemValue]);
 
-  /** Keys of the items under a deleted one, which offer no actions. */
-  const underDeleted = React.useMemo(() => {
+  const underDisabled = React.useMemo(() => {
     const keys = new Set<TreeViewNodeKey>();
-    if (!isDeleted) return keys;
+    if (!isItemDisabled) return keys;
     const mark = (parent: TreeViewNodeKey | null, inherited: boolean) =>
       (childrenByParent.get(parent) ?? []).forEach((item) => {
         const key = getItemValue(item);
         if (inherited) keys.add(key);
-        mark(key, inherited || isDeleted(item));
+        mark(key, inherited || isItemDisabled(item));
       });
     mark(null, false);
     return keys;
-  }, [childrenByParent, getItemValue, isDeleted]);
+  }, [childrenByParent, getItemValue, isItemDisabled]);
 
-  const present = actionOrder.filter((name) => actions?.[name]);
-  const actionsFor = (item: T) => {
-    if (isDeleted?.(item)) return present.filter((name) => name === 'restore');
-    if (underDeleted.has(getItemValue(item))) return [];
-    return present.filter((name) => name !== 'restore');
-  };
-
-  const renderRowOverlay =
-    present.length > 0
-      ? (item: T) => {
-          const names = actionsFor(item);
-          if (names.length === 0) return null;
-          return (
-            <>
-              {names.map((name) => {
-                const action = actions?.[name];
-                if (!action) return null;
-                const ariaLabel =
+  const renderRowOverlay = actions
+    ? (item: T) => {
+        const rowActions = actions(item, {
+          ancestorDisabled: underDisabled.has(getItemValue(item)),
+        });
+        if (rowActions.length === 0) return null;
+        return (
+          <>
+            {rowActions.map((action) => (
+              <Button
+                key={action.key}
+                type="button"
+                intent={action.intent ?? 'secondary'}
+                size="xs"
+                danger={action.danger ?? false}
+                aria-label={
                   action.ariaLabel ??
-                  (typeof action.label === 'string' ? action.label : name);
-                return (
-                  <Button
-                    key={name}
-                    type="button"
-                    intent={actionIntents[name]}
-                    size="xs"
-                    danger={name === 'delete'}
-                    aria-label={ariaLabel}
-                    disabled={action.disabled?.(item) ?? false}
-                    onClick={() => action.onAction(item)}
-                  >
-                    {action.label}
-                  </Button>
-                );
-              })}
-            </>
-          );
-        }
-      : undefined;
+                  (typeof action.label === 'string' ? action.label : action.key)
+                }
+                disabled={action.disabled ?? false}
+                onClick={() => action.onAction(item)}
+              >
+                {action.label}
+              </Button>
+            ))}
+          </>
+        );
+      }
+    : undefined;
 
   const renderLevel = (parentKey: TreeViewNodeKey | null): React.ReactNode =>
     (childrenByParent.get(parentKey) ?? []).map((item) => {
@@ -255,7 +235,7 @@ function TreeListInner<T>(
           key={key}
           value={item}
           label={getLabel(item)}
-          disabled={isDeleted?.(item) ?? false}
+          disabled={isItemDisabled?.(item) ?? false}
           {...(renderRowOverlay && { renderRowOverlay })}
         >
           {renderLevel(key)}
