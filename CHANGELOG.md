@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.13.2](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.1...v1.13.2) (2026-10-09)
+
+### Bug Fixes
+
+* **general:** Give the shared Popover a z-index token ([#195](https://github.com/GoodMoneyger/chemican_components/issues/195)) ([d6b9f4c](https://github.com/GoodMoneyger/chemican_components/commit/d6b9f4c2b9c1bcbeabd0726efbf9772f4aba015a))
+
 ## [1.13.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.0...v1.13.1) (2026-10-09)
 
 ### Bug Fixes
