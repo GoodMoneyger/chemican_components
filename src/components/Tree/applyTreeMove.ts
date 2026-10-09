@@ -1,23 +1,23 @@
-import type { TreeViewMoveEvent, TreeViewNodeKey } from './types';
+import type { TreeMoveEvent, TreeNodeKey } from './types';
 
-export interface TreeViewMoveAccessors<N> {
-  getKey: (node: N) => TreeViewNodeKey;
-  /** Return undefined for leaf nodes so Roots and Items sharing a key stay apart. */
+export interface TreeMoveAccessors<N> {
+  getKey: (node: N) => TreeNodeKey;
+  /** Return undefined for leaf nodes so Groups and Items sharing a key stay apart. */
   getChildren: (node: N) => N[] | undefined;
   withChildren: (node: N, children: N[]) => N;
 }
 
 /**
- * Applies a `TreeViewMoveEvent` to nested data and returns the new nodes.
+ * Applies a `TreeMoveEvent` to nested data and returns the new nodes.
  * Untouched branches keep their identity.
  */
-export const applyTreeViewMove = <N>(
+export const applyTreeMove = <N>(
   nodes: N[],
-  event: TreeViewMoveEvent,
-  accessors: TreeViewMoveAccessors<N>
+  event: TreeMoveEvent,
+  accessors: TreeMoveAccessors<N>
 ): N[] => {
   const { getKey, getChildren, withChildren } = accessors;
-  const isRoot = event.kind === 'root';
+  const isGroup = event.kind === 'group';
   let moved: N | undefined;
 
   const replaceAt = (list: N[], index: number, node: N) =>
@@ -27,7 +27,7 @@ export const applyTreeViewMove = <N>(
     for (let i = 0; i < list.length; i += 1) {
       const node = list[i] as N;
       const children = getChildren(node);
-      if (getKey(node) === event.key && (children !== undefined) === isRoot) {
+      if (getKey(node) === event.key && (children !== undefined) === isGroup) {
         moved = node;
         return list.filter((_, j) => j !== i);
       }
@@ -64,7 +64,7 @@ export const applyTreeViewMove = <N>(
 
   const withoutNode = remove(nodes);
   if (moved === undefined) return nodes;
-  // The destination can be missing from the data, for instance a Root whose
+  // The destination can be missing from the data, for instance a Group whose
   // `getChildren` returns undefined. Keep the node rather than dropping it.
   return insert(withoutNode, moved) ?? nodes;
 };

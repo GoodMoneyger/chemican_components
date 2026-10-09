@@ -5,10 +5,10 @@
  *
  * - `droppable.sortable.index` is written in `syncIndexes` to animate rows.
  * - `droppable.refreshShape()` is called in `placeGap` after the gap moves.
- * - `manager.dragOperation.status.idle` is polled in `afterDrop` (TreeView.tsx).
- * - `manager.dragOperation.position.current` is read in TreeView.tsx.
+ * - `manager.dragOperation.status.idle` is polled in `afterDrop` (Tree.tsx).
+ * - `manager.dragOperation.position.current` is read in Tree.tsx.
  * - `data-dnd-placeholder` filters rows here and draws the dashed slot in
- *   TreeView.tsx; `dndKitInternals.test.ts` checks the name.
+ *   Tree.tsx; `dndKitInternals.test.ts` checks the name.
  * - `plugins: []` on `useSortable` turns off optimistic and keyboard sorting.
  * - `GAP_SETTLE_MS` and `DROP_SETTLE_TIMEOUT_MS` are tuned against dnd-kit's
  *   250 ms sortable and drop animations.
@@ -35,7 +35,7 @@ export interface DragSnapshot {
   node: TreeNode;
   originList: Element;
   originIndex: number;
-  /** The dragged Root was open and is collapsed for the duration of the drag. */
+  /** The dragged Group was open and is collapsed for the duration of the drag. */
   reopen: boolean;
   /** Registered node of a row element, or of a list's parent to find its owner. */
   nodeOf: (element: Element | null) => TreeNode | undefined;
@@ -145,18 +145,18 @@ export const locateGap = (
   const list = node?.element.parentElement;
   const rect = node?.element.firstElementChild?.getBoundingClientRect();
   if (!node || !list || !rect || rect.height === 0) return;
-  // A disabled Root takes no new children, so its list takes no gap either.
+  // A disabled Group takes no new children, so its list takes no gap either.
   if (snapshot.nodeOf(list.parentElement)?.disabled) return;
 
   const rel = (pointer.y - rect.top) / rect.height;
   const group =
-    node.kind === 'root' ? node.element.querySelector(':scope > ul') : null;
+    node.kind === 'group' ? node.element.querySelector(':scope > ul') : null;
   const expanded = node.element.getAttribute('aria-expanded');
   const dragged = snapshot.node.element;
   const place = (into: Element, before: Element | null) =>
     placeGap(manager, registry, snapshot, into, before);
 
-  // A disabled Root takes no new children, so the gap only goes beside it.
+  // A disabled Group takes no new children, so the gap only goes beside it.
   const nestable = !node.disabled;
   if (group && expanded === 'true' && nestable) {
     if (rel < 0.5) place(list, node.element);
@@ -183,8 +183,8 @@ interface GapSlot {
 
 /**
  * Every spot the gap can take, in document order: before each visible row,
- * at the end of each list, and inside a childless Root that can take
- * children. Lists owned by a disabled Root are left out, as is the dragged
+ * at the end of each list, and inside a childless Group that can take
+ * children. Lists owned by a disabled Group are left out, as is the dragged
  * subtree.
  */
 const gapSlots = (tree: Element, snapshot: DragSnapshot): GapSlot[] => {

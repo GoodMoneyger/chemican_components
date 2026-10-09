@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { applyTreeViewMove } from './applyTreeViewMove';
-import type { TreeViewMoveAccessors } from './applyTreeViewMove';
-import type { TreeViewMoveEvent, TreeViewNodeKind } from './types';
+import { applyTreeMove } from './applyTreeMove';
+import type { TreeMoveAccessors } from './applyTreeMove';
+import type { TreeMoveEvent, TreeNodeKind } from './types';
 
 interface Node {
   id: string;
   children?: Node[];
 }
 
-const accessors: TreeViewMoveAccessors<Node> = {
+const accessors: TreeMoveAccessors<Node> = {
   getKey: (node) => node.id,
   getChildren: (node) => node.children,
   withChildren: (node, children) => ({ ...node, children }),
@@ -23,10 +23,10 @@ const tree = (): Node[] => [
 
 const move = (
   key: string,
-  kind: TreeViewNodeKind,
+  kind: TreeNodeKind,
   from: [string | null, number],
   to: [string | null, number]
-): TreeViewMoveEvent => ({
+): TreeMoveEvent => ({
   key,
   kind,
   value: undefined,
@@ -36,9 +36,9 @@ const move = (
 
 const ids = (nodes: Node[] | undefined) => (nodes ?? []).map((n) => n.id);
 
-describe('applyTreeViewMove', () => {
+describe('applyTreeMove', () => {
   it('reorders within a parent using the index counted after removal', () => {
-    const result = applyTreeViewMove(
+    const result = applyTreeMove(
       tree(),
       move('a1', 'item', ['a', 0], ['a', 2]),
       accessors
@@ -47,7 +47,7 @@ describe('applyTreeViewMove', () => {
   });
 
   it('moves a node under another parent at the given index', () => {
-    const result = applyTreeViewMove(
+    const result = applyTreeMove(
       tree(),
       move('a2', 'item', ['a', 1], ['b', 0]),
       accessors
@@ -57,7 +57,7 @@ describe('applyTreeViewMove', () => {
   });
 
   it('moves a node to the top level', () => {
-    const result = applyTreeViewMove(
+    const result = applyTreeMove(
       tree(),
       move('a3', 'item', ['a', 2], [null, 1]),
       accessors
@@ -66,9 +66,9 @@ describe('applyTreeViewMove', () => {
   });
 
   it('moves a whole branch with its children', () => {
-    const result = applyTreeViewMove(
+    const result = applyTreeMove(
       tree(),
-      move('a', 'root', [null, 0], ['b', 0]),
+      move('a', 'group', [null, 0], ['b', 0]),
       accessors
     );
     expect(ids(result)).toEqual(['b', 'c']);
@@ -76,12 +76,12 @@ describe('applyTreeViewMove', () => {
     expect(ids(result[0]?.children?.[0]?.children)).toEqual(['a1', 'a2', 'a3']);
   });
 
-  it('tells a Root and an Item apart when they share a key', () => {
+  it('tells a Group and an Item apart when they share a key', () => {
     const nodes: Node[] = [
       { id: 'x', children: [{ id: 'x' }] },
       { id: 'b', children: [] },
     ];
-    const result = applyTreeViewMove(
+    const result = applyTreeMove(
       nodes,
       move('x', 'item', ['x', 0], ['b', 0]),
       accessors
@@ -94,28 +94,20 @@ describe('applyTreeViewMove', () => {
   it('returns the same array when the key is unknown', () => {
     const nodes = tree();
     expect(
-      applyTreeViewMove(
-        nodes,
-        move('zzz', 'item', ['a', 0], ['b', 0]),
-        accessors
-      )
+      applyTreeMove(nodes, move('zzz', 'item', ['a', 0], ['b', 0]), accessors)
     ).toBe(nodes);
   });
 
   it('returns the same array when the destination parent has no children array', () => {
     const nodes = tree();
     expect(
-      applyTreeViewMove(
-        nodes,
-        move('a1', 'item', ['a', 0], ['c', 0]),
-        accessors
-      )
+      applyTreeMove(nodes, move('a1', 'item', ['a', 0], ['c', 0]), accessors)
     ).toBe(nodes);
   });
 
   it('keeps untouched branches identical', () => {
     const nodes = tree();
-    const result = applyTreeViewMove(
+    const result = applyTreeMove(
       nodes,
       move('a1', 'item', ['a', 0], ['a', 1]),
       accessors

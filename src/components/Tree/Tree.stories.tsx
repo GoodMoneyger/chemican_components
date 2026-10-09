@@ -15,16 +15,12 @@ import {
   DropdownTrigger,
 } from '../DropdownMenu';
 
-import { TreeView, applyTreeViewMove } from './TreeView';
-import type {
-  TreeViewHandle,
-  TreeViewMoveAccessors,
-  TreeViewMoveEvent,
-} from './TreeView';
+import { Tree, applyTreeMove } from './Tree';
+import type { TreeHandle, TreeMoveAccessors, TreeMoveEvent } from './Tree';
 
-const meta: Meta<typeof TreeView> = {
-  title: 'Components/TreeView',
-  component: TreeView,
+const meta: Meta<typeof Tree> = {
+  title: 'Components/Tree',
+  component: Tree,
   parameters: { layout: 'padded' },
 };
 
@@ -99,7 +95,7 @@ const renderNodes = (
     if (isFolder(node)) {
       const defaultOpen = options.defaultOpenIds?.includes(node.id);
       return (
-        <TreeView.Root
+        <Tree.Group
           key={node.id}
           value={node}
           label={node.name}
@@ -108,38 +104,36 @@ const renderNodes = (
           {...overlayProps}
         >
           {renderNodes(node.children, options)}
-        </TreeView.Root>
+        </Tree.Group>
       );
     }
 
     return (
-      <TreeView.Item
+      <Tree.Item
         key={node.id}
         value={node}
         disabled={disabled}
         {...overlayProps}
       >
         {node.name}
-      </TreeView.Item>
+      </Tree.Item>
     );
   });
 
 export const Default: Story = {
-  render: () => (
-    <TreeView aria-label="ドキュメント">{renderNodes(documents)}</TreeView>
-  ),
+  render: () => <Tree aria-label="ドキュメント">{renderNodes(documents)}</Tree>,
 };
 
 export const AllCollapsed: Story = {
   render: () => (
-    <TreeView aria-label="ドキュメント" allCollapsed>
+    <Tree aria-label="ドキュメント" defaultCollapsed>
       {renderNodes(documents)}
-    </TreeView>
+    </Tree>
   ),
 };
 
 const CollapseExpandFromOutsideExample = () => {
-  const treeRef = useRef<TreeViewHandle>(null);
+  const treeRef = useRef<TreeHandle>(null);
 
   return (
     <div className="gap-md flex flex-col">
@@ -161,9 +155,9 @@ const CollapseExpandFromOutsideExample = () => {
           すべて開く
         </Button>
       </div>
-      <TreeView ref={treeRef} aria-label="ドキュメント" allCollapsed>
+      <Tree ref={treeRef} aria-label="ドキュメント" defaultCollapsed>
         {renderNodes(documents, { defaultOpenIds: ['regulations'] })}
-      </TreeView>
+      </Tree>
     </div>
   );
 };
@@ -174,7 +168,7 @@ export const CollapseExpandFromOutside: Story = {
     docs: {
       description: {
         story:
-          'The tree starts with `allCollapsed`, except the "法規制" Root which sets `defaultOpen`. Both buttons call the ref handle, which overrides every per-node state.',
+          'The tree starts with `defaultCollapsed`, except the "法規制" Group which sets `defaultOpen`. Both buttons call the ref handle, which overrides every per-node state.',
       },
     },
   },
@@ -184,7 +178,7 @@ const WithOverlayExample = () => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const renderRowOverlay = (node: TreeNode) => (
-    <TreeView.RootOverlay forceVisible={openMenuId === node.id}>
+    <Tree.RowOverlay forceVisible={openMenuId === node.id}>
       <Button
         type="button"
         intent="tertiary"
@@ -211,13 +205,13 @@ const WithOverlayExample = () => {
           </DropdownItem>
         </DropdownContent>
       </Dropdown>
-    </TreeView.RootOverlay>
+    </Tree.RowOverlay>
   );
 
   return (
-    <TreeView aria-label="ドキュメント">
+    <Tree aria-label="ドキュメント">
       {renderNodes(documents, { renderRowOverlay })}
-    </TreeView>
+    </Tree>
   );
 };
 
@@ -227,7 +221,7 @@ export const WithOverlay: Story = {
     docs: {
       description: {
         story:
-          'Hover a row, or tab into it, to reveal the overlay. The callback returns `TreeView.RootOverlay` explicitly so `forceVisible` can keep it visible while the dropdown is open, since a modal dropdown removes the hover state from the row.',
+          'Hover a row, or tab into it, to reveal the overlay. The callback returns `Tree.RowOverlay` explicitly so `forceVisible` can keep it visible while the dropdown is open, since a modal dropdown removes the hover state from the row.',
       },
     },
   },
@@ -238,14 +232,14 @@ const WithSelectionExample = () => {
 
   return (
     <div className="gap-md flex flex-col">
-      <TreeView
+      <Tree
         aria-label="ドキュメント"
         selectable
         selected={selected}
         onSelectedChange={(values) => setSelected(values as TreeNode[])}
       >
         {renderNodes(documents, { disabledIds: ['ghs', 'sds-2024'] })}
-      </TreeView>
+      </Tree>
       <p className="text-md text-body-secondary">
         選択中: {selected.map((node) => node.name).join('、') || 'なし'}
       </p>
@@ -259,7 +253,7 @@ export const WithSelection: Story = {
     docs: {
       description: {
         story:
-          'A Root checkbox selects or clears every enabled Item below it and shows an indeterminate state when only some are selected. Only Items are reported through `onSelectedChange`. "GHS分類.pdf" is a disabled Item and "2024年度" is a disabled Root, so their Items are never selected by a parent.',
+          'A Group checkbox selects or clears every enabled Item below it and shows an indeterminate state when only some are selected. Only Items are reported through `onSelectedChange`. "GHS分類.pdf" is a disabled Item and "2024年度" is a disabled Group, so their Items are never selected by a parent.',
       },
     },
   },
@@ -270,22 +264,22 @@ const WithStringItemsExample = () => {
 
   return (
     <div className="gap-md flex flex-col">
-      <TreeView
+      <Tree
         aria-label="食材"
         selectable
         selected={selected}
         onSelectedChange={(values) => setSelected(values as string[])}
       >
-        <TreeView.Root label="果物">
-          <TreeView.Item value="りんご">りんご</TreeView.Item>
-          <TreeView.Item value="みかん">みかん</TreeView.Item>
-          <TreeView.Item value="ぶどう">ぶどう</TreeView.Item>
-        </TreeView.Root>
-        <TreeView.Root label="野菜">
-          <TreeView.Item value="にんじん">にんじん</TreeView.Item>
-          <TreeView.Item value="たまねぎ">たまねぎ</TreeView.Item>
-        </TreeView.Root>
-      </TreeView>
+        <Tree.Group label="果物">
+          <Tree.Item value="りんご">りんご</Tree.Item>
+          <Tree.Item value="みかん">みかん</Tree.Item>
+          <Tree.Item value="ぶどう">ぶどう</Tree.Item>
+        </Tree.Group>
+        <Tree.Group label="野菜">
+          <Tree.Item value="にんじん">にんじん</Tree.Item>
+          <Tree.Item value="たまねぎ">たまねぎ</Tree.Item>
+        </Tree.Group>
+      </Tree>
       <p className="text-md text-body-secondary">
         選択中: {selected.join('、') || 'なし'}
       </p>
@@ -299,7 +293,7 @@ export const WithStringItems: Story = {
     docs: {
       description: {
         story:
-          'Item values can be plain strings, in which case `getItemValue` is not needed. Roots without a `value` still get a cascading checkbox.',
+          'Item values can be plain strings, in which case `getItemValue` is not needed. Groups without a `value` still get a cascading checkbox.',
       },
     },
   },
@@ -317,7 +311,7 @@ const toSortableNode = (node: TreeNode): SortableNode => ({
   children: isFolder(node) ? node.children.map(toSortableNode) : [],
 });
 
-const sortableAccessors: TreeViewMoveAccessors<SortableNode> = {
+const sortableAccessors: TreeMoveAccessors<SortableNode> = {
   getKey: (node) => node.id,
   getChildren: (node) => node.children,
   withChildren: (node, children) => ({ ...node, children }),
@@ -325,12 +319,12 @@ const sortableAccessors: TreeViewMoveAccessors<SortableNode> = {
 
 const renderSortableNodes = (nodes: SortableNode[]): React.ReactNode =>
   nodes.map((node) => (
-    <TreeView.Root key={node.id} value={node} label={node.name}>
+    <Tree.Group key={node.id} value={node} label={node.name}>
       {renderSortableNodes(node.children)}
-    </TreeView.Root>
+    </Tree.Group>
   ));
 
-type SortableMoveEvent = TreeViewMoveEvent<never, SortableNode>;
+type SortableMoveEvent = TreeMoveEvent<never, SortableNode>;
 
 const describeMove = (event: SortableMoveEvent) => {
   const parent = event.to.parentValue;
@@ -346,18 +340,18 @@ const SortableExample = () => {
 
   return (
     <div className="gap-md flex flex-col">
-      <TreeView
+      <Tree
         aria-label="ドキュメント"
         sortable
         onMove={(event: SortableMoveEvent) => {
           setNodes((current) =>
-            applyTreeViewMove(current, event, sortableAccessors)
+            applyTreeMove(current, event, sortableAccessors)
           );
           setLastMove(describeMove(event));
         }}
       >
         {renderSortableNodes(nodes)}
-      </TreeView>
+      </Tree>
       <p className="text-md text-body-secondary">
         最後の移動: {lastMove ?? 'なし'}
       </p>
@@ -371,7 +365,7 @@ export const Sortable: Story = {
     docs: {
       description: {
         story:
-          'Every node here is a `TreeView.Root`, so any node can receive children. Drag a row by the grip that appears at its left edge on hover. The dashed slot always sits where the node will land: the top half of a row places it before that row, the bottom half of an open group makes it the first child, the middle of a node without children nests it inside, and the bottom half of any other row places it after. Keep the pointer over a collapsed group to open it. A dragged group collapses while it moves and can never be dropped into itself. `onMove` fires once per drop and `applyTreeViewMove` applies it to nested data. Use `TreeView.Item` for nodes that must stay leaves.',
+          'Every node here is a `Tree.Group`, so any node can receive children. Drag a row by the grip that appears at its left edge on hover. The dashed slot always sits where the node will land: the top half of a row places it before that row, the bottom half of an open group makes it the first child, the middle of a node without children nests it inside, and the bottom half of any other row places it after. Keep the pointer over a collapsed group to open it. A dragged group collapses while it moves and can never be dropped into itself. `onMove` fires once per drop and `applyTreeMove` applies it to nested data. Use `Tree.Item` for nodes that must stay leaves.',
       },
     },
   },
@@ -387,7 +381,7 @@ const SortableWithValidationExample = () => {
 
   return (
     <div className="gap-md flex flex-col">
-      <TreeView
+      <Tree
         aria-label="ドキュメント"
         sortable
         onMove={(event: SortableMoveEvent) => {
@@ -399,13 +393,13 @@ const SortableWithValidationExample = () => {
             return;
           }
           setNodes((current) =>
-            applyTreeViewMove(current, event, sortableAccessors)
+            applyTreeMove(current, event, sortableAccessors)
           );
           setMessage(describeMove(event));
         }}
       >
         {renderSortableNodes(nodes)}
-      </TreeView>
+      </Tree>
       <p className="text-md text-body-secondary">{message ?? 'なし'}</p>
     </div>
   );
@@ -423,7 +417,7 @@ export const SortableWithValidation: Story = {
   },
 };
 
-const documentAccessors: TreeViewMoveAccessors<TreeNode> = {
+const documentAccessors: TreeMoveAccessors<TreeNode> = {
   getKey: (node) => node.id,
   getChildren: (node) => (isFolder(node) ? node.children : undefined),
   withChildren: (node, children) => ({ ...node, children }),
@@ -471,7 +465,7 @@ const AllFeaturesExample = () => {
   };
 
   const renderRowOverlay = (node: TreeNode) => (
-    <TreeView.RootOverlay>
+    <Tree.RowOverlay>
       <Button
         type="button"
         intent="tertiary"
@@ -488,7 +482,7 @@ const AllFeaturesExample = () => {
         aria-label={`${node.name}を削除`}
         onClick={() => remove([node.id])}
       />
-    </TreeView.RootOverlay>
+    </Tree.RowOverlay>
   );
 
   return (
@@ -506,7 +500,7 @@ const AllFeaturesExample = () => {
           選択した{selected.length}件を削除
         </Button>
       </div>
-      <TreeView
+      <Tree
         aria-label="ドキュメント"
         selectable
         sortable
@@ -514,12 +508,12 @@ const AllFeaturesExample = () => {
         onSelectedChange={(values) => setSelected(values as TreeNode[])}
         onMove={(event) =>
           setNodes((current) =>
-            applyTreeViewMove(current, event, documentAccessors)
+            applyTreeMove(current, event, documentAccessors)
           )
         }
       >
         {renderNodes(nodes, { renderRowOverlay })}
-      </TreeView>
+      </Tree>
       <p className="text-md text-body-secondary">
         選択中: {selected.map((node) => node.name).join('、') || 'なし'}
       </p>

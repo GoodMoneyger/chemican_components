@@ -1,13 +1,13 @@
-import type { TreeViewNodeKey, TreeViewNodeKind } from './types';
+import type { TreeNodeKey, TreeNodeKind } from './types';
 
-/** A mounted Root or Item. */
+/** A mounted Group or Item. */
 export interface TreeNode {
-  /** Unique within the tree. Roots with a value are prefixed so they never collide with Items. */
-  key: TreeViewNodeKey;
+  /** Unique within the tree. Groups with a value are prefixed so they never collide with Items. */
+  key: TreeNodeKey;
   /** Key of `value` as resolved by `getItemValue`. Undefined for nodes without a value. */
-  valueKey: TreeViewNodeKey | undefined;
-  parentKey: TreeViewNodeKey | null;
-  kind: TreeViewNodeKind;
+  valueKey: TreeNodeKey | undefined;
+  parentKey: TreeNodeKey | null;
+  kind: TreeNodeKind;
   disabled: boolean;
   hasChildren: boolean;
   defaultOpen: boolean | undefined;
@@ -15,13 +15,13 @@ export interface TreeNode {
   getValue: () => unknown;
 }
 
-export type Registry = Map<TreeViewNodeKey, TreeNode>;
+export type Registry = Map<TreeNodeKey, TreeNode>;
 
-export type Leaf = TreeNode & { valueKey: TreeViewNodeKey };
+export type Leaf = TreeNode & { valueKey: TreeNodeKey };
 
-export interface RootSelection {
+export interface GroupSelection {
   state: 'all' | 'some' | 'none';
-  /** Whether the Root's checkbox can change anything. */
+  /** Whether the Group's checkbox can change anything. */
   selectable: boolean;
 }
 
@@ -35,44 +35,44 @@ export const byDocumentPosition = (a: TreeNode, b: TreeNode) =>
     : 1;
 
 /**
- * Selectable leaves under every Root: the Items with a value nested anywhere
- * inside it, or the Root itself when it has a value and nothing selectable
+ * Selectable leaves under every Group: the Items with a value nested anywhere
+ * inside it, or the Group itself when it has a value and nothing selectable
  * inside.
  */
 export const collectLeaves = (registry: Registry) => {
-  const children = new Map<TreeViewNodeKey | null, TreeNode[]>();
+  const children = new Map<TreeNodeKey | null, TreeNode[]>();
   registry.forEach((node) => {
     const siblings = children.get(node.parentKey);
     if (siblings) siblings.push(node);
     else children.set(node.parentKey, [node]);
   });
 
-  const leavesByRoot = new Map<TreeViewNodeKey, Leaf[]>();
-  const collect = (root: TreeNode): Leaf[] => {
+  const leavesByGroup = new Map<TreeNodeKey, Leaf[]>();
+  const collect = (group: TreeNode): Leaf[] => {
     const leaves: Leaf[] = [];
-    (children.get(root.key) ?? []).forEach((child) => {
-      if (child.kind === 'root') leaves.push(...collect(child));
+    (children.get(group.key) ?? []).forEach((child) => {
+      if (child.kind === 'group') leaves.push(...collect(child));
       else if (hasValue(child)) leaves.push(child);
     });
-    const own = leaves.length === 0 && hasValue(root) ? [root] : leaves;
-    leavesByRoot.set(root.key, own);
+    const own = leaves.length === 0 && hasValue(group) ? [group] : leaves;
+    leavesByGroup.set(group.key, own);
     return own;
   };
   (children.get(null) ?? []).forEach((node) => {
-    if (node.kind === 'root') collect(node);
+    if (node.kind === 'group') collect(node);
   });
-  return leavesByRoot;
+  return leavesByGroup;
 };
 
 /**
- * Checkbox state of a Root from its leaves. Disabled leaves count towards
- * `all` only when every enabled leaf is selected, so a Root whose enabled
+ * Checkbox state of a Group from its leaves. Disabled leaves count towards
+ * `all` only when every enabled leaf is selected, so a Group whose enabled
  * leaves are all checked reads as fully selected.
  */
-export const rootSelectionOf = (
+export const groupSelectionOf = (
   leaves: Leaf[],
-  isSelected: (valueKey: TreeViewNodeKey) => boolean
-): RootSelection => {
+  isSelected: (valueKey: TreeNodeKey) => boolean
+): GroupSelection => {
   const enabled = leaves.filter((leaf) => !leaf.disabled);
   const countSelected = (list: Leaf[]) =>
     list.filter((leaf) => isSelected(leaf.valueKey)).length;

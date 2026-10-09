@@ -16,7 +16,7 @@ import { useSortable } from '@dnd-kit/react/sortable';
 import { IconChevronRight, IconGripVertical } from '@tabler/icons-react';
 
 import { Checkbox } from '../Checkbox';
-import { cn } from '../../lib/utils';
+import { cn, resolveValueKey } from '../../lib/utils';
 
 import {
   DROP_SETTLE_TIMEOUT_MS,
@@ -34,80 +34,71 @@ import {
   byDocumentPosition,
   collectLeaves,
   hasValue,
-  rootSelectionOf,
+  groupSelectionOf,
 } from './registry';
-import type { Leaf, Registry, RootSelection, TreeNode } from './registry';
+import type { Leaf, Registry, GroupSelection, TreeNode } from './registry';
 import type {
-  TreeViewMoveEvent,
-  TreeViewMovePlacement,
-  TreeViewNodeKey,
-  TreeViewNodeKind,
+  TreeMoveEvent,
+  TreeMovePlacement,
+  TreeNodeKey,
+  TreeNodeKind,
 } from './types';
 
 export type {
-  TreeViewMoveEvent,
-  TreeViewMovePlacement,
-  TreeViewNodeKey,
-  TreeViewNodeKind,
+  TreeMoveEvent,
+  TreeMovePlacement,
+  TreeNodeKey,
+  TreeNodeKind,
 } from './types';
-export { applyTreeViewMove } from './applyTreeViewMove';
-export type { TreeViewMoveAccessors } from './applyTreeViewMove';
+export { applyTreeMove } from './applyTreeMove';
+export type { TreeMoveAccessors } from './applyTreeMove';
 export { groupFlatTreeItems } from './groupFlatTreeItems';
 export type { FlatTreeAccessors } from './groupFlatTreeItems';
 
-export type TreeViewSize = 'md' | 'lg';
+export type TreeSize = 'md' | 'lg';
 
-export interface TreeViewHandle {
+export interface TreeHandle {
   collapseAll: () => void;
   expandAll: () => void;
 }
 
-export interface TreeViewAriaLabels {
+export interface TreeAriaLabels {
   dragHandle?: string;
 }
 
-/** How many Roots with children exist and how many of them are open. */
-export interface TreeViewExpandedCount {
-  expandable: number;
-  open: number;
+/** How many Groups with children exist and how many of them are open. */
+export interface TreeExpandedCount {
+  expandableCount: number;
+  openCount: number;
 }
 
-/** Default `getItemValue`: the value itself for strings and numbers, or its `id`. */
-export const resolveTreeViewItemValue = (item: unknown): TreeViewNodeKey => {
-  if (typeof item === 'string' || typeof item === 'number') return item;
-  if (item !== null && typeof item === 'object' && 'id' in item) {
-    const { id } = item as { id: unknown };
-    if (typeof id === 'string' || typeof id === 'number') return id;
-  }
-  throw new Error(
-    'TreeView: values must be strings, numbers, or objects with a string or number `id`. Pass `getItemValue` for any other shape.'
-  );
-};
+export const resolveTreeValue = (value: unknown): TreeNodeKey =>
+  resolveValueKey(value, 'Tree');
 
-interface TreeViewContextValue {
+interface TreeContextValue {
   selectable: boolean;
   sortable: boolean;
-  size: TreeViewSize;
-  ariaLabels: Required<TreeViewAriaLabels>;
-  resolveKey: (value: unknown) => TreeViewNodeKey;
+  size: TreeSize;
+  ariaLabels: Required<TreeAriaLabels>;
+  resolveKey: (value: unknown) => TreeNodeKey;
   /** Returns the matching unregister function. */
   register: (node: TreeNode) => () => void;
-  isOpen: (key: TreeViewNodeKey, defaultOpen?: boolean) => boolean;
-  setOpen: (key: TreeViewNodeKey, open: boolean) => void;
-  isSelected: (valueKey: TreeViewNodeKey) => boolean;
-  getRootSelection: (key: TreeViewNodeKey) => RootSelection;
-  toggleItem: (key: TreeViewNodeKey) => void;
-  setRootSelected: (key: TreeViewNodeKey, checked: boolean) => void;
-  canDrop: (sourceKey: TreeViewNodeKey, targetKey: TreeViewNodeKey) => boolean;
+  isOpen: (key: TreeNodeKey, defaultOpen?: boolean) => boolean;
+  setOpen: (key: TreeNodeKey, open: boolean) => void;
+  isSelected: (valueKey: TreeNodeKey) => boolean;
+  getGroupSelection: (key: TreeNodeKey) => GroupSelection;
+  toggleItem: (key: TreeNodeKey) => void;
+  setGroupSelected: (key: TreeNodeKey, checked: boolean) => void;
+  canDrop: (sourceKey: TreeNodeKey, targetKey: TreeNodeKey) => boolean;
 }
 
 interface BranchContextValue {
-  parentKey: TreeViewNodeKey | null;
+  parentKey: TreeNodeKey | null;
   depth: number;
   disabled: boolean;
 }
 
-const TreeViewContext = React.createContext<TreeViewContextValue | null>(null);
+const TreeContext = React.createContext<TreeContextValue | null>(null);
 
 const BranchContext = React.createContext<BranchContextValue>({
   parentKey: null,
@@ -115,12 +106,10 @@ const BranchContext = React.createContext<BranchContextValue>({
   disabled: false,
 });
 
-const useTreeViewContext = () => {
-  const ctx = React.useContext(TreeViewContext);
+const useTreeContext = () => {
+  const ctx = React.useContext(TreeContext);
   if (!ctx) {
-    throw new Error(
-      'TreeView.Root and TreeView.Item must be rendered inside TreeView'
-    );
+    throw new Error('Tree.Group and Tree.Item must be rendered inside Tree');
   }
   return ctx;
 };
@@ -146,60 +135,60 @@ const focusRowOf = (event: React.FocusEvent<HTMLElement>) => {
 /*                                  Container                                 */
 /* -------------------------------------------------------------------------- */
 
-export interface TreeViewProps
+export interface TreeProps
   extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children'> {
   /**
-   * Collapses every Root that has no `defaultOpen` and has not been toggled.
+   * Collapses every Group that has no `defaultOpen` and has not been toggled.
    * The ref handle takes over once called.
    */
-  allCollapsed?: boolean;
+  defaultCollapsed?: boolean;
   /**
-   * Renders a checkbox on Items with a value, and a cascading one on Roots.
-   * A Root with nothing selectable inside selects itself instead.
+   * Renders a checkbox on Items with a value, and a cascading one on Groups.
+   * A Group with nothing selectable inside selects itself instead.
    */
   selectable?: boolean;
   /**
-   * Values of the selected Items. A Root with no selectable Item inside is
+   * Values of the selected Items. A Group with no selectable Item inside is
    * selectable itself, so its value can appear here as well.
    */
   selected?: unknown[];
   defaultSelected?: unknown[];
   onSelectedChange?: (values: unknown[]) => void;
   /**
-   * Derives a unique key from a Root or Item value. Defaults to the value
+   * Derives a unique key from a Group or Item value. Defaults to the value
    * itself for strings and numbers, or its `id` for objects.
    */
-  getItemValue?: (value: unknown) => TreeViewNodeKey;
+  getItemValue?: (value: unknown) => TreeNodeKey;
   /**
    * Adds a drag handle at the start of every row, shown on hover. Siblings
    * shift to open a gap where the node will land, in this list or between the
-   * children of another Root. Hovering a collapsed Root opens it; hovering a
-   * Root without children opens an empty slot beneath it to nest into. Roots
+   * children of another Group. Hovering a collapsed Group opens it; hovering a
+   * Group without children opens an empty slot beneath it to nest into. Groups
    * taking part in moves should have a `value` so `onMove` can identify them.
    */
   sortable?: boolean;
   /**
-   * Called once per drop. Apply it to your data, e.g. with `applyTreeViewMove`.
-   * Annotate the event as `TreeViewMoveEvent<Item, Root>` to type its values;
+   * Called once per drop. Apply it to your data, e.g. with `applyTreeMove`.
+   * Annotate the event as `TreeMoveEvent<Item, Group>` to type its values;
    * method syntax keeps that annotation assignable.
    */
-  onMove?(event: TreeViewMoveEvent): void;
+  onMove?(event: TreeMoveEvent): void;
   /** Row height: `md` is 40px, `lg` is 48px. */
-  size?: TreeViewSize;
-  /** Reports how many Roots with children exist and how many are open. */
-  onExpandedCountChange?: (state: TreeViewExpandedCount) => void;
-  ariaLabels?: TreeViewAriaLabels;
+  size?: TreeSize;
+  /** Reports how many Groups with children exist and how many are open. */
+  onExpandedCountChange?: (state: TreeExpandedCount) => void;
+  ariaLabels?: TreeAriaLabels;
   children: React.ReactNode;
 }
 
 interface OpenState {
-  /** Set by collapseAll/expandAll; replaces `defaultOpen` and `allCollapsed`. */
+  /** Set by collapseAll/expandAll; replaces `defaultOpen` and `defaultCollapsed`. */
   all?: boolean;
-  overrides: Map<TreeViewNodeKey, boolean>;
+  overrides: Map<TreeNodeKey, boolean>;
 }
 
 /**
- * Composable tree with collapsible Roots, leaf Items, optional cascading
+ * Composable tree with collapsible Groups, leaf Items, optional cascading
  * checkbox selection, drag-and-drop reordering and right-aligned row overlays.
  *
  * The rows form a single tab stop: arrow keys move between visible rows and
@@ -210,14 +199,14 @@ interface OpenState {
  * ArrowDown move it one slot at a time through the tree, Enter or Space
  * drops it and Escape cancels.
  */
-function TreeViewInner(
+function TreeInner(
   {
-    allCollapsed = false,
+    defaultCollapsed = false,
     selectable = false,
     selected,
     defaultSelected,
     onSelectedChange,
-    getItemValue = resolveTreeViewItemValue,
+    getItemValue = resolveTreeValue,
     sortable = false,
     onMove,
     size = 'md',
@@ -229,8 +218,8 @@ function TreeViewInner(
     style,
     children,
     ...props
-  }: TreeViewProps,
-  ref: React.ForwardedRef<TreeViewHandle>
+  }: TreeProps,
+  ref: React.ForwardedRef<TreeHandle>
 ) {
   const registryRef = React.useRef<Registry>(new Map());
   // Wrapped again on every registration so memos can depend on the registry.
@@ -245,7 +234,7 @@ function TreeViewInner(
     const elements = elementsRef.current;
     if (nodes.has(node.key)) {
       console.warn(
-        `TreeView: duplicate node key "${String(node.key)}". Item values must resolve to unique keys across the whole tree.`
+        `Tree: duplicate node key "${String(node.key)}". Item values must resolve to unique keys across the whole tree.`
       );
     }
     nodes.set(node.key, node);
@@ -263,15 +252,15 @@ function TreeViewInner(
   }));
 
   const isOpen = React.useCallback(
-    (key: TreeViewNodeKey, defaultOpen?: boolean) =>
+    (key: TreeNodeKey, defaultOpen?: boolean) =>
       openState.overrides.get(key) ??
       openState.all ??
       defaultOpen ??
-      !allCollapsed,
-    [openState, allCollapsed]
+      !defaultCollapsed,
+    [openState, defaultCollapsed]
   );
 
-  const setOpen = React.useCallback((key: TreeViewNodeKey, open: boolean) => {
+  const setOpen = React.useCallback((key: TreeNodeKey, open: boolean) => {
     setOpenState((state) => ({
       ...state,
       overrides: new Map(state.overrides).set(key, open),
@@ -322,7 +311,7 @@ function TreeViewInner(
   // The tree has one tab stop: the row focused last, or the first row while
   // that one is gone or hidden. Rows render with tabIndex -1 and the active
   // one is switched to 0 here, so moving focus never re-renders the rows.
-  const focusKeyRef = React.useRef<TreeViewNodeKey | null>(null);
+  const focusKeyRef = React.useRef<TreeNodeKey | null>(null);
   const activeRowRef = React.useRef<HTMLLIElement | null>(null);
   const activateRow = React.useCallback((element: HTMLLIElement | null) => {
     const previous = activeRowRef.current;
@@ -343,20 +332,24 @@ function TreeViewInner(
     activateRow(active?.element ?? null);
   }, [registryState, isShown, firstTopLevelKey, activateRow]);
 
-  const expandedRef = React.useRef<TreeViewExpandedCount | null>(null);
+  const expandedRef = React.useRef<TreeExpandedCount | null>(null);
   React.useEffect(() => {
     if (!onExpandedCountChange) return;
-    let expandable = 0;
-    let open = 0;
+    let expandableCount = 0;
+    let openCount = 0;
     registryState.nodes.forEach((node) => {
-      if (node.kind !== 'root' || !node.hasChildren) return;
-      expandable += 1;
-      if (isOpen(node.key, node.defaultOpen)) open += 1;
+      if (node.kind !== 'group' || !node.hasChildren) return;
+      expandableCount += 1;
+      if (isOpen(node.key, node.defaultOpen)) openCount += 1;
     });
     const previous = expandedRef.current;
-    if (previous?.expandable === expandable && previous.open === open) return;
-    expandedRef.current = { expandable, open };
-    onExpandedCountChange({ expandable, open });
+    if (
+      previous?.expandableCount === expandableCount &&
+      previous.openCount === openCount
+    )
+      return;
+    expandedRef.current = { expandableCount, openCount };
+    onExpandedCountChange({ expandableCount, openCount });
   }, [onExpandedCountChange, registryState, isOpen]);
 
   const isControlled = selected !== undefined;
@@ -368,11 +361,11 @@ function TreeViewInner(
     () => new Set(currentSelected.map((item) => getItemValue(item))),
     [currentSelected, getItemValue]
   );
-  const leavesByRoot = React.useMemo(
+  const leavesByGroup = React.useMemo(
     () =>
       selectable
         ? collectLeaves(registryState.nodes)
-        : new Map<TreeViewNodeKey, Leaf[]>(),
+        : new Map<TreeNodeKey, Leaf[]>(),
     [selectable, registryState]
   );
 
@@ -405,20 +398,20 @@ function TreeViewInner(
   );
 
   const isSelected = React.useCallback(
-    (valueKey: TreeViewNodeKey) => selectedKeys.has(valueKey),
+    (valueKey: TreeNodeKey) => selectedKeys.has(valueKey),
     [selectedKeys]
   );
 
-  const getRootSelection = React.useCallback(
-    (key: TreeViewNodeKey): RootSelection =>
-      rootSelectionOf(leavesByRoot.get(key) ?? [], (valueKey) =>
+  const getGroupSelection = React.useCallback(
+    (key: TreeNodeKey): GroupSelection =>
+      groupSelectionOf(leavesByGroup.get(key) ?? [], (valueKey) =>
         selectedKeys.has(valueKey)
       ),
-    [leavesByRoot, selectedKeys]
+    [leavesByGroup, selectedKeys]
   );
 
   const toggleItem = React.useCallback(
-    (key: TreeViewNodeKey) => {
+    (key: TreeNodeKey) => {
       const node = registryRef.current.get(key);
       if (node && hasValue(node)) {
         select([node], !selectedKeys.has(node.valueKey));
@@ -427,13 +420,13 @@ function TreeViewInner(
     [select, selectedKeys]
   );
 
-  const setRootSelected = React.useCallback(
-    (key: TreeViewNodeKey, checked: boolean) =>
+  const setGroupSelected = React.useCallback(
+    (key: TreeNodeKey, checked: boolean) =>
       select(
-        (leavesByRoot.get(key) ?? []).filter((leaf) => !leaf.disabled),
+        (leavesByGroup.get(key) ?? []).filter((leaf) => !leaf.disabled),
         checked
       ),
-    [select, leavesByRoot]
+    [select, leavesByGroup]
   );
 
   const handleFocus = (event: React.FocusEvent<HTMLUListElement>) => {
@@ -492,7 +485,10 @@ function TreeViewInner(
         if (!selectable || node.disabled) return;
         if (node.kind === 'item') toggleItem(node.key);
         else
-          setRootSelected(node.key, getRootSelection(node.key).state !== 'all');
+          setGroupSelected(
+            node.key,
+            getGroupSelection(node.key).state !== 'all'
+          );
         break;
       default:
         return;
@@ -503,7 +499,7 @@ function TreeViewInner(
   const treeRef = React.useRef<HTMLUListElement>(null);
   const dragRef = React.useRef<DragSnapshot | null>(null);
   const dwellRef = React.useRef<{
-    key: TreeViewNodeKey;
+    key: TreeNodeKey;
     timer: number;
   } | null>(null);
   const pointerRef = React.useRef<Pointer | null>(null);
@@ -572,7 +568,7 @@ function TreeViewInner(
   );
 
   const canDrop = React.useCallback(
-    (sourceKey: TreeViewNodeKey, targetKey: TreeViewNodeKey) => {
+    (sourceKey: TreeNodeKey, targetKey: TreeNodeKey) => {
       const nodes = registryRef.current;
       for (
         let node = nodes.get(targetKey);
@@ -586,14 +582,14 @@ function TreeViewInner(
     []
   );
 
-  /** The Root owning a list, null for the tree itself, undefined for an unknown list. */
+  /** The Group owning a list, null for the tree itself, undefined for an unknown list. */
   const ownerOf = (list: Element): TreeNode | null | undefined =>
     list === treeRef.current ? null : nodeOf(list.parentElement);
 
   const placement = (
     owner: TreeNode | null,
     index: number
-  ): TreeViewMovePlacement => ({
+  ): TreeMovePlacement => ({
     parentKey: owner ? (owner.valueKey ?? owner.key) : null,
     parentValue: owner?.getValue(),
     index,
@@ -608,7 +604,7 @@ function TreeViewInner(
     const node = source ? registryRef.current.get(source.id) : undefined;
     const originList = node?.element.parentElement;
     if (!node || !originList) return;
-    // Collapse a dragged Root before dnd-kit clones it for the placeholder, so
+    // Collapse a dragged Group before dnd-kit clones it for the placeholder, so
     // the gap it leaves is a single row.
     const reopen = node.element.getAttribute('aria-expanded') === 'true';
     if (reopen) flushSync(() => setOpen(node.key, false));
@@ -701,7 +697,7 @@ function TreeViewInner(
     const from = ownerOf(originList);
     const to = list ? ownerOf(list) : undefined;
     const moved = list !== originList || toIndex !== originIndex;
-    const reopenRoot = () => {
+    const reopenGroup = () => {
       if (reopen) setOpen(node.key, true);
     };
     if (
@@ -714,10 +710,10 @@ function TreeViewInner(
       // Nothing changes: the row goes straight back so the drop animation
       // returns it to its place, and a dragged group reopens afterwards.
       restoreRow(snapshot);
-      afterDrop(manager, reopenRoot);
+      afterDrop(manager, reopenGroup);
       return;
     }
-    const moveEvent: TreeViewMoveEvent = {
+    const moveEvent: TreeMoveEvent = {
       key: node.valueKey ?? node.key,
       kind: node.kind,
       value: node.getValue(),
@@ -733,7 +729,7 @@ function TreeViewInner(
       if (!node.element.isConnected || !originList.isConnected) return;
       restoreRow(snapshot);
       flushSync(() => {
-        reopenRoot();
+        reopenGroup();
         onMove(moveEvent);
       });
     });
@@ -750,7 +746,7 @@ function TreeViewInner(
     ],
     [rowHeight]
   );
-  const contextValue = React.useMemo<TreeViewContextValue>(
+  const contextValue = React.useMemo<TreeContextValue>(
     () => ({
       selectable,
       sortable,
@@ -761,9 +757,9 @@ function TreeViewInner(
       isOpen,
       setOpen,
       isSelected,
-      getRootSelection,
+      getGroupSelection,
       toggleItem,
-      setRootSelected,
+      setGroupSelected,
       canDrop,
     }),
     [
@@ -776,15 +772,15 @@ function TreeViewInner(
       isOpen,
       setOpen,
       isSelected,
-      getRootSelection,
+      getGroupSelection,
       toggleItem,
-      setRootSelected,
+      setGroupSelected,
       canDrop,
     ]
   );
 
   const tree = (
-    <TreeViewContext.Provider value={contextValue}>
+    <TreeContext.Provider value={contextValue}>
       <ul
         ref={treeRef}
         role="tree"
@@ -801,7 +797,7 @@ function TreeViewInner(
       >
         {children}
       </ul>
-    </TreeViewContext.Provider>
+    </TreeContext.Provider>
   );
 
   if (!sortable) return tree;
@@ -819,14 +815,14 @@ function TreeViewInner(
   );
 }
 
-const TreeViewContainer = React.forwardRef(TreeViewInner);
-TreeViewContainer.displayName = 'TreeView';
+const TreeContainer = React.forwardRef(TreeInner);
+TreeContainer.displayName = 'Tree';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Overlay                                  */
 /* -------------------------------------------------------------------------- */
 
-export interface TreeViewRootOverlayProps
+export interface TreeRowOverlayProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Keep the overlay visible (e.g. while a dropdown opened from it is open). */
   forceVisible?: boolean;
@@ -834,36 +830,35 @@ export interface TreeViewRootOverlayProps
 }
 
 /**
- * Right-aligned action area laid over a TreeView row. Shown on row hover or
+ * Right-aligned action area laid over a Tree row. Shown on row hover or
  * when a control inside it has focus. Rendered automatically by
  * `renderRowOverlay`; return it explicitly from that callback to control
  * `forceVisible`.
  */
-const TreeViewRootOverlay = React.forwardRef<
-  HTMLDivElement,
-  TreeViewRootOverlayProps
->(({ forceVisible = false, className, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    data-force-visible={forceVisible || undefined}
-    {...props}
-    className={cn(
-      `right-0 top-0 bottom-0 pr-md pl-16 z-slight bg-row-overlay-fade
-      pointer-events-none absolute flex w-max items-center`,
-      forceVisible
-        ? 'opacity-100'
-        : `opacity-0 transition-opacity group-hover:opacity-100
-          group-has-[:focus-visible]:opacity-100
-          [li:focus-visible>div>&]:opacity-100`,
-      className
-    )}
-  >
-    <div className="gap-xs pointer-events-auto flex items-center">
-      {children}
+const TreeRowOverlay = React.forwardRef<HTMLDivElement, TreeRowOverlayProps>(
+  ({ forceVisible = false, className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      data-force-visible={forceVisible || undefined}
+      {...props}
+      className={cn(
+        `right-0 top-0 bottom-0 pr-md pl-16 z-slight bg-row-overlay-fade
+        pointer-events-none absolute flex w-max items-center`,
+        forceVisible
+          ? 'opacity-100'
+          : `opacity-0 transition-opacity group-hover:opacity-100
+            group-has-[:focus-visible]:opacity-100
+            [li:focus-visible>div>&]:opacity-100`,
+        className
+      )}
+    >
+      <div className="gap-xs pointer-events-auto flex items-center">
+        {children}
+      </div>
     </div>
-  </div>
-));
-TreeViewRootOverlay.displayName = 'TreeView.RootOverlay';
+  )
+);
+TreeRowOverlay.displayName = 'Tree.RowOverlay';
 
 const renderOverlay = <T,>(
   value: T | undefined,
@@ -872,10 +867,10 @@ const renderOverlay = <T,>(
   if (value === undefined || !renderRowOverlay) return null;
   const content = renderRowOverlay(value);
   if (content == null || typeof content === 'boolean') return null;
-  if (React.isValidElement(content) && content.type === TreeViewRootOverlay) {
+  if (React.isValidElement(content) && content.type === TreeRowOverlay) {
     return content;
   }
-  return <TreeViewRootOverlay>{content}</TreeViewRootOverlay>;
+  return <TreeRowOverlay>{content}</TreeRowOverlay>;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -888,7 +883,7 @@ const rowClassName = `group relative gap-xxs pr-md py-xxs text-md
   has-[[data-force-visible]]:bg-interactive-neutral-hover flex items-center
   transition-colors`;
 
-const rowSizeClassName: Record<TreeViewSize, string> = {
+const rowSizeClassName: Record<TreeSize, string> = {
   md: 'min-h-10',
   lg: 'min-h-12',
 };
@@ -906,7 +901,7 @@ const treeItemClassName = `[&:focus-visible>div]:ring-interactive-focused
   [&:focus-visible>div]:bg-interactive-neutral-hover outline-none
   [&:focus-visible>div]:ring-4 [&:focus-visible>div]:ring-inset`;
 
-const ariaChecked = (state: RootSelection['state']) =>
+const ariaChecked = (state: GroupSelection['state']) =>
   state === 'some' ? 'mixed' : state === 'all';
 
 const gripClassName = `text-shape-light rounded-xs
@@ -944,15 +939,15 @@ const placeholderClassName = `[&_[data-dnd-placeholder]]:relative
   [&_[data-dnd-placeholder]]:after:border-dashed
   [&_[data-dnd-placeholder]]:after:content-['']`;
 
-interface TreeViewRowProps {
-  nodeKey: TreeViewNodeKey;
+interface TreeRowProps {
+  nodeKey: TreeNodeKey;
   elementRef: React.RefObject<HTMLLIElement | null>;
   depth: number;
   disabled: boolean;
   children: React.ReactNode;
 }
 
-const rowClass = (size: TreeViewSize, disabled: boolean, extra?: string) =>
+const rowClass = (size: TreeSize, disabled: boolean, extra?: string) =>
   cn(
     rowClassName,
     rowSizeClassName[size],
@@ -960,14 +955,14 @@ const rowClass = (size: TreeViewSize, disabled: boolean, extra?: string) =>
     extra
   );
 
-const TreeViewSortableRow = ({
+const TreeSortableRow = ({
   nodeKey,
   elementRef,
   depth,
   disabled,
   children,
-}: TreeViewRowProps) => {
-  const { size, ariaLabels, canDrop } = useTreeViewContext();
+}: TreeRowProps) => {
+  const { size, ariaLabels, canDrop } = useTreeContext();
   const { targetRef, handleRef, isDragging } = useSortable({
     id: nodeKey,
     // Rows are numbered from the DOM while dragging; see `syncIndexes`.
@@ -1005,9 +1000,9 @@ const TreeViewSortableRow = ({
   );
 };
 
-const TreeViewRow = (props: TreeViewRowProps) => {
-  const { sortable, size } = useTreeViewContext();
-  if (sortable) return <TreeViewSortableRow {...props} />;
+const TreeRow = (props: TreeRowProps) => {
+  const { sortable, size } = useTreeContext();
+  if (sortable) return <TreeSortableRow {...props} />;
   return (
     <div
       className={rowClass(size, props.disabled)}
@@ -1034,25 +1029,19 @@ const countNodes = (children: React.ReactNode): number =>
     0
   );
 
-interface TreeViewNodeInput<T> {
-  kind: TreeViewNodeKind;
+interface TreeNodeInput<T> {
+  kind: TreeNodeKind;
   value: T | undefined;
   disabled: boolean;
   hasChildren?: boolean;
   defaultOpen?: boolean | undefined;
 }
 
-const useTreeViewNode = <T,>(
-  {
-    kind,
-    value,
-    disabled,
-    hasChildren = false,
-    defaultOpen,
-  }: TreeViewNodeInput<T>,
+const useTreeNode = <T,>(
+  { kind, value, disabled, hasChildren = false, defaultOpen }: TreeNodeInput<T>,
   forwardedRef: React.ForwardedRef<HTMLLIElement>
 ) => {
-  const ctx = useTreeViewContext();
+  const ctx = useTreeContext();
   const branch = React.useContext(BranchContext);
   const id = React.useId();
   const valueKey = value === undefined ? undefined : ctx.resolveKey(value);
@@ -1063,14 +1052,14 @@ const useTreeViewNode = <T,>(
     typeof valueKey !== 'number'
   ) {
     throw new Error(
-      'TreeView.Item: `getItemValue` must return a string or number for every Item value.'
+      'Tree.Item: `getItemValue` must return a string or number for every Item value.'
     );
   }
   const key =
     valueKey === undefined
       ? id
-      : kind === 'root'
-        ? `root:${String(valueKey)}`
+      : kind === 'group'
+        ? `group:${String(valueKey)}`
         : valueKey;
   const isDisabled = disabled || branch.disabled;
 
@@ -1129,7 +1118,7 @@ const useTreeViewNode = <T,>(
   };
 };
 
-export interface TreeViewRootProps<T>
+export interface TreeGroupProps<T>
   extends Omit<
     React.LiHTMLAttributes<HTMLLIElement>,
     'value' | 'children' | 'tabIndex'
@@ -1138,14 +1127,14 @@ export interface TreeViewRootProps<T>
   /** Identifies the node and is passed back to `renderRowOverlay`. */
   value?: T;
   renderRowOverlay?: (value: T) => React.ReactNode;
-  /** Initial open state for this Root. Ignored once collapseAll/expandAll is called. */
+  /** Initial open state for this Group. Ignored once collapseAll/expandAll is called. */
   defaultOpen?: boolean;
-  /** Disables selection and dragging for this Root and every nested node. Expanding still works. */
+  /** Disables selection and dragging for this Group and every nested node. Expanding still works. */
   disabled?: boolean;
   children?: React.ReactNode;
 }
 
-function TreeViewRootInner<T>(
+function TreeGroupInner<T>(
   {
     label,
     value,
@@ -1155,27 +1144,27 @@ function TreeViewRootInner<T>(
     className,
     children,
     ...props
-  }: TreeViewRootProps<T>,
+  }: TreeGroupProps<T>,
   ref: React.ForwardedRef<HTMLLIElement>
 ) {
   const hasChildren = countNodes(children) > 0;
   const { ctx, depth, key, isDisabled, id, setElement, elementRef } =
-    useTreeViewNode(
-      { kind: 'root', value, disabled, hasChildren, defaultOpen },
+    useTreeNode(
+      { kind: 'group', value, disabled, hasChildren, defaultOpen },
       ref
     );
   const hasOwnValue = value !== undefined;
   React.useEffect(() => {
     if (ctx.sortable && !hasOwnValue) {
       console.warn(
-        'TreeView.Root: give every Root a `value` in a sortable tree, so `onMove` can name it as a parent.'
+        'Tree.Group: give every Group a `value` in a sortable tree, so `onMove` can name it as a parent.'
       );
     }
   }, [ctx.sortable, hasOwnValue]);
   const labelId = `${id}-label`;
   const groupId = `${id}-group`;
   const open = !hasChildren || ctx.isOpen(key, defaultOpen);
-  const selection = ctx.selectable ? ctx.getRootSelection(key) : null;
+  const selection = ctx.selectable ? ctx.getGroupSelection(key) : null;
   const toggle = () => ctx.setOpen(key, !open);
 
   return (
@@ -1194,7 +1183,7 @@ function TreeViewRootInner<T>(
       tabIndex={-1}
       className={cn(treeItemClassName, className)}
     >
-      <TreeViewRow
+      <TreeRow
         nodeKey={key}
         elementRef={elementRef}
         depth={depth}
@@ -1223,7 +1212,7 @@ function TreeViewRootInner<T>(
             indeterminate={selection.state === 'some'}
             disabled={isDisabled || !selection.selectable}
             onCheckedChange={(checked) =>
-              ctx.setRootSelected(key, checked === true)
+              ctx.setGroupSelected(key, checked === true)
             }
             className="shrink-0"
           />
@@ -1239,7 +1228,7 @@ function TreeViewRootInner<T>(
           {label}
         </span>
         {renderOverlay(value, renderRowOverlay)}
-      </TreeViewRow>
+      </TreeRow>
       <BranchContext.Provider
         value={{ parentKey: key, depth: depth + 1, disabled: isDisabled }}
       >
@@ -1258,16 +1247,16 @@ function TreeViewRootInner<T>(
   );
 }
 
-type TreeViewRootComponent = <T>(
-  props: TreeViewRootProps<T> & { ref?: React.ForwardedRef<HTMLLIElement> }
+type TreeGroupComponent = <T>(
+  props: TreeGroupProps<T> & { ref?: React.ForwardedRef<HTMLLIElement> }
 ) => React.ReactElement;
 
-const TreeViewRoot = React.forwardRef(
-  TreeViewRootInner
-) as TreeViewRootComponent & { displayName?: string };
-TreeViewRoot.displayName = 'TreeView.Root';
+const TreeGroup = React.forwardRef(TreeGroupInner) as TreeGroupComponent & {
+  displayName?: string;
+};
+TreeGroup.displayName = 'Tree.Group';
 
-export interface TreeViewItemProps<T>
+export interface TreeItemProps<T>
   extends Omit<
     React.LiHTMLAttributes<HTMLLIElement>,
     'value' | 'children' | 'tabIndex'
@@ -1279,7 +1268,7 @@ export interface TreeViewItemProps<T>
   children: React.ReactNode;
 }
 
-function TreeViewItemInner<T>(
+function TreeItemInner<T>(
   {
     value,
     renderRowOverlay,
@@ -1287,11 +1276,11 @@ function TreeViewItemInner<T>(
     className,
     children,
     ...props
-  }: TreeViewItemProps<T>,
+  }: TreeItemProps<T>,
   ref: React.ForwardedRef<HTMLLIElement>
 ) {
   const { ctx, depth, key, valueKey, isDisabled, id, setElement, elementRef } =
-    useTreeViewNode({ kind: 'item', value, disabled }, ref);
+    useTreeNode({ kind: 'item', value, disabled }, ref);
   const labelId = `${id}-label`;
   const checkboxId = `${id}-checkbox`;
   const showCheckbox = ctx.selectable && valueKey !== undefined;
@@ -1309,7 +1298,7 @@ function TreeViewItemInner<T>(
       tabIndex={-1}
       className={cn(treeItemClassName, className)}
     >
-      <TreeViewRow
+      <TreeRow
         nodeKey={key}
         elementRef={elementRef}
         depth={depth}
@@ -1348,22 +1337,22 @@ function TreeViewItemInner<T>(
           </span>
         )}
         {renderOverlay(value, renderRowOverlay)}
-      </TreeViewRow>
+      </TreeRow>
     </li>
   );
 }
 
-type TreeViewItemComponent = <T>(
-  props: TreeViewItemProps<T> & { ref?: React.ForwardedRef<HTMLLIElement> }
+type TreeItemComponent = <T>(
+  props: TreeItemProps<T> & { ref?: React.ForwardedRef<HTMLLIElement> }
 ) => React.ReactElement;
 
-const TreeViewItem = React.forwardRef(
-  TreeViewItemInner
-) as TreeViewItemComponent & { displayName?: string };
-TreeViewItem.displayName = 'TreeView.Item';
+const TreeItem = React.forwardRef(TreeItemInner) as TreeItemComponent & {
+  displayName?: string;
+};
+TreeItem.displayName = 'Tree.Item';
 
-export const TreeView = Object.assign(TreeViewContainer, {
-  Root: TreeViewRoot,
-  Item: TreeViewItem,
-  RootOverlay: TreeViewRootOverlay,
+export const Tree = Object.assign(TreeContainer, {
+  Group: TreeGroup,
+  Item: TreeItem,
+  RowOverlay: TreeRowOverlay,
 });

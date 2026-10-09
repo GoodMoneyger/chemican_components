@@ -11,7 +11,7 @@ vi.mock('@dnd-kit/react/sortable', () => ({ isSortable: () => false }));
 
 interface Spec {
   key: string;
-  /** Makes the row a Root. `undefined` leaves it childless. */
+  /** Makes the row a Group. `undefined` leaves it childless. */
   expanded?: boolean | 'childless';
   disabled?: boolean;
   children?: Spec[];
@@ -44,7 +44,7 @@ const build = (specs: Spec[], list: Element, parentKey: string | null) => {
       key: spec.key,
       valueKey: spec.key,
       parentKey,
-      kind: spec.expanded === undefined ? 'item' : 'root',
+      kind: spec.expanded === undefined ? 'item' : 'group',
       disabled: spec.disabled ?? false,
       hasChildren: (spec.children ?? []).length > 0,
       defaultOpen: undefined,
@@ -97,7 +97,7 @@ const over = (index: number, fraction: number) => ({
   y: (index + fraction) * ROW_HEIGHT,
 });
 
-/** The tree as text: keys in order, with a Root's children in brackets. */
+/** The tree as text: keys in order, with a Group's children in brackets. */
 const layout = (list: Element = tree): string =>
   Array.from(list.children)
     .map((element) => {
@@ -129,7 +129,7 @@ describe('locateGap', () => {
     expect(layout()).toBe('a x b');
   });
 
-  it('makes the gap the first child from the bottom half of an open Root', () => {
+  it('makes the gap the first child from the bottom half of an open Group', () => {
     setup([
       { key: 'x' },
       { key: 'r', expanded: true, children: [{ key: 'a' }] },
@@ -138,19 +138,19 @@ describe('locateGap', () => {
     expect(layout()).toBe('r[x a]');
   });
 
-  it('nests the gap inside a childless Root from its middle', () => {
+  it('nests the gap inside a childless Group from its middle', () => {
     setup([{ key: 'x' }, { key: 'r', expanded: 'childless' }]);
     hover('r', 1, 0.5);
     expect(layout()).toBe('r[x]');
   });
 
-  it('places the gap beside a childless Root from its edges', () => {
+  it('places the gap beside a childless Group from its edges', () => {
     setup([{ key: 'a' }, { key: 'r', expanded: 'childless' }, { key: 'x' }]);
     hover('r', 1, 0.1);
     expect(layout()).toBe('a x r[]');
   });
 
-  it('places the gap beside a collapsed Root rather than inside it', () => {
+  it('places the gap beside a collapsed Group rather than inside it', () => {
     setup([
       { key: 'x' },
       { key: 'r', expanded: false, children: [{ key: 'a' }] },
@@ -160,13 +160,13 @@ describe('locateGap', () => {
     expect(layout()).toBe('r[a] x b');
   });
 
-  it('never nests the gap inside a disabled Root', () => {
+  it('never nests the gap inside a disabled Group', () => {
     setup([{ key: 'x' }, { key: 'r', expanded: 'childless', disabled: true }]);
     hover('r', 1, 0.5);
     expect(layout()).toBe('r[] x');
   });
 
-  it('leaves the gap alone over a row in a disabled Root', () => {
+  it('leaves the gap alone over a row in a disabled Group', () => {
     setup([
       { key: 'x' },
       { key: 'r', expanded: true, disabled: true, children: [{ key: 'a' }] },
@@ -197,7 +197,7 @@ describe('stepGap', () => {
     expect(layout()).toBe('a x b');
   });
 
-  it('walks into and out of an open Root', () => {
+  it('walks into and out of an open Group', () => {
     setup([
       { key: 'x' },
       { key: 'r', expanded: true, children: [{ key: 'a' }] },
@@ -210,13 +210,13 @@ describe('stepGap', () => {
     expect(layout()).toBe('r[a] x');
   });
 
-  it('stops inside a childless Root', () => {
+  it('stops inside a childless Group', () => {
     setup([{ key: 'x' }, { key: 'r', expanded: 'childless' }]);
     step(1);
     expect(layout()).toBe('r[x]');
   });
 
-  it('skips the lists of collapsed and disabled Roots', () => {
+  it('skips the lists of collapsed and disabled Groups', () => {
     setup([
       { key: 'x' },
       { key: 'c', expanded: false, children: [{ key: 'a' }] },

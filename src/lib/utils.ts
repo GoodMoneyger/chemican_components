@@ -74,3 +74,18 @@ export const renderIcon = (
   // Otherwise, render as-is (React node/JSX element)
   return icon;
 };
+
+/** Default `getItemValue`: the value itself for strings and numbers, or its `id`. */
+export const resolveValueKey = (
+  value: unknown,
+  owner: string
+): string | number => {
+  if (typeof value === 'string' || typeof value === 'number') return value;
+  if (value !== null && typeof value === 'object' && 'id' in value) {
+    const { id } = value as { id: unknown };
+    if (typeof id === 'string' || typeof id === 'number') return id;
+  }
+  throw new Error(
+    `${owner}: values must be strings, numbers, or objects with a string or number \`id\`. Pass \`getItemValue\` for any other shape.`
+  );
+};

@@ -59,7 +59,7 @@ function getComponentTopics() {
       'toast',
       'tooltip',
       'treelist',
-      'treeview',
+      'tree',
     ];
   }
 }

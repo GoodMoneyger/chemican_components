@@ -3,14 +3,14 @@ import React from 'react';
 import { Button } from '../Button';
 import type { ButtonProps } from '../Button';
 import { TextLink } from '../TextLink';
-import { TreeView, resolveTreeViewItemValue } from './TreeView';
+import { Tree, resolveTreeValue } from './Tree';
 import type {
-  TreeViewExpandedCount,
-  TreeViewHandle,
-  TreeViewMoveEvent,
-  TreeViewNodeKey,
-  TreeViewProps,
-} from './TreeView';
+  TreeExpandedCount,
+  TreeHandle,
+  TreeMoveEvent,
+  TreeNodeKey,
+  TreeProps,
+} from './Tree';
 import { cn } from '../../lib/utils';
 
 import { applyTreeListMove } from './applyTreeListMove';
@@ -43,7 +43,7 @@ export interface TreeListLabels {
 
 interface TreeListBaseProps<T>
   extends Omit<
-    TreeViewProps,
+    TreeProps,
     | 'children'
     | 'size'
     | 'onExpandedCountChange'
@@ -63,7 +63,7 @@ interface TreeListBaseProps<T>
    * Key of the parent node, or null for a top-level node. Keys are compared
    * with `===`, so return the same primitive type as `getItemValue`.
    */
-  getParentKey: (item: T) => TreeViewNodeKey | null | undefined;
+  getParentKey: (item: T) => TreeNodeKey | null | undefined;
   getLabel: (item: T) => React.ReactNode;
   /** Sort key among siblings. Items keep their array order when omitted. */
   getOrder?: (item: T) => number;
@@ -84,8 +84,8 @@ interface TreeListBaseProps<T>
   defaultSelected?: T[];
   onSelectedChange?: (items: T[]) => void;
   /** Derives a unique key from an item. Defaults to the item itself for strings and numbers, or its `id`. */
-  getItemValue?: (item: T) => TreeViewNodeKey;
-  onMove?: (event: TreeViewMoveEvent<T, T>) => void;
+  getItemValue?: (item: T) => TreeNodeKey;
+  onMove?: (event: TreeMoveEvent<T, T>) => void;
 }
 
 interface TreeListUncontrolledMoveProps {
@@ -115,8 +115,8 @@ const indentVariables = {
 
 /**
  * A titled, flat-list driven tree: a header bar, expand all / collapse all
- * controls, and optional per-row actions, on top of `TreeView`. Every other
- * `TreeView` prop, such as `selectable` or `sortable`, passes through.
+ * controls, and optional per-row actions, on top of `Tree`. Every other
+ * `Tree` prop, such as `selectable` or `sortable`, passes through.
  */
 function TreeListInner<T>(
   {
@@ -132,14 +132,14 @@ function TreeListInner<T>(
     withPlacement,
     onMove,
     onSelectedChange,
-    getItemValue = resolveTreeViewItemValue,
+    getItemValue = resolveTreeValue,
     className,
     style,
     ...treeProps
   }: TreeListProps<T>,
-  ref: React.ForwardedRef<TreeViewHandle>
+  ref: React.ForwardedRef<TreeHandle>
 ) {
-  const treeRef = React.useRef<TreeViewHandle>(null);
+  const treeRef = React.useRef<TreeHandle>(null);
   const headerId = React.useId();
   const labelled =
     treeProps['aria-label'] !== undefined ||
@@ -153,9 +153,9 @@ function TreeListInner<T>(
     []
   );
 
-  const [expanded, setExpanded] = React.useState<TreeViewExpandedCount>({
-    expandable: 0,
-    open: 0,
+  const [expanded, setExpanded] = React.useState<TreeExpandedCount>({
+    expandableCount: 0,
+    openCount: 0,
   });
 
   const childrenByParent = React.useMemo(
@@ -172,7 +172,7 @@ function TreeListInner<T>(
   React.useEffect(() => {
     if (warnedItemsRef.current === items) return;
     let reachable = 0;
-    const visit = (parent: TreeViewNodeKey | null) =>
+    const visit = (parent: TreeNodeKey | null) =>
       (childrenByParent.get(parent) ?? []).forEach((item) => {
         reachable += 1;
         visit(getItemValue(item));
@@ -187,9 +187,9 @@ function TreeListInner<T>(
   }, [items, childrenByParent, getItemValue]);
 
   const underDisabled = React.useMemo(() => {
-    const keys = new Set<TreeViewNodeKey>();
+    const keys = new Set<TreeNodeKey>();
     if (!isItemDisabled) return keys;
-    const mark = (parent: TreeViewNodeKey | null, inherited: boolean) =>
+    const mark = (parent: TreeNodeKey | null, inherited: boolean) =>
       (childrenByParent.get(parent) ?? []).forEach((item) => {
         const key = getItemValue(item);
         if (inherited) keys.add(key);
@@ -229,11 +229,11 @@ function TreeListInner<T>(
       }
     : undefined;
 
-  const renderLevel = (parentKey: TreeViewNodeKey | null): React.ReactNode =>
+  const renderLevel = (parentKey: TreeNodeKey | null): React.ReactNode =>
     (childrenByParent.get(parentKey) ?? []).map((item) => {
       const key = getItemValue(item);
       return (
-        <TreeView.Root
+        <Tree.Group
           key={key}
           value={item}
           label={getLabel(item)}
@@ -241,12 +241,12 @@ function TreeListInner<T>(
           {...(renderRowOverlay && { renderRowOverlay })}
         >
           {renderLevel(key)}
-        </TreeView.Root>
+        </Tree.Group>
       );
     });
 
   const handleMove = onItemsChange
-    ? (event: TreeViewMoveEvent<T, T>) => {
+    ? (event: TreeMoveEvent<T, T>) => {
         onItemsChange(
           applyTreeListMove(items, event, {
             getItemValue,
@@ -260,8 +260,9 @@ function TreeListInner<T>(
     : onMove;
 
   const canExpand =
-    expanded.expandable > 0 && expanded.open < expanded.expandable;
-  const canCollapse = expanded.open > 0;
+    expanded.expandableCount > 0 &&
+    expanded.openCount < expanded.expandableCount;
+  const canCollapse = expanded.openCount > 0;
 
   return (
     <div className={cn('flex w-full flex-col', className)} style={style}>
@@ -298,11 +299,11 @@ function TreeListInner<T>(
             {header}
           </div>
         </div>
-        <TreeView
+        <Tree
           ref={treeRef}
           size="lg"
           aria-labelledby={labelled ? undefined : headerId}
-          getItemValue={getItemValue as (value: unknown) => TreeViewNodeKey}
+          getItemValue={getItemValue as (value: unknown) => TreeNodeKey}
           {...(onSelectedChange && {
             onSelectedChange: onSelectedChange as (values: unknown[]) => void,
           })}
@@ -314,14 +315,14 @@ function TreeListInner<T>(
           {...treeProps}
         >
           {renderLevel(null)}
-        </TreeView>
+        </Tree>
       </div>
     </div>
   );
 }
 
 type TreeListComponent = <T>(
-  props: TreeListProps<T> & { ref?: React.Ref<TreeViewHandle> }
+  props: TreeListProps<T> & { ref?: React.Ref<TreeHandle> }
 ) => React.ReactElement;
 
 export const TreeList = React.forwardRef(TreeListInner) as TreeListComponent & {

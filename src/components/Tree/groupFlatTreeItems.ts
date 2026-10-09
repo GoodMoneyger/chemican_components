@@ -1,9 +1,9 @@
-import type { TreeViewNodeKey } from './types';
+import type { TreeNodeKey } from './types';
 
 /** Keys are compared with `===`: `getItemValue` and `getParentKey` must return the same primitive type. */
 export interface FlatTreeAccessors<T> {
-  getItemValue: (item: T) => TreeViewNodeKey;
-  getParentKey: (item: T) => TreeViewNodeKey | null | undefined;
+  getItemValue: (item: T) => TreeNodeKey;
+  getParentKey: (item: T) => TreeNodeKey | null | undefined;
   /** Sort key among siblings. Items keep their array order when omitted. */
   getOrder?: (item: T) => number;
 }
@@ -16,11 +16,11 @@ export interface FlatTreeAccessors<T> {
 export const groupFlatTreeItems = <T>(
   items: T[],
   { getItemValue, getParentKey, getOrder }: FlatTreeAccessors<T>
-): Map<TreeViewNodeKey | null, T[]> => {
-  const keys = new Set<TreeViewNodeKey>();
+): Map<TreeNodeKey | null, T[]> => {
+  const keys = new Set<TreeNodeKey>();
   items.forEach((item) => keys.add(getItemValue(item)));
 
-  const groups = new Map<TreeViewNodeKey | null, T[]>();
+  const groups = new Map<TreeNodeKey | null, T[]>();
   items.forEach((item) => {
     const parent = getParentKey(item) ?? null;
     const group = parent !== null && keys.has(parent) ? parent : null;

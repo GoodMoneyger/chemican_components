@@ -11,7 +11,7 @@ import {
 
 import { Button } from '../Button';
 import { Tooltip } from '../Tooltip';
-import { cn } from '../../lib/utils';
+import { cn, resolveValueKey } from '../../lib/utils';
 
 export type SortableItemId = string | number;
 
@@ -32,20 +32,8 @@ const useSortableContext = () => {
   return ctx;
 };
 
-const resolveItemValue = (item: unknown): SortableItemId => {
-  if (typeof item === 'string' || typeof item === 'number') {
-    return item;
-  }
-  if (item !== null && typeof item === 'object' && 'id' in item) {
-    const { id } = item as { id: unknown };
-    if (typeof id === 'string' || typeof id === 'number') {
-      return id;
-    }
-  }
-  throw new Error(
-    'Sortable.Container: items must be strings, numbers, or objects with a string or number `id`. Pass `getItemValue` for any other shape.'
-  );
-};
+const resolveItemValue = (item: unknown): SortableItemId =>
+  resolveValueKey(item, 'Sortable.Container');
 
 export interface SortableContainerProps<T> {
   value: T[];

@@ -1,2 +1,2 @@
-export * from './TreeView';
+export * from './Tree';
 export * from './TreeList';

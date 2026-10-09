@@ -1,32 +1,28 @@
-import type { TreeViewMoveEvent, TreeViewNodeKey } from './TreeView';
+import type { TreeMoveEvent, TreeNodeKey } from './Tree';
 
 /** Keys are compared with `===`: `getItemValue` and `getParentKey` must return the same primitive type. */
 export interface TreeListMoveAccessors<T> {
-  getItemValue: (item: T) => TreeViewNodeKey;
-  getParentKey: (item: T) => TreeViewNodeKey | null | undefined;
+  getItemValue: (item: T) => TreeNodeKey;
+  getParentKey: (item: T) => TreeNodeKey | null | undefined;
   getOrder: (item: T) => number;
   /** Returns the item with its new parent and order. */
-  withPlacement: (
-    item: T,
-    parentKey: TreeViewNodeKey | null,
-    order: number
-  ) => T;
+  withPlacement: (item: T, parentKey: TreeNodeKey | null, order: number) => T;
 }
 
 /**
- * Applies a `TreeViewMoveEvent` to a flat list: the moved item gets its new
+ * Applies a `TreeMoveEvent` to a flat list: the moved item gets its new
  * parent, and the siblings of both the old and the new parent are numbered
  * again from zero. Untouched items keep their identity.
  */
 export const applyTreeListMove = <T>(
   items: T[],
-  event: TreeViewMoveEvent,
+  event: TreeMoveEvent,
   accessors: TreeListMoveAccessors<T>
 ): T[] => {
   const { getItemValue, getParentKey, getOrder, withPlacement } = accessors;
   const moved = items.find((item) => getItemValue(item) === event.key);
   if (!moved) return items;
-  const siblingsOf = (parent: TreeViewNodeKey | null) =>
+  const siblingsOf = (parent: TreeNodeKey | null) =>
     items
       .filter(
         (item) =>
@@ -34,10 +30,7 @@ export const applyTreeListMove = <T>(
           getItemValue(item) !== event.key
       )
       .sort((a, b) => getOrder(a) - getOrder(b));
-  const placements = new Map<
-    TreeViewNodeKey,
-    [TreeViewNodeKey | null, number]
-  >();
+  const placements = new Map<TreeNodeKey, [TreeNodeKey | null, number]>();
   const target = siblingsOf(event.to.parentKey);
   target.splice(event.to.index, 0, moved);
   target.forEach((item, index) =>

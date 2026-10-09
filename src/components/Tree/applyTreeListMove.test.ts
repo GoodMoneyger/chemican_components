@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { TreeViewMoveEvent } from './TreeView';
+import type { TreeMoveEvent } from './Tree';
 
 import { applyTreeListMove } from './applyTreeListMove';
 import type { TreeListMoveAccessors } from './applyTreeListMove';
@@ -34,9 +34,9 @@ const move = (
   key: string,
   from: [string | null, number],
   to: [string | null, number]
-): TreeViewMoveEvent => ({
+): TreeMoveEvent => ({
   key,
-  kind: 'root',
+  kind: 'group',
   value: undefined,
   from: { parentKey: from[0], parentValue: undefined, index: from[1] },
   to: { parentKey: to[0], parentValue: undefined, index: to[1] },
