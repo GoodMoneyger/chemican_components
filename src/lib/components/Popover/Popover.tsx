@@ -27,7 +27,7 @@ const PopoverContent = React.forwardRef<
         // NOTE: The animation styles (like fade-in, fade-out) are currently not defined
         // but we can add them later as needed.
         `bg-surface-primary border-divider-default shadow-overlay
-        text-body-primary rounded-md w-72 p-4 z-50 border outline-none`,
+        text-body-primary rounded-md w-72 p-4 z-dropdown border outline-none`,
         className
       )}
       {...props}
