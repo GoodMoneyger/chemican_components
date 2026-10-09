@@ -1,3 +1,18 @@
+/**
+ * dnd-kit upgrade checklist. The tree drives dnd-kit 0.5.0 through internals
+ * that no type or test fully guards; verify each one after an upgrade, then
+ * run a pointer and a keyboard drag in Storybook.
+ *
+ * - `droppable.sortable.index` is written in `syncIndexes` to animate rows.
+ * - `droppable.refreshShape()` is called in `placeGap` after the gap moves.
+ * - `manager.dragOperation.status.idle` is polled in `afterDrop` (TreeView.tsx).
+ * - `manager.dragOperation.position.current` is read in TreeView.tsx.
+ * - `data-dnd-placeholder` filters rows here and draws the dashed slot in
+ *   TreeView.tsx; `dndKitInternals.test.ts` checks the name.
+ * - `plugins: []` on `useSortable` turns off optimistic and keyboard sorting.
+ * - `GAP_SETTLE_MS` and `DROP_SETTLE_TIMEOUT_MS` are tuned against dnd-kit's
+ *   250 ms sortable and drop animations.
+ */
 import type { DragDropManager } from '@dnd-kit/react';
 import { isSortable } from '@dnd-kit/react/sortable';
 
