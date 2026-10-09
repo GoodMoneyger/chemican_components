@@ -10,7 +10,6 @@ import { FormField } from '../FormField';
 import { RadioButton, RadioButtonGroup } from '../RadioButton';
 import { Select } from '../Select';
 import { TextField } from '../TextField';
-import type { TreeViewMoveEvent } from '../TreeView';
 
 import { TreeList } from './TreeList';
 
@@ -534,8 +533,8 @@ const WithActionsExample = () => {
           display_order: order,
         })}
         onItemsChange={setItems}
-        onMove={(event: TreeViewMoveEvent) => {
-          setLastAction(`${(event.value as Department).name} を移動`);
+        onMove={(event) => {
+          setLastAction(`${event.value?.name} を移動`);
         }}
         isItemDisabled={(d) => deletedIds.has(d.uuid)}
         actions={(d, { ancestorDisabled }) => {

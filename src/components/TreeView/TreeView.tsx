@@ -144,7 +144,7 @@ const focusRowOf = (event: React.FocusEvent<HTMLElement>) => {
 /*                                  Container                                 */
 /* -------------------------------------------------------------------------- */
 
-export interface TreeViewProps<T>
+export interface TreeViewProps
   extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children'> {
   /**
    * Collapses every Root that has no `defaultOpen` and has not been toggled.
@@ -157,20 +157,17 @@ export interface TreeViewProps<T>
    */
   selectable?: boolean;
   /**
-   * Selected Items. A Root with no selectable Item inside is selectable
-   * itself, so it can appear here as well.
+   * Values of the selected Items. A Root with no selectable Item inside is
+   * selectable itself, so its value can appear here as well.
    */
-  selected?: T[];
-  defaultSelected?: T[];
-  onSelectedChange?: (items: T[]) => void;
+  selected?: unknown[];
+  defaultSelected?: unknown[];
+  onSelectedChange?: (values: unknown[]) => void;
   /**
-   * Derives a unique key from a node value. Defaults to the value itself for
-   * strings and numbers, or its `id` for objects. It is applied to Root
-   * values as well as Item values, so when Roots hold a different type than
-   * `T` the callback receives both at runtime: write it for the union, e.g.
-   * `(node: Folder | File) => node.id`.
+   * Derives a unique key from a Root or Item value. Defaults to the value
+   * itself for strings and numbers, or its `id` for objects.
    */
-  getItemValue?: (item: T) => TreeViewNodeKey;
+  getItemValue?: (value: unknown) => TreeViewNodeKey;
   /**
    * Adds a drag handle at the start of every row, shown on hover. Siblings
    * shift to open a gap where the node will land, in this list or between the
@@ -179,8 +176,12 @@ export interface TreeViewProps<T>
    * taking part in moves should have a `value` so `onMove` can identify them.
    */
   sortable?: boolean;
-  /** Called once per drop. Apply it to your data, e.g. with `applyTreeViewMove`. */
-  onMove?: (event: TreeViewMoveEvent) => void;
+  /**
+   * Called once per drop. Apply it to your data, e.g. with `applyTreeViewMove`.
+   * Annotate the event as `TreeViewMoveEvent<Item, Root>` to type its values;
+   * method syntax keeps that annotation assignable.
+   */
+  onMove?(event: TreeViewMoveEvent): void;
   /** Row height: `md` is 40px, `lg` is 48px. */
   size?: TreeViewSize;
   /** Reports how many Roots with children exist and how many are open. */
@@ -207,7 +208,7 @@ interface OpenState {
  * ArrowDown move it one slot at a time through the tree, Enter or Space
  * drops it and Escape cancels.
  */
-function TreeViewInner<T>(
+function TreeViewInner(
   {
     allCollapsed = false,
     selectable = false,
@@ -226,7 +227,7 @@ function TreeViewInner<T>(
     style,
     children,
     ...props
-  }: TreeViewProps<T>,
+  }: TreeViewProps,
   ref: React.ForwardedRef<TreeViewHandle>
 ) {
   const registryRef = React.useRef<Registry>(new Map());
@@ -357,7 +358,7 @@ function TreeViewInner<T>(
   }, [onExpandedCountChange, registryState, isOpen]);
 
   const isControlled = selected !== undefined;
-  const [internalSelected, setInternalSelected] = React.useState<T[]>(
+  const [internalSelected, setInternalSelected] = React.useState<unknown[]>(
     () => defaultSelected ?? []
   );
   const currentSelected = selected ?? internalSelected;
@@ -375,16 +376,13 @@ function TreeViewInner<T>(
 
   const select = React.useCallback(
     (leaves: Leaf[], checked: boolean) => {
-      let next: T[];
+      let next: unknown[];
       if (checked) {
         const added = leaves
           .filter((leaf) => !selectedKeys.has(leaf.valueKey))
           .sort(byDocumentPosition);
         if (added.length === 0) return;
-        next = [
-          ...currentSelected,
-          ...added.map((leaf) => leaf.getValue() as T),
-        ];
+        next = [...currentSelected, ...added.map((leaf) => leaf.getValue())];
       } else {
         const removed = new Set(leaves.map((leaf) => leaf.valueKey));
         next = currentSelected.filter(
@@ -750,17 +748,13 @@ function TreeViewInner<T>(
     ],
     [rowHeight]
   );
-  const resolveKey = React.useCallback(
-    (value: unknown) => getItemValue(value as T),
-    [getItemValue]
-  );
   const contextValue = React.useMemo<TreeViewContextValue>(
     () => ({
       selectable,
       sortable,
       size,
       ariaLabels: { dragHandle: dragHandleLabel },
-      resolveKey,
+      resolveKey: getItemValue,
       register,
       isOpen,
       setOpen,
@@ -775,7 +769,7 @@ function TreeViewInner<T>(
       sortable,
       size,
       dragHandleLabel,
-      resolveKey,
+      getItemValue,
       register,
       isOpen,
       setOpen,
@@ -823,13 +817,7 @@ function TreeViewInner<T>(
   );
 }
 
-type TreeViewComponent = <T>(
-  props: TreeViewProps<T> & { ref?: React.Ref<TreeViewHandle> }
-) => React.ReactElement;
-
-const TreeViewContainer = React.forwardRef(
-  TreeViewInner
-) as TreeViewComponent & { displayName?: string };
+const TreeViewContainer = React.forwardRef(TreeViewInner);
 TreeViewContainer.displayName = 'TreeView';
 
 /* -------------------------------------------------------------------------- */

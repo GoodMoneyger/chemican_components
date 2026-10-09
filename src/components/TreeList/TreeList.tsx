@@ -42,8 +42,15 @@ export interface TreeListLabels {
 
 interface TreeListBaseProps<T>
   extends Omit<
-    TreeViewProps<T>,
-    'children' | 'size' | 'onExpandedCountChange'
+    TreeViewProps,
+    | 'children'
+    | 'size'
+    | 'onExpandedCountChange'
+    | 'selected'
+    | 'defaultSelected'
+    | 'onSelectedChange'
+    | 'getItemValue'
+    | 'onMove'
   > {
   /**
    * Flat list of nodes. Nesting comes from `getParentKey`. The list is
@@ -72,6 +79,12 @@ interface TreeListBaseProps<T>
    */
   isItemDisabled?: (item: T) => boolean;
   labels: TreeListLabels;
+  selected?: T[];
+  defaultSelected?: T[];
+  onSelectedChange?: (items: T[]) => void;
+  /** Derives a unique key from an item. Defaults to the item itself for strings and numbers, or its `id`. */
+  getItemValue?: (item: T) => TreeViewNodeKey;
+  onMove?: (event: TreeViewMoveEvent<T, T>) => void;
 }
 
 interface TreeListUncontrolledMoveProps {
@@ -117,6 +130,7 @@ function TreeListInner<T>(
     onItemsChange,
     withPlacement,
     onMove,
+    onSelectedChange,
     getItemValue = resolveTreeViewItemValue,
     className,
     style,
@@ -244,7 +258,7 @@ function TreeListInner<T>(
     });
 
   const handleMove = onItemsChange
-    ? (event: TreeViewMoveEvent) => {
+    ? (event: TreeViewMoveEvent<T, T>) => {
         onItemsChange(
           applyTreeListMove(items, event, {
             getItemValue,
@@ -300,7 +314,10 @@ function TreeListInner<T>(
           ref={treeRef}
           size="lg"
           aria-labelledby={labelled ? undefined : headerId}
-          getItemValue={getItemValue}
+          getItemValue={getItemValue as (value: unknown) => TreeViewNodeKey}
+          {...(onSelectedChange && {
+            onSelectedChange: onSelectedChange as (values: unknown[]) => void,
+          })}
           onExpandedCountChange={setExpanded}
           {...(handleMove && { onMove: handleMove })}
           className="border-surface-default divide-surface-default rounded-none

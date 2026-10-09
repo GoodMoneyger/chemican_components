@@ -234,7 +234,7 @@ export const WithOverlay: Story = {
 };
 
 const WithSelectionExample = () => {
-  const [selected, setSelected] = useState<FileNode[]>([]);
+  const [selected, setSelected] = useState<TreeNode[]>([]);
 
   return (
     <div className="gap-md flex flex-col">
@@ -242,8 +242,7 @@ const WithSelectionExample = () => {
         aria-label="ドキュメント"
         selectable
         selected={selected}
-        onSelectedChange={setSelected}
-        getItemValue={(node) => node.id}
+        onSelectedChange={(values) => setSelected(values as TreeNode[])}
       >
         {renderNodes(documents, { disabledIds: ['ghs', 'sds-2024'] })}
       </TreeView>
@@ -275,7 +274,7 @@ const WithStringItemsExample = () => {
         aria-label="食材"
         selectable
         selected={selected}
-        onSelectedChange={setSelected}
+        onSelectedChange={(values) => setSelected(values as string[])}
       >
         <TreeView.Root label="果物">
           <TreeView.Item value="りんご">りんご</TreeView.Item>
@@ -331,9 +330,11 @@ const renderSortableNodes = (nodes: SortableNode[]): React.ReactNode =>
     </TreeView.Root>
   ));
 
-const describeMove = (event: TreeViewMoveEvent) => {
-  const parent = event.to.parentValue as { name: string } | undefined;
-  return `${(event.value as { name: string }).name} を ${parent ? parent.name : 'トップレベル'} の ${event.to.index + 1} 番目へ`;
+type SortableMoveEvent = TreeViewMoveEvent<never, SortableNode>;
+
+const describeMove = (event: SortableMoveEvent) => {
+  const parent = event.to.parentValue;
+  return `${event.value?.name} を ${parent ? parent.name : 'トップレベル'} の ${event.to.index + 1} 番目へ`;
 };
 
 const SortableExample = () => {
@@ -348,7 +349,7 @@ const SortableExample = () => {
       <TreeView
         aria-label="ドキュメント"
         sortable
-        onMove={(event) => {
+        onMove={(event: SortableMoveEvent) => {
           setNodes((current) =>
             applyTreeViewMove(current, event, sortableAccessors)
           );
@@ -389,11 +390,11 @@ const SortableWithValidationExample = () => {
       <TreeView
         aria-label="ドキュメント"
         sortable
-        onMove={(event) => {
-          const parent = event.to.parentValue as SortableNode | undefined;
+        onMove={(event: SortableMoveEvent) => {
+          const parent = event.to.parentValue;
           if (parent?.id === READ_ONLY_FOLDER) {
             setMessage(
-              `${(event.value as SortableNode).name} は ${parent.name} の下へ移動できません。`
+              `${event.value?.name} は ${parent.name} の下へ移動できません。`
             );
             return;
           }
@@ -510,8 +511,7 @@ const AllFeaturesExample = () => {
         selectable
         sortable
         selected={selected}
-        onSelectedChange={setSelected}
-        getItemValue={(node) => node.id}
+        onSelectedChange={(values) => setSelected(values as TreeNode[])}
         onMove={(event) =>
           setNodes((current) =>
             applyTreeViewMove(current, event, documentAccessors)
