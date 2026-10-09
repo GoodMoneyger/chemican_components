@@ -5,7 +5,7 @@ import type { ButtonProps } from '../Button';
 import { TextLink } from '../TextLink';
 import { TreeView, resolveTreeViewItemValue } from '../TreeView';
 import type {
-  TreeViewExpandedState,
+  TreeViewExpandedCount,
   TreeViewHandle,
   TreeViewMoveEvent,
   TreeViewNodeKey,
@@ -40,7 +40,10 @@ export interface TreeListLabels {
 }
 
 interface TreeListBaseProps<T>
-  extends Omit<TreeViewProps<T>, 'children' | 'size' | 'onExpandedChange'> {
+  extends Omit<
+    TreeViewProps<T>,
+    'children' | 'size' | 'onExpandedCountChange'
+  > {
   /**
    * Flat list of nodes. Nesting comes from `getParentKey`. The list is
    * grouped again whenever it or one of the accessors changes identity, so
@@ -144,7 +147,7 @@ function TreeListInner<T>(
     []
   );
 
-  const [expanded, setExpanded] = React.useState<TreeViewExpandedState>({
+  const [expanded, setExpanded] = React.useState<TreeViewExpandedCount>({
     expandable: 0,
     open: 0,
   });
@@ -318,7 +321,7 @@ function TreeListInner<T>(
           size="lg"
           aria-labelledby={labelled ? undefined : headerId}
           getItemValue={getItemValue}
-          onExpandedChange={setExpanded}
+          onExpandedCountChange={setExpanded}
           {...(handleMove && { onMove: handleMove })}
           className="border-surface-default divide-surface-default rounded-none
             border-x-0 border-t border-b-0"

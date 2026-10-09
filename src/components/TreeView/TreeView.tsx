@@ -65,7 +65,7 @@ export interface TreeViewAriaLabels {
 }
 
 /** How many Roots with children exist and how many of them are open. */
-export interface TreeViewExpandedState {
+export interface TreeViewExpandedCount {
   expandable: number;
   open: number;
 }
@@ -184,7 +184,7 @@ export interface TreeViewProps<T>
   /** Row height: `md` is 40px, `lg` is 48px. */
   size?: TreeViewSize;
   /** Reports how many Roots with children exist and how many are open. */
-  onExpandedChange?: (state: TreeViewExpandedState) => void;
+  onExpandedCountChange?: (state: TreeViewExpandedCount) => void;
   ariaLabels?: TreeViewAriaLabels;
   children: React.ReactNode;
 }
@@ -218,7 +218,7 @@ function TreeViewInner<T>(
     sortable = false,
     onMove,
     size = 'md',
-    onExpandedChange,
+    onExpandedCountChange,
     ariaLabels,
     onFocus,
     onKeyDown,
@@ -340,9 +340,9 @@ function TreeViewInner<T>(
     activateRow(active?.element ?? null);
   }, [registryState, isShown, firstTopLevelKey, activateRow]);
 
-  const expandedRef = React.useRef<TreeViewExpandedState | null>(null);
+  const expandedRef = React.useRef<TreeViewExpandedCount | null>(null);
   React.useEffect(() => {
-    if (!onExpandedChange) return;
+    if (!onExpandedCountChange) return;
     let expandable = 0;
     let open = 0;
     registryState.nodes.forEach((node) => {
@@ -353,8 +353,8 @@ function TreeViewInner<T>(
     const previous = expandedRef.current;
     if (previous?.expandable === expandable && previous.open === open) return;
     expandedRef.current = { expandable, open };
-    onExpandedChange({ expandable, open });
-  }, [onExpandedChange, registryState, isOpen]);
+    onExpandedCountChange({ expandable, open });
+  }, [onExpandedCountChange, registryState, isOpen]);
 
   const isControlled = selected !== undefined;
   const [internalSelected, setInternalSelected] = React.useState<T[]>(
