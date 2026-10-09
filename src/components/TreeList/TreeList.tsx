@@ -1,11 +1,4 @@
 import React from 'react';
-import {
-  IconFolderSymlink,
-  IconPencil,
-  IconPlus,
-  IconRestore,
-  IconTrash,
-} from '@tabler/icons-react';
 
 import { Button } from '../Button';
 import type { ButtonProps } from '../Button';
@@ -17,7 +10,6 @@ import type {
   TreeViewNodeKey,
   TreeViewProps,
 } from '../TreeView';
-import type { IconProp } from '../../lib/utils';
 import { cn } from '../../lib/utils';
 
 export interface TreeListAction<T> {
@@ -26,7 +18,6 @@ export interface TreeListAction<T> {
   label: React.ReactNode;
   /** Accessible name, required when `label` is not a plain string. */
   ariaLabel?: string;
-  icon?: IconProp;
   disabled?: (item: T) => boolean;
 }
 
@@ -62,7 +53,7 @@ export interface TreeListProps<T>
   getOrder?: (item: T) => number;
   /** Title shown in the header bar above the rows. */
   header: React.ReactNode;
-  /** Row actions, each shown as a button with its icon and label when present. */
+  /** Row actions, each shown as a text button with its label. */
   actions?: TreeListActions<T>;
   /**
    * Marks items pending deletion. They look disabled, cannot be dragged or
@@ -76,14 +67,6 @@ export interface TreeListProps<T>
 type ActionName = keyof TreeListActions<unknown>;
 
 const actionOrder: ActionName[] = ['add', 'edit', 'move', 'delete', 'restore'];
-
-const defaultIcons: Record<ActionName, IconProp> = {
-  add: IconPlus,
-  edit: IconPencil,
-  move: IconFolderSymlink,
-  delete: IconTrash,
-  restore: IconRestore,
-};
 
 const actionIntents: Record<ActionName, ButtonProps['intent']> = {
   add: 'primary',
@@ -220,7 +203,6 @@ function TreeListInner<T>(
                     type="button"
                     intent={actionIntents[name]}
                     size="xs"
-                    icon={action.icon ?? defaultIcons[name]}
                     danger={name === 'delete'}
                     aria-label={ariaLabel}
                     disabled={action.disabled?.(item) ?? false}
