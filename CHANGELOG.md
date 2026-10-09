@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.13.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.0...v1.13.1) (2026-10-09)
+
+### Bug Fixes
+
+* **Toast:** Have mre granular z-indexes ([#194](https://github.com/GoodMoneyger/chemican_components/issues/194)) ([910167a](https://github.com/GoodMoneyger/chemican_components/commit/910167a194a8b5b1ebbf12fdbad68d14741d52f5))
+
+### Build
+
+* **deps:** bump source-map-js from 1.2.1 to 1.2.2 ([54da420](https://github.com/GoodMoneyger/chemican_components/commit/54da420a7647e622900fc5c6d40636ef7fc35d50))
+* **deps:** bump undici and release-it ([7a41cc7](https://github.com/GoodMoneyger/chemican_components/commit/7a41cc714d20a2cd84594ae59f8af1367d96511d))
+
 ## [1.13.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.12.0...v1.13.0) (2026-10-09)
 
 ### Features
