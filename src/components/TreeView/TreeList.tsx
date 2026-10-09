@@ -15,6 +15,7 @@ import { cn } from '../../lib/utils';
 
 import { applyTreeListMove } from './applyTreeListMove';
 import type { TreeListMoveAccessors } from './applyTreeListMove';
+import { groupFlatTreeItems } from './groupFlatTreeItems';
 
 export interface TreeListAction<T> {
   /** Unique among the actions of one row. */
@@ -157,28 +158,15 @@ function TreeListInner<T>(
     open: 0,
   });
 
-  const childrenByParent = React.useMemo(() => {
-    const keys = new Set<TreeViewNodeKey>();
-    items.forEach((item) => keys.add(getItemValue(item)));
-
-    const groups = new Map<TreeViewNodeKey | null, T[]>();
-    items.forEach((item) => {
-      const parent = getParentKey(item) ?? null;
-      // Nodes whose parent is missing surface at the top level.
-      const group = parent !== null && keys.has(parent) ? parent : null;
-      const siblings = groups.get(group);
-      if (siblings) siblings.push(item);
-      else groups.set(group, [item]);
-    });
-
-    if (getOrder) {
-      groups.forEach((siblings) =>
-        siblings.sort((a, b) => getOrder(a) - getOrder(b))
-      );
-    }
-
-    return groups;
-  }, [items, getItemValue, getParentKey, getOrder]);
+  const childrenByParent = React.useMemo(
+    () =>
+      groupFlatTreeItems(items, {
+        getItemValue,
+        getParentKey,
+        ...(getOrder && { getOrder }),
+      }),
+    [items, getItemValue, getParentKey, getOrder]
+  );
 
   const warnedItemsRef = React.useRef<T[] | null>(null);
   React.useEffect(() => {

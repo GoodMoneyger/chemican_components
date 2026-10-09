@@ -52,6 +52,8 @@ export type {
 } from './types';
 export { applyTreeViewMove } from './applyTreeViewMove';
 export type { TreeViewMoveAccessors } from './applyTreeViewMove';
+export { groupFlatTreeItems } from './groupFlatTreeItems';
+export type { FlatTreeAccessors } from './groupFlatTreeItems';
 
 export type TreeViewSize = 'md' | 'lg';
 
