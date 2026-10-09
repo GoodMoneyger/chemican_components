@@ -3,6 +3,8 @@ import React from 'react';
 import { Button } from '../Button';
 import type { ButtonProps } from '../Button';
 import { TextLink } from '../TextLink';
+import { cn } from '../../lib/utils';
+
 import { Tree, resolveTreeValue } from './Tree';
 import type {
   TreeExpandedCount,
@@ -11,8 +13,6 @@ import type {
   TreeNodeKey,
   TreeProps,
 } from './Tree';
-import { cn } from '../../lib/utils';
-
 import { applyTreeListMove } from './applyTreeListMove';
 import type { TreeListMoveAccessors } from './applyTreeListMove';
 import { groupFlatTreeItems } from './groupFlatTreeItems';
@@ -114,6 +114,10 @@ export type TreeListProps<T> = TreeListBaseProps<T> &
  * A titled, flat-list driven tree: a header bar, expand all / collapse all
  * controls, and optional per-row actions, on top of `Tree`. Every other
  * `Tree` prop, such as `selectable` or `sortable`, passes through.
+ *
+ * Every row is a `Tree.Group`, so any item can take children through a drop.
+ * As a result, `kind` in `onMove` is always `'group'`, and rows follow Group
+ * selection: a row with selectable descendants cascades to them.
  */
 function TreeListInner<T>(
   {
