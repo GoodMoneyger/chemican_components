@@ -57,6 +57,17 @@ export type { FlatTreeAccessors } from './groupFlatTreeItems';
 
 export type TreeSize = 'md' | 'lg';
 
+export type TreeSpacing =
+  | 'xxxs'
+  | 'xxs'
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | 'xxl'
+  | 'xxxl';
+
 export interface TreeHandle {
   collapseAll: () => void;
   expandAll: () => void;
@@ -175,6 +186,10 @@ export interface TreeProps
   onMove?(event: TreeMoveEvent): void;
   /** Row height: `md` is 40px, `lg` is 48px. */
   size?: TreeSize;
+  /** Padding before top-level rows. Defaults to `sm`. */
+  indentBase?: TreeSpacing;
+  /** Extra padding per nesting level. Defaults to `xl`. */
+  indentStep?: TreeSpacing;
   /** Reports how many Groups with children exist and how many are open. */
   onExpandedCountChange?: (state: TreeExpandedCount) => void;
   ariaLabels?: TreeAriaLabels;
@@ -210,6 +225,8 @@ function TreeInner(
     sortable = false,
     onMove,
     size = 'md',
+    indentBase = 'sm',
+    indentStep = 'xl',
     onExpandedCountChange,
     ariaLabels,
     onFocus,
@@ -793,7 +810,14 @@ function TreeInner(
           sortable && placeholderClassName,
           className
         )}
-        style={{ ...indentStyle(0), ...style }}
+        style={
+          {
+            '--tree-indent-base': `var(--token-spacing-${indentBase})`,
+            '--tree-indent-step': `var(--token-spacing-${indentStep})`,
+            ...indentStyle(0),
+            ...style,
+          } as React.CSSProperties
+        }
       >
         {children}
       </ul>
@@ -914,9 +938,9 @@ const gripClassName = `text-shape-light rounded-xs
 const toggleSpacerClassName = 'size-6 shrink-0';
 const checkboxSpacerClassName = 'size-[1.125rem] shrink-0';
 
-/** Row padding per depth. Override with `--tree-indent-base` and `--tree-indent-step`. */
+/** Row padding per depth, from `indentBase` and `indentStep`. */
 const indent = (depth: number) =>
-  `calc(var(--tree-indent-base, var(--token-spacing-sm)) + ${depth} * var(--tree-indent-step, var(--token-spacing-xl)))`;
+  `calc(var(--tree-indent-base) + ${depth} * var(--tree-indent-step))`;
 
 /** Lets the drop placeholder, a clone of the dragged row, align with the list it sits in. */
 const indentStyle = (depth: number) =>

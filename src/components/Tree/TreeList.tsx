@@ -108,11 +108,6 @@ interface TreeListControlledMoveProps<T> {
 export type TreeListProps<T> = TreeListBaseProps<T> &
   (TreeListUncontrolledMoveProps | TreeListControlledMoveProps<T>);
 
-const indentVariables = {
-  '--tree-indent-base': 'var(--token-spacing-xl)',
-  '--tree-indent-step': 'var(--token-spacing-lg)',
-} as React.CSSProperties;
-
 /**
  * A titled, flat-list driven tree: a header bar, expand all / collapse all
  * controls, and optional per-row actions, on top of `Tree`. Every other
@@ -311,7 +306,8 @@ function TreeListInner<T>(
           {...(handleMove && { onMove: handleMove })}
           className="border-surface-default divide-surface-default rounded-none
             border-x-0 border-t border-b-0"
-          style={indentVariables}
+          indentBase="xl"
+          indentStep="lg"
           {...treeProps}
         >
           {renderLevel(null)}
