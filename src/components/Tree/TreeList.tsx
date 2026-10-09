@@ -71,7 +71,9 @@ interface TreeListBaseProps<T>
   header: React.ReactNode;
   /**
    * Row actions, shown as buttons in the order returned. Called for every
-   * row; return an empty array to show none.
+   * row; return an empty array to show none. Like `getLabel` and
+   * `isItemDisabled`, pass a stable function so rows are not rebuilt on
+   * every render.
    */
   actions?: (item: T, context: TreeListActionContext) => TreeListAction<T>[];
   /**
@@ -194,51 +196,66 @@ function TreeListInner<T>(
     return keys;
   }, [childrenByParent, getItemValue, isItemDisabled]);
 
-  const renderRowOverlay = actions
-    ? (item: T) => {
-        const rowActions = actions(item, {
-          ancestorDisabled: underDisabled.has(getItemValue(item)),
-        });
-        if (rowActions.length === 0) return null;
-        return (
-          <>
-            {rowActions.map((action) => (
-              <Button
-                key={action.key}
-                type="button"
-                intent={action.intent ?? 'secondary'}
-                size="xs"
-                danger={action.danger ?? false}
-                aria-label={
-                  action.ariaLabel ??
-                  (typeof action.label === 'string' ? action.label : action.key)
-                }
-                disabled={action.disabled ?? false}
-                onClick={() => action.onAction(item)}
-              >
-                {action.label}
-              </Button>
-            ))}
-          </>
-        );
-      }
-    : undefined;
+  const renderRowOverlay = React.useMemo(
+    () =>
+      actions
+        ? (item: T) => {
+            const rowActions = actions(item, {
+              ancestorDisabled: underDisabled.has(getItemValue(item)),
+            });
+            if (rowActions.length === 0) return null;
+            return (
+              <>
+                {rowActions.map((action) => (
+                  <Button
+                    key={action.key}
+                    type="button"
+                    intent={action.intent ?? 'secondary'}
+                    size="xs"
+                    danger={action.danger ?? false}
+                    aria-label={
+                      action.ariaLabel ??
+                      (typeof action.label === 'string'
+                        ? action.label
+                        : action.key)
+                    }
+                    disabled={action.disabled ?? false}
+                    onClick={() => action.onAction(item)}
+                  >
+                    {action.label}
+                  </Button>
+                ))}
+              </>
+            );
+          }
+        : undefined,
+    [actions, underDisabled, getItemValue]
+  );
 
-  const renderLevel = (parentKey: TreeNodeKey | null): React.ReactNode =>
-    (childrenByParent.get(parentKey) ?? []).map((item) => {
-      const key = getItemValue(item);
-      return (
-        <Tree.Group
-          key={key}
-          value={item}
-          label={getLabel(item)}
-          disabled={isItemDisabled?.(item) ?? false}
-          {...(renderRowOverlay && { renderRowOverlay })}
-        >
-          {renderLevel(key)}
-        </Tree.Group>
-      );
-    });
+  const rows = React.useMemo(() => {
+    const renderLevel = (parentKey: TreeNodeKey | null): React.ReactNode =>
+      (childrenByParent.get(parentKey) ?? []).map((item) => {
+        const key = getItemValue(item);
+        return (
+          <Tree.Group
+            key={key}
+            value={item}
+            label={getLabel(item)}
+            disabled={isItemDisabled?.(item) ?? false}
+            {...(renderRowOverlay && { renderRowOverlay })}
+          >
+            {renderLevel(key)}
+          </Tree.Group>
+        );
+      });
+    return renderLevel(null);
+  }, [
+    childrenByParent,
+    getItemValue,
+    getLabel,
+    isItemDisabled,
+    renderRowOverlay,
+  ]);
 
   const handleMove = onItemsChange
     ? (event: TreeMoveEvent<T, T>) => {
@@ -310,7 +327,7 @@ function TreeListInner<T>(
           indentStep="lg"
           {...treeProps}
         >
-          {renderLevel(null)}
+          {rows}
         </Tree>
       </div>
     </div>
