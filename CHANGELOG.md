@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.13.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.12.0...v1.13.0) (2026-10-09)
+
+### Features
+
+* **Tree:** Create new Tree and TreeList components ([#191](https://github.com/GoodMoneyger/chemican_components/issues/191)) ([5e356f1](https://github.com/GoodMoneyger/chemican_components/commit/5e356f1b61a8484c29bf889e52893ec8d8531702))
+
 ## [1.12.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.11.3...v1.12.0) (2026-10-06)
 
 ### Bug Fixes
