@@ -3,14 +3,14 @@ import React from 'react';
 import { Button } from '../Button';
 import type { ButtonProps } from '../Button';
 import { TextLink } from '../TextLink';
-import { TreeView, resolveTreeViewItemValue } from '../TreeView';
+import { TreeView, resolveTreeViewItemValue } from './TreeView';
 import type {
   TreeViewExpandedCount,
   TreeViewHandle,
   TreeViewMoveEvent,
   TreeViewNodeKey,
   TreeViewProps,
-} from '../TreeView';
+} from './TreeView';
 import { cn } from '../../lib/utils';
 
 import { applyTreeListMove } from './applyTreeListMove';

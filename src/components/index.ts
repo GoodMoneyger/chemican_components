@@ -33,5 +33,4 @@ export * from './TextLink';
 export * from './Toast';
 export * from './Tooltip';
 export * from './TreeView';
-export * from './TreeList';
 export * from './FileUploader';

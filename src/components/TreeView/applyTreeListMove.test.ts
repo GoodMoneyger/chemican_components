@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { TreeViewMoveEvent } from '../TreeView';
+import type { TreeViewMoveEvent } from './TreeView';
 
 import { applyTreeListMove } from './applyTreeListMove';
 import type { TreeListMoveAccessors } from './applyTreeListMove';

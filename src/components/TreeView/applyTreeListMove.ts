@@ -1,4 +1,4 @@
-import type { TreeViewMoveEvent, TreeViewNodeKey } from '../TreeView';
+import type { TreeViewMoveEvent, TreeViewNodeKey } from './TreeView';
 
 /** Keys are compared with `===`: `getItemValue` and `getParentKey` must return the same primitive type. */
 export interface TreeListMoveAccessors<T> {
