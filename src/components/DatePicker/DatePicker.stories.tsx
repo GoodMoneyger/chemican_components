@@ -265,7 +265,7 @@ Either way every week of the month stays reachable.
   },
   render: () => (
     <div className="p-md flex h-screen flex-col justify-end">
-      <div className="max-w-xs">
+      <div className="w-64">
         <h3 className="text-sm font-medium text-body-primary mb-2">
           Input near the bottom of the viewport
         </h3>
