@@ -887,9 +887,10 @@ WithRowOverlay.parameters = {
   docs: {
     description: {
       story:
-        'Demonstrates the TableRowOverlay component that appears on row hover. ' +
-        'The overlay sticks to the right edge during horizontal scroll and can be ' +
-        'forced visible (e.g., when a dropdown is open).',
+        'Demonstrates the TableRowOverlay component that appears on row hover ' +
+        'or when one of its controls takes keyboard focus. The overlay sticks ' +
+        'to the right edge during horizontal scroll and can be forced visible ' +
+        '(e.g., when a dropdown is open).',
     },
   },
 };
