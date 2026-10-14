@@ -8,7 +8,8 @@ import { Calendar } from '../Calendar/Calendar';
 import { TextField } from '../TextField/TextField';
 
 // Popover content classes
-const contentClasses = `bg-surface-primary rounded-lg z-dropdown w-auto  max-w-none shadow-lg`;
+const contentClasses = `bg-surface-primary rounded-lg z-dropdown w-auto max-w-none shadow-lg
+  max-h-[var(--radix-popover-content-available-height)] overflow-y-auto`;
 
 export interface DatePickerProps
   extends Omit<
@@ -246,9 +247,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
             align="start"
             alignOffset={0}
             side={side}
-            avoidCollisions={false}
             collisionPadding={16}
-            sticky="always"
             onEscapeKeyDown={() => handleOpenChange(false)}
             onPointerDownOutside={() => handleOpenChange(false)}
             role="dialog"

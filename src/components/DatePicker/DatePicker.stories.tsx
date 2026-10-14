@@ -247,3 +247,33 @@ For i18n, consuming projects can use their preferred translation library:
     },
   },
 };
+
+// Collision handling - the calendar flips above an input that sits low on screen
+export const NearViewportBottom: Story = {
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: `
+The calendar always renders six week rows, so it needs roughly 320px of room.
+When the input sits too low for that, Radix flips the popover above the input;
+on a viewport too short for either side, the popover caps its height and scrolls.
+Either way every week of the month stays reachable.
+        `,
+      },
+    },
+  },
+  render: () => (
+    <div className="p-md flex h-screen flex-col justify-end">
+      <div className="w-64">
+        <h3 className="text-sm font-medium text-body-primary mb-2">
+          Input near the bottom of the viewport
+        </h3>
+        <p className="text-xs text-body-secondary mb-2">
+          画面下部に配置された入力欄
+        </p>
+        <DatePicker placeholder="選択してください" />
+      </div>
+    </div>
+  ),
+};
