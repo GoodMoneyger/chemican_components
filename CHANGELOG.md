@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.3](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.2...v1.13.3) (2026-10-14)
+
+### Bug Fixes
+
+* **DatePicker:** Let the calendar flip above an input low on screen ([#197](https://github.com/GoodMoneyger/chemican_components/issues/197)) ([719edcd](https://github.com/GoodMoneyger/chemican_components/commit/719edcdc808ffb95093f292b3fd79292fb2fc5e7))
+* **Table:** Correct the renderOverlay for Table keyboards ([#196](https://github.com/GoodMoneyger/chemican_components/issues/196)) ([067fd77](https://github.com/GoodMoneyger/chemican_components/commit/067fd77fcddf139c7d5faec4980f4d9f58f8ccf6))
+
 ## [1.13.2](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.1...v1.13.2) (2026-10-09)
 
 ### Bug Fixes
