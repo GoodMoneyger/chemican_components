@@ -181,7 +181,8 @@ const TableRow = React.forwardRef<
     ref={ref}
     className={cn(
       `border-surface-default [thead_&]:h-10 h-12
-      [tbody_&]:hover:bg-interactive-neutral-hover group relative
+      [tbody_&]:hover:bg-interactive-neutral-hover
+      [tbody_&]:has-[:focus-visible]:bg-interactive-neutral-hover group relative
       transition-colors [:not(:last-child)]:border-b`,
       className
     )}

@@ -13,7 +13,8 @@ export interface TableRowOverlayProps {
 /**
  * A table row overlay that:
  * - Sticks to the right edge during horizontal scroll
- * - Appears on row hover or when forceVisible is true
+ * - Appears on row hover, when a control inside it has keyboard focus, or when
+ *   forceVisible is true
  * - Spans over multiple columns (not constrained to cell width)
  *
  * Must be used as the last child in a TableRow.
@@ -46,7 +47,8 @@ const TableRowOverlay = React.forwardRef<
         // Visibility control
         forceVisible
           ? 'opacity-100'
-          : 'opacity-0 transition-opacity group-hover:opacity-100',
+          : `opacity-0 transition-opacity group-hover:opacity-100
+            group-has-[:focus-visible]:opacity-100`,
         className
       )}
     >
