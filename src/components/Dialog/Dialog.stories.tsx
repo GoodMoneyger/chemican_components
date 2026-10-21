@@ -536,3 +536,13 @@ function AutoSuggestField() {
     </div>
   );
 }
+
+export const Mobile = Template.bind({});
+Mobile.args = {
+  ...LongContent.args,
+  actions: MultipleActions.args?.actions,
+  isOpen: true,
+};
+Mobile.globals = {
+  viewport: { value: 'mobile', isRotated: false },
+};

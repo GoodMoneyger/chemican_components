@@ -408,3 +408,10 @@ const WithOnCancelControlComponent = () => {
 export const WithOnCancelControl: Story = {
   render: () => <WithOnCancelControlComponent />,
 };
+
+export const Mobile: Story = {
+  render: () => <BasicWizardComponent />,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+};

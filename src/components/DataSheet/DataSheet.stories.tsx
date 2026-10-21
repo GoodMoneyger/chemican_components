@@ -648,3 +648,56 @@ KeyValueWithFormFields.parameters = {
     },
   },
 };
+
+export const Mobile: Story = () => (
+  <DataSheet>
+    <DataSheet.Section>
+      <DataSheet.KeyValue orientation="horizontal" label="推奨用途">
+        試薬、工業用原料、研究開発用
+      </DataSheet.KeyValue>
+      <DataSheet.KeyValue orientation="horizontal" label="使用上の制限">
+        -
+      </DataSheet.KeyValue>
+    </DataSheet.Section>
+    <DataSheet.Section>
+      <DataSheet.Table>
+        <DataSheet.TableHeader>
+          <DataSheet.TableRow header>
+            <DataSheet.TableCell header parts={30}>
+              化学名
+            </DataSheet.TableCell>
+            <DataSheet.TableCell header parts={20}>
+              CAS番号
+            </DataSheet.TableCell>
+            <DataSheet.TableCell header parts={15}>
+              含有量
+            </DataSheet.TableCell>
+            <DataSheet.TableCell header parts={35}>
+              化審法番号
+            </DataSheet.TableCell>
+          </DataSheet.TableRow>
+        </DataSheet.TableHeader>
+        <DataSheet.TableBody>
+          <DataSheet.TableRow>
+            <DataSheet.TableCell>
+              塩化水素 / Hydrogen chloride
+            </DataSheet.TableCell>
+            <DataSheet.TableCell>7647-01-0</DataSheet.TableCell>
+            <DataSheet.TableCell>35 %</DataSheet.TableCell>
+            <DataSheet.TableCell>(1)-215</DataSheet.TableCell>
+          </DataSheet.TableRow>
+          <DataSheet.TableRow>
+            <DataSheet.TableCell>水 / Water</DataSheet.TableCell>
+            <DataSheet.TableCell>7732-18-5</DataSheet.TableCell>
+            <DataSheet.TableCell>65 %</DataSheet.TableCell>
+            <DataSheet.TableCell>対象外</DataSheet.TableCell>
+          </DataSheet.TableRow>
+        </DataSheet.TableBody>
+      </DataSheet.Table>
+    </DataSheet.Section>
+  </DataSheet>
+);
+Mobile.parameters = { layout: 'padded' };
+Mobile.globals = {
+  viewport: { value: 'mobile', isRotated: false },
+};

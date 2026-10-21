@@ -188,13 +188,17 @@ const dataSheetKeyValueVariants = cva('py-sm', {
   variants: {
     orientation: {
       vertical: 'gap-xxs flex flex-col',
-      horizontal: 'px-0 py-0 min-h-11 flex items-center',
+      horizontal: `px-0 py-0 min-h-11 max-md:gap-xxs max-md:flex-col
+      max-md:items-stretch flex items-center`,
     },
     spacing: {
       default: '',
       compact: 'py-xxs min-h-0 border-none',
     },
   },
+  compoundVariants: [
+    { orientation: 'horizontal', spacing: 'default', class: 'max-md:py-sm' },
+  ],
   defaultVariants: {
     orientation: 'vertical',
     spacing: 'default',
@@ -207,7 +211,8 @@ const dataSheetKeyValueLabelVariants = cva(
     variants: {
       orientation: {
         vertical: 'leading-none',
-        horizontal: 'w-[7.5rem] shrink-0 leading-[1.5]',
+        horizontal: `max-md:w-auto max-md:leading-none w-[7.5rem] shrink-0
+        leading-[1.5]`,
       },
     },
     defaultVariants: {
@@ -286,6 +291,11 @@ export interface DataSheetTableProps<TItem extends DataSheetItemType = string>
   onRemoveRow?: (item: TItem) => void;
   onRestoreRow?: (item: TItem) => void;
   actionsColumnParts?: number;
+  /**
+   * Minimum table width below the md breakpoint. Narrower containers scroll
+   * the table sideways instead of squeezing its columns.
+   */
+  mobileMinWidth?: string;
 }
 
 interface DataSheetTableContextValue<TItem extends DataSheetItemType = string> {
@@ -335,6 +345,8 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
     onRemoveRow,
     onRestoreRow,
     actionsColumnParts = 10,
+    mobileMinWidth = '40rem',
+    style,
     ...props
   }: DataSheetTableProps<TItem>,
   ref: React.ForwardedRef<HTMLDivElement>
@@ -350,8 +362,23 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
     <DataSheetTableContext.Provider
       value={contextValue as DataSheetTableContextValue}
     >
-      <div ref={ref} className={cn('overflow-x-auto', className)} {...props}>
-        <table className="w-full table-fixed">{children}</table>
+      <div
+        ref={ref}
+        className={cn('overflow-x-auto', className)}
+        style={
+          {
+            '--cc-data-sheet-table-min-width': mobileMinWidth,
+            ...style,
+          } as React.CSSProperties
+        }
+        {...props}
+      >
+        <table
+          className="max-md:min-w-(--cc-data-sheet-table-min-width) w-full
+            table-fixed"
+        >
+          {children}
+        </table>
       </div>
     </DataSheetTableContext.Provider>
   );
