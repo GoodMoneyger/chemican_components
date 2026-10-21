@@ -128,6 +128,9 @@ export const MobileNavigation = ({
     ? {
         animationDuration: `${motion.duration}ms`,
         animationTimingFunction: motion.easing,
+        // Holds the closed state between the end of the animation and the
+        // unmount, which would otherwise flash the open menu for a frame
+        animationFillMode: isOpen ? undefined : 'forwards',
       }
     : undefined;
 
