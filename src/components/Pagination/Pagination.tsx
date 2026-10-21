@@ -10,7 +10,8 @@ import { Button } from '../Button';
 const paginationVariants = cva('gap-md flex items-center justify-start', {
   variants: {
     size: {
-      default: 'gap-md',
+      default: '',
+      sm: '',
     },
   },
   defaultVariants: {
@@ -57,6 +58,13 @@ export interface PaginationProps
 
   // Navigation control
   showNavigation?: boolean;
+
+  // Rows per page selector visibility. Always hidden below md to fit phones
+  showRowsPerPage?: boolean;
+
+  // Accessible names of the navigation buttons (for internationalization)
+  previousPageLabel?: string;
+  nextPageLabel?: string;
 }
 
 export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
@@ -72,15 +80,19 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
       rowsPerPageLabel = '表示行数',
       pageSelectLabel = 'ページ選択',
       formatPageOption = (page, totalPages) => `${page} / ${totalPages}`,
-      formatPageValue = (page, totalPages, totalItems) =>
-        `${page} / ${totalPages}（全${totalItems}件）`,
+      formatPageValue = (page, totalPages) => `${page} / ${totalPages}`,
       showNavigation = true,
+      showRowsPerPage = true,
+      previousPageLabel = 'Previous page',
+      nextPageLabel = 'Next page',
       size,
       className,
       ...props
     },
     ref
   ) => {
+    const buttonSize = size === 'sm' ? 'xs' : 'sm';
+
     const handlePreviousPage = () => {
       if (currentPage > 1) {
         onPageChange(currentPage - 1);
@@ -130,19 +142,23 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
         {...props}
       >
         {/* Rows per page selector */}
-        <div className="gap-xs flex items-center">
-          <span className={cn(labelVariants())}>{rowsPerPageLabel}</span>
-          <Select
-            value={rowsPerPage.toString()}
-            onValueChange={handleRowsPerPageChange}
-            options={rowsPerPageSelectOptions}
-          />
-        </div>
+        {showRowsPerPage && (
+          <div className="gap-xs max-md:hidden flex items-center">
+            <span className={cn(labelVariants())}>{rowsPerPageLabel}</span>
+            <Select
+              size={size}
+              value={rowsPerPage.toString()}
+              onValueChange={handleRowsPerPageChange}
+              options={rowsPerPageSelectOptions}
+            />
+          </div>
+        )}
 
         {/* Page info and selector */}
         <div className="gap-xs flex items-center">
           <span className={cn(labelVariants())}>{pageSelectLabel}</span>
           <Select
+            size={size}
             value={currentPage.toString()}
             onValueChange={handlePageChange}
             options={pageSelectOptions}
@@ -158,22 +174,26 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 
         {/* Navigation buttons */}
         {showNavigation && (
-          <div className="gap-md flex items-center">
+          <div
+            className={cn('gap-md flex items-center', {
+              'gap-xs': size === 'sm',
+            })}
+          >
             <Button
               intent="text"
-              size="sm"
+              size={buttonSize}
               icon={IconChevronLeft}
               onClick={handlePreviousPage}
               disabled={currentPage <= 1}
-              aria-label="Previous page"
+              aria-label={previousPageLabel}
             />
             <Button
               intent="text"
-              size="sm"
+              size={buttonSize}
               icon={IconChevronRight}
               onClick={handleNextPage}
               disabled={currentPage >= totalPages}
-              aria-label="Next page"
+              aria-label={nextPageLabel}
             />
           </div>
         )}

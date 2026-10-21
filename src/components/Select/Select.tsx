@@ -17,10 +17,14 @@ const selectVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-interactive-default p-md rounded gap-xs h-11.5 w-full',
+        default: 'border-interactive-default rounded gap-xs w-full',
         compact: `py-xxs px-xs rounded-sm gap-xxs
         hover:bg-interactive-neutral-hover max-w-62 h-[1.625rem] w-fit
         border-transparent`,
+      },
+      size: {
+        default: '',
+        sm: '',
       },
       intent: {
         primary: '',
@@ -42,9 +46,12 @@ const selectVariants = cva(
         intent: 'secondary',
         class: 'bg-surface-tertiary',
       },
+      { variant: 'default', size: 'default', class: 'p-md h-11.5' },
+      { variant: 'default', size: 'sm', class: 'px-sm py-xs h-7.5' },
     ],
     defaultVariants: {
       variant: 'default',
+      size: 'default',
       intent: 'primary',
     },
   }
@@ -148,6 +155,7 @@ export const Select = <T extends number | string = string>({
   icon: Icon,
   invalid = false,
   variant = 'default',
+  size = 'default',
   intent = 'primary',
   value,
   hideChevron = false,
@@ -224,7 +232,7 @@ export const Select = <T extends number | string = string>({
     >
       <RadixSelect.Trigger
         className={cn(
-          selectVariants({ variant, intent, invalid }),
+          selectVariants({ variant, size, intent, invalid }),
           'group',
           className
         )}
