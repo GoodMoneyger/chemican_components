@@ -1,6 +1,7 @@
 :root {
   --cc-side-navigation-width-expanded: 13.5rem;
   --cc-side-navigation-width-collapsed: 3.25rem;
+  --cc-mobile-header-height: 3.5rem;
 }
 
 /* Global width of a rendered SideNavigation, switching on its collapsed
@@ -12,6 +13,14 @@
 
 :root:has(nav[data-cc-side-navigation][data-collapsed='true']) {
   --cc-side-navigation-width: var(--cc-side-navigation-width-collapsed);
+}
+
+/* A responsive SideNavigation is hidden below md, so it takes no width. Same
+   specificity as the collapsed rule above, which it overrides by order. */
+@media (width < 48rem) {
+  :root:has(nav[data-cc-side-navigation][data-responsive]) {
+    --cc-side-navigation-width: 0px;
+  }
 }
 
 @theme inline {

@@ -21,8 +21,12 @@ import {
   DropdownItem,
   DropdownSeparator,
 } from '../DropdownMenu';
-
 import { TooltipProvider } from '../Tooltip';
+import {
+  MobileNavigation,
+  MobileNavigationItem,
+  MobileNavigationSection,
+} from '../MobileNavigation';
 
 import { SideNavigation } from './SideNavigation';
 import { SideNavigationItem } from './SideNavigationItem';
@@ -304,4 +308,46 @@ export const WithCustomLinks: Story = {
       </div>
     );
   },
+};
+
+export const Responsive: Story = {
+  args: { responsive: true },
+  render: (args) => (
+    <div className="flex min-h-screen">
+      <div className="w-(--cc-side-navigation-width) shrink-0" />
+      <SideNavigation {...args} header={<Header />}>
+        <SideNavigationSection title="SDS管理">
+          <SideNavigationItem asChild tooltipLabel="SDS登録">
+            <a href="#" className="gap-xs flex items-center">
+              <IconUpload size={16} className="shrink-0" />
+              SDS登録
+            </a>
+          </SideNavigationItem>
+          <SideNavigationItem asChild variant="selected" tooltipLabel="SDS一覧">
+            <a href="#" className="gap-xs flex items-center">
+              <IconTable size={16} className="shrink-0" />
+              SDS一覧
+            </a>
+          </SideNavigationItem>
+        </SideNavigationSection>
+      </SideNavigation>
+      <div className="min-w-0 flex-1">
+        <MobileNavigation logo="SDS管理">
+          <MobileNavigationSection>
+            <MobileNavigationItem asChild variant="selected">
+              <a href="#" className="gap-xs flex items-center">
+                <IconTable size={20} className="shrink-0" />
+                SDS一覧
+              </a>
+            </MobileNavigationItem>
+          </MobileNavigationSection>
+        </MobileNavigation>
+        <main className="p-md text-body-primary">
+          The side navigation shows from md (768px) up. Below md it is hidden,
+          <code>--cc-side-navigation-width</code> is 0 and MobileNavigation
+          takes over. Switch the viewport to compare.
+        </main>
+      </div>
+    </div>
+  ),
 };
