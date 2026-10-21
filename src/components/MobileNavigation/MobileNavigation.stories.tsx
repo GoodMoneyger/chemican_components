@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
   IconFileAlert,
+  IconLanguage,
   IconListCheck,
   IconLogout,
   IconTable,
@@ -143,6 +144,38 @@ export const FromBottom: Story = {
     },
   },
   render: Default.render,
+};
+
+const LanguageItem = () => {
+  const [language, setLanguage] = React.useState<'ja' | 'en'>('ja');
+
+  return (
+    <MobileNavigationItem
+      closeOnSelect={false}
+      className="gap-xs"
+      onClick={() => setLanguage((current) => (current === 'ja' ? 'en' : 'ja'))}
+    >
+      <IconLanguage size={20} className="shrink-0" />
+      {language === 'ja' ? '日本語' : 'English'}
+    </MobileNavigationItem>
+  );
+};
+
+export const WithItemKeepingMenuOpen: Story = {
+  args: {
+    menuTop: '松本 一紀 ・ 管理者権限でログイン中',
+  },
+  render: (args) => (
+    <>
+      <MobileNavigation {...args}>
+        <Items />
+        <MobileNavigationSection title="表示言語">
+          <LanguageItem />
+        </MobileNavigationSection>
+      </MobileNavigation>
+      <PageContent />
+    </>
+  ),
 };
 
 export const CustomAnimation: Story = {

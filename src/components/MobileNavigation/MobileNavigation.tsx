@@ -256,16 +256,20 @@ export const MobileNavigation = React.forwardRef<
 
 MobileNavigation.displayName = 'MobileNavigation';
 
-export type MobileNavigationItemProps = Omit<
-  SideNavigationItemProps,
-  'tooltipLabel' | 'size'
->;
+export interface MobileNavigationItemProps
+  extends Omit<SideNavigationItemProps, 'tooltipLabel' | 'size'> {
+  /**
+   * Closes the menu when the item is activated. Turn it off for items that
+   * act in place, such as a language switch.
+   */
+  closeOnSelect?: boolean;
+}
 
-/** A menu entry. It closes the menu when activated. */
+/** A menu entry. By default it closes the menu when activated. */
 export const MobileNavigationItem = React.forwardRef<
   HTMLButtonElement,
   MobileNavigationItemProps
->(({ className, onClick, ...props }, ref) => {
+>(({ className, onClick, closeOnSelect = true, ...props }, ref) => {
   const context = React.useContext(MobileNavigationContext);
 
   return (
@@ -274,7 +278,7 @@ export const MobileNavigationItem = React.forwardRef<
       className={cn('h-11', className)}
       onClick={(event) => {
         onClick?.(event);
-        context?.close();
+        if (closeOnSelect) context?.close();
       }}
       {...props}
     />
