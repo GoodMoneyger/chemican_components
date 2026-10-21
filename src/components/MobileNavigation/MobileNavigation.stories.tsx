@@ -110,6 +110,39 @@ export const WithEndAndMenuTop: Story = {
   render: Default.render,
 };
 
+export const FromLeft: Story = {
+  args: {
+    ...WithEndAndMenuTop.args,
+    animation: {
+      in: 'animate-in slide-in-from-left',
+      out: 'animate-out slide-out-to-left',
+    },
+  },
+  render: Default.render,
+};
+
+export const FromRight: Story = {
+  args: {
+    ...WithEndAndMenuTop.args,
+    animation: {
+      in: 'animate-in slide-in-from-right',
+      out: 'animate-out slide-out-to-right',
+    },
+  },
+  render: Default.render,
+};
+
+export const FromBottom: Story = {
+  args: {
+    ...WithEndAndMenuTop.args,
+    animation: {
+      in: 'animate-in slide-in-from-bottom',
+      out: 'animate-out slide-out-to-bottom',
+    },
+  },
+  render: Default.render,
+};
+
 export const CustomAnimation: Story = {
   args: {
     menuTop: '松本 一紀 ・ 管理者権限でログイン中',
