@@ -30,9 +30,6 @@ const defaultAnimation = {
   duration: 270,
 } satisfies MobileNavigationAnimation;
 
-/** Tailwind's `md` breakpoint, from which the `md:hidden` classes below apply */
-const desktopMediaQuery = '(width >= 48rem)';
-
 export interface MobileNavigationProps
   extends React.HTMLAttributes<HTMLElement> {
   /** Content on the left of the header bar */
@@ -121,6 +118,9 @@ export const MobileNavigation = React.forwardRef<
     },
     ref
   ) => {
+    const headerRef = React.useRef<HTMLElement>(null);
+    React.useImperativeHandle(ref, () => headerRef.current as HTMLElement);
+
     const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
     const isControlled = openProp !== undefined;
     const isOpen = isControlled ? openProp : uncontrolledOpen;
@@ -133,17 +133,20 @@ export const MobileNavigation = React.forwardRef<
       [isControlled, onOpenChange]
     );
 
-    // Above md the menu is hidden with CSS, but Radix would keep the scroll
-    // lock, the focus trap and aria-hidden on the page, leaving it inert.
+    // Once `md:hidden` hides the bar, Radix would still keep the scroll lock,
+    // the focus trap and aria-hidden on the page. Checking the bar itself keeps
+    // this in step with the CSS, whatever value the md breakpoint has.
     React.useEffect(() => {
       if (!isOpen) return;
-      const desktop = window.matchMedia(desktopMediaQuery);
-      const closeOnDesktop = () => {
-        if (desktop.matches) setOpen(false);
+      const closeWhenHidden = () => {
+        const header = headerRef.current;
+        if (header && getComputedStyle(header).display === 'none') {
+          setOpen(false);
+        }
       };
-      closeOnDesktop();
-      desktop.addEventListener('change', closeOnDesktop);
-      return () => desktop.removeEventListener('change', closeOnDesktop);
+      closeWhenHidden();
+      window.addEventListener('resize', closeWhenHidden);
+      return () => window.removeEventListener('resize', closeWhenHidden);
     }, [isOpen, setOpen]);
 
     const contextValue = React.useMemo(
@@ -181,7 +184,7 @@ export const MobileNavigation = React.forwardRef<
           className="md:hidden h-(--cc-mobile-header-height) shrink-0"
         />
         <header
-          ref={ref}
+          ref={headerRef}
           className={cn(
             barClassName,
             'z-navigation inset-x-0 top-0 md:hidden fixed',
