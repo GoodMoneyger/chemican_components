@@ -1,6 +1,8 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
+  IconFileAlert,
+  IconListCheck,
   IconLogout,
   IconTable,
   IconUpload,
@@ -180,8 +182,27 @@ export const LongerMenu: Story = {
             <IconTable size={20} className="shrink-0" />
             SDS一覧
           </MobileNavigationItem>
+          <MobileNavigationItem className="gap-xs">
+            <IconFileAlert size={20} className="shrink-0" />
+            データ化不備一覧
+          </MobileNavigationItem>
         </MobileNavigationSection>
-        <Items />
+        <MobileNavigationSection title="アプリケーション">
+          <MobileNavigationItem className="gap-xs">
+            <IconListCheck size={20} className="shrink-0" />
+            法規制チェックリスト
+          </MobileNavigationItem>
+        </MobileNavigationSection>
+        <MobileNavigationSection title="アカウント">
+          <MobileNavigationItem className="gap-xs">
+            <IconUser size={20} className="shrink-0" />
+            マイページ
+          </MobileNavigationItem>
+          <MobileNavigationItem className="gap-xs">
+            <IconLogout size={20} className="shrink-0" />
+            ログアウト
+          </MobileNavigationItem>
+        </MobileNavigationSection>
       </MobileNavigation>
       <PageContent />
     </>
