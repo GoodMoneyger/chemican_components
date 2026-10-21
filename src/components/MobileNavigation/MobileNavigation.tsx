@@ -35,11 +35,16 @@ export interface MobileNavigationProps
   /** Content on the left of the header bar */
   logo?: React.ReactNode;
   /**
-   * Optional content next to the menu button, e.g. a user chip. It is
-   * repeated in the bar inside the open menu, so it mounts twice while the
-   * menu is open.
+   * Optional content next to the menu button, e.g. a user chip. Unless
+   * `menuEnd` is set, it is repeated in the bar inside the open menu, so it
+   * mounts twice while the menu is open.
    */
   end?: React.ReactNode;
+  /**
+   * Replaces `end` in the bar inside the open menu, e.g. with something
+   * simpler than a stateful dropdown. Pass `null` to render nothing there.
+   */
+  menuEnd?: React.ReactNode;
   /** Content at the top of the open menu, above the items */
   menuTop?: React.ReactNode;
   /** Menu items: `MobileNavigationItem` and `MobileNavigationSection` */
@@ -104,6 +109,7 @@ export const MobileNavigation = React.forwardRef<
     {
       logo,
       end,
+      menuEnd = end,
       menuTop,
       children,
       open: openProp,
@@ -166,11 +172,11 @@ export const MobileNavigation = React.forwardRef<
         }
       : undefined;
 
-    const bar = (trigger: React.ReactNode) => (
+    const bar = (endContent: React.ReactNode, trigger: React.ReactNode) => (
       <>
         <div className="min-w-0 flex items-center">{logo}</div>
         <div className="gap-xs flex shrink-0 items-center">
-          {end}
+          {endContent}
           {trigger}
         </div>
       </>
@@ -193,6 +199,7 @@ export const MobileNavigation = React.forwardRef<
           {...props}
         >
           {bar(
+            end,
             <RadixDialog.Trigger asChild>
               <MenuButton icon={IconMenu2} label={openMenuLabel} />
             </RadixDialog.Trigger>
@@ -221,6 +228,7 @@ export const MobileNavigation = React.forwardRef<
             </RadixDialog.Title>
             <div className={cn(barClassName, 'z-slight relative', className)}>
               {bar(
+                menuEnd,
                 <RadixDialog.Close asChild>
                   <MenuButton icon={IconX} label={closeMenuLabel} />
                 </RadixDialog.Close>

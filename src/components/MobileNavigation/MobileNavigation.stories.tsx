@@ -113,6 +113,19 @@ export const WithEndAndMenuTop: Story = {
   render: Default.render,
 };
 
+export const WithSimplerMenuEnd: Story = {
+  args: {
+    ...WithEndAndMenuTop.args,
+    menuEnd: (
+      <span className="text-body-primary gap-xxs text-sm flex items-center">
+        <IconUser size={16} className="shrink-0" />
+        松本 一紀
+      </span>
+    ),
+  },
+  render: Default.render,
+};
+
 export const FromLeft: Story = {
   args: {
     ...WithEndAndMenuTop.args,
