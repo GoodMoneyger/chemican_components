@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { IconMenu2, IconX } from '@tabler/icons-react';
+import { IconMenu2, IconX, type TablerIcon } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
 import {
@@ -24,17 +24,24 @@ export interface MobileNavigationAnimation {
   easing?: string;
 }
 
-const defaultAnimation: Required<Omit<MobileNavigationAnimation, 'easing'>> &
-  Pick<MobileNavigationAnimation, 'easing'> = {
+const defaultAnimation = {
   in: 'animate-in slide-in-from-top',
   out: 'animate-out slide-out-to-top',
   duration: 270,
-};
+} satisfies MobileNavigationAnimation;
 
-export interface MobileNavigationProps {
+/** Tailwind's `md` breakpoint, from which the `md:hidden` classes below apply */
+const desktopMediaQuery = '(width >= 48rem)';
+
+export interface MobileNavigationProps
+  extends React.HTMLAttributes<HTMLElement> {
   /** Content on the left of the header bar */
   logo?: React.ReactNode;
-  /** Optional content next to the menu button, e.g. a user chip */
+  /**
+   * Optional content next to the menu button, e.g. a user chip. It is
+   * repeated in the bar inside the open menu, so it mounts twice while the
+   * menu is open.
+   */
   end?: React.ReactNode;
   /** Content at the top of the open menu, above the items */
   menuTop?: React.ReactNode;
@@ -53,6 +60,7 @@ export interface MobileNavigationProps {
   closeMenuLabel?: React.ReactNode;
   /** Accessible title of the open menu */
   menuLabel?: React.ReactNode;
+  /** Classes for the header bar, on the page and inside the open menu */
   className?: string;
 }
 
@@ -69,7 +77,7 @@ const barClassName = `bg-surface-secondary px-md gap-sm flex
 const MenuButton = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    icon: typeof IconMenu2;
+    icon: TablerIcon;
     label: React.ReactNode;
   }
 >(({ icon: Icon, label, className, ...props }, ref) => (
@@ -91,134 +99,163 @@ const MenuButton = React.forwardRef<
 ));
 MenuButton.displayName = 'MobileNavigationMenuButton';
 
-export const MobileNavigation = ({
-  logo,
-  end,
-  menuTop,
-  children,
-  open: openProp,
-  defaultOpen = false,
-  onOpenChange,
-  animation,
-  openMenuLabel = 'メニューを開く',
-  closeMenuLabel = 'メニューを閉じる',
-  menuLabel = 'メニュー',
-  className,
-}: MobileNavigationProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
-  const isControlled = openProp !== undefined;
-  const isOpen = isControlled ? openProp : uncontrolledOpen;
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setUncontrolledOpen(next);
-      onOpenChange?.(next);
+export const MobileNavigation = React.forwardRef<
+  HTMLElement,
+  MobileNavigationProps
+>(
+  (
+    {
+      logo,
+      end,
+      menuTop,
+      children,
+      open: openProp,
+      defaultOpen = false,
+      onOpenChange,
+      animation,
+      openMenuLabel = 'メニューを開く',
+      closeMenuLabel = 'メニューを閉じる',
+      menuLabel = 'メニュー',
+      className,
+      ...props
     },
-    [isControlled, onOpenChange]
-  );
+    ref
+  ) => {
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+    const isControlled = openProp !== undefined;
+    const isOpen = isControlled ? openProp : uncontrolledOpen;
 
-  const contextValue = React.useMemo(
-    () => ({ close: () => setOpen(false) }),
-    [setOpen]
-  );
+    const setOpen = React.useCallback(
+      (next: boolean) => {
+        if (!isControlled) setUncontrolledOpen(next);
+        onOpenChange?.(next);
+      },
+      [isControlled, onOpenChange]
+    );
 
-  const motion =
-    animation === false ? null : { ...defaultAnimation, ...animation };
-  const motionStyle: React.CSSProperties | undefined = motion
-    ? {
-        animationDuration: `${motion.duration}ms`,
-        animationTimingFunction: motion.easing,
-        // Holds the closed state between the end of the animation and the
-        // unmount, which would otherwise flash the open menu for a frame
-        animationFillMode: isOpen ? undefined : 'forwards',
-      }
-    : undefined;
+    // Above md the menu is hidden with CSS, but Radix would keep the scroll
+    // lock, the focus trap and aria-hidden on the page, leaving it inert.
+    React.useEffect(() => {
+      if (!isOpen) return;
+      const desktop = window.matchMedia(desktopMediaQuery);
+      const closeOnDesktop = () => {
+        if (desktop.matches) setOpen(false);
+      };
+      closeOnDesktop();
+      desktop.addEventListener('change', closeOnDesktop);
+      return () => desktop.removeEventListener('change', closeOnDesktop);
+    }, [isOpen, setOpen]);
 
-  const bar = (trigger: React.ReactNode) => (
-    <>
-      <div className="min-w-0 flex items-center">{logo}</div>
-      <div className="gap-xs flex shrink-0 items-center">
-        {end}
-        {trigger}
-      </div>
-    </>
-  );
+    const contextValue = React.useMemo(
+      () => ({ close: () => setOpen(false) }),
+      [setOpen]
+    );
 
-  return (
-    <RadixDialog.Root open={isOpen} onOpenChange={setOpen}>
-      {/* Keeps the page content below the fixed bar */}
-      <div
-        aria-hidden
-        className="md:hidden h-(--cc-mobile-header-height) shrink-0"
-      />
-      <header
-        className={cn(
-          barClassName,
-          'z-navigation inset-x-0 top-0 md:hidden fixed',
-          className
-        )}
-      >
-        {bar(
-          <RadixDialog.Trigger asChild>
-            <MenuButton icon={IconMenu2} label={openMenuLabel} />
-          </RadixDialog.Trigger>
-        )}
-      </header>
+    const motion =
+      animation === false ? null : { ...defaultAnimation, ...animation };
+    const motionStyle: React.CSSProperties | undefined = motion
+      ? {
+          animationDuration: `${motion.duration}ms`,
+          animationTimingFunction: motion.easing,
+          // Holds the closed state between the end of the animation and the
+          // unmount, which would otherwise flash the open menu for a frame
+          animationFillMode: isOpen ? undefined : 'forwards',
+        }
+      : undefined;
 
-      <RadixDialog.Portal>
-        {/* Radix locks page scrolling through the overlay */}
-        <RadixDialog.Overlay className="z-drawer inset-0 md:hidden fixed" />
-        {/* The content only runs a neutral animation as long as the menu's,
-            so Radix keeps it mounted until the menu has finished closing. */}
-        <RadixDialog.Content
-          aria-describedby={undefined}
+    const bar = (trigger: React.ReactNode) => (
+      <>
+        <div className="min-w-0 flex items-center">{logo}</div>
+        <div className="gap-xs flex shrink-0 items-center">
+          {end}
+          {trigger}
+        </div>
+      </>
+    );
+
+    return (
+      <RadixDialog.Root open={isOpen} onOpenChange={setOpen}>
+        {/* Keeps the page content below the fixed bar */}
+        <div
+          aria-hidden
+          className="md:hidden h-(--cc-mobile-header-height) shrink-0"
+        />
+        <header
+          ref={ref}
           className={cn(
-            'z-drawer inset-0 md:hidden fixed flex flex-col',
-            motion && (isOpen ? 'animate-in' : 'animate-out'),
-            'motion-reduce:animate-none'
+            barClassName,
+            'z-navigation inset-x-0 top-0 md:hidden fixed',
+            className
           )}
-          style={motionStyle}
+          {...props}
         >
-          <RadixDialog.Title className="sr-only">{menuLabel}</RadixDialog.Title>
-          <div className={cn(barClassName, 'z-slight relative')}>
-            {bar(
-              <RadixDialog.Close asChild>
-                <MenuButton icon={IconX} label={closeMenuLabel} />
-              </RadixDialog.Close>
-            )}
-          </div>
-          <nav
+          {bar(
+            <RadixDialog.Trigger asChild>
+              <MenuButton icon={IconMenu2} label={openMenuLabel} />
+            </RadixDialog.Trigger>
+          )}
+        </header>
+
+        <RadixDialog.Portal>
+          {/* Radix locks page scrolling through the overlay */}
+          <RadixDialog.Overlay className="z-drawer inset-0 md:hidden fixed" />
+          {/* The bar is repeated inside the dialog so its close button is part
+              of the focus trap; Radix hides the page bar underneath from
+              assistive technology. The content only runs a neutral animation
+              as long as the menu's, so Radix keeps it mounted until the menu
+              has finished closing. */}
+          <RadixDialog.Content
+            aria-describedby={undefined}
             className={cn(
-              `bg-surface-primary p-md gap-md flex flex-1 flex-col
-              overflow-y-auto`,
-              motion && (isOpen ? motion.in : motion.out),
+              'z-drawer inset-0 md:hidden fixed flex flex-col',
+              motion && (isOpen ? 'animate-in' : 'animate-out'),
               'motion-reduce:animate-none'
             )}
             style={motionStyle}
           >
-            {menuTop && (
-              <div
-                className="bg-interactive-neutral-selected text-body-primary
-                  py-xs px-sm rounded-sm text-sm text-center"
-              >
-                {menuTop}
-              </div>
-            )}
-            <MobileNavigationContext.Provider value={contextValue}>
-              <SideNavigationProvider>{children}</SideNavigationProvider>
-            </MobileNavigationContext.Provider>
-          </nav>
-        </RadixDialog.Content>
-      </RadixDialog.Portal>
-    </RadixDialog.Root>
-  );
-};
+            <RadixDialog.Title className="sr-only">
+              {menuLabel}
+            </RadixDialog.Title>
+            <div className={cn(barClassName, 'z-slight relative', className)}>
+              {bar(
+                <RadixDialog.Close asChild>
+                  <MenuButton icon={IconX} label={closeMenuLabel} />
+                </RadixDialog.Close>
+              )}
+            </div>
+            <nav
+              className={cn(
+                `bg-surface-primary p-md gap-md flex flex-1 flex-col
+                overflow-y-auto`,
+                motion && (isOpen ? motion.in : motion.out),
+                'motion-reduce:animate-none'
+              )}
+              style={motionStyle}
+            >
+              {menuTop && (
+                <div
+                  className="bg-interactive-neutral-selected text-body-primary
+                    py-xs px-sm rounded-sm text-sm text-center"
+                >
+                  {menuTop}
+                </div>
+              )}
+              <MobileNavigationContext.Provider value={contextValue}>
+                <SideNavigationProvider>{children}</SideNavigationProvider>
+              </MobileNavigationContext.Provider>
+            </nav>
+          </RadixDialog.Content>
+        </RadixDialog.Portal>
+      </RadixDialog.Root>
+    );
+  }
+);
 
 MobileNavigation.displayName = 'MobileNavigation';
 
 export type MobileNavigationItemProps = Omit<
   SideNavigationItemProps,
-  'tooltipLabel'
+  'tooltipLabel' | 'size'
 >;
 
 /** A menu entry. It closes the menu when activated. */
