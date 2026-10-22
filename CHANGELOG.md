@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.13.4](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.3...v1.13.4) (2026-10-22)
+
+### Bug Fixes
+
+* **SearchBar,Tag:** [[#205](https://github.com/GoodMoneyger/chemican_components/issues/205)] Keep long keywords inside the bar ([#206](https://github.com/GoodMoneyger/chemican_components/issues/206)) ([4135baa](https://github.com/GoodMoneyger/chemican_components/commit/4135baab280c5f24ebaead9c96551b217fb08aa0))
+
 ## [1.13.3](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.2...v1.13.3) (2026-10-14)
 
 ### Bug Fixes
