@@ -91,14 +91,15 @@ WithInitialKeywords.args = {
   initialKeywords: ['SDS ID', '化学物質名'],
 };
 
-const sdsFileName =
+const longFileName =
   '1IK_COPPER SELENIDE (CU2SE)_SDS-US_English.pdf_ filename_=UTF-8_1IK_COPPER_20SELENIDE_20_28CU2SE_29_SDS-US_English_20405-64-5.pdf';
 
 /**
- * Mirrors the sticky filter bar of the SDS list in sds_scan_general, where a
- * pasted file name has to stay inside the 448px wide bar.
+ * A keyword longer than the bar, such as a pasted file name, truncates with
+ * the full text in a tooltip. Laid out like a list page toolbar, where the
+ * bar has a fixed width next to other actions.
  */
-export const SdsList: StoryFn<typeof SearchBar> = (args) => {
+export const LongKeyword: StoryFn<typeof SearchBar> = (args) => {
   const [value, setValue] = useState('');
   const [searched, setSearched] = useState<string[]>(
     args.initialKeywords ?? []
@@ -137,12 +138,12 @@ export const SdsList: StoryFn<typeof SearchBar> = (args) => {
     </div>
   );
 };
-SdsList.args = {
+LongKeyword.args = {
   size: 'md',
   placeholder: 'SDSを検索（CAS番号・法令名・化学物質名など）',
   supportText:
     'Enterキーを押して、キーワードを確定してください。キーワードは複数入力することができます。SDS ID/SDSファイル名/製品名/製造者名/化学物質名/CAS番号/法令名/細則名から検索ができます。',
   searchButtonText: '検索',
-  initialKeywords: [sdsFileName, '20405-64-5'],
+  initialKeywords: [longFileName, '20405-64-5'],
 };
-SdsList.parameters = { layout: 'fullscreen' };
+LongKeyword.parameters = { layout: 'fullscreen' };
