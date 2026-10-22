@@ -660,7 +660,7 @@ export const Mobile: Story = () => (
       </DataSheet.KeyValue>
     </DataSheet.Section>
     <DataSheet.Section>
-      <DataSheet.Table>
+      <DataSheet.Table aria-label="組成および成分情報">
         <DataSheet.TableHeader>
           <DataSheet.TableRow header>
             <DataSheet.TableCell header parts={30}>

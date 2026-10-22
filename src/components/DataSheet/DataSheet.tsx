@@ -293,7 +293,11 @@ export interface DataSheetTableProps<TItem extends DataSheetItemType = string>
   actionsColumnParts?: number;
   /**
    * Minimum table width below the md breakpoint. Narrower containers scroll
-   * the table sideways instead of squeezing its columns.
+   * the table sideways instead of squeezing its columns. Pass `'auto'` for
+   * tables that fit as they are.
+   *
+   * A table that scrolls is a keyboard-focusable region. Name it with
+   * `aria-label` or `aria-labelledby`.
    */
   mobileMinWidth?: string;
 }
@@ -337,6 +341,27 @@ const useDataSheetTableRowContext = <
     DataSheetTableRowContext
   ) as DataSheetTableRowContextValue<TItem>;
 
+const useHasHorizontalOverflow = (ref: React.RefObject<HTMLElement | null>) => {
+  const [hasOverflow, setHasOverflow] = React.useState(false);
+
+  React.useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const update = () =>
+      setHasOverflow(element.scrollWidth > element.clientWidth);
+    const observer = new ResizeObserver(update);
+
+    observer.observe(element);
+    Array.from(element.children).forEach((child) => observer.observe(child));
+    update();
+
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return hasOverflow;
+};
+
 function DataSheetTableInner<TItem extends DataSheetItemType = string>(
   {
     className,
@@ -351,6 +376,10 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
   }: DataSheetTableProps<TItem>,
   ref: React.ForwardedRef<HTMLDivElement>
 ) {
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+  React.useImperativeHandle(ref, () => wrapperRef.current as HTMLDivElement);
+  const hasOverflow = useHasHorizontalOverflow(wrapperRef);
+
   const contextValue: DataSheetTableContextValue<TItem> = {
     actionsColumnParts,
     ...(onEditRow && { onEditRow }),
@@ -363,8 +392,15 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
       value={contextValue as DataSheetTableContextValue}
     >
       <div
-        ref={ref}
-        className={cn('overflow-x-auto', className)}
+        ref={wrapperRef}
+        role="region"
+        tabIndex={hasOverflow ? 0 : undefined}
+        className={cn(
+          `focus-visible:ring-interactive-focused overflow-x-auto
+          focus-visible:ring-2 focus-visible:outline-none
+          focus-visible:ring-inset`,
+          className
+        )}
         style={
           {
             '--cc-data-sheet-table-min-width': mobileMinWidth,
