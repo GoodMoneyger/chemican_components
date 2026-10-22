@@ -649,55 +649,333 @@ KeyValueWithFormFields.parameters = {
   },
 };
 
-export const Mobile: Story = () => (
-  <DataSheet>
-    <DataSheet.Section>
-      <DataSheet.KeyValue orientation="horizontal" label="推奨用途">
-        試薬、工業用原料、研究開発用
-      </DataSheet.KeyValue>
-      <DataSheet.KeyValue orientation="horizontal" label="使用上の制限">
-        -
-      </DataSheet.KeyValue>
-    </DataSheet.Section>
-    <DataSheet.Section>
-      <DataSheet.Table aria-label="組成および成分情報">
-        <DataSheet.TableHeader>
-          <DataSheet.TableRow header>
-            <DataSheet.TableCell header parts={30}>
-              化学名
-            </DataSheet.TableCell>
-            <DataSheet.TableCell header parts={20}>
-              CAS番号
-            </DataSheet.TableCell>
-            <DataSheet.TableCell header parts={15}>
-              含有量
-            </DataSheet.TableCell>
-            <DataSheet.TableCell header parts={35}>
-              化審法番号
-            </DataSheet.TableCell>
-          </DataSheet.TableRow>
-        </DataSheet.TableHeader>
-        <DataSheet.TableBody>
-          <DataSheet.TableRow>
-            <DataSheet.TableCell>
-              塩化水素 / Hydrogen chloride
-            </DataSheet.TableCell>
-            <DataSheet.TableCell>7647-01-0</DataSheet.TableCell>
-            <DataSheet.TableCell>35 %</DataSheet.TableCell>
-            <DataSheet.TableCell>(1)-215</DataSheet.TableCell>
-          </DataSheet.TableRow>
-          <DataSheet.TableRow>
-            <DataSheet.TableCell>水 / Water</DataSheet.TableCell>
-            <DataSheet.TableCell>7732-18-5</DataSheet.TableCell>
-            <DataSheet.TableCell>65 %</DataSheet.TableCell>
-            <DataSheet.TableCell>対象外</DataSheet.TableCell>
-          </DataSheet.TableRow>
-        </DataSheet.TableBody>
-      </DataSheet.Table>
-    </DataSheet.Section>
-  </DataSheet>
+interface MobileManufacturer {
+  id: number;
+  name: string;
+  address: string;
+  phone: string;
+  isDeleted: boolean;
+}
+
+interface MobileIngredient {
+  id: number;
+  name: string;
+  cas: string;
+  content: string;
+  kashinhou: string;
+  isDeleted: boolean;
+}
+
+const MobileCaption = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-body-secondary mb-xs text-xs">{children}</p>
 );
-Mobile.parameters = { layout: 'padded' };
+
+export const Mobile: Story = () => {
+  const [manufacturers, setManufacturers] = React.useState<
+    MobileManufacturer[]
+  >([
+    {
+      id: 1,
+      name: 'Eastman Chemical Company',
+      address: '200 South Wilcox Drive Kingsport TN 37660-5280',
+      phone: '423-229-2000',
+      isDeleted: false,
+    },
+    {
+      id: 2,
+      name: '全国農業協同組合連合会',
+      address: '東京都千代田区大手町1-3-1',
+      phone: '03-6271-8111',
+      isDeleted: true,
+    },
+  ]);
+  const [ingredients, setIngredients] = React.useState<MobileIngredient[]>([
+    {
+      id: 1,
+      name: '塩化水素 / Hydrogen chloride',
+      cas: '7647-01-0',
+      content: '35 %',
+      kashinhou: '(1)-215',
+      isDeleted: false,
+    },
+    {
+      id: 2,
+      name: '水 / Water',
+      cas: '7732-18-5',
+      content: '65 %',
+      kashinhou: '対象外',
+      isDeleted: false,
+    },
+    {
+      id: 3,
+      name: 'アセトン / Acetone',
+      cas: '67-64-1',
+      content: '< 1 %',
+      kashinhou: '(2)-542',
+      isDeleted: true,
+    },
+  ]);
+
+  const setManufacturerDeleted = (id: number, isDeleted: boolean) =>
+    setManufacturers((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, isDeleted } : m))
+    );
+  const setIngredientDeleted = (id: number, isDeleted: boolean) =>
+    setIngredients((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, isDeleted } : i))
+    );
+
+  return (
+    <div className="space-y-xl">
+      <section>
+        <MobileCaption>
+          Key / value: vertical, compact, horizontal
+        </MobileCaption>
+        <DataSheet>
+          <DataSheet.Section>
+            <DataSheet.KeyValue label="SDS作成日">
+              2025/01/08
+            </DataSheet.KeyValue>
+            <DataSheet.KeyValue spacing="compact" label="SDSファイル名">
+              4-AMINO-2-CHLOROBENZOIC-5GR.pdf
+            </DataSheet.KeyValue>
+            <DataSheet.KeyValue orientation="horizontal" label="推奨用途">
+              試薬、工業用原料、研究開発用
+            </DataSheet.KeyValue>
+            <DataSheet.KeyValue
+              spacing="compact"
+              orientation="horizontal"
+              label="使用上の制限"
+            >
+              -
+            </DataSheet.KeyValue>
+          </DataSheet.Section>
+        </DataSheet>
+      </section>
+
+      <section>
+        <MobileCaption>
+          Primary headers with actions, a deleted section, and the add action
+        </MobileCaption>
+        <DataSheet>
+          {manufacturers.map((manufacturer) => (
+            <DataSheet.Section key={manufacturer.id}>
+              <DataSheet.Header
+                variant="primary"
+                isDeleted={manufacturer.isDeleted}
+                onEdit={() => alert(`Edit ${manufacturer.name}`)}
+                onRemove={() => setManufacturerDeleted(manufacturer.id, true)}
+                onRestore={() => setManufacturerDeleted(manufacturer.id, false)}
+                ariaLabels={{
+                  edit: `Edit ${manufacturer.name}`,
+                  remove: `Remove ${manufacturer.name}`,
+                  restore: `Restore ${manufacturer.name}`,
+                }}
+              >
+                {manufacturer.name}
+              </DataSheet.Header>
+              <DataSheet.KeyValue orientation="horizontal" label="住所">
+                {manufacturer.address}
+              </DataSheet.KeyValue>
+              <DataSheet.KeyValue orientation="horizontal" label="電話番号">
+                {manufacturer.phone}
+              </DataSheet.KeyValue>
+            </DataSheet.Section>
+          ))}
+          <DataSheet.Action size="xs" intent="secondary" icon={IconPlus}>
+            製造者情報を追加する
+          </DataSheet.Action>
+        </DataSheet>
+      </section>
+
+      <section>
+        <MobileCaption>
+          Tables: one scrolling with row actions and a deleted row, one narrow
+          table opting out of the min width
+        </MobileCaption>
+        <DataSheet>
+          <DataSheet.Header variant="primary">
+            組成および成分情報
+          </DataSheet.Header>
+          <DataSheet.Section>
+            <DataSheet.Header variant="table">
+              製品全体｜パイロカラージアゾ試薬 DIA60-STV (1A) 塩酸溶液
+            </DataSheet.Header>
+            <DataSheet.Table<MobileIngredient>
+              aria-label="成分"
+              onEditRow={(item) => alert(`Edit ${item.name}`)}
+              onRemoveRow={(item) => setIngredientDeleted(item.id, true)}
+              onRestoreRow={(item) => setIngredientDeleted(item.id, false)}
+            >
+              <DataSheet.TableHeader>
+                <DataSheet.TableRow header>
+                  <DataSheet.TableCell header parts={30}>
+                    化学名
+                  </DataSheet.TableCell>
+                  <DataSheet.TableCell header parts={20}>
+                    CAS番号
+                  </DataSheet.TableCell>
+                  <DataSheet.TableCell header parts={15}>
+                    含有量
+                  </DataSheet.TableCell>
+                  <DataSheet.TableCell header parts={25}>
+                    化審法番号
+                  </DataSheet.TableCell>
+                  <DataSheet.TableActionsCell header />
+                </DataSheet.TableRow>
+              </DataSheet.TableHeader>
+              <DataSheet.TableBody>
+                {ingredients.map((item) => (
+                  <DataSheet.TableRow
+                    key={item.id}
+                    item={item}
+                    isDeleted={item.isDeleted}
+                    ariaLabels={{
+                      edit: `Edit ${item.name}`,
+                      remove: `Remove ${item.name}`,
+                      restore: `Restore ${item.name}`,
+                    }}
+                  >
+                    <DataSheet.TableCell>{item.name}</DataSheet.TableCell>
+                    <DataSheet.TableCell>{item.cas}</DataSheet.TableCell>
+                    <DataSheet.TableCell>{item.content}</DataSheet.TableCell>
+                    <DataSheet.TableCell>{item.kashinhou}</DataSheet.TableCell>
+                    <DataSheet.TableActionsCell />
+                  </DataSheet.TableRow>
+                ))}
+              </DataSheet.TableBody>
+            </DataSheet.Table>
+          </DataSheet.Section>
+          <DataSheet.Section>
+            <DataSheet.Header variant="table">適用法令</DataSheet.Header>
+            <DataSheet.Table mobileMinWidth="auto" aria-label="適用法令">
+              <DataSheet.TableHeader>
+                <DataSheet.TableRow header>
+                  <DataSheet.TableCell header parts={60}>
+                    法令
+                  </DataSheet.TableCell>
+                  <DataSheet.TableCell header parts={40}>
+                    該当
+                  </DataSheet.TableCell>
+                </DataSheet.TableRow>
+              </DataSheet.TableHeader>
+              <DataSheet.TableBody>
+                <DataSheet.TableRow>
+                  <DataSheet.TableCell>化審法</DataSheet.TableCell>
+                  <DataSheet.TableCell>該当</DataSheet.TableCell>
+                </DataSheet.TableRow>
+                <DataSheet.TableRow>
+                  <DataSheet.TableCell>安衛法</DataSheet.TableCell>
+                  <DataSheet.TableCell>非該当</DataSheet.TableCell>
+                </DataSheet.TableRow>
+              </DataSheet.TableBody>
+            </DataSheet.Table>
+          </DataSheet.Section>
+        </DataSheet>
+      </section>
+
+      <section>
+        <MobileCaption>Bordered variant</MobileCaption>
+        <div className="bg-surface-secondary p-md">
+          <DataSheet variant="bordered">
+            <DataSheet.Section>
+              <DataSheet.KeyValue
+                orientation="horizontal"
+                className="px-md py-xs"
+                label="概要"
+              >
+                This is a bordered DataSheet variant with rounded corners and a
+                border.
+              </DataSheet.KeyValue>
+              <DataSheet.KeyValue
+                orientation="horizontal"
+                className="px-md py-xs"
+                label="法令データベース"
+              >
+                REACH, RoHS, TSCA
+              </DataSheet.KeyValue>
+            </DataSheet.Section>
+          </DataSheet>
+        </div>
+      </section>
+
+      <section>
+        <MobileCaption>Form fields</MobileCaption>
+        <DataSheet>
+          <DataSheet.Section>
+            <DataSheet.KeyValue label="製品名">
+              <TextField defaultValue="塩酸溶液" />
+            </DataSheet.KeyValue>
+            <DataSheet.KeyValue label="備考">
+              <TextArea
+                defaultValue="取り扱いには十分注意してください。"
+                showCharacterLimit={false}
+              />
+            </DataSheet.KeyValue>
+            <DataSheet.KeyValue label="SDS改訂日">
+              <DatePicker defaultValue={new Date('2025-01-08')} />
+            </DataSheet.KeyValue>
+            <DataSheet.KeyValue orientation="horizontal" label="推奨用途">
+              <TextField defaultValue="研究用" />
+            </DataSheet.KeyValue>
+          </DataSheet.Section>
+        </DataSheet>
+      </section>
+
+      <section>
+        <MobileCaption>Inside an accordion</MobileCaption>
+        <div className="bg-surface-secondary p-md">
+          <Accordion defaultValue={['section-1']}>
+            <Accordion.Item value="section-1">
+              <Accordion.Trigger>0. 基礎情報</Accordion.Trigger>
+              <Accordion.Content>
+                <DataSheet>
+                  <DataSheet.Section>
+                    <DataSheet.KeyValue label="SDS作成日">
+                      2025/01/08
+                    </DataSheet.KeyValue>
+                    <DataSheet.KeyValue
+                      orientation="horizontal"
+                      label="使用上の制限"
+                    >
+                      -
+                    </DataSheet.KeyValue>
+                  </DataSheet.Section>
+                </DataSheet>
+              </Accordion.Content>
+            </Accordion.Item>
+            <Accordion.Item value="section-2">
+              <Accordion.Trigger>
+                1. 化学品及び会社情報（製品情報）
+              </Accordion.Trigger>
+              <Accordion.Content>
+                <DataSheet>
+                  <DataSheet.Section>
+                    <DataSheet.KeyValue orientation="horizontal" label="住所">
+                      200 South Wilcox Drive Kingsport TN 37660-5280
+                    </DataSheet.KeyValue>
+                  </DataSheet.Section>
+                </DataSheet>
+              </Accordion.Content>
+            </Accordion.Item>
+          </Accordion>
+        </div>
+      </section>
+    </div>
+  );
+};
+Mobile.parameters = {
+  layout: 'padded',
+  docs: {
+    description: {
+      story:
+        'Every DataSheet pattern at phone width: key/value orientations and ' +
+        'spacings, primary headers with actions, a scrolling table with row ' +
+        'actions and a deleted row, a narrow table with `mobileMinWidth="auto"`, ' +
+        'the bordered variant, form fields, and a sheet inside an accordion.',
+    },
+  },
+};
 Mobile.globals = {
   viewport: { value: 'mobile', isRotated: false },
 };
