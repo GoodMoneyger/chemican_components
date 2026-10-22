@@ -296,8 +296,8 @@ export interface DataSheetTableProps<TItem extends DataSheetItemType = string>
    * the table sideways instead of squeezing its columns. Pass `'auto'` for
    * tables that fit as they are.
    *
-   * A table that scrolls is a keyboard-focusable region. Name it with
-   * `aria-label` or `aria-labelledby`.
+   * A table that scrolls fades the edge that hides more columns and is a
+   * keyboard-focusable region. Name it with `aria-label` or `aria-labelledby`.
    */
   mobileMinWidth?: string;
 }
@@ -341,25 +341,72 @@ const useDataSheetTableRowContext = <
     DataSheetTableRowContext
   ) as DataSheetTableRowContextValue<TItem>;
 
-const useHasHorizontalOverflow = (ref: React.RefObject<HTMLElement | null>) => {
-  const [hasOverflow, setHasOverflow] = React.useState(false);
+// Scroll distance over which an edge fade ramps out as that end comes into view.
+const EDGE_FADE_RAMP_PX = 48;
+
+// Fades the edges that hide more columns. Each edge's stop alpha follows the
+// scroll position, so the fade is gone once that end is in view.
+const edgeFadeClass =
+  '[mask-image:linear-gradient(to_right,rgb(0_0_0/var(--cc-data-sheet-fade-start)),black_3rem,black_calc(100%-3rem),rgb(0_0_0/var(--cc-data-sheet-fade-end)))]';
+
+interface HorizontalScrollEdges {
+  hasOverflow: boolean;
+  /** Mask alpha at the start edge: 1 while at the start, 0 once scrolled past the ramp. */
+  startAlpha: number;
+  /** Mask alpha at the end edge: 1 once the end is in view, 0 while far from it. */
+  endAlpha: number;
+}
+
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+
+const useHorizontalScrollEdges = (ref: React.RefObject<HTMLElement | null>) => {
+  const [edges, setEdges] = React.useState<HorizontalScrollEdges>({
+    hasOverflow: false,
+    startAlpha: 1,
+    endAlpha: 1,
+  });
 
   React.useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
-    const update = () =>
-      setHasOverflow(element.scrollWidth > element.clientWidth);
-    const observer = new ResizeObserver(update);
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const { scrollWidth, clientWidth, scrollLeft } = element;
+      const next = {
+        hasOverflow: scrollWidth > clientWidth,
+        startAlpha: 1 - clamp01(scrollLeft / EDGE_FADE_RAMP_PX),
+        endAlpha:
+          1 -
+          clamp01((scrollWidth - clientWidth - scrollLeft) / EDGE_FADE_RAMP_PX),
+      };
+      setEdges((prev) =>
+        prev.hasOverflow === next.hasOverflow &&
+        prev.startAlpha === next.startAlpha &&
+        prev.endAlpha === next.endAlpha
+          ? prev
+          : next
+      );
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    const observer = new ResizeObserver(schedule);
 
     observer.observe(element);
     Array.from(element.children).forEach((child) => observer.observe(child));
-    update();
+    element.addEventListener('scroll', schedule, { passive: true });
+    measure();
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      element.removeEventListener('scroll', schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, [ref]);
 
-  return hasOverflow;
+  return edges;
 };
 
 function DataSheetTableInner<TItem extends DataSheetItemType = string>(
@@ -378,14 +425,18 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
 ) {
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(ref, () => wrapperRef.current as HTMLDivElement);
-  const hasOverflow = useHasHorizontalOverflow(wrapperRef);
+  const { hasOverflow, startAlpha, endAlpha } =
+    useHorizontalScrollEdges(wrapperRef);
 
-  const contextValue: DataSheetTableContextValue<TItem> = {
-    actionsColumnParts,
-    ...(onEditRow && { onEditRow }),
-    ...(onRemoveRow && { onRemoveRow }),
-    ...(onRestoreRow && { onRestoreRow }),
-  };
+  const contextValue = React.useMemo<DataSheetTableContextValue<TItem>>(
+    () => ({
+      actionsColumnParts,
+      ...(onEditRow && { onEditRow }),
+      ...(onRemoveRow && { onRemoveRow }),
+      ...(onRestoreRow && { onRestoreRow }),
+    }),
+    [actionsColumnParts, onEditRow, onRemoveRow, onRestoreRow]
+  );
 
   return (
     <DataSheetTableContext.Provider
@@ -399,11 +450,14 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
           `focus-visible:ring-interactive-focused overflow-x-auto
           focus-visible:ring-2 focus-visible:outline-none
           focus-visible:ring-inset`,
+          hasOverflow && edgeFadeClass,
           className
         )}
         style={
           {
             '--cc-data-sheet-table-min-width': mobileMinWidth,
+            '--cc-data-sheet-fade-start': startAlpha,
+            '--cc-data-sheet-fade-end': endAlpha,
             ...style,
           } as React.CSSProperties
         }
