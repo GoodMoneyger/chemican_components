@@ -235,6 +235,8 @@ export interface TagProps {
   className?: string;
   children?: React.ReactNode;
   onRemove?: () => void;
+  /** Accessible name of the remove button. */
+  removeAriaLabel?: string;
   onClick?: () => void;
   colorCode?: TagColorCode;
   size?: 'sm' | 'md';
@@ -300,6 +302,7 @@ export const Tag: React.FC<TagProps> = ({
   children,
   className,
   onRemove,
+  removeAriaLabel,
   onClick,
   size = 'md',
   style,
@@ -375,6 +378,7 @@ export const Tag: React.FC<TagProps> = ({
       {Boolean(onRemove) && !disabled && (
         <button
           type="button"
+          aria-label={removeAriaLabel}
           className={cn(
             `bg-interactive-neutral-default hover:border-interactive-hover h-3.5
             w-3.5 box-border flex shrink-0 cursor-pointer items-center

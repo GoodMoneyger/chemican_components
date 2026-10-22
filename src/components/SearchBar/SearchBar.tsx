@@ -76,6 +76,7 @@ interface KeywordChipProps {
   size: 'sm' | 'md';
   disabled: boolean;
   onRemove: () => void;
+  removeAriaLabel: string;
 }
 
 const KeywordChip = ({
@@ -83,6 +84,7 @@ const KeywordChip = ({
   size,
   disabled,
   onRemove,
+  removeAriaLabel,
 }: KeywordChipProps) => {
   const { ref, isTruncated } = useIsTruncated<HTMLSpanElement>();
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
@@ -98,11 +100,12 @@ const KeywordChip = ({
         size={size}
         disabled={disabled}
         onRemove={onRemove}
+        removeAriaLabel={removeAriaLabel}
       >
         <Tooltip
           content={keyword}
-          open={isTruncated && tooltipOpen}
-          onOpenChange={setTooltipOpen}
+          open={tooltipOpen}
+          onOpenChange={(open) => setTooltipOpen(open && isTruncated)}
         >
           <span ref={ref} className="block h-full truncate">
             {keyword}
@@ -128,6 +131,8 @@ export interface SearchBarProps
   searchButtonText?: React.ReactNode;
   searchOnKeywordAdd?: boolean;
   initialKeywords?: string[];
+  /** Accessible name of each keyword's remove button. */
+  removeKeywordAriaLabel?: string;
 }
 
 export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
@@ -145,6 +150,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       searchButtonText = '検索',
       searchOnKeywordAdd = false,
       initialKeywords,
+      removeKeywordAriaLabel = 'Remove keyword',
       ...props
     },
     ref
@@ -268,6 +274,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                   size={size === 'sm' ? 'sm' : 'md'}
                   disabled={disabled}
                   onRemove={() => handleRemoveKeyword(idx)}
+                  removeAriaLabel={removeKeywordAriaLabel}
                 />
               ))}
               <input
