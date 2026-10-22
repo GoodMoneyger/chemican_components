@@ -187,6 +187,8 @@ export interface TagProps {
     className?: string;
     children?: React.ReactNode;
     onRemove?: () => void;
+    /** Accessible name of the remove button. */
+    removeAriaLabel?: string;
     onClick?: () => void;
     colorCode?: TagColorCode;
     size?: 'sm' | 'md';
