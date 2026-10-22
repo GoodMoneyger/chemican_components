@@ -374,6 +374,7 @@ export const Tag: React.FC<TagProps> = ({
       )}
       {Boolean(onRemove) && !disabled && (
         <button
+          type="button"
           className={cn(
             `bg-interactive-neutral-default hover:border-interactive-hover h-3.5
             w-3.5 box-border flex shrink-0 cursor-pointer items-center
