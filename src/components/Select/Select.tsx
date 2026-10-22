@@ -138,6 +138,11 @@ export interface SelectProps<T extends number | string = string>
   value?: T;
   onValueChange?: (value: T) => void;
   intent?: 'primary' | 'secondary';
+  /**
+   * Trigger height. Only applies to `variant="default"`; `compact` has its
+   * own fixed height.
+   */
+  size?: VariantProps<typeof selectVariants>['size'];
   hideChevron?: boolean;
   searchPlaceholder?: string;
   searchThreshold?: number;
