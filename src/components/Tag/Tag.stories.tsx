@@ -70,6 +70,7 @@ WithRemoveButton.args = {
   size: 'sm',
   colorCode: 2,
   onRemove: () => alert('Tag removed!'),
+  removeAriaLabel: 'タグを削除',
 };
 
 export const SelectedTag = TagTemplate.bind({});

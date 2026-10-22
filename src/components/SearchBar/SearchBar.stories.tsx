@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react';
+import { IconDownload, IconFilter } from '@tabler/icons-react';
+
+import { Button } from '../Button';
 
 import { SearchBar } from './SearchBar';
 
@@ -87,3 +90,60 @@ WithInitialKeywords.args = {
   ...defaultArgs,
   initialKeywords: ['SDS ID', '化学物質名'],
 };
+
+const longFileName =
+  '1IK_COPPER SELENIDE (CU2SE)_SDS-US_English.pdf_ filename_=UTF-8_1IK_COPPER_20SELENIDE_20_28CU2SE_29_SDS-US_English_20405-64-5.pdf';
+
+/**
+ * A keyword longer than the bar, such as a pasted file name, truncates with
+ * the full text in a tooltip. Laid out like a list page toolbar, where the
+ * bar has a fixed width next to other actions.
+ */
+export const LongKeyword: StoryFn<typeof SearchBar> = (args) => {
+  const [value, setValue] = useState('');
+  const [searched, setSearched] = useState<string[]>(
+    args.initialKeywords ?? []
+  );
+  return (
+    <div className="gap-md flex flex-col">
+      <div
+        className="bg-surface-secondary px-xxl h-19 flex w-full items-center
+          justify-between"
+      >
+        <div className="gap-2 flex items-center">
+          <SearchBar
+            {...args}
+            className="w-112"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onSearch={setSearched}
+            searchOnKeywordAdd
+          />
+          <Button
+            intent="secondary"
+            size="sm"
+            className="min-w-20"
+            icon={<IconFilter size={20} />}
+          >
+            フィルター
+          </Button>
+        </div>
+        <Button intent="primary" size="sm" icon={<IconDownload size={20} />}>
+          エクスポート
+        </Button>
+      </div>
+      <p className="text-body-primary px-xxl text-sm">
+        Searched: {searched.join(' / ') || '(none)'}
+      </p>
+    </div>
+  );
+};
+LongKeyword.args = {
+  size: 'md',
+  placeholder: 'SDSを検索（CAS番号・法令名・化学物質名など）',
+  supportText:
+    'Enterキーを押して、キーワードを確定してください。キーワードは複数入力することができます。SDS ID/SDSファイル名/製品名/製造者名/化学物質名/CAS番号/法令名/細則名から検索ができます。',
+  searchButtonText: '検索',
+  initialKeywords: [longFileName, '20405-64-5'],
+};
+LongKeyword.parameters = { layout: 'fullscreen' };

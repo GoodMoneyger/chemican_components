@@ -4,3 +4,4 @@ export type {
   CompositionHandlers,
   UseCompositionGuardResult,
 } from './useCompositionGuard';
+export { useIsTruncated } from './useIsTruncated';

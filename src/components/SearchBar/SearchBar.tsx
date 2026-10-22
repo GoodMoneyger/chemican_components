@@ -4,7 +4,9 @@ import { cva } from 'class-variance-authority';
 import { IconSearch, IconX } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
-import { useCompositionGuard } from '../../lib/hooks';
+import { useCompositionGuard, useIsTruncated } from '../../lib/hooks';
+import { Tag } from '../Tag';
+import { Tooltip } from '../Tooltip';
 
 const searchBarWrapperVariants = cva(
   `rounded-sm bg-surface-primary border-interactive-default
@@ -33,12 +35,12 @@ const searchBarWrapperVariants = cva(
 );
 
 const inputWrapperClasses =
-  'gap-xxs px-sm disabled:bg-input-disabled flex min-h-full flex-1 items-center flex-wrap';
+  'gap-xxs px-sm py-xxs disabled:bg-input-disabled flex min-h-full min-w-0 flex-1 items-center';
 
-const inputGroupClasses = `rounded-l-sm gap-1 disabled:bg-input-disabled flex min-h-full flex-1 flex-row
+const inputGroupClasses = `rounded-l-sm gap-1 disabled:bg-input-disabled flex min-h-full min-w-0 flex-1 flex-row
   flex-wrap items-center justify-start`;
 
-const inputClasses = `min-w-24 min-h-6 text-md text-body-primary disabled:bg-input-disabled
+const inputClasses = `min-w-24 min-h-5.5 text-md text-body-primary disabled:bg-input-disabled
   disabled:text-body-disabled placeholder:text-body-disabled flex-1
   bg-transparent leading-[100%] tracking-[0%] outline-none
   focus:placeholder-transparent disabled:cursor-not-allowed h-full`;
@@ -69,27 +71,50 @@ const buttonVariants = cva(
   }
 );
 const supportTextClasses = 'gap-xs text-sm text-body-inverse flex-row';
-const chipVariants = cva(
-  `gap-xxs bg-shape-accent-gray-pale px-xs text-md text-accent-gray-strong flex
-  items-center rounded-full`,
-  {
-    variants: {
-      size: {
-        sm: 'h-5 text-sm',
-        md: 'h-6',
-        lg: 'h-6',
-      },
-    },
-    defaultVariants: {
-      size: 'md',
-    },
-  }
-);
-const chipRemoveButtonClasses = `h-3 w-3 text-shape-primary flex items-center justify-center rounded-full
-  disabled:cursor-not-allowed disabled:opacity-50`;
+interface KeywordChipProps {
+  keyword: string;
+  size: 'sm' | 'md';
+  disabled: boolean;
+  onRemove: () => void;
+  removeAriaLabel: string;
+}
 
-const chipContainerClasses =
-  'gap-xs flex min-h-full flex-1 flex-row flex-nowrap items-center';
+const KeywordChip = ({
+  keyword,
+  size,
+  disabled,
+  onRemove,
+  removeAriaLabel,
+}: KeywordChipProps) => {
+  const { ref, isTruncated } = useIsTruncated<HTMLSpanElement>();
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
+
+  return (
+    // Keep the input focused when the chip or its remove button is clicked
+    <span
+      className="min-w-0 flex max-w-full"
+      onMouseDown={(e) => e.preventDefault()}
+    >
+      <Tag
+        variant="secondary"
+        size={size}
+        disabled={disabled}
+        onRemove={onRemove}
+        removeAriaLabel={removeAriaLabel}
+      >
+        <Tooltip
+          content={keyword}
+          open={tooltipOpen}
+          onOpenChange={(open) => setTooltipOpen(open && isTruncated)}
+        >
+          <span ref={ref} className="block h-full truncate">
+            {keyword}
+          </span>
+        </Tooltip>
+      </Tag>
+    </span>
+  );
+};
 
 export interface SearchBarProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
@@ -106,6 +131,8 @@ export interface SearchBarProps
   searchButtonText?: React.ReactNode;
   searchOnKeywordAdd?: boolean;
   initialKeywords?: string[];
+  /** Accessible name of each keyword's remove button. */
+  removeKeywordAriaLabel?: string;
 }
 
 export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
@@ -123,6 +150,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       searchButtonText = '検索',
       searchOnKeywordAdd = false,
       initialKeywords,
+      removeKeywordAriaLabel = 'Remove keyword',
       ...props
     },
     ref
@@ -232,38 +260,22 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
         >
           {/* Chips + Input area */}
           <div className={cn(inputWrapperClasses)}>
-            <div className={cn(chipContainerClasses, inputGroupClasses)}>
-              <span
-                className="text-shape-primary
-                  disabled:text-shape-interactive-disabled flex items-center"
-              >
-                <IconSearch size={20} />
-              </span>
-              {/* Render chips */}
+            <span
+              className="text-shape-primary
+                disabled:text-shape-interactive-disabled flex items-center"
+            >
+              <IconSearch size={20} />
+            </span>
+            <div className={cn(inputGroupClasses)}>
               {keywords.map((kw, idx) => (
-                <span key={idx} className={chipVariants({ size })}>
-                  <span>{kw}</span>
-                  <button
-                    type="button"
-                    className={cn(
-                      chipRemoveButtonClasses,
-                      'bg-surface-primary cursor-pointer'
-                    )}
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent event bubbling
-                      e.preventDefault(); // Prevent default behavior
-                      handleRemoveKeyword(idx);
-                    }}
-                    onMouseDown={(e) => {
-                      e.preventDefault(); // Prevent focus change on mouse down
-                    }}
-                    tabIndex={-1}
-                    aria-label="Remove keyword"
-                    disabled={disabled} // Disable chip remove button
-                  >
-                    <IconX size={8} />
-                  </button>
-                </span>
+                <KeywordChip
+                  key={`${idx}-${kw}`}
+                  keyword={kw}
+                  size={size === 'sm' ? 'sm' : 'md'}
+                  disabled={disabled}
+                  onRemove={() => handleRemoveKeyword(idx)}
+                  removeAriaLabel={removeKeywordAriaLabel}
+                />
               ))}
               <input
                 ref={ref}
