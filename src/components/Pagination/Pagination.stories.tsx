@@ -35,6 +35,9 @@ const meta: Meta<typeof Pagination> = {
     showRowsPerPage: {
       control: { type: 'boolean' },
     },
+    hideRowsPerPageOnMobile: {
+      control: { type: 'boolean' },
+    },
     size: {
       control: { type: 'radio' },
       options: ['default', 'sm'],
@@ -193,6 +196,7 @@ export const Mobile = InteractiveTemplate.bind({});
 Mobile.args = {
   ...Default.args,
   size: 'sm',
+  hideRowsPerPageOnMobile: true,
 };
 Mobile.globals = {
   viewport: { value: 'mobile', isRotated: false },

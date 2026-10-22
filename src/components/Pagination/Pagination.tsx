@@ -59,8 +59,11 @@ export interface PaginationProps
   // Navigation control
   showNavigation?: boolean;
 
-  // Rows per page selector visibility. Always hidden below md to fit phones
+  // Rows per page selector visibility
   showRowsPerPage?: boolean;
+
+  // Hide the rows per page selector below md so the bar fits a phone
+  hideRowsPerPageOnMobile?: boolean;
 
   // Accessible names of the navigation buttons (for internationalization)
   previousPageLabel?: string;
@@ -83,6 +86,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
       formatPageValue = (page, totalPages) => `${page} / ${totalPages}`,
       showNavigation = true,
       showRowsPerPage = true,
+      hideRowsPerPageOnMobile = false,
       previousPageLabel = 'Previous page',
       nextPageLabel = 'Next page',
       size,
@@ -143,7 +147,11 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
       >
         {/* Rows per page selector */}
         {showRowsPerPage && (
-          <div className="gap-xs max-md:hidden flex items-center">
+          <div
+            className={cn('gap-xs flex items-center', {
+              'max-md:hidden': hideRowsPerPageOnMobile,
+            })}
+          >
             <span className={cn(labelVariants())}>{rowsPerPageLabel}</span>
             <Select
               size={size}
