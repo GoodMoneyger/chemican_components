@@ -21,6 +21,10 @@ const meta: Meta<typeof Select> = {
       control: { type: 'select' },
       options: ['default', 'compact'],
     },
+    size: {
+      control: { type: 'select' },
+      options: ['default', 'sm'],
+    },
     intent: {
       control: { type: 'select' },
       options: ['primary', 'secondary'],
@@ -68,6 +72,12 @@ Default.args = {
   placeholder: 'Select an option',
   disabled: false,
   invalid: false,
+};
+
+export const Small = Template.bind({});
+Small.args = {
+  ...Default.args,
+  size: 'sm',
 };
 
 export const WithFormField = FormFieldTemplate.bind({});

@@ -23,6 +23,20 @@ const preview: Preview = {
     theme: '',
   },
   parameters: {
+    viewport: {
+      options: {
+        mobile: {
+          name: 'Mobile (375)',
+          styles: { width: '375px', height: '667px' },
+          type: 'mobile',
+        },
+        desktop: {
+          name: 'Desktop (1280)',
+          styles: { width: '1280px', height: '800px' },
+          type: 'desktop',
+        },
+      },
+    },
     options: {
       storySort: {
         order: [

@@ -32,6 +32,16 @@ const meta: Meta<typeof Pagination> = {
     showNavigation: {
       control: { type: 'boolean' },
     },
+    showRowsPerPage: {
+      control: { type: 'boolean' },
+    },
+    hideRowsPerPageOnMobile: {
+      control: { type: 'boolean' },
+    },
+    size: {
+      control: { type: 'radio' },
+      options: ['default', 'sm'],
+    },
   },
   parameters: {
     design: {
@@ -174,4 +184,26 @@ EnglishLabels.args = {
   showNavigation: true,
   onPageChange: () => {},
   onRowsPerPageChange: () => {},
+};
+
+export const Small = InteractiveTemplate.bind({});
+Small.args = {
+  ...Default.args,
+  size: 'sm',
+};
+
+export const Mobile = InteractiveTemplate.bind({});
+Mobile.args = {
+  ...Default.args,
+  size: 'sm',
+  hideRowsPerPageOnMobile: true,
+};
+Mobile.globals = {
+  viewport: { value: 'mobile', isRotated: false },
+};
+
+export const WithoutRowsPerPage = InteractiveTemplate.bind({});
+WithoutRowsPerPage.args = {
+  ...Default.args,
+  showRowsPerPage: false,
 };
