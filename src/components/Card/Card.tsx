@@ -82,10 +82,13 @@ interface CardItemBaseProps
   > {
   /**
    * Renders the whole card as the child element, for example the app's
-   * `Link`. Pass the child without content: the slots render inside it, and
-   * the title labels it unless `aria-label` or `aria-labelledby` is set. No
-   * slot may then hold interactive content, such as a button, a `Tag` with
-   * `onRemove` or a `TextLink`: a link must not contain interactive content.
+   * `Link`. Pass the child without content: the slots render inside it. The
+   * title labels the child unless `aria-label` or `aria-labelledby` is set,
+   * and the top row and `content` describe it unless `aria-describedby` is
+   * set, so screen readers that announce a link by its name alone still get
+   * them. No slot may then hold interactive content, such as a button, a
+   * `Tag` with `onRemove` or a `TextLink`: a link must not contain
+   * interactive content.
    */
   asChild?: boolean;
   /** The element to render the card as, with `asChild` */
@@ -123,13 +126,15 @@ const isPresent = (node: React.ReactNode) =>
   node !== true &&
   node !== '';
 
-const hasLabel = (attrs?: React.AriaAttributes) =>
-  attrs?.['aria-label'] !== undefined ||
-  attrs?.['aria-labelledby'] !== undefined;
+const hasAria = (
+  attrs: React.AriaAttributes | undefined,
+  ...names: (keyof React.AriaAttributes)[]
+) => names.some((name) => attrs?.[name] !== undefined);
 
 /**
- * A table row shown as a card, for phones. Inside `Card.List` it renders as
- * a list item.
+ * A table row shown as a card, for phones. The slots are `status` top left,
+ * `trailing` top right, then `title` and `content`. Inside `Card.List` it
+ * renders as a list item.
  */
 const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
   (
@@ -147,12 +152,26 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
     ref
   ) => {
     const inList = React.useContext(CardListContext);
-    const titleId = React.useId();
+    const id = React.useId();
+    const titleId = `${id}-title`;
+    const topId = `${id}-top`;
+    const contentId = `${id}-content`;
     const Comp = asChild ? Slot.Root : 'div';
+    const childProps = children?.props as React.AriaAttributes | undefined;
+    const hasTop = isPresent(status) || isPresent(trailing);
+    const hasContent = isPresent(content);
     const labelledByTitle =
       asChild &&
-      !hasLabel(props) &&
-      !hasLabel(children?.props as React.AriaAttributes | undefined);
+      !hasAria(props, 'aria-label', 'aria-labelledby') &&
+      !hasAria(childProps, 'aria-label', 'aria-labelledby');
+    const describedBy =
+      asChild &&
+      !hasAria(props, 'aria-describedby') &&
+      !hasAria(childProps, 'aria-describedby')
+        ? [hasTop && topId, hasContent && contentId]
+            .filter(Boolean)
+            .join(' ') || undefined
+        : undefined;
 
     const card = (
       <Comp
@@ -162,10 +181,15 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
           className
         )}
         aria-labelledby={labelledByTitle ? titleId : undefined}
+        aria-describedby={describedBy}
         {...props}
       >
-        {(isPresent(status) || isPresent(trailing)) && (
-          <div data-slot="top" className="gap-xs flex items-center">
+        {hasTop && (
+          <div
+            id={describedBy ? topId : undefined}
+            data-slot="top"
+            className="gap-xs flex items-center"
+          >
             {isPresent(status) && (
               <div data-slot="status" className="max-w-full shrink-0">
                 {status}
@@ -190,8 +214,12 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
           >
             {title}
           </div>
-          {isPresent(content) && (
-            <div data-slot="content" className="min-w-0">
+          {hasContent && (
+            <div
+              id={describedBy ? contentId : undefined}
+              data-slot="content"
+              className="min-w-0"
+            >
               {content}
             </div>
           )}

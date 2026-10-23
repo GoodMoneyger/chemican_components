@@ -4,7 +4,8 @@ import React from 'react';
 import type { ClassArray } from 'clsx';
 import type { TablerIcon } from '@tabler/icons-react';
 
-const spacingTokens = [
+/** The spacing tokens behind `gap-*`, `p-*`, `m-*` and the like, smallest first */
+export const spacingTokens = [
   'xxxs',
   'xxs',
   'xs',
@@ -16,7 +17,7 @@ const spacingTokens = [
   'xxxl',
 ] as const;
 
-/** The spacing tokens behind `gap-*`, `p-*`, `m-*` and the like */
+/** One of `spacingTokens` */
 export type Spacing = (typeof spacingTokens)[number];
 
 const twMerge = extendTailwindMerge({

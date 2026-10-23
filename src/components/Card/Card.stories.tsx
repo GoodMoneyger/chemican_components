@@ -33,12 +33,6 @@ const meta = {
   subcomponents: { 'Card.List': Card.List },
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component:
-          "Shows a table row as a card on phones. `Card.Item` lays out its slots: `status` top left, `trailing` top right, `title`, then `content` for the rows the app needs, such as tags and secondary lines. With `asChild`, the whole card renders as the child, for example the app's `Link` or a `button`: the title labels it, and it gets the hover, active and focus styles unless `interactive` is off. `Card.List` wraps items in a `ul`, and the items then render as `li`; `columns` lays them out in a grid from `md` up and `gap` sets the spacing between them.",
-      },
-    },
     design: {
       type: 'figma',
       url: 'https://www.figma.com/design/f46iSbgpNKClOOIDRfG7AB/Master-v2.0-SDS%E7%AE%A1%E7%90%86%EF%BC%88JP_Products%EF%BC%89?node-id=18788-15906',

@@ -77,6 +77,62 @@ describe('Card.Item', () => {
     );
   });
 
+  it('describes a card rendered as the child by its top row and content', () => {
+    const html = renderToStaticMarkup(
+      <Card.Item asChild status="S" trailing="T" title="A" content="C">
+        <a href="/sds/1" />
+      </Card.Item>
+    );
+
+    const ids = html.match(/aria-describedby="([^"]+)"/)?.[1].split(' ');
+    expect(ids).toHaveLength(2);
+    expect(html).toMatch(
+      new RegExp(`<div [^>]*id="${ids?.[0]}"[^>]*data-slot="top"`)
+    );
+    expect(html).toMatch(
+      new RegExp(
+        `<div [^>]*id="${ids?.[1]}"[^>]*data-slot="content"[^>]*>C</div>`
+      )
+    );
+  });
+
+  it('describes a card rendered as the child by the slots it has', () => {
+    const titleOnly = renderToStaticMarkup(
+      <Card.Item asChild title="A">
+        <a href="/sds/1" />
+      </Card.Item>
+    );
+    const withContent = renderToStaticMarkup(
+      <Card.Item asChild title="A" content="C">
+        <a href="/sds/1" />
+      </Card.Item>
+    );
+
+    expect(titleOnly).not.toContain('aria-describedby');
+    expect(withContent.match(/aria-describedby="([^"]+)"/)?.[1]).not.toContain(
+      ' '
+    );
+  });
+
+  it('keeps a description the app gives the card or its child', () => {
+    const onCard = renderToStaticMarkup(
+      <Card.Item asChild title="A" content="C" aria-describedby="hint">
+        <a href="/sds/1" />
+      </Card.Item>
+    );
+    const onChild = renderToStaticMarkup(
+      <Card.Item asChild title="A" content="C">
+        <a href="/sds/1" aria-describedby="hint" />
+      </Card.Item>
+    );
+
+    for (const html of [onCard, onChild]) {
+      expect(html.match(/aria-describedby="[^"]+"/g)).toEqual([
+        'aria-describedby="hint"',
+      ]);
+    }
+  });
+
   it('keeps a label the app gives the card or its child', () => {
     const onCard = renderToStaticMarkup(
       <Card.Item asChild title="A" aria-label="Open A">
@@ -95,10 +151,13 @@ describe('Card.Item', () => {
     }
   });
 
-  it('labels no plain card', () => {
-    const html = renderToStaticMarkup(<Card.Item title="A" />);
+  it('labels and describes no plain card', () => {
+    const html = renderToStaticMarkup(
+      <Card.Item status="S" title="A" content="C" />
+    );
 
     expect(html).not.toContain('aria-labelledby');
+    expect(html).not.toContain('aria-describedby');
     expect(html).not.toContain(' id=');
   });
 

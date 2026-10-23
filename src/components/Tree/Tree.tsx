@@ -58,6 +58,9 @@ export type { FlatTreeAccessors } from './groupFlatTreeItems';
 
 export type TreeSize = 'md' | 'lg';
 
+/** @deprecated Use `Spacing` from `@chemican/components/utils`. */
+export type TreeSpacing = Spacing;
+
 export interface TreeHandle {
   collapseAll: () => void;
   expandAll: () => void;
