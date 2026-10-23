@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { IconDotsVertical, IconTrash } from '@tabler/icons-react';
 
-import { Button } from '../Button';
 import { StatusIndicator } from '../StatusIndicator';
 import type { StatusLevel } from '../StatusIndicator';
 import { Tag } from '../Tag';
@@ -37,7 +35,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Shows a table row as a card on phones. `Card.Item` lays out its slots: `status` top left, `trailing` top right, `title`, then `content` for the rows the app needs, such as tags and secondary lines, with `actions` at the end. With `asChild`, the whole card renders as the child, for example the app's `Link`, and the title labels it. `interactive` adds the hover, active and focus styles, and defaults to `asChild`. `Card.List` wraps items in a `ul`, and the items then render as `li`; `columns` lays them out in a grid from `md` up and `gap` sets the spacing between them.",
+          "Shows a table row as a card on phones. `Card.Item` lays out its slots: `status` top left, `trailing` top right, `title`, then `content` for the rows the app needs, such as tags and secondary lines. With `asChild`, the whole card renders as the child, for example the app's `Link`, and the title labels it. `interactive` adds the hover, active and focus styles, and defaults to `asChild`. `Card.List` wraps items in a `ul`, and the items then render as `li`; `columns` lays them out in a grid from `md` up and `gap` sets the spacing between them.",
       },
     },
     design: {
@@ -257,37 +255,6 @@ export const WithoutTrailing: Story = {
 
 export const WithoutContent: Story = {
   args: { content: undefined },
-};
-
-export const WithActions: Story = {
-  args: {
-    actions: (
-      <>
-        <Button
-          type="button"
-          intent="tertiary"
-          size="xs"
-          icon={IconTrash}
-          aria-label="削除"
-        />
-        <Button
-          type="button"
-          intent="tertiary"
-          size="xs"
-          icon={IconDotsVertical}
-          aria-label="その他の操作"
-        />
-      </>
-    ),
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Actions render inside the card, at its end. A card rendered as a link with `asChild` cannot hold buttons, since a link must not contain interactive content.',
-      },
-    },
-  },
 };
 
 export const Mobile: Story = {

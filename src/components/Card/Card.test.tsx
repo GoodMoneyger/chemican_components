@@ -122,10 +122,10 @@ describe('Card.Item', () => {
 
   it('renders every slot it is given', () => {
     const html = renderToStaticMarkup(
-      <Card.Item status="S" trailing="T" title="A" content="C" actions="X" />
+      <Card.Item status="S" trailing="T" title="A" content="C" />
     );
 
-    for (const text of ['S', 'T', 'A', 'C', 'X']) {
+    for (const text of ['S', 'T', 'A', 'C']) {
       expect(html).toContain(`>${text}<`);
     }
   });

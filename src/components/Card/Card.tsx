@@ -62,7 +62,7 @@ CardList.displayName = 'Card.List';
 
 const cardItemVariants = cva(
   `bg-surface-primary border-surface-default text-body-primary px-md py-sm
-  gap-sm rounded-lg min-w-0 flex w-full border text-start`,
+  gap-xxs rounded-lg min-w-0 flex w-full flex-col border text-start`,
   {
     variants: {
       interactive: {
@@ -107,8 +107,6 @@ interface CardItemBaseProps
   title: React.ReactNode;
   /** Below the title, for the rows the app needs, such as tags and lines */
   content?: React.ReactNode;
-  /** Controls at the end of the card. Not with `asChild`, see there. */
-  actions?: React.ReactNode;
 }
 
 export type CardItemProps = CardItemBaseProps &
@@ -142,7 +140,6 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
       trailing,
       title,
       content,
-      actions,
       className,
       ...props
     },
@@ -163,37 +160,30 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
         aria-labelledby={labelledByTitle ? titleId : undefined}
         {...props}
       >
-        <div className="gap-xxs min-w-0 flex flex-1 flex-col">
-          {(isPresent(status) || isPresent(trailing)) && (
-            <div className="gap-xs flex items-center">
-              {isPresent(status) && (
-                <div className="max-w-full shrink-0">{status}</div>
-              )}
-              {isPresent(trailing) && (
-                <div
-                  className="text-body-secondary min-w-0 text-sm leading-normal
-                    ms-auto text-end"
-                >
-                  {trailing}
-                </div>
-              )}
-            </div>
-          )}
-          <div className="gap-xs flex flex-col">
-            <div
-              id={labelledByTitle ? titleId : undefined}
-              className="text-md min-w-0 font-bold leading-[1.2] wrap-anywhere"
-            >
-              {title}
-            </div>
-            {isPresent(content) && <div className="min-w-0">{content}</div>}
-          </div>
-        </div>
-        {isPresent(actions) && (
-          <div className="gap-xxs flex shrink-0 items-center self-start">
-            {actions}
+        {(isPresent(status) || isPresent(trailing)) && (
+          <div className="gap-xs flex items-center">
+            {isPresent(status) && (
+              <div className="max-w-full shrink-0">{status}</div>
+            )}
+            {isPresent(trailing) && (
+              <div
+                className="text-body-secondary min-w-0 text-sm leading-normal
+                  ms-auto text-end"
+              >
+                {trailing}
+              </div>
+            )}
           </div>
         )}
+        <div className="gap-xs flex flex-col">
+          <div
+            id={labelledByTitle ? titleId : undefined}
+            className="text-md min-w-0 font-bold leading-[1.2] wrap-anywhere"
+          >
+            {title}
+          </div>
+          {isPresent(content) && <div className="min-w-0">{content}</div>}
+        </div>
         {asChild && <Slot.Slottable>{children}</Slot.Slottable>}
       </Comp>
     );
