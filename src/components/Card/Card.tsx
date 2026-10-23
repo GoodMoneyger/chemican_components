@@ -2,22 +2,12 @@ import React from 'react';
 import { cva } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 
+import type { Spacing } from '../../lib/utils';
 import { cn } from '../../lib/utils';
 
 const CardListContext = React.createContext(false);
 
 export type CardListColumns = 1 | 2 | 3 | 4;
-
-export type CardListGap =
-  | 'xxxs'
-  | 'xxs'
-  | 'xs'
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | 'xxl'
-  | 'xxxl';
 
 const cardListVariants = cva('grid grid-cols-1', {
   variants: {
@@ -37,7 +27,7 @@ const cardListVariants = cva('grid grid-cols-1', {
       xl: 'gap-xl',
       xxl: 'gap-xxl',
       xxxl: 'gap-xxxl',
-    },
+    } satisfies Record<Spacing, string>,
   },
 });
 
@@ -45,7 +35,7 @@ export interface CardListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** Cards per row from `md` up. Below `md` there is always one column. */
   columns?: CardListColumns;
   /** Spacing token between the cards */
-  gap?: CardListGap;
+  gap?: Spacing;
 }
 
 /**
@@ -78,39 +68,65 @@ const cardItemVariants = cva(
       interactive: {
         true: `hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
-        focus-visible:ring-interactive-focused cursor-pointer transition-colors
-        focus:outline-none focus-visible:ring-2`,
+        focus-visible:ring-interactive-focused transition-colors
+        focus-visible:ring-2 focus-visible:outline-none`,
       },
     },
   }
 );
 
-export interface CardItemProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'content'> {
+interface CardItemBaseProps
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    'title' | 'content' | 'children'
+  > {
   /**
    * Renders the whole card as the child element, for example the app's
-   * `Link`, so it gets the hover, active and focus styles. Pass the child
-   * without content; the slots render inside it.
+   * `Link`. Pass the child without content: the slots render inside it, and
+   * the title labels it unless `aria-label` or `aria-labelledby` is set. No
+   * slot may then hold interactive content, such as a button, a `Tag` with
+   * `onRemove` or a `TextLink`: a link must not contain interactive content.
    */
   asChild?: boolean;
+  /** The element to render the card as, with `asChild` */
+  children?: React.ReactElement;
+  /**
+   * Hover, active and focus styles. Defaults to `asChild`, since the child is
+   * then a link or a button.
+   */
+  interactive?: boolean;
   /** Top left, for example a `StatusIndicator` or a `Tag` */
   status?: React.ReactNode;
   /** Top right, for example a label and a date */
   trailing?: React.ReactNode;
-  /** The main line. It wraps anywhere, so long file names stay inside. */
+  /**
+   * The main line. It wraps anywhere, so long file names stay inside. A
+   * heading element passed here inherits the size, weight and line height,
+   * and lets a list be navigated by headings.
+   */
   title: React.ReactNode;
   /** Below the title, for the rows the app needs, such as tags and lines */
   content?: React.ReactNode;
-  /**
-   * Controls at the end of the card. They render inside it, so a card with
-   * `asChild` cannot hold interactive actions: a link must not contain
-   * buttons.
-   */
+  /** Controls at the end of the card. Not with `asChild`, see there. */
   actions?: React.ReactNode;
 }
 
+export type CardItemProps = CardItemBaseProps &
+  (
+    | { asChild: true; children: React.ReactElement }
+    | { asChild?: false; children?: never }
+  );
+
 const isPresent = (node: React.ReactNode) =>
-  node !== undefined && node !== null && node !== false;
+  node !== undefined &&
+  node !== null &&
+  node !== false &&
+  node !== true &&
+  node !== '';
+
+const hasLabel = (attrs?: React.AriaAttributes) =>
+  attrs?.['aria-label'] !== undefined ||
+  attrs?.['aria-labelledby'] !== undefined;
 
 /**
  * A table row shown as a card, for phones. Inside `Card.List` it renders as
@@ -120,24 +136,31 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
   (
     {
       asChild = false,
+      children,
+      interactive = asChild,
       status,
       trailing,
       title,
       content,
       actions,
       className,
-      children,
       ...props
     },
     ref
   ) => {
     const inList = React.useContext(CardListContext);
+    const titleId = React.useId();
     const Comp = asChild ? Slot.Root : 'div';
+    const labelledByTitle =
+      asChild &&
+      !hasLabel(props) &&
+      !hasLabel(children?.props as React.AriaAttributes | undefined);
 
     const card = (
       <Comp
         ref={ref}
-        className={cn(cardItemVariants({ interactive: asChild }), className)}
+        className={cn(cardItemVariants({ interactive }), className)}
+        aria-labelledby={labelledByTitle ? titleId : undefined}
         {...props}
       >
         <div className="gap-xxs min-w-0 flex flex-1 flex-col">
@@ -158,6 +181,7 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
           )}
           <div className="gap-xs flex flex-col">
             <div
+              id={labelledByTitle ? titleId : undefined}
               className="text-md min-w-0 font-bold leading-[1.2] wrap-anywhere"
             >
               {title}
@@ -170,7 +194,7 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
             {actions}
           </div>
         )}
-        {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : children}
+        {asChild && <Slot.Slottable>{children}</Slot.Slottable>}
       </Comp>
     );
 

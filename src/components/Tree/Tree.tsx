@@ -16,6 +16,7 @@ import { useSortable } from '@dnd-kit/react/sortable';
 import { IconChevronRight, IconGripVertical } from '@tabler/icons-react';
 
 import { Checkbox } from '../Checkbox';
+import type { Spacing } from '../../lib/utils';
 import { cn, resolveValueKey } from '../../lib/utils';
 
 import {
@@ -57,16 +58,7 @@ export type { FlatTreeAccessors } from './groupFlatTreeItems';
 
 export type TreeSize = 'md' | 'lg';
 
-export type TreeSpacing =
-  | 'xxxs'
-  | 'xxs'
-  | 'xs'
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | 'xxl'
-  | 'xxxl';
+export type TreeSpacing = Spacing;
 
 export interface TreeHandle {
   collapseAll: () => void;

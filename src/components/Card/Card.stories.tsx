@@ -7,6 +7,7 @@ import { StatusIndicator } from '../StatusIndicator';
 import type { StatusLevel } from '../StatusIndicator';
 import { Tag } from '../Tag';
 
+import type { CardItemProps } from './Card';
 import { Card } from './Card';
 
 /** What an app's own card would put below the title */
@@ -36,7 +37,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Shows a table row as a card on phones. `Card.Item` lays out its slots: `status` top left, `trailing` top right, `title`, then `content` for the rows the app needs, such as tags and secondary lines, with `actions` at the end. With `asChild`, the whole card renders as the child, for example the app's `Link`. `Card.List` wraps items in a `ul`, and the items then render as `li`; `columns` lays them out in a grid from `md` up and `gap` sets the spacing between them.",
+          "Shows a table row as a card on phones. `Card.Item` lays out its slots: `status` top left, `trailing` top right, `title`, then `content` for the rows the app needs, such as tags and secondary lines, with `actions` at the end. With `asChild`, the whole card renders as the child, for example the app's `Link`, and the title labels it. `interactive` adds the hover, active and focus styles, and defaults to `asChild`. `Card.List` wraps items in a `ul`, and the items then render as `li`; `columns` lays them out in a grid from `md` up and `gap` sets the spacing between them.",
       },
     },
     design: {
@@ -197,35 +198,37 @@ export const Columns: Story = {
   },
 };
 
-export const LongContent: Story = {
-  args: {
-    trailing: (
-      <>
-        SDS改訂日（最終更新を含む）{' '}
-        <span className="text-body-primary">2025/01/08</span>
-      </>
-    ),
-    title:
-      'test_test_foo_bar_safety_data_sheet_uranium_metal_revision_2020_final_v3.pdf',
-    content: (
-      <div className="gap-xs flex flex-col">
-        <div className="gap-xs flex flex-wrap">
-          <Tag>URANIUM METAL</Tag>
-          <Tag>ウラン金属（核燃料物質）</Tag>
-          <Tag>
-            URANIUM_METAL_HIGH_PURITY_INGOT_FOR_RESEARCH_PURPOSES_ONLY_LOT_2020
-          </Tag>
-          <Tag>U</Tag>
-        </div>
-        <p className="text-body-secondary text-md leading-normal">
-          検見間株式会社 原子力材料事業部 研究開発センター 第二研究所
-        </p>
-        <p className="text-body-secondary text-md leading-normal">
-          最終確認: 2025/03/15
-        </p>
+const longContentArgs = {
+  trailing: (
+    <>
+      SDS改訂日（最終更新を含む）{' '}
+      <span className="text-body-primary">2025/01/08</span>
+    </>
+  ),
+  title:
+    'test_test_foo_bar_safety_data_sheet_uranium_metal_revision_2020_final_v3.pdf',
+  content: (
+    <div className="gap-xs flex flex-col">
+      <div className="gap-xs flex flex-wrap">
+        <Tag>URANIUM METAL</Tag>
+        <Tag>ウラン金属（核燃料物質）</Tag>
+        <Tag>
+          URANIUM_METAL_HIGH_PURITY_INGOT_FOR_RESEARCH_PURPOSES_ONLY_LOT_2020
+        </Tag>
+        <Tag>U</Tag>
       </div>
-    ),
-  },
+      <p className="text-body-secondary text-md leading-normal">
+        検見間株式会社 原子力材料事業部 研究開発センター 第二研究所
+      </p>
+      <p className="text-body-secondary text-md leading-normal">
+        最終確認: 2025/03/15
+      </p>
+    </div>
+  ),
+} satisfies Partial<CardItemProps>;
+
+export const LongContent: Story = {
+  args: longContentArgs,
   parameters: {
     docs: {
       description: {
@@ -295,12 +298,7 @@ export const Mobile: Story = {
           <a href={`#sds-${sds.id}`} />
         </Card.Item>
       ))}
-      <Card.Item
-        asChild
-        {...meta.args}
-        {...LongContent.args}
-        title={LongContent.args?.title}
-      >
+      <Card.Item asChild {...meta.args} {...longContentArgs}>
         <a href="#sds-long" />
       </Card.Item>
     </Card.List>
