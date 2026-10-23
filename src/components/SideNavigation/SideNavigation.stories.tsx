@@ -332,7 +332,7 @@ export const Responsive: Story = {
         </SideNavigationSection>
       </SideNavigation>
       <div className="min-w-0 flex-1">
-        <MobileNavigation logo="SDS管理">
+        <MobileNavigation header={<Logo />}>
           <MobileNavigationSection>
             <MobileNavigationItem asChild variant="selected">
               <a href="#" className="gap-xs flex items-center">

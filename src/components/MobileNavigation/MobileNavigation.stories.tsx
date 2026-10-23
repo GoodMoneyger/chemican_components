@@ -10,9 +10,9 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 
-import logoSvg from '../../assets/img/sds_manager_logo.svg';
 import { AccountMenu } from '../AccountMenu';
 import { DropdownItem } from '../DropdownMenu';
+import { Logo } from '../SideNavigation';
 
 import {
   MobileNavigation,
@@ -34,7 +34,7 @@ const meta = {
     viewport: { value: 'mobile', isRotated: false },
   },
   args: {
-    logo: <img src={logoSvg} alt="SDS管理" className="h-auto w-[5.8125rem]" />,
+    header: <Logo />,
     children: null,
   },
 } satisfies Meta<typeof MobileNavigation>;

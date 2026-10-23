@@ -32,8 +32,8 @@ const defaultAnimation = {
 
 export interface MobileNavigationProps
   extends React.HTMLAttributes<HTMLElement> {
-  /** Content on the left of the header bar */
-  logo?: React.ReactNode;
+  /** Content on the left of the bar, usually a logo such as `Logo` */
+  header?: React.ReactNode;
   /**
    * Optional content next to the menu button, e.g. a user chip. Unless
    * `menuEnd` is set, it is repeated in the bar inside the open menu, so it
@@ -107,7 +107,7 @@ export const MobileNavigation = React.forwardRef<
 >(
   (
     {
-      logo,
+      header,
       end,
       menuEnd = end,
       menuTop,
@@ -174,7 +174,7 @@ export const MobileNavigation = React.forwardRef<
 
     const bar = (endContent: React.ReactNode, trigger: React.ReactNode) => (
       <>
-        <div className="min-w-0 flex items-center">{logo}</div>
+        <div className="min-w-0 flex items-center">{header}</div>
         <div className="gap-xs flex shrink-0 items-center">
           {endContent}
           {trigger}
@@ -183,81 +183,84 @@ export const MobileNavigation = React.forwardRef<
     );
 
     return (
-      <RadixDialog.Root open={isOpen} onOpenChange={setOpen}>
-        {/* Keeps the page content below the fixed bar */}
-        <div
-          aria-hidden
-          className="md:hidden h-(--cc-mobile-header-height) shrink-0"
-        />
-        <header
-          ref={headerRef}
-          className={cn(
-            barClassName,
-            'z-navigation inset-x-0 top-0 md:hidden fixed',
-            className
-          )}
-          {...props}
-        >
-          {bar(
-            end,
-            <RadixDialog.Trigger asChild>
-              <MenuButton icon={IconMenu2} label={openMenuLabel} />
-            </RadixDialog.Trigger>
-          )}
-        </header>
+      <SideNavigationProvider>
+        {/* The items and Logo read the sidebar context, never collapsed here */}
+        <RadixDialog.Root open={isOpen} onOpenChange={setOpen}>
+          {/* Keeps the page content below the fixed bar */}
+          <div
+            aria-hidden
+            className="md:hidden h-(--cc-mobile-header-height) shrink-0"
+          />
+          <header
+            ref={headerRef}
+            className={cn(
+              barClassName,
+              'z-navigation inset-x-0 top-0 md:hidden fixed',
+              className
+            )}
+            {...props}
+          >
+            {bar(
+              end,
+              <RadixDialog.Trigger asChild>
+                <MenuButton icon={IconMenu2} label={openMenuLabel} />
+              </RadixDialog.Trigger>
+            )}
+          </header>
 
-        <RadixDialog.Portal>
-          {/* Radix locks page scrolling through the overlay */}
-          <RadixDialog.Overlay className="z-drawer inset-0 md:hidden fixed" />
-          {/* The bar is repeated inside the dialog so its close button is part
+          <RadixDialog.Portal>
+            {/* Radix locks page scrolling through the overlay */}
+            <RadixDialog.Overlay className="z-drawer inset-0 md:hidden fixed" />
+            {/* The bar is repeated inside the dialog so its close button is part
               of the focus trap; Radix hides the page bar underneath from
               assistive technology. The content only runs a neutral animation
               as long as the menu's, so Radix keeps it mounted until the menu
               has finished closing. */}
-          <RadixDialog.Content
-            aria-describedby={undefined}
-            className={cn(
-              'z-drawer inset-0 md:hidden fixed flex flex-col',
-              motion && (isOpen ? 'animate-in' : 'animate-out'),
-              'motion-reduce:animate-none'
-            )}
-            style={motionStyle}
-          >
-            <RadixDialog.Title className="sr-only">
-              {menuLabel}
-            </RadixDialog.Title>
-            <div className={cn(barClassName, 'z-slight relative', className)}>
-              {bar(
-                menuEnd,
-                <RadixDialog.Close asChild>
-                  <MenuButton icon={IconX} label={closeMenuLabel} />
-                </RadixDialog.Close>
-              )}
-            </div>
-            <nav
+            <RadixDialog.Content
+              aria-describedby={undefined}
               className={cn(
-                `bg-surface-primary p-md gap-md flex flex-1 flex-col
-                overflow-y-auto`,
-                motion && (isOpen ? motion.in : motion.out),
+                'z-drawer inset-0 md:hidden fixed flex flex-col',
+                motion && (isOpen ? 'animate-in' : 'animate-out'),
                 'motion-reduce:animate-none'
               )}
               style={motionStyle}
             >
-              {menuTop && (
-                <div
-                  className="bg-interactive-neutral-selected text-body-primary
-                    py-xs px-sm rounded-sm text-sm text-center"
-                >
-                  {menuTop}
-                </div>
-              )}
-              <MobileNavigationContext.Provider value={contextValue}>
-                <SideNavigationProvider>{children}</SideNavigationProvider>
-              </MobileNavigationContext.Provider>
-            </nav>
-          </RadixDialog.Content>
-        </RadixDialog.Portal>
-      </RadixDialog.Root>
+              <RadixDialog.Title className="sr-only">
+                {menuLabel}
+              </RadixDialog.Title>
+              <div className={cn(barClassName, 'z-slight relative', className)}>
+                {bar(
+                  menuEnd,
+                  <RadixDialog.Close asChild>
+                    <MenuButton icon={IconX} label={closeMenuLabel} />
+                  </RadixDialog.Close>
+                )}
+              </div>
+              <nav
+                className={cn(
+                  `bg-surface-primary p-md gap-md flex flex-1 flex-col
+                  overflow-y-auto`,
+                  motion && (isOpen ? motion.in : motion.out),
+                  'motion-reduce:animate-none'
+                )}
+                style={motionStyle}
+              >
+                {menuTop && (
+                  <div
+                    className="bg-interactive-neutral-selected text-body-primary
+                      py-xs px-sm rounded-sm text-sm text-center"
+                  >
+                    {menuTop}
+                  </div>
+                )}
+                <MobileNavigationContext.Provider value={contextValue}>
+                  {children}
+                </MobileNavigationContext.Provider>
+              </nav>
+            </RadixDialog.Content>
+          </RadixDialog.Portal>
+        </RadixDialog.Root>
+      </SideNavigationProvider>
     );
   }
 );
