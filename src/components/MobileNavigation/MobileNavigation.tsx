@@ -130,6 +130,7 @@ export const MobileNavigation = React.forwardRef<
   ) => {
     const headerRef = React.useRef<HTMLElement>(null);
     React.useImperativeHandle(ref, () => headerRef.current as HTMLElement);
+    const navLabelId = React.useId();
 
     const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
     const isControlled = openProp !== undefined;
@@ -247,6 +248,7 @@ export const MobileNavigation = React.forwardRef<
                 )}
               </div>
               <nav
+                aria-labelledby={navLabelId}
                 className={cn(
                   `bg-surface-primary p-md gap-md flex flex-1 flex-col
                   overflow-y-auto`,
@@ -255,6 +257,9 @@ export const MobileNavigation = React.forwardRef<
                 )}
                 style={motionStyle}
               >
+                <span id={navLabelId} className="sr-only">
+                  {menuLabel}
+                </span>
                 {menuTop && (
                   <div
                     className="bg-interactive-neutral-selected text-body-primary
