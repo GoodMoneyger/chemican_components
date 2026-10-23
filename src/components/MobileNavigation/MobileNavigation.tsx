@@ -98,6 +98,13 @@ const MenuButton = React.forwardRef<
 ));
 MenuButton.displayName = 'MobileNavigationMenuButton';
 
+/**
+ * A header bar with a menu button, shown below `md`, and the full-screen menu
+ * it opens. The bar is fixed, so a spacer of its height keeps the page content
+ * below it. The spacer only lines up when the component is the first thing in
+ * the page flow: inside a padded container, the content ends up offset by the
+ * padding as well.
+ */
 export const MobileNavigation = React.forwardRef<
   HTMLElement,
   MobileNavigationProps
