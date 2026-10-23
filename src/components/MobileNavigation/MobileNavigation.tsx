@@ -264,8 +264,11 @@ export const MobileNavigation = React.forwardRef<
 
 MobileNavigation.displayName = 'MobileNavigation';
 
-export interface MobileNavigationItemProps
-  extends Omit<SideNavigationItemProps, 'tooltipLabel' | 'size'> {
+/**
+ * The sidebar item props, so one item tree can feed both menus.
+ * `tooltipLabel` and `size` have no effect here.
+ */
+export interface MobileNavigationItemProps extends SideNavigationItemProps {
   /**
    * Closes the menu when the item is activated. Turn it off for items that
    * act in place, such as a language switch.
@@ -277,33 +280,39 @@ export interface MobileNavigationItemProps
 export const MobileNavigationItem = React.forwardRef<
   HTMLButtonElement,
   MobileNavigationItemProps
->(({ className, onClick, closeOnSelect = true, ...props }, ref) => {
-  const context = React.useContext(MobileNavigationContext);
+>(
+  (
+    { className, onClick, closeOnSelect = true, tooltipLabel, size, ...props },
+    ref
+  ) => {
+    const context = React.useContext(MobileNavigationContext);
 
-  return (
-    <SideNavigationItem
-      ref={ref}
-      className={cn('h-11', className)}
-      onClick={(event) => {
-        onClick?.(event);
-        if (closeOnSelect) context?.close();
-      }}
-      {...props}
-    />
-  );
-});
+    return (
+      <SideNavigationItem
+        ref={ref}
+        className={cn('h-11', className)}
+        onClick={(event) => {
+          onClick?.(event);
+          if (closeOnSelect) context?.close();
+        }}
+        {...props}
+      />
+    );
+  }
+);
 
 MobileNavigationItem.displayName = 'MobileNavigationItem';
 
-export type MobileNavigationSectionProps = Omit<
-  SideNavigationSectionProps,
-  'isLast' | 'isCollapsed'
->;
+/**
+ * The sidebar section props, so one item tree can feed both menus. `isLast`
+ * and `isCollapsed` have no effect here.
+ */
+export type MobileNavigationSectionProps = SideNavigationSectionProps;
 
 export const MobileNavigationSection = React.forwardRef<
   HTMLDivElement,
   MobileNavigationSectionProps
->(({ className, ...props }, ref) => (
+>(({ className, isLast, isCollapsed, ...props }, ref) => (
   <SideNavigationSection
     ref={ref}
     className={cn('px-0 items-stretch', className)}
