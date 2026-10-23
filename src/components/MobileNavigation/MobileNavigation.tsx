@@ -128,28 +128,34 @@ export const MobileNavigation = React.forwardRef<
     const isControlled = openProp !== undefined;
     const isOpen = isControlled ? openProp : uncontrolledOpen;
 
+    const onOpenChangeRef = React.useRef(onOpenChange);
+    React.useEffect(() => {
+      onOpenChangeRef.current = onOpenChange;
+    });
+
     const setOpen = React.useCallback(
       (next: boolean) => {
         if (!isControlled) setUncontrolledOpen(next);
-        onOpenChange?.(next);
+        onOpenChangeRef.current?.(next);
       },
-      [isControlled, onOpenChange]
+      [isControlled]
     );
 
     // Once `md:hidden` hides the bar, Radix would still keep the scroll lock,
-    // the focus trap and aria-hidden on the page. Checking the bar itself keeps
-    // this in step with the CSS, whatever value the md breakpoint has.
+    // the focus trap and aria-hidden on the page. Watching the bar itself keeps
+    // this in step with the CSS, whatever value the md breakpoint has: the
+    // observer fires when the bar collapses to 0×0. It stays silent when the
+    // bar is already hidden on open, hence the first check by hand.
     React.useEffect(() => {
-      if (!isOpen) return;
+      const header = headerRef.current;
+      if (!isOpen || !header) return;
       const closeWhenHidden = () => {
-        const header = headerRef.current;
-        if (header && getComputedStyle(header).display === 'none') {
-          setOpen(false);
-        }
+        if (getComputedStyle(header).display === 'none') setOpen(false);
       };
       closeWhenHidden();
-      window.addEventListener('resize', closeWhenHidden);
-      return () => window.removeEventListener('resize', closeWhenHidden);
+      const observer = new ResizeObserver(closeWhenHidden);
+      observer.observe(header);
+      return () => observer.disconnect();
     }, [isOpen, setOpen]);
 
     const contextValue = React.useMemo(
