@@ -68,8 +68,8 @@ const cardItemVariants = cva(
       interactive: {
         true: `hover:bg-interactive-neutral-hover
         active:bg-interactive-neutral-active
-        focus-visible:ring-interactive-focused transition-colors
-        focus-visible:ring-2 focus-visible:outline-none`,
+        focus-visible:ring-interactive-focused cursor-pointer transition-colors
+        focus-visible:ring-4 focus-visible:outline-none`,
       },
     },
   }
@@ -91,8 +91,9 @@ interface CardItemBaseProps
   /** The element to render the card as, with `asChild` */
   children?: React.ReactElement;
   /**
-   * Hover, active and focus styles. Defaults to `asChild`, since the child is
-   * then a link or a button.
+   * Hover, active and focus styles and the pointer cursor, with `asChild`.
+   * On by default, since the child is then a link or a button; a child that
+   * is neither can opt out.
    */
   interactive?: boolean;
   /** Top left, for example a `StatusIndicator` or a `Tag` */
@@ -112,7 +113,7 @@ interface CardItemBaseProps
 export type CardItemProps = CardItemBaseProps &
   (
     | { asChild: true; children: React.ReactElement }
-    | { asChild?: false; children?: never }
+    | { asChild?: false; children?: never; interactive?: never }
   );
 
 const isPresent = (node: React.ReactNode) =>
@@ -156,17 +157,23 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
     const card = (
       <Comp
         ref={ref}
-        className={cn(cardItemVariants({ interactive }), className)}
+        className={cn(
+          cardItemVariants({ interactive: asChild && interactive }),
+          className
+        )}
         aria-labelledby={labelledByTitle ? titleId : undefined}
         {...props}
       >
         {(isPresent(status) || isPresent(trailing)) && (
-          <div className="gap-xs flex items-center">
+          <div data-slot="top" className="gap-xs flex items-center">
             {isPresent(status) && (
-              <div className="max-w-full shrink-0">{status}</div>
+              <div data-slot="status" className="max-w-full shrink-0">
+                {status}
+              </div>
             )}
             {isPresent(trailing) && (
               <div
+                data-slot="trailing"
                 className="text-body-secondary min-w-0 text-sm leading-normal
                   ms-auto text-end"
               >
@@ -178,11 +185,16 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
         <div className="gap-xs flex flex-col">
           <div
             id={labelledByTitle ? titleId : undefined}
+            data-slot="title"
             className="text-md min-w-0 font-bold leading-[1.2] wrap-anywhere"
           >
             {title}
           </div>
-          {isPresent(content) && <div className="min-w-0">{content}</div>}
+          {isPresent(content) && (
+            <div data-slot="content" className="min-w-0">
+              {content}
+            </div>
+          )}
         </div>
         {asChild && <Slot.Slottable>{children}</Slot.Slottable>}
       </Comp>

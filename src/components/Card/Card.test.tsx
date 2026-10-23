@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest';
 
 import { Card } from './Card';
 
+const slot = (name: string, text: string) =>
+  new RegExp(`<div [^>]*data-slot="${name}"[^>]*>${text}</div>`);
+
 describe('Card.List', () => {
   it('renders a list with one list item per card', () => {
     const html = renderToStaticMarkup(
@@ -12,8 +15,8 @@ describe('Card.List', () => {
       </Card.List>
     );
 
-    expect(html).toMatch(/^<ul role="list"/);
-    expect(html.match(/<li class="flex">/g)).toHaveLength(2);
+    expect(html).toMatch(/^<ul [^>]*role="list"/);
+    expect(html.match(/<li\b/g)).toHaveLength(2);
   });
 
   it('lays the cards out in columns from md up, with the given gap', () => {
@@ -42,7 +45,7 @@ describe('Card.Item', () => {
       <Card.Item title="A" className="mt-md" />
     );
 
-    expect(html).toMatch(/^<div class="[^"]*mt-md/);
+    expect(html).toMatch(/^<div [^>]*class="[^"]*\bmt-md\b/);
   });
 
   it('renders the whole card as the child with asChild', () => {
@@ -54,12 +57,10 @@ describe('Card.Item', () => {
       </Card.List>
     );
 
-    expect(html).toMatch(
-      /^<ul role="list"[^>]*><li class="flex"><a href="\/sds\/1" class="/
-    );
+    expect(html).toMatch(/^<ul [^>]*><li[^>]*><a [^>]*href="\/sds\/1"/);
     expect(html.match(/<a /g)).toHaveLength(1);
-    expect(html).toContain('A');
-    expect(html).toContain('C');
+    expect(html).toMatch(slot('title', 'A'));
+    expect(html).toMatch(slot('content', 'C'));
   });
 
   it('labels a card rendered as the child by its title', () => {
@@ -71,8 +72,9 @@ describe('Card.Item', () => {
 
     const id = html.match(/aria-labelledby="([^"]+)"/)?.[1];
     expect(id).toBeDefined();
-    expect(html).toContain(`<div id="${id}" class="`);
-    expect(html).toMatch(new RegExp(`id="${id}"[^>]*>A</div>`));
+    expect(html).toMatch(
+      new RegExp(`<div [^>]*id="${id}"[^>]*data-slot="title"[^>]*>A</div>`)
+    );
   });
 
   it('keeps a label the app gives the card or its child', () => {
@@ -100,12 +102,15 @@ describe('Card.Item', () => {
     expect(html).not.toContain(' id=');
   });
 
-  it('styles a card as interactive with asChild or on request', () => {
-    const plain = renderToStaticMarkup(<Card.Item title="A" />);
-    const requested = renderToStaticMarkup(<Card.Item title="A" interactive />);
+  it('styles a card rendered as the child as interactive unless it opts out', () => {
     const link = renderToStaticMarkup(
       <Card.Item asChild title="A">
         <a href="/sds/1" />
+      </Card.Item>
+    );
+    const button = renderToStaticMarkup(
+      <Card.Item asChild title="A">
+        <button type="button" />
       </Card.Item>
     );
     const staticChild = renderToStaticMarkup(
@@ -114,10 +119,20 @@ describe('Card.Item', () => {
       </Card.Item>
     );
 
-    expect(plain).not.toContain('hover:');
-    expect(requested).toContain('hover:');
     expect(link).toContain('hover:');
+    expect(button).toContain('hover:');
     expect(staticChild).not.toContain('hover:');
+  });
+
+  it('styles no plain card as interactive', () => {
+    const plain = renderToStaticMarkup(<Card.Item title="A" />);
+    const requested = renderToStaticMarkup(
+      // @ts-expect-error interactive takes asChild
+      <Card.Item title="A" interactive />
+    );
+
+    expect(plain).not.toContain('hover:');
+    expect(requested).not.toContain('hover:');
   });
 
   it('renders every slot it is given', () => {
@@ -125,8 +140,13 @@ describe('Card.Item', () => {
       <Card.Item status="S" trailing="T" title="A" content="C" />
     );
 
-    for (const text of ['S', 'T', 'A', 'C']) {
-      expect(html).toContain(`>${text}<`);
+    for (const [name, text] of [
+      ['status', 'S'],
+      ['trailing', 'T'],
+      ['title', 'A'],
+      ['content', 'C'],
+    ]) {
+      expect(html).toMatch(slot(name, text));
     }
   });
 
@@ -135,6 +155,8 @@ describe('Card.Item', () => {
       <Card.Item status="" trailing={false} title="A" />
     );
 
-    expect(html).not.toContain('items-center');
+    expect(html).not.toContain('data-slot="top"');
+    expect(html).not.toContain('data-slot="status"');
+    expect(html).not.toContain('data-slot="trailing"');
   });
 });

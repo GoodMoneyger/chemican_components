@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from 'storybook/test';
 
 import { StatusIndicator } from '../StatusIndicator';
 import type { StatusLevel } from '../StatusIndicator';
@@ -35,7 +36,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Shows a table row as a card on phones. `Card.Item` lays out its slots: `status` top left, `trailing` top right, `title`, then `content` for the rows the app needs, such as tags and secondary lines. With `asChild`, the whole card renders as the child, for example the app's `Link`, and the title labels it. `interactive` adds the hover, active and focus styles, and defaults to `asChild`. `Card.List` wraps items in a `ul`, and the items then render as `li`; `columns` lays them out in a grid from `md` up and `gap` sets the spacing between them.",
+          "Shows a table row as a card on phones. `Card.Item` lays out its slots: `status` top left, `trailing` top right, `title`, then `content` for the rows the app needs, such as tags and secondary lines. With `asChild`, the whole card renders as the child, for example the app's `Link` or a `button`: the title labels it, and it gets the hover, active and focus styles unless `interactive` is off. `Card.List` wraps items in a `ul`, and the items then render as `li`; `columns` lays them out in a grid from `md` up and `gap` sets the spacing between them.",
       },
     },
     design: {
@@ -167,6 +168,52 @@ export const AsLink: Story = {
       description: {
         story:
           'With `asChild` the whole card is the link passed as the child, so routing stays in the app. Hover a card, or tab through the list, for the hover and focus styles.',
+      },
+    },
+  },
+};
+
+export const AsButton: Story = {
+  args: { onClick: fn() },
+  render: ({ onClick }) => (
+    <Card.List>
+      {sdsRows.map((sds) => (
+        <Card.Item key={sds.id} asChild onClick={onClick} {...sdsSlots(sds)}>
+          <button type="button" />
+        </Card.Item>
+      ))}
+    </Card.List>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A card that opens something in place, such as a sheet or a dialog, takes a `button` as the child. It gets the same hover, active and focus styles as a link, and the pointer cursor.',
+      },
+    },
+  },
+};
+
+export const HeadingTitle: Story = {
+  render: () => (
+    <Card.List>
+      {sdsRows.map((sds) => (
+        <Card.Item
+          key={sds.id}
+          asChild
+          {...sdsSlots(sds)}
+          title={<h3>{sds.fileName}</h3>}
+        >
+          <a href={`#sds-${sds.id}`} />
+        </Card.Item>
+      ))}
+    </Card.List>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A heading element in `title` inherits the title styles and lets screen reader users jump from card to card by heading. Pick the level that follows the page's outline.",
       },
     },
   },

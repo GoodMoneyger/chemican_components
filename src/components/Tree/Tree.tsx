@@ -58,8 +58,6 @@ export type { FlatTreeAccessors } from './groupFlatTreeItems';
 
 export type TreeSize = 'md' | 'lg';
 
-export type TreeSpacing = Spacing;
-
 export interface TreeHandle {
   collapseAll: () => void;
   expandAll: () => void;
@@ -179,9 +177,9 @@ export interface TreeProps<TSelected = unknown>
   /** Row height: `md` is 40px, `lg` is 48px. */
   size?: TreeSize;
   /** Padding before top-level rows. Defaults to `sm`. */
-  indentBase?: TreeSpacing;
+  indentBase?: Spacing;
   /** Extra padding per nesting level. Defaults to `xl`. */
-  indentStep?: TreeSpacing;
+  indentStep?: Spacing;
   /** Reports how many Groups with children exist and how many are open. */
   onExpandedCountChange?: (state: TreeExpandedCount) => void;
   ariaLabels?: TreeAriaLabels;
