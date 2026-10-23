@@ -34,15 +34,12 @@ export interface MobileNavigationProps
   extends React.HTMLAttributes<HTMLElement> {
   /** Content on the left of the bar, usually a logo such as `Logo` */
   header?: React.ReactNode;
-  /**
-   * Optional content next to the menu button, e.g. a user chip. Unless
-   * `menuEnd` is set, it is repeated in the bar inside the open menu, so it
-   * mounts twice while the menu is open.
-   */
+  /** Content next to the menu button, e.g. a user chip */
   end?: React.ReactNode;
   /**
-   * Replaces `end` in the bar inside the open menu, e.g. with something
-   * simpler than a stateful dropdown. Pass `null` to render nothing there.
+   * Content next to the close button in the bar inside the open menu, empty
+   * by default. Passing `end` repeats it there, which mounts it twice while
+   * the menu is open.
    */
   menuEnd?: React.ReactNode;
   /** Content at the top of the open menu, above the items */
@@ -109,7 +106,7 @@ export const MobileNavigation = React.forwardRef<
     {
       header,
       end,
-      menuEnd = end,
+      menuEnd,
       menuTop,
       children,
       open: openProp,
