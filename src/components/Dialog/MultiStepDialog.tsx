@@ -130,8 +130,10 @@ const Root: React.FC<MultiStepDialogRootProps> = ({
           >
             <RadixDialog.Content
               className="bg-surface-primary rounded-lg z-dialog max-w-screen-sm
-                min-w-96 fixed top-1/2 left-1/2 w-2/3 -translate-x-1/2
-                -translate-y-1/2 transform"
+                min-w-96 max-md:flex max-md:max-h-[calc(100dvh-2rem)]
+                max-md:w-[calc(100vw-2rem)] max-md:min-w-0 max-md:flex-col fixed
+                top-1/2 left-1/2 w-2/3 -translate-x-1/2 -translate-y-1/2
+                transform"
               onPointerDownOutside={handleOutsideClick}
               onEscapeKeyDown={handleEscapeKeyDown}
             >
@@ -152,7 +154,7 @@ export interface MultiStepDialogStepProps {
 }
 
 const Step: React.FC<MultiStepDialogStepProps> = ({ children }) => {
-  return <div className="flex flex-col">{children}</div>;
+  return <div className="max-md:min-h-0 flex flex-col">{children}</div>;
 };
 
 // Header component
@@ -182,11 +184,13 @@ export interface MultiStepDialogBodyProps {
 const Body: React.FC<MultiStepDialogBodyProps> = ({ children, className }) => {
   return (
     <div
-      // max-h-[calc(100vh-40px-68px-78px)] → viewport full height - 20px top and bottom - header - footer
+      // max-h-[calc(100dvh-40px-68px-78px)] → viewport full height - 20px top and bottom - header - footer.
+      // Below md the content is a capped flex column instead, so a stacked footer still fits.
       className={cn(
         `border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
-        text-body-primary max-h-[calc(100vh-40px-68px-78px)] overflow-hidden
-        overflow-y-auto border-y-1`,
+        text-body-primary max-md:max-h-none max-md:min-h-0 max-md:flex-1
+        max-h-[calc(100dvh-40px-68px-78px)] overflow-hidden overflow-y-auto
+        border-y-1`,
         className
       )}
     >
@@ -219,15 +223,25 @@ const Footer: React.FC<MultiStepDialogFooterProps> = ({
   };
 
   return (
-    <footer className="px-xl py-md flex justify-between">
-      <div className="gap-xs flex">
+    <footer
+      className="px-xl py-md max-md:gap-xs max-md:flex-col-reverse flex
+        justify-between"
+    >
+      <div className="gap-xs max-md:empty:hidden max-md:*:w-full flex">
         {showCancel && cancellable && (
           <Button intent="tertiary" onClick={handleCancelClick}>
             {cancelLabel}
           </Button>
         )}
       </div>
-      {children && <div className="gap-xs ml-auto flex">{children}</div>}
+      {children && (
+        <div
+          className="gap-xs max-md:ml-0 max-md:flex-col-reverse max-md:*:w-full
+            ml-auto flex"
+        >
+          {children}
+        </div>
+      )}
     </footer>
   );
 };
