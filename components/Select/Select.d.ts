@@ -4,6 +4,7 @@ import { VariantProps } from 'class-variance-authority';
 import { IconProp } from '../../lib/utils';
 declare const selectVariants: (props?: ({
     variant?: "default" | "compact" | null | undefined;
+    size?: "sm" | "default" | null | undefined;
     intent?: "primary" | "secondary" | null | undefined;
     invalid?: boolean | null | undefined;
 } & import('class-variance-authority/dist/types').ClassProp) | undefined) => string;
@@ -28,6 +29,11 @@ export interface SelectProps<T extends number | string = string> extends Variant
     value?: T;
     onValueChange?: (value: T) => void;
     intent?: 'primary' | 'secondary';
+    /**
+     * Trigger height. Only applies to `variant="default"`; `compact` has its
+     * own fixed height.
+     */
+    size?: VariantProps<typeof selectVariants>['size'];
     hideChevron?: boolean;
     searchPlaceholder?: string;
     searchThreshold?: number;
@@ -38,7 +44,7 @@ export interface SelectProps<T extends number | string = string> extends Variant
     renderValue?: React.ReactNode;
 }
 export declare const Select: {
-    <T extends number | string = string>({ options, placeholder, className, icon: Icon, invalid, variant, intent, value, hideChevron, onValueChange, searchPlaceholder, searchThreshold, renderValue, ...props }: SelectProps<T>): import("react/jsx-runtime").JSX.Element;
+    <T extends number | string = string>({ options, placeholder, className, icon: Icon, invalid, variant, size, intent, value, hideChevron, onValueChange, searchPlaceholder, searchThreshold, renderValue, ...props }: SelectProps<T>): import("react/jsx-runtime").JSX.Element;
     displayName: string;
 };
 export {};
