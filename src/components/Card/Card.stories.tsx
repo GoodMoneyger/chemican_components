@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import { fn } from 'storybook/test';
 
 import { StatusIndicator } from '../StatusIndicator';
@@ -38,13 +38,6 @@ const meta = {
       url: 'https://www.figma.com/design/f46iSbgpNKClOOIDRfG7AB/Master-v2.0-SDS%E7%AE%A1%E7%90%86%EF%BC%88JP_Products%EF%BC%89?node-id=18788-15906',
     },
   },
-  decorators: [
-    (Story, { parameters }) => (
-      <div className={parameters.fullWidth ? undefined : 'max-w-96'}>
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     status: (
       <StatusIndicator size="sm" level="success">
@@ -65,6 +58,13 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+/** Keeps a story at the width of a card on a phone */
+const narrow: Decorator = (Story) => (
+  <div className="max-w-96">
+    <Story />
+  </div>
+);
 
 interface Sds {
   id: string;
@@ -127,9 +127,10 @@ const sdsSlots = (sds: Sds) => ({
   ),
 });
 
-export const Default: Story = {};
+export const Default: Story = { decorators: [narrow] };
 
 export const List: Story = {
+  decorators: [narrow],
   render: () => (
     <Card.List>
       {sdsRows.map((sds) => (
@@ -148,6 +149,7 @@ export const List: Story = {
 };
 
 export const AsLink: Story = {
+  decorators: [narrow],
   render: () => (
     <Card.List>
       {sdsRows.map((sds) => (
@@ -168,6 +170,7 @@ export const AsLink: Story = {
 };
 
 export const AsButton: Story = {
+  decorators: [narrow],
   args: { onClick: fn() },
   render: ({ onClick }) => (
     <Card.List>
@@ -189,6 +192,7 @@ export const AsButton: Story = {
 };
 
 export const HeadingTitle: Story = {
+  decorators: [narrow],
   render: () => (
     <Card.List>
       {sdsRows.map((sds) => (
@@ -227,7 +231,6 @@ export const Columns: Story = {
     viewport: { value: 'desktop', isRotated: false },
   },
   parameters: {
-    fullWidth: true,
     docs: {
       description: {
         story:
@@ -267,6 +270,7 @@ const longContentArgs = {
 } satisfies Partial<CardItemProps>;
 
 export const LongContent: Story = {
+  decorators: [narrow],
   args: longContentArgs,
   parameters: {
     docs: {
@@ -279,6 +283,7 @@ export const LongContent: Story = {
 };
 
 export const TitleOnly: Story = {
+  decorators: [narrow],
   args: {
     status: undefined,
     trailing: undefined,
@@ -287,18 +292,22 @@ export const TitleOnly: Story = {
 };
 
 export const WithoutStatus: Story = {
+  decorators: [narrow],
   args: { status: undefined },
 };
 
 export const WithoutTrailing: Story = {
+  decorators: [narrow],
   args: { trailing: undefined },
 };
 
 export const WithoutContent: Story = {
+  decorators: [narrow],
   args: { content: undefined },
 };
 
 export const Mobile: Story = {
+  decorators: [narrow],
   render: () => (
     <Card.List>
       {sdsRows.map((sds) => (

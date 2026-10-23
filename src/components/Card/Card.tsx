@@ -77,7 +77,7 @@ const cardItemVariants = cva(
 
 interface CardItemBaseProps
   extends Omit<
-    React.HTMLAttributes<HTMLDivElement>,
+    React.HTMLAttributes<HTMLElement>,
     'title' | 'content' | 'children'
   > {
   /**
@@ -85,10 +85,15 @@ interface CardItemBaseProps
    * `Link`. Pass the child without content: the slots render inside it. The
    * title labels the child unless `aria-label` or `aria-labelledby` is set,
    * and the top row and `content` describe it unless `aria-describedby` is
-   * set, so screen readers that announce a link by its name alone still get
-   * them. No slot may then hold interactive content, such as a button, a
-   * `Tag` with `onRemove` or a `TextLink`: a link must not contain
-   * interactive content.
+   * set, so screen readers that announce a link by its name alone, such as
+   * VoiceOver on iOS, still get them. Readers that also read a link's
+   * content, such as NVDA in browse mode, then hear the top row and
+   * `content` twice. No slot may hold interactive content, such as a button,
+   * a `Tag` with `onRemove` or a `TextLink`: a link must not contain
+   * interactive content. With a `button` child, prefer phrasing content in
+   * `status` and `content`, such as text and `span`s: browsers render a
+   * `div` or a heading inside a button, but the HTML is invalid and
+   * assistive technology handles it unevenly.
    */
   asChild?: boolean;
   /** The element to render the card as, with `asChild` */
@@ -111,6 +116,11 @@ interface CardItemBaseProps
   title: React.ReactNode;
   /** Below the title, for the rows the app needs, such as tags and lines */
   content?: React.ReactNode;
+  /**
+   * Classes for the card. Inside `Card.List` the list item around the card
+   * is the grid cell, which they do not reach.
+   */
+  className?: string;
 }
 
 export type CardItemProps = CardItemBaseProps &
@@ -136,7 +146,7 @@ const hasAria = (
  * `trailing` top right, then `title` and `content`. Inside `Card.List` it
  * renders as a list item.
  */
-const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
+const CardItem = React.forwardRef<HTMLElement, CardItemProps>(
   (
     {
       asChild = false,
@@ -156,7 +166,7 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
     const titleId = `${id}-title`;
     const topId = `${id}-top`;
     const contentId = `${id}-content`;
-    const Comp = asChild ? Slot.Root : 'div';
+    const Comp = asChild ? Slot.Slot : 'div';
     const childProps = children?.props as React.AriaAttributes | undefined;
     const hasTop = isPresent(status) || isPresent(trailing);
     const hasContent = isPresent(content);
@@ -175,7 +185,7 @@ const CardItem = React.forwardRef<HTMLDivElement, CardItemProps>(
 
     const card = (
       <Comp
-        ref={ref}
+        ref={ref as React.Ref<HTMLDivElement>}
         className={cn(
           cardItemVariants({ interactive: asChild && interactive }),
           className
