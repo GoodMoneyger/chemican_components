@@ -4,10 +4,26 @@ import React from 'react';
 import type { ClassArray } from 'clsx';
 import type { TablerIcon } from '@tabler/icons-react';
 
+/** The spacing tokens behind `gap-*`, `p-*`, `m-*` and the like, smallest first */
+export const spacingTokens = [
+  'xxxs',
+  'xxs',
+  'xs',
+  'sm',
+  'md',
+  'lg',
+  'xl',
+  'xxl',
+  'xxxl',
+] as const;
+
+/** One of `spacingTokens` */
+export type Spacing = (typeof spacingTokens)[number];
+
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
-      spacing: ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxxl'],
+      spacing: [...spacingTokens],
     },
     classGroups: {
       'bg-image': [{ bg: ['row-overlay-fade'] }],

@@ -16,6 +16,7 @@ import { useSortable } from '@dnd-kit/react/sortable';
 import { IconChevronRight, IconGripVertical } from '@tabler/icons-react';
 
 import { Checkbox } from '../Checkbox';
+import type { Spacing } from '../../lib/utils';
 import { cn, resolveValueKey } from '../../lib/utils';
 
 import {
@@ -57,16 +58,8 @@ export type { FlatTreeAccessors } from './groupFlatTreeItems';
 
 export type TreeSize = 'md' | 'lg';
 
-export type TreeSpacing =
-  | 'xxxs'
-  | 'xxs'
-  | 'xs'
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | 'xxl'
-  | 'xxxl';
+/** @deprecated Use `Spacing` from `@chemican/components/utils`. */
+export type TreeSpacing = Spacing;
 
 export interface TreeHandle {
   collapseAll: () => void;
@@ -187,9 +180,9 @@ export interface TreeProps<TSelected = unknown>
   /** Row height: `md` is 40px, `lg` is 48px. */
   size?: TreeSize;
   /** Padding before top-level rows. Defaults to `sm`. */
-  indentBase?: TreeSpacing;
+  indentBase?: Spacing;
   /** Extra padding per nesting level. Defaults to `xl`. */
-  indentStep?: TreeSpacing;
+  indentStep?: Spacing;
   /** Reports how many Groups with children exist and how many are open. */
   onExpandedCountChange?: (state: TreeExpandedCount) => void;
   ariaLabels?: TreeAriaLabels;
