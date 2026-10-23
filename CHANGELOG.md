@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.14.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.4...v1.14.0) (2026-10-23)
+
+### Features
+
+* **Pagination:** Add a small size and hide rows per page on phones ([#202](https://github.com/GoodMoneyger/chemican_components/issues/202)) ([89395f0](https://github.com/GoodMoneyger/chemican_components/commit/89395f0281e617ac5c8a1faff8f0196992d04eac)), references [GoodMoneyger/sds_scan_general#4175](https://github.com/GoodMoneyger/sds_scan_general/issues/4175)
+
 ## [1.13.4](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.3...v1.13.4) (2026-10-22)
 
 ### Bug Fixes
