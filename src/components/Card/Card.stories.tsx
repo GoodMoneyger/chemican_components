@@ -17,7 +17,7 @@ const SdsContent = ({
   products: string[];
   manufacturer: ReactNode;
 }) => (
-  <div className="gap-xxs flex flex-col">
+  <div className="gap-xs flex flex-col">
     <div className="gap-xxs flex flex-wrap">
       {products.map((product) => (
         <Tag key={product}>{product}</Tag>
@@ -250,7 +250,7 @@ const longContentArgs = {
   title:
     'test_test_foo_bar_safety_data_sheet_uranium_metal_revision_2020_final_v3.pdf',
   content: (
-    <div className="gap-xxs flex flex-col">
+    <div className="gap-xs flex flex-col">
       <div className="gap-xxs flex flex-wrap">
         <Tag>URANIUM METAL</Tag>
         <Tag>ウラン金属（核燃料物質）</Tag>
