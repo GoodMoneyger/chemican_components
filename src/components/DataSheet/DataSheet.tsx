@@ -50,7 +50,7 @@ const dataSheetHeaderVariants = cva(
     variants: {
       variant: {
         primary: 'text-md font-bold',
-        table: `text-sm font-bold bg-surface-tertiary px-xs py-xxs mb-xxs
+        table: `text-sm font-bold bg-surface-tertiary px-xs py-xxs
         leading-tight`,
       },
     },

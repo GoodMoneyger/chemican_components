@@ -56,12 +56,12 @@
   /* Shadows over the edges of a horizontal scroller that hide more content. */
   --background-image-scroll-shadow-start: linear-gradient(
     to right,
-    var(--neutral-alpha-1200-20),
+    var(--neutral-alpha-1200-16),
     transparent
   );
   --background-image-scroll-shadow-end: linear-gradient(
     to left,
-    var(--neutral-alpha-1200-20),
+    var(--neutral-alpha-1200-16),
     transparent
   );
 }
