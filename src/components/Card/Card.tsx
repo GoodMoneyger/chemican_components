@@ -190,6 +190,12 @@ const CardItem = React.forwardRef<HTMLElement, CardItemProps>(
             .filter(Boolean)
             .join(' ') || undefined
         : undefined;
+    // The ids go on the child: Slot spreads the child's props last, so an
+    // `undefined` aria key on the child or the card would override them
+    const childAria = {
+      ...(labelledByTitle && { 'aria-labelledby': titleId }),
+      ...(describedBy && { 'aria-describedby': describedBy }),
+    };
 
     const card = (
       <Comp
@@ -198,8 +204,6 @@ const CardItem = React.forwardRef<HTMLElement, CardItemProps>(
           cardItemVariants({ interactive: asChild && interactive }),
           className
         )}
-        aria-labelledby={labelledByTitle ? titleId : undefined}
-        aria-describedby={describedBy}
         {...props}
       >
         {hasTop && (
@@ -242,7 +246,11 @@ const CardItem = React.forwardRef<HTMLElement, CardItemProps>(
             </div>
           )}
         </div>
-        {asChild && <Slot.Slottable>{children}</Slot.Slottable>}
+        {asChild && children && (
+          <Slot.Slottable>
+            {React.cloneElement(children, childAria)}
+          </Slot.Slottable>
+        )}
       </Comp>
     );
 

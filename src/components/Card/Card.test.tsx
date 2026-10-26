@@ -151,6 +151,34 @@ describe('Card.Item', () => {
     }
   });
 
+  it('keeps the title label and the description over an undefined aria key', () => {
+    const onCard = renderToStaticMarkup(
+      <Card.Item
+        asChild
+        title="A"
+        content="C"
+        aria-labelledby={undefined}
+        aria-describedby={undefined}
+      >
+        <a href="/sds/1" />
+      </Card.Item>
+    );
+    const onChild = renderToStaticMarkup(
+      <Card.Item asChild title="A" content="C">
+        <a
+          href="/sds/1"
+          aria-labelledby={undefined}
+          aria-describedby={undefined}
+        />
+      </Card.Item>
+    );
+
+    for (const html of [onCard, onChild]) {
+      expect(html).toMatch(/<a [^>]*aria-labelledby="[^"]+-title"/);
+      expect(html).toMatch(/<a [^>]*aria-describedby="[^"]+-content"/);
+    }
+  });
+
   it('labels and describes no plain card', () => {
     const html = renderToStaticMarkup(
       <Card.Item status="S" title="A" content="C" />
