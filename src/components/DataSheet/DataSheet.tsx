@@ -470,11 +470,11 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
               justify-between"
           >
             <div
-              className="bg-scroll-shadow-start w-12"
+              className="bg-scroll-shadow-start w-8"
               style={{ opacity: startShadow }}
             />
             <div
-              className="bg-scroll-shadow-end w-12"
+              className="bg-scroll-shadow-end w-8"
               style={{ opacity: endShadow }}
             />
           </div>
