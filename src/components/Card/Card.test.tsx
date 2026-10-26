@@ -194,6 +194,15 @@ describe('Card.Item', () => {
     expect(requested).not.toContain('hover:');
   });
 
+  it('takes no event handler on a plain card', () => {
+    const html = renderToStaticMarkup(
+      // @ts-expect-error a clickable card takes asChild
+      <Card.Item title="A" onClick={() => {}} />
+    );
+
+    expect(html).not.toMatch(/role=|tabindex=/);
+  });
+
   it('renders every slot it is given', () => {
     const html = renderToStaticMarkup(
       <Card.Item status="S" trailing="T" title="A" content="C" />

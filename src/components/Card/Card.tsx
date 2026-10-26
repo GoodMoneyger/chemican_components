@@ -78,7 +78,7 @@ const cardItemVariants = cva(
 interface CardItemBaseProps
   extends Omit<
     React.HTMLAttributes<HTMLElement>,
-    'title' | 'content' | 'children'
+    'title' | 'content' | keyof React.DOMAttributes<HTMLElement>
   > {
   /**
    * Renders the whole card as the child element, for example the app's
@@ -123,10 +123,17 @@ interface CardItemBaseProps
   className?: string;
 }
 
+type EventHandlers = Omit<
+  React.DOMAttributes<HTMLElement>,
+  'children' | 'dangerouslySetInnerHTML'
+>;
+
 export type CardItemProps = CardItemBaseProps &
   (
-    | { asChild: true; children: React.ReactElement }
-    | { asChild?: false; children?: never; interactive?: never }
+    | ({ asChild: true; children: React.ReactElement } & EventHandlers)
+    | ({ asChild?: false; children?: never; interactive?: never } & {
+        [K in keyof EventHandlers]?: never;
+      })
   );
 
 const isPresent = (node: React.ReactNode) =>
@@ -144,7 +151,8 @@ const hasAria = (
 /**
  * A table row shown as a card, for phones. The slots are `status` top left,
  * `trailing` top right, then `title` and `content`. Inside `Card.List` it
- * renders as a list item.
+ * renders as a list item. A plain card is static and takes no event handler:
+ * a card that opens something takes `asChild` with a link or a button.
  */
 const CardItem = React.forwardRef<HTMLElement, CardItemProps>(
   (
