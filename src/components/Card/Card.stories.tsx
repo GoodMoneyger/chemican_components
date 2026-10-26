@@ -127,6 +127,30 @@ const sdsSlots = (sds: Sds) => ({
   ),
 });
 
+/** The slots as phrasing content, which is all a `button` may hold */
+const phrasingSlots = (sds: Sds) => ({
+  ...sdsSlots(sds),
+  status: (
+    <span className="text-body-secondary text-sm leading-normal">
+      {sds.status.label}
+    </span>
+  ),
+  content: (
+    <span className="gap-xs flex flex-col">
+      <span className="gap-xxs flex flex-wrap">
+        {sds.products.map((product) => (
+          <Tag key={product} asChild>
+            <span>{product}</span>
+          </Tag>
+        ))}
+      </span>
+      <span className="text-body-secondary text-md leading-normal">
+        {sds.manufacturer}
+      </span>
+    </span>
+  ),
+});
+
 export const Default: Story = { decorators: [narrow] };
 
 export const List: Story = {
@@ -175,7 +199,12 @@ export const AsButton: Story = {
   render: ({ onClick }) => (
     <Card.List>
       {sdsRows.map((sds) => (
-        <Card.Item key={sds.id} asChild onClick={onClick} {...sdsSlots(sds)}>
+        <Card.Item
+          key={sds.id}
+          asChild
+          onClick={onClick}
+          {...phrasingSlots(sds)}
+        >
           <button type="button" />
         </Card.Item>
       ))}
@@ -185,7 +214,7 @@ export const AsButton: Story = {
     docs: {
       description: {
         story:
-          'A card that opens something in place, such as a sheet or a dialog, takes a `button` as the child. It gets the same hover, active and focus styles as a link, and the pointer cursor.',
+          'A card that opens something in place, such as a sheet or a dialog, takes a `button` as the child. It gets the same hover, active and focus styles as a link, and the pointer cursor. A button holds only phrasing content, so the slots here are text, `span`s and `Tag` with `asChild`, not the `StatusIndicator` and block elements of the link stories.',
       },
     },
   },
