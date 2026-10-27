@@ -1,4 +1,5 @@
 import { default as React } from '../../../node_modules/react';
+import { Spacing } from '../../lib/utils';
 import { TreeMoveEvent, TreeNodeKey } from './types';
 export type { TreeMoveEvent, TreeMovePlacement, TreeNodeKey, TreeNodeKind, } from './types';
 export { applyTreeMove } from './applyTreeMove';
@@ -6,7 +7,8 @@ export type { TreeMoveAccessors } from './applyTreeMove';
 export { groupFlatTreeItems } from './groupFlatTreeItems';
 export type { FlatTreeAccessors } from './groupFlatTreeItems';
 export type TreeSize = 'md' | 'lg';
-export type TreeSpacing = 'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
+/** @deprecated Use `Spacing` from `@chemican/components/utils`. */
+export type TreeSpacing = Spacing;
 export interface TreeHandle {
     collapseAll: () => void;
     expandAll: () => void;
@@ -60,9 +62,9 @@ export interface TreeProps<TSelected = unknown> extends Omit<React.HTMLAttribute
     /** Row height: `md` is 40px, `lg` is 48px. */
     size?: TreeSize;
     /** Padding before top-level rows. Defaults to `sm`. */
-    indentBase?: TreeSpacing;
+    indentBase?: Spacing;
     /** Extra padding per nesting level. Defaults to `xl`. */
-    indentStep?: TreeSpacing;
+    indentStep?: Spacing;
     /** Reports how many Groups with children exist and how many are open. */
     onExpandedCountChange?: (state: TreeExpandedCount) => void;
     ariaLabels?: TreeAriaLabels;

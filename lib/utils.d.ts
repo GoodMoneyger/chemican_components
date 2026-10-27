@@ -1,6 +1,10 @@
 import { default as React } from '../../node_modules/react';
 import { ClassArray } from 'clsx';
 import { TablerIcon } from '../../@tabler/icons-react/dist/esm/icons/index.mjs';
+/** The spacing tokens behind `gap-*`, `p-*`, `m-*` and the like, smallest first */
+export declare const spacingTokens: readonly ["xxxs", "xxs", "xs", "sm", "md", "lg", "xl", "xxl", "xxxl"];
+/** One of `spacingTokens` */
+export type Spacing = (typeof spacingTokens)[number];
 export declare const cn: (...inputs: ClassArray) => string;
 export type IconProp = React.ReactNode | TablerIcon;
 export interface IconRenderOptions {
