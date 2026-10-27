@@ -44,6 +44,15 @@ export interface DataSheetTableProps<TItem extends DataSheetItemType = string> e
     onRemoveRow?: (item: TItem) => void;
     onRestoreRow?: (item: TItem) => void;
     actionsColumnParts?: number;
+    /**
+     * Minimum table width below the md breakpoint. Narrower containers scroll
+     * the table sideways instead of squeezing its columns. Pass `'auto'` for
+     * tables that fit as they are.
+     *
+     * A table that scrolls shades the edge that hides more columns and is a
+     * keyboard-focusable region. Name it with `aria-label` or `aria-labelledby`.
+     */
+    mobileMinWidth?: string;
 }
 declare const DataSheetTable: <TItem extends DataSheetItemType = string>(props: DataSheetTableProps<TItem> & {
     ref?: React.ForwardedRef<HTMLDivElement>;

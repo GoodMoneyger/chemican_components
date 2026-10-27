@@ -10,6 +10,11 @@ export interface SideNavigationProps extends React.HTMLAttributes<HTMLElement>, 
     collapseLabel?: React.ReactNode;
     expandLabel?: React.ReactNode;
     defaultCollapsed?: boolean;
+    /**
+     * Hides the navigation below the md breakpoint, where `MobileNavigation`
+     * takes over, and sets `--cc-side-navigation-width` to 0 there.
+     */
+    responsive?: boolean;
 }
 export declare const SideNavigation: React.ForwardRefExoticComponent<SideNavigationProps & React.RefAttributes<HTMLElement>>;
 export {};
