@@ -50,7 +50,7 @@ const dataSheetHeaderVariants = cva(
     variants: {
       variant: {
         primary: 'text-md font-bold',
-        table: `text-sm font-bold bg-surface-tertiary px-xs py-xxs mb-xxs
+        table: `text-sm font-bold bg-surface-tertiary px-xs py-xxs
         leading-tight`,
       },
     },
@@ -188,13 +188,17 @@ const dataSheetKeyValueVariants = cva('py-sm', {
   variants: {
     orientation: {
       vertical: 'gap-xxs flex flex-col',
-      horizontal: 'px-0 py-0 min-h-11 flex items-center',
+      horizontal: `px-0 py-0 min-h-11 max-md:gap-xxs max-md:flex-col
+      max-md:items-stretch flex items-center`,
     },
     spacing: {
       default: '',
       compact: 'py-xxs min-h-0 border-none',
     },
   },
+  compoundVariants: [
+    { orientation: 'horizontal', spacing: 'default', class: 'max-md:py-sm' },
+  ],
   defaultVariants: {
     orientation: 'vertical',
     spacing: 'default',
@@ -207,7 +211,8 @@ const dataSheetKeyValueLabelVariants = cva(
     variants: {
       orientation: {
         vertical: 'leading-none',
-        horizontal: 'w-[7.5rem] shrink-0 leading-[1.5]',
+        horizontal: `max-md:w-auto max-md:leading-none w-[7.5rem] shrink-0
+        leading-[1.5]`,
       },
     },
     defaultVariants: {
@@ -286,6 +291,15 @@ export interface DataSheetTableProps<TItem extends DataSheetItemType = string>
   onRemoveRow?: (item: TItem) => void;
   onRestoreRow?: (item: TItem) => void;
   actionsColumnParts?: number;
+  /**
+   * Minimum table width below the md breakpoint. Narrower containers scroll
+   * the table sideways instead of squeezing its columns. Pass `'auto'` for
+   * tables that fit as they are.
+   *
+   * A table that scrolls shades the edge that hides more columns and is a
+   * keyboard-focusable region. Name it with `aria-label` or `aria-labelledby`.
+   */
+  mobileMinWidth?: string;
 }
 
 interface DataSheetTableContextValue<TItem extends DataSheetItemType = string> {
@@ -327,6 +341,69 @@ const useDataSheetTableRowContext = <
     DataSheetTableRowContext
   ) as DataSheetTableRowContextValue<TItem>;
 
+// Scroll distance over which an edge shadow ramps out as that end comes into view.
+const EDGE_SHADOW_RAMP_PX = 48;
+
+interface HorizontalScrollEdges {
+  hasOverflow: boolean;
+  /** Shadow opacity at the start edge: 0 while at the start, 1 once scrolled past the ramp. */
+  startShadow: number;
+  /** Shadow opacity at the end edge: 1 while far from the end, 0 once it is in view. */
+  endShadow: number;
+}
+
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+
+const useHorizontalScrollEdges = (ref: React.RefObject<HTMLElement | null>) => {
+  const [edges, setEdges] = React.useState<HorizontalScrollEdges>({
+    hasOverflow: false,
+    startShadow: 0,
+    endShadow: 0,
+  });
+
+  React.useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const { scrollWidth, clientWidth, scrollLeft } = element;
+      const next = {
+        hasOverflow: scrollWidth > clientWidth,
+        startShadow: clamp01(scrollLeft / EDGE_SHADOW_RAMP_PX),
+        endShadow: clamp01(
+          (scrollWidth - clientWidth - scrollLeft) / EDGE_SHADOW_RAMP_PX
+        ),
+      };
+      setEdges((prev) =>
+        prev.hasOverflow === next.hasOverflow &&
+        prev.startShadow === next.startShadow &&
+        prev.endShadow === next.endShadow
+          ? prev
+          : next
+      );
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    const observer = new ResizeObserver(schedule);
+
+    observer.observe(element);
+    Array.from(element.children).forEach((child) => observer.observe(child));
+    element.addEventListener('scroll', schedule, { passive: true });
+    measure();
+
+    return () => {
+      observer.disconnect();
+      element.removeEventListener('scroll', schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [ref]);
+
+  return edges;
+};
+
 function DataSheetTableInner<TItem extends DataSheetItemType = string>(
   {
     className,
@@ -335,23 +412,73 @@ function DataSheetTableInner<TItem extends DataSheetItemType = string>(
     onRemoveRow,
     onRestoreRow,
     actionsColumnParts = 10,
+    mobileMinWidth = '40rem',
+    style,
     ...props
   }: DataSheetTableProps<TItem>,
   ref: React.ForwardedRef<HTMLDivElement>
 ) {
-  const contextValue: DataSheetTableContextValue<TItem> = {
-    actionsColumnParts,
-    ...(onEditRow && { onEditRow }),
-    ...(onRemoveRow && { onRemoveRow }),
-    ...(onRestoreRow && { onRestoreRow }),
-  };
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+  React.useImperativeHandle(ref, () => wrapperRef.current as HTMLDivElement);
+  const { hasOverflow, startShadow, endShadow } =
+    useHorizontalScrollEdges(wrapperRef);
+
+  const contextValue = React.useMemo<DataSheetTableContextValue<TItem>>(
+    () => ({
+      actionsColumnParts,
+      ...(onEditRow && { onEditRow }),
+      ...(onRemoveRow && { onRemoveRow }),
+      ...(onRestoreRow && { onRestoreRow }),
+    }),
+    [actionsColumnParts, onEditRow, onRemoveRow, onRestoreRow]
+  );
 
   return (
     <DataSheetTableContext.Provider
       value={contextValue as DataSheetTableContextValue}
     >
-      <div ref={ref} className={cn('overflow-x-auto', className)} {...props}>
-        <table className="w-full table-fixed">{children}</table>
+      <div className="relative">
+        <div
+          ref={wrapperRef}
+          role="region"
+          tabIndex={hasOverflow ? 0 : undefined}
+          className={cn(
+            `focus-visible:ring-interactive-focused overflow-x-auto
+            focus-visible:ring-2 focus-visible:outline-none
+            focus-visible:ring-inset`,
+            className
+          )}
+          style={
+            {
+              '--cc-data-sheet-table-min-width': mobileMinWidth,
+              ...style,
+            } as React.CSSProperties
+          }
+          {...props}
+        >
+          <table
+            className="max-md:min-w-(--cc-data-sheet-table-min-width) w-full
+              table-fixed"
+          >
+            {children}
+          </table>
+        </div>
+        {hasOverflow && (
+          <div
+            aria-hidden
+            className="z-slight inset-0 pointer-events-none absolute flex
+              justify-between"
+          >
+            <div
+              className="bg-scroll-shadow-start w-8"
+              style={{ opacity: startShadow }}
+            />
+            <div
+              className="bg-scroll-shadow-end w-8"
+              style={{ opacity: endShadow }}
+            />
+          </div>
+        )}
       </div>
     </DataSheetTableContext.Provider>
   );

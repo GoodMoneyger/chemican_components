@@ -135,8 +135,10 @@ export const Dialog: React.FC<DialogProps> = ({
             onEscapeKeyDown={handleEscapeKeyDown}
             onOpenAutoFocus={onOpenAutoFocus}
             className={cn(
-              `bg-surface-primary rounded-lg z-dialog min-w-96 fixed top-1/2
-              left-1/2 w-2/3 -translate-x-1/2 -translate-y-1/2 transform`,
+              `bg-surface-primary rounded-lg z-dialog min-w-96 max-md:flex
+              max-md:max-h-[calc(100dvh-2rem)] max-md:w-[calc(100vw-2rem)]
+              max-md:min-w-0 max-md:flex-col fixed top-1/2 left-1/2 w-2/3
+              -translate-x-1/2 -translate-y-1/2 transform`,
               sizeClasses[size]
             )}
           >
@@ -152,28 +154,40 @@ export const Dialog: React.FC<DialogProps> = ({
             </header>
 
             <div
-              // max-h-[calc(100vh-40px-68px-78px)] → viewport full height - 20px top and bottom - header - footer
+              // max-h-[calc(100dvh-40px-68px-78px)] → viewport full height - 20px top and bottom - header - footer.
+              // Below md the content is a capped flex column instead, so a stacked footer still fits.
               className={cn(
                 `border-divider-default bg-surface-secondary px-xl pt-md pb-xxl
-                text-body-primary max-h-[calc(100vh-40px-68px-78px)]
-                overflow-hidden overflow-y-auto border-y-1`,
+                text-body-primary max-md:max-h-none max-md:min-h-0 max-md:flex-1
+                max-h-[calc(100dvh-40px-68px-78px)] overflow-hidden
+                overflow-y-auto border-y-1`,
                 bodyClassName
               )}
             >
               {children}
             </div>
 
-            <footer className="px-xl py-md flex justify-between">
+            <footer
+              className="px-xl py-md max-md:gap-xs max-md:flex-col-reverse flex
+                justify-between"
+            >
               {cancellable && (
                 <Button
                   intent="tertiary"
                   onClick={handleCancelClick}
                   disabled={busyState}
+                  className="max-md:w-full"
                 >
                   {cancelButtonLabel}
                 </Button>
               )}
-              <div className={`gap-xs flex ${!cancellable ? 'ml-auto' : ''}`}>
+              <div
+                className={cn(
+                  `gap-xs max-md:ml-0 max-md:flex-col-reverse max-md:*:w-full
+                  flex`,
+                  { 'ml-auto': !cancellable }
+                )}
+              >
                 {actions.map((action, index) => {
                   const { label, classNames, onAction, value, ...buttonProps } =
                     action;
