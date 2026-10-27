@@ -2,61 +2,66 @@ name: TruffleHog Secret Scan
 
 on: pull_request
 
+permissions: {}
+
 jobs:
     test:
       runs-on: ubuntu-latest
+      timeout-minutes: 10
+      permissions:
+        contents: read
       steps:
 
-      - name: Extract Pull Request's commits
-        run: echo "fetch_depth=$(( commits + 1 ))" >> $GITHUB_ENV
-        env:
-          commits: ${{ github.event.pull_request.commits }}
-
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: ${{ env.fetch_depth }}
+          # 全履歴を取る。「PR のコミット数 + 1」の深さだと base が浅いクローンに
+          # 入らないことがあり、そのとき TruffleHog は 0 バイトしか見ずに成功する。
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Secret Scanning
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
         with:
           base: ${{ github.event.pull_request.base.sha }}
           head: ${{ github.event.pull_request.head.sha }}
+          # スキャナ本体を digest で固定する。version の既定値は latest なので、
+          # uses: を固定してもスキャナは浮いたままになる。uses: を上げるときは
+          # ここも揃える。
+          version: 3.97.5@sha256:1cec88f18ca39e26e04e61fe9d886c9c4e5f2fc0ba4f2ed185cac0722bd8a076
 
       # Slack Webhook用のGCP Service Accountの認証
       - name: 'GCP Service Account Authorization for Slack Webhook'
         if: ${{ failure() }}
         id: auth_slack_webhook
-        uses: 'google-github-actions/auth@v2'
+        uses: 'google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093' # v3.0.0
         with:
           credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_FOR_GITHUB }}'
-      
-      # GCP Service Accountの認証
-      - name: 'Activate Service Account'
-        if: ${{ failure() }}
-        run: |
-          # GCP Service Accountの認証
-          gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
-          gcloud config set project sds-scan
 
-      # SLACK_WEBHOOK_URLを環境変数にセット
-      - name: 'Get WEBHOOK_URL from Google Cloud Secret Manager'
+      # Webhook URL は GitHub の secret ではないので、$GITHUB_ENV に書くと
+      # ログに平文で出る。この action は読んだ値をマスクしてから output に渡す。
+      - name: Get Slack Webhook URL
+        id: secretmanager
         if: ${{ failure() }}
-        run: echo "SLACK_WEBHOOK_URL_SECURITY_ALERT=$(gcloud secrets versions access latest --secret='SLACK_WEBHOOK_URL_SECURITY_ALERT')" >> $GITHUB_ENV
+        uses: google-github-actions/get-secretmanager-secrets@bc9c54b29fdffb8a47776820a7d26e77b379d262 # v3.0.0
+        with:
+          secrets: |-
+            SLACK_WEBHOOK_URL:sds-scan/SLACK_WEBHOOK_URL_SECURITY_ALERT
 
       # Slackに通知
       - name: Notify Slack
         if: ${{ failure() }}
-        uses: 8398a7/action-slack@v3
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
         with:
-          status: custom
-          fields: workflow,job,commit
-          custom_payload: |
+          webhook: ${{ steps.secretmanager.outputs.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          errors: true
+          payload: |
             {
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `${{ github.repository }}リポジトリにsecretがcommitされている可能性があります\nデプロイ中のジョブ: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`,
-              }]
+              "attachments": [
+                {
+                  "color": "${{ job.status == 'success' && 'good' || (job.status == 'failure' && 'danger' || 'warning') }}",
+                  "text": "${{ github.repository }}リポジトリにsecretがcommitされている可能性があります\nデプロイ中のジョブ: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                }
+              ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL_SECURITY_ALERT }}
