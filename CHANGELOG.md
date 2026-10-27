@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.15.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.14.0...v1.15.0) (2026-10-27)
+
+### Features
+
+* **Card:** [[#201](https://github.com/GoodMoneyger/chemican_components/issues/201)] Add Card.Item and Card.List for rows shown as cards ([#208](https://github.com/GoodMoneyger/chemican_components/issues/208)) ([f4083eb](https://github.com/GoodMoneyger/chemican_components/commit/f4083ebc83b092b68c211abf0498251db88ff1b6))
+* **MobileNavigation:** Add a mobile header and menu, and a responsive SideNavigation ([#204](https://github.com/GoodMoneyger/chemican_components/issues/204)) ([58572a2](https://github.com/GoodMoneyger/chemican_components/commit/58572a234c97ccd119209821d3d2d22b48489094)), closes [#199](https://github.com/GoodMoneyger/chemican_components/issues/199)
+
+### Bug Fixes
+
+* **Dialog, DataSheet:** Fit dialogs and data sheets on phone screens ([#203](https://github.com/GoodMoneyger/chemican_components/issues/203)) ([85d8029](https://github.com/GoodMoneyger/chemican_components/commit/85d8029cefe16a3e3a9aee79906355575e505b2b)), closes [#200](https://github.com/GoodMoneyger/chemican_components/issues/200)
+
 ## [1.14.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.4...v1.14.0) (2026-10-23)
 
 ### Features
