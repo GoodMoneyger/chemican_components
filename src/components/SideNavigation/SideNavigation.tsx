@@ -36,6 +36,11 @@ export interface SideNavigationProps
   collapseLabel?: React.ReactNode;
   expandLabel?: React.ReactNode;
   defaultCollapsed?: boolean;
+  /**
+   * Hides the navigation below the md breakpoint, where `MobileNavigation`
+   * takes over, and sets `--cc-side-navigation-width` to 0 there.
+   */
+  responsive?: boolean;
 }
 
 export const SideNavigation = React.forwardRef<
@@ -66,6 +71,7 @@ const SideNavigationContent = React.forwardRef<
       showCollapseButton = false,
       collapseLabel,
       expandLabel,
+      responsive = false,
       ...props
     },
     ref
@@ -81,10 +87,12 @@ const SideNavigationContent = React.forwardRef<
         className={cn(
           sideNavigationVariants({ width: effectiveWidth }),
           'group',
+          { 'max-md:hidden': responsive },
           className
         )}
         data-cc-side-navigation=""
         data-collapsed={effectiveWidth === 'collapsed'}
+        data-responsive={responsive || undefined}
         {...props}
       >
         {header && (
