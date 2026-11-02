@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.14.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.14.0...v1.14.1) (2026-11-02)
+
+### Bug Fixes
+
+* **Table:** Center the cover message in Firefox ([#213](https://github.com/GoodMoneyger/chemican_components/issues/213)) ([f23192b](https://github.com/GoodMoneyger/chemican_components/commit/f23192b0f21d4422c9b8bb7a7474312a8cb8cfb2))
+
 ## [1.14.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.13.4...v1.14.0) (2026-10-23)
 
 ### Features
