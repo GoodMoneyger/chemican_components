@@ -112,18 +112,22 @@ const TableCoverMessage = React.forwardRef<
   TableCoverMessageProps
 >(({ className, children, ...props }, ref) => (
   <tr ref={ref} {...props}>
-    <td
-      className="py-sm min-h-12 sticky
-        left-[calc((100%+var(--cc-side-navigation-width,0px))/2)] block w-fit
-        text-center align-middle"
-    >
+    {/* Firefox keeps a sticky element inside its cell, so the cell spans
+        every column to give the sticky wrapper room to move. */}
+    <td colSpan={100} className="p-0">
       <div
-        className={cn(
-          'flex w-max -translate-x-1/2 transform items-center',
-          className
-        )}
+        className="py-sm min-h-12 sticky
+          left-[calc((100%+var(--cc-side-navigation-width,0px))/2)] w-fit
+          text-center"
       >
-        {children}
+        <div
+          className={cn(
+            'flex w-max -translate-x-1/2 transform items-center',
+            className
+          )}
+        >
+          {children}
+        </div>
       </div>
     </td>
   </tr>
