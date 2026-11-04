@@ -176,16 +176,30 @@ const MobileRender = () => {
   );
 };
 
+// Desktop browsers report a fine pointer, which makes TabBar collapse into the
+// dropdown. Answer that query as a phone would, so the story scrolls like one.
+const withoutFinePointer = () => {
+  const matchMedia = window.matchMedia;
+  window.matchMedia = (query) =>
+    matchMedia.call(window, query === '(pointer: fine)' ? 'not all' : query);
+  return () => {
+    window.matchMedia = matchMedia;
+  };
+};
+
 export const Mobile: Story = {
   render: () => <MobileRender />,
+  beforeEach: withoutFinePointer,
   globals: {
     viewport: { value: 'mobile', isRotated: false },
   },
   parameters: {
     docs: {
+      // Its own iframe keeps the pointer override away from the other stories.
+      story: { inline: false, height: '120px' },
       description: {
         story:
-          'The normal size at 375px: 14px labels and 38px tabs. On touch screens the bar scrolls sideways without a scrollbar and shades the edge that hides more tabs. With a mouse it collapses into the "more" dropdown instead, so turn on touch emulation (e.g. the Chrome DevTools device toolbar) or open it on a phone to see the scrolling.',
+          'The normal size at 375px, as on a phone: 14px labels and 38px tabs. The bar scrolls sideways without a scrollbar and shades the edge that hides more tabs. The story reports no fine pointer, so it scrolls even with a mouse; on a real desktop the bar collapses into the "more" dropdown instead.',
       },
     },
   },
