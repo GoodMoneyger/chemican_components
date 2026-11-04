@@ -16,7 +16,7 @@ import {
 const tabBarVariants = cva('inline-flex', {
   variants: {
     size: {
-      normal: 'h-12',
+      normal: 'h-12 max-md:h-10',
       small: 'h-10',
     },
   },
@@ -40,7 +40,7 @@ const tabVariants = cva(
   {
     variants: {
       size: {
-        normal: 'p-md h-12 text-lg',
+        normal: 'p-md h-12 text-lg max-md:p-sm max-md:h-9.5 max-md:text-md',
         small: 'p-sm h-9.5 text-md',
       },
     },
@@ -58,7 +58,7 @@ const moreButtonVariants = cva(
   {
     variants: {
       size: {
-        normal: 'p-md h-12 text-lg',
+        normal: 'p-md h-12 text-lg max-md:p-sm max-md:h-9.5 max-md:text-md',
         small: 'p-sm h-9.5 text-md',
       },
     },
