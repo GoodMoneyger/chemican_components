@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.15.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.15.0...v1.15.1) (2026-11-04)
+
+### Bug Fixes
+
+* **TabBar:** Fit the tab bar to phones: small size, edge shadows, no scrollbar ([#215](https://github.com/GoodMoneyger/chemican_components/issues/215)) ([f4936c4](https://github.com/GoodMoneyger/chemican_components/commit/f4936c4c9081277544384af38394dd67eb5034f6)), references [GoodMoneyger/sds_scan_general#4151](https://github.com/GoodMoneyger/sds_scan_general/issues/4151)
+* **Table:** Center the cover message in Firefox ([#213](https://github.com/GoodMoneyger/chemican_components/issues/213)) ([#216](https://github.com/GoodMoneyger/chemican_components/issues/216)) ([8445cf4](https://github.com/GoodMoneyger/chemican_components/commit/8445cf4c43b994d8cf0da7242e27791a07563fa9))
+
+### Build
+
+* **deps-dev:** bump storybook from 9.1.19 to 9.1.21 ([9757ac5](https://github.com/GoodMoneyger/chemican_components/commit/9757ac581a5b0005ad8edddf3d4c479747ef4489))
+* **deps-dev:** bump vite from 6.4.3 to 6.4.5 ([57db326](https://github.com/GoodMoneyger/chemican_components/commit/57db32643577a7d1c238ab749b27a9d3cd9f753d))
+* **deps:** bump fast-uri from 3.1.7 to 3.1.9 ([d31e524](https://github.com/GoodMoneyger/chemican_components/commit/d31e5240cf47f89acf08a0fb2e4156f1cd85e96d))
+* **deps:** bump undici and release-it ([d9f7993](https://github.com/GoodMoneyger/chemican_components/commit/d9f7993bedddb4f2017085a77b7e0358f85f6171))
+
+### CI
+
+* mask the Slack webhook read from Secret Manager in truffle_hog.yml ([3bea92c](https://github.com/GoodMoneyger/chemican_components/commit/3bea92c62c1441ae18f1203caa7b53ae52576c73))
+
 ## [1.15.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.14.0...v1.15.0) (2026-10-27)
 
 ### Features
