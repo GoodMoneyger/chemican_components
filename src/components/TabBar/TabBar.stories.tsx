@@ -162,3 +162,45 @@ export const OverflowCustomLabel: Story = {
     </div>
   ),
 };
+
+const MobileRender = () => {
+  const [value, setValue] = React.useState('profile');
+  return (
+    <TabBar value={value} onValueChange={setValue}>
+      <Tab value="profile">プロフィール</Tab>
+      <Tab value="email">メール配信設定</Tab>
+      <Tab value="two-factor">二要素認証設定</Tab>
+      <Tab value="language">言語設定</Tab>
+      <Tab value="notifications">通知設定</Tab>
+    </TabBar>
+  );
+};
+
+// Desktop browsers report a fine pointer, which makes TabBar collapse into the
+// dropdown. Answer that query as a phone would, so the story scrolls like one.
+const withoutFinePointer = () => {
+  const matchMedia = window.matchMedia;
+  window.matchMedia = (query) =>
+    matchMedia.call(window, query === '(pointer: fine)' ? 'not all' : query);
+  return () => {
+    window.matchMedia = matchMedia;
+  };
+};
+
+export const Mobile: Story = {
+  render: () => <MobileRender />,
+  beforeEach: withoutFinePointer,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+  parameters: {
+    docs: {
+      // Its own iframe keeps the pointer override away from the other stories.
+      story: { inline: false, height: '120px' },
+      description: {
+        story:
+          'The normal size at 375px, as on a phone: 14px labels and 38px tabs. The bar scrolls sideways without a scrollbar and shades the edge that hides more tabs. The story reports no fine pointer, so it scrolls even with a mouse; on a real desktop the bar collapses into the "more" dropdown instead.',
+      },
+    },
+  },
+};
