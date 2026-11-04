@@ -162,3 +162,31 @@ export const OverflowCustomLabel: Story = {
     </div>
   ),
 };
+
+const MobileRender = () => {
+  const [value, setValue] = React.useState('profile');
+  return (
+    <TabBar value={value} onValueChange={setValue}>
+      <Tab value="profile">プロフィール</Tab>
+      <Tab value="email">メール配信設定</Tab>
+      <Tab value="two-factor">二要素認証設定</Tab>
+      <Tab value="language">言語設定</Tab>
+      <Tab value="notifications">通知設定</Tab>
+    </TabBar>
+  );
+};
+
+export const Mobile: Story = {
+  render: () => <MobileRender />,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The normal size at 375px: 14px labels and 38px tabs. On touch screens the bar scrolls sideways without a scrollbar and shades the edge that hides more tabs. With a mouse it collapses into the "more" dropdown instead, so turn on touch emulation (e.g. the Chrome DevTools device toolbar) or open it on a phone to see the scrolling.',
+      },
+    },
+  },
+};
