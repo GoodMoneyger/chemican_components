@@ -5,3 +5,4 @@ export type {
   UseCompositionGuardResult,
 } from './useCompositionGuard';
 export { useIsTruncated } from './useIsTruncated';
+export { useHorizontalScrollEdges } from './useHorizontalScrollEdges';

@@ -5,6 +5,8 @@ import { Tabs as RadixTabs } from 'radix-ui';
 import { IconDotsVertical } from '@tabler/icons-react';
 
 import { cn } from '../../lib/utils';
+import { useHorizontalScrollEdges } from '../../lib/hooks';
+import { ScrollEdgeShadows } from '../../lib/components/ScrollEdgeShadows';
 import {
   Dropdown,
   DropdownTrigger,
@@ -121,6 +123,11 @@ export const TabBar = React.forwardRef<
   // on container resize. Hidden tabs keep their cached width since offsetWidth
   // reports 0 for display:none elements.
   const tabWidths = React.useRef<Map<string, number>>(new Map());
+  const {
+    hasOverflow: isScrollable,
+    startShadow,
+    endShadow,
+  } = useHorizontalScrollEdges(listRef);
 
   const tabs = React.useMemo(() => extractTabs(children), [children]);
 
@@ -202,13 +209,19 @@ export const TabBar = React.forwardRef<
   const formatMoreLabel = moreLabel ?? ((count: number) => `${count} more`);
 
   return (
-    <RadixTabs.Root ref={ref} className={cn('w-full', className)} {...props}>
+    <RadixTabs.Root
+      ref={ref}
+      className={cn('relative w-full', className)}
+      {...props}
+    >
       <RadixTabs.List
         ref={listRef}
         className={cn(
           tabBarVariants({ size: effectiveSize }),
           'w-full',
-          !useDropdown && 'overflow-x-auto'
+          !useDropdown &&
+            `overflow-x-auto [scrollbar-width:none]
+            [&::-webkit-scrollbar]:hidden`
         )}
         role="tablist"
       >
@@ -290,6 +303,9 @@ export const TabBar = React.forwardRef<
           </div>
         )}
       </RadixTabs.List>
+      {!useDropdown && isScrollable && (
+        <ScrollEdgeShadows startShadow={startShadow} endShadow={endShadow} />
+      )}
     </RadixTabs.Root>
   );
 });
