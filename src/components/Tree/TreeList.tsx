@@ -35,6 +35,13 @@ export interface TreeListAction<T> {
   intent?: ButtonProps['intent'];
   danger?: boolean;
   disabled?: boolean;
+  /**
+   * Keeps the action as a button before the menu button when the actions
+   * collapse into a menu on a narrow list. Below `md` it goes in the menu.
+   */
+  besideMenu?: boolean;
+  /** Item text in the menu. Defaults to `label`. */
+  menuLabel?: React.ReactNode;
   onAction: (item: T) => void;
 }
 
@@ -233,6 +240,24 @@ function TreeListInner<T>(
             });
             if (rowActions.length === 0) return null;
             const menuOpen = openMenuKey === key;
+            const compact = actionsLayout !== 'buttons';
+            const renderButton = (action: TreeListAction<T>) => (
+              <Button
+                key={action.key}
+                type="button"
+                intent={action.intent ?? 'secondary'}
+                size="xs"
+                danger={action.danger ?? false}
+                aria-label={
+                  action.ariaLabel ??
+                  (typeof action.label === 'string' ? action.label : action.key)
+                }
+                disabled={action.disabled ?? false}
+                onClick={() => action.onAction(item)}
+              >
+                {action.label}
+              </Button>
+            );
             const buttons = actionsLayout !== 'menu' && (
               <span
                 className={cn(
@@ -241,34 +266,33 @@ function TreeListInner<T>(
                     '@max-4xl/tree-list:hidden max-md:hidden'
                 )}
               >
-                {rowActions.map((action) => (
-                  <Button
-                    key={action.key}
-                    type="button"
-                    intent={action.intent ?? 'secondary'}
-                    size="xs"
-                    danger={action.danger ?? false}
-                    aria-label={
-                      action.ariaLabel ??
-                      (typeof action.label === 'string'
-                        ? action.label
-                        : action.key)
-                    }
-                    disabled={action.disabled ?? false}
-                    onClick={() => action.onAction(item)}
-                  >
-                    {action.label}
-                  </Button>
-                ))}
+                {rowActions.map(renderButton)}
               </span>
             );
-            const menu = actionsLayout !== 'buttons' && (
+            const besideActions = rowActions.filter(
+              (action) => action.besideMenu
+            );
+            const beside = compact && besideActions.length > 0 && (
               <span
-                className={cn(
-                  'contents',
-                  actionsLayout === 'auto' &&
-                    '@max-4xl/tree-list:contents max-md:contents hidden'
-                )}
+                className={
+                  actionsLayout === 'auto'
+                    ? 'md:@max-4xl/tree-list:contents hidden'
+                    : 'md:contents hidden'
+                }
+              >
+                {besideActions.map(renderButton)}
+              </span>
+            );
+            const menuOnlyAtMobile = besideActions.length === rowActions.length;
+            const menu = compact && (
+              <span
+                className={
+                  menuOnlyAtMobile
+                    ? 'max-md:contents hidden'
+                    : actionsLayout === 'auto'
+                      ? '@max-4xl/tree-list:contents max-md:contents hidden'
+                      : 'contents'
+                }
               >
                 <Dropdown
                   open={menuOpen}
@@ -290,8 +314,9 @@ function TreeListInner<T>(
                         intent={action.danger ? 'danger' : 'default'}
                         disabled={action.disabled ?? false}
                         onSelect={() => action.onAction(item)}
+                        className={cn(action.besideMenu && 'md:hidden')}
                       >
-                        {action.label}
+                        {action.menuLabel ?? action.label}
                       </DropdownItem>
                     ))}
                   </DropdownContent>
@@ -302,12 +327,13 @@ function TreeListInner<T>(
               <Tree.RowOverlay
                 forceVisible={menuOpen}
                 className={cn(
-                  actionsLayout !== 'buttons' &&
+                  compact &&
                     `max-md:static max-md:bg-none max-md:px-0
                       max-md:opacity-100`
                 )}
               >
                 {buttons}
+                {beside}
                 {menu}
               </Tree.RowOverlay>
             );

@@ -809,6 +809,22 @@ const CompactActionsExample = () => {
         aria-label="部署一覧"
         actions={(d) => [
           {
+            key: 'users',
+            label: `${d.name.length}人`,
+            menuLabel: 'ユーザー一覧を開く',
+            intent: 'text',
+            besideMenu: true,
+            onAction: log('ユーザー一覧で開く'),
+          },
+          {
+            key: 'documents',
+            label: `${d.name.length * 2}件`,
+            menuLabel: 'SDS一覧を開く',
+            intent: 'text',
+            besideMenu: true,
+            onAction: log('SDS一覧で開く'),
+          },
+          {
             key: 'add',
             label: '子部署の追加',
             intent: 'primary',
@@ -842,7 +858,7 @@ export const NarrowContainer: Story = {
     docs: {
       description: {
         story:
-          'The list sits in a 48rem container, as on a 1024px window with the side navigation open. Below 56rem of list width, `actionsLayout="auto"` replaces the row buttons with one menu button, so the overlay no longer covers the names of deep rows. The menu lists the actions in the order returned, with danger and disabled actions marked, and keeps the overlay visible while it is open.',
+          'The list sits in a 48rem container, as on a 1024px window with the side navigation open. Below 56rem of list width, `actionsLayout="auto"` replaces the row buttons with one menu button, so the overlay no longer covers the names of deep rows. The count links are `besideMenu`, so they stay as buttons before the menu button. The menu lists the actions in the order returned, with danger and disabled actions marked, and keeps the overlay visible while it is open.',
       },
     },
   },
@@ -857,7 +873,7 @@ export const Mobile: Story = {
     docs: {
       description: {
         story:
-          'Below `md` there is no hover, so the menu button stays in every row, after the label. The label truncates before it instead of sitting under it.',
+          'Below `md` there is no hover, so the menu button stays in every row, after the label. The label truncates before it instead of sitting under it. The `besideMenu` count links move into the menu under their `menuLabel`.',
       },
     },
   },
