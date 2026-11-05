@@ -758,3 +758,123 @@ export const WithActions: Story = {
     },
   },
 };
+
+const deepLevelNames = [
+  '本社',
+  '生産技術統括本部',
+  '化学品事業部門',
+  '関東地区製造拠点',
+  '第二工場製造管理部',
+  '有機溶剤取扱品質保証課',
+  '危険物貯蔵設備保安グループ',
+  '夜間勤務体制安全衛生チーム',
+  '屋外タンク定期点検作業班',
+  '化学物質リスクアセスメント推進ワーキンググループ',
+];
+
+const deepDepartments: Department[] = [
+  ...deepLevelNames.map((name, depth) => ({
+    uuid: `level-${depth + 1}`,
+    name,
+    parent_id: depth === 0 ? null : `level-${depth}`,
+    display_order: 0,
+  })),
+  ...departments
+    .filter((d) => d.uuid !== 'honsha')
+    .map((d) => ({
+      ...d,
+      parent_id:
+        d.parent_id === null || d.parent_id === 'honsha'
+          ? 'level-1'
+          : d.parent_id,
+      display_order: d.display_order + 1,
+    })),
+];
+
+const CompactActionsExample = () => {
+  const [lastAction, setLastAction] = useState<string | null>(null);
+  const log = (verb: string) => (d: Department) =>
+    setLastAction(`${d.name} を${verb}`);
+
+  return (
+    <div className="gap-md flex flex-col">
+      <TreeList
+        header="部署名"
+        items={deepDepartments}
+        getItemValue={(d) => d.uuid}
+        getParentKey={(d) => d.parent_id}
+        getOrder={(d) => d.display_order}
+        getLabel={(d) => d.name}
+        labels={{ ...labels, actions: '部署の操作' }}
+        aria-label="部署一覧"
+        actions={(d) => [
+          {
+            key: 'users',
+            label: `${d.name.length}人`,
+            menuLabel: 'ユーザー一覧を開く',
+            intent: 'text',
+            besideMenu: true,
+            onAction: log('ユーザー一覧で開く'),
+          },
+          {
+            key: 'documents',
+            label: `${d.name.length * 2}件`,
+            menuLabel: 'SDS一覧を開く',
+            intent: 'text',
+            besideMenu: true,
+            onAction: log('SDS一覧で開く'),
+          },
+          {
+            key: 'add',
+            label: '子部署の追加',
+            intent: 'primary',
+            disabled: d.parent_id === 'level-9',
+            onAction: log('追加'),
+          },
+          { key: 'edit', label: '部署名の変更', onAction: log('編集') },
+          { key: 'move', label: '部署の移動', onAction: log('移動') },
+          {
+            key: 'delete',
+            label: '部署の削除',
+            danger: true,
+            onAction: log('削除'),
+          },
+        ]}
+      />
+      <p className="text-sm text-body-secondary" aria-live="polite">
+        {lastAction ?? '操作を選んでください'}
+      </p>
+    </div>
+  );
+};
+
+export const NarrowContainer: Story = {
+  render: () => (
+    <div className="max-w-3xl">
+      <CompactActionsExample />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The list sits in a 48rem container, as on a 1024px window with the side navigation open. Below 56rem of list width, `actionsLayout="auto"` replaces the row buttons with one menu button, so the overlay no longer covers the names of deep rows. The count links are `besideMenu`, so they stay as buttons before the menu button. The menu lists the actions in the order returned, with danger and disabled actions marked, and keeps the overlay visible while it is open.',
+      },
+    },
+  },
+};
+
+export const Mobile: Story = {
+  render: () => <CompactActionsExample />,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Below `md` there is no hover, so the menu button stays in every row, after the label. The label truncates before it instead of sitting under it. The `besideMenu` count links move into the menu under their `menuLabel`.',
+      },
+    },
+  },
+};
