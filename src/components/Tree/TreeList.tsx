@@ -60,6 +60,8 @@ export interface TreeListLabels {
 /**
  * How row actions are shown. `auto` shows buttons, and switches to one menu
  * button when the list is narrower than 56rem or the viewport is below `md`.
+ * In `auto` and `menu`, a row whose actions are all `besideMenu` shows the
+ * menu button only below `md`, since above it the menu would be empty.
  */
 export type TreeListActionsLayout = 'auto' | 'buttons' | 'menu';
 
@@ -92,8 +94,10 @@ interface TreeListBaseProps<T>
   /** Title shown in the header bar above the rows. */
   header: React.ReactNode;
   /**
-   * Row actions, shown as buttons in the order returned. Called for every
-   * row; return an empty array to show none. Like `getLabel` and
+   * Row actions, shown as buttons or menu items in the order returned (see
+   * `actionsLayout`). Called for every row; return an empty array to show
+   * none. Set `labels.actions`, the accessible name of the menu button, which
+   * otherwise defaults to the English `Actions`. Like `getLabel` and
    * `isItemDisabled`, pass a stable function so rows are not rebuilt on
    * every render.
    */
@@ -225,9 +229,6 @@ function TreeListInner<T>(
     return keys;
   }, [childrenByParent, getItemValue, isItemDisabled]);
 
-  const [openMenuKey, setOpenMenuKey] = React.useState<TreeNodeKey | null>(
-    null
-  );
   const actionsLabel = labels.actions ?? 'Actions';
 
   const renderRowOverlay = React.useMemo(
@@ -239,7 +240,6 @@ function TreeListInner<T>(
               ancestorDisabled: underDisabled.has(key),
             });
             if (rowActions.length === 0) return null;
-            const menuOpen = openMenuKey === key;
             const compact = actionsLayout !== 'buttons';
             const renderButton = (action: TreeListAction<T>) => (
               <Button
@@ -289,7 +289,11 @@ function TreeListInner<T>(
             const besideInFlow = compact && besideActions.length > 0;
             const menuOnlyAtMobile = besideActions.length === rowActions.length;
             const menu = compact && (
-              <span
+              <TreeListRowMenu
+                item={item}
+                actions={rowActions}
+                label={actionsLabel}
+                fadeIn={besideInFlow}
                 className={
                   menuOnlyAtMobile
                     ? 'max-md:contents hidden'
@@ -297,48 +301,12 @@ function TreeListInner<T>(
                       ? '@max-4xl/tree-list:contents max-md:contents hidden'
                       : 'contents'
                 }
-              >
-                <Dropdown
-                  open={menuOpen}
-                  onOpenChange={(open) => setOpenMenuKey(open ? key : null)}
-                >
-                  <DropdownTrigger asChild>
-                    <Button
-                      type="button"
-                      intent="tertiary"
-                      size="xs"
-                      icon={IconDotsVertical}
-                      aria-label={actionsLabel}
-                      className={cn(
-                        besideInFlow &&
-                          `max-md:opacity-100 opacity-0 transition-opacity
-                            group-hover:opacity-100
-                            group-has-[:focus-visible]:opacity-100
-                            data-[state=open]:opacity-100
-                            [li:focus-visible>div_&]:opacity-100`
-                      )}
-                    />
-                  </DropdownTrigger>
-                  <DropdownContent align="end">
-                    {rowActions.map((action) => (
-                      <DropdownItem
-                        key={action.key}
-                        intent={action.danger ? 'danger' : 'default'}
-                        disabled={action.disabled ?? false}
-                        onSelect={() => action.onAction(item)}
-                        className={cn(action.besideMenu && 'md:hidden')}
-                      >
-                        {action.menuLabel ?? action.label}
-                      </DropdownItem>
-                    ))}
-                  </DropdownContent>
-                </Dropdown>
-              </span>
+              />
             );
             return (
               <Tree.RowOverlay
-                forceVisible={menuOpen}
                 className={cn(
+                  'has-[[data-force-visible]]:opacity-100',
                   compact &&
                     `max-md:static max-md:bg-none max-md:px-0
                       max-md:opacity-100`,
@@ -356,14 +324,7 @@ function TreeListInner<T>(
             );
           }
         : undefined,
-    [
-      actions,
-      actionsLayout,
-      actionsLabel,
-      openMenuKey,
-      underDisabled,
-      getItemValue,
-    ]
+    [actions, actionsLayout, actionsLabel, underDisabled, getItemValue]
   );
 
   const rows = React.useMemo(() => {
@@ -466,6 +427,64 @@ function TreeListInner<T>(
         </Tree>
       </div>
     </div>
+  );
+}
+
+interface TreeListRowMenuProps<T> {
+  item: T;
+  actions: TreeListAction<T>[];
+  label: string;
+  /** Hides the menu button until the row is hovered or focused. */
+  fadeIn: boolean;
+  className: string;
+}
+
+/**
+ * Holds its own open state so opening a menu re-renders only its row. While
+ * open, `data-force-visible` keeps the row highlighted and the overlay shown.
+ */
+function TreeListRowMenu<T>({
+  item,
+  actions,
+  label,
+  fadeIn,
+  className,
+}: TreeListRowMenuProps<T>) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <span className={className} data-force-visible={open || undefined}>
+      <Dropdown open={open} onOpenChange={setOpen}>
+        <DropdownTrigger asChild>
+          <Button
+            type="button"
+            intent="tertiary"
+            size="xs"
+            icon={IconDotsVertical}
+            aria-label={label}
+            className={cn(
+              fadeIn &&
+                `max-md:opacity-100 opacity-0 transition-opacity
+                group-hover:opacity-100 group-has-[:focus-visible]:opacity-100
+                data-[state=open]:opacity-100
+                [li:focus-visible>div_&]:opacity-100`
+            )}
+          />
+        </DropdownTrigger>
+        <DropdownContent align="end">
+          {actions.map((action) => (
+            <DropdownItem
+              key={action.key}
+              intent={action.danger ? 'danger' : 'default'}
+              disabled={action.disabled ?? false}
+              onSelect={() => action.onAction(item)}
+              className={cn(action.besideMenu && 'md:hidden')}
+            >
+              {action.menuLabel ?? action.label}
+            </DropdownItem>
+          ))}
+        </DropdownContent>
+      </Dropdown>
+    </span>
   );
 }
 
