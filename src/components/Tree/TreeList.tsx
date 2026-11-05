@@ -1,7 +1,14 @@
 import React from 'react';
+import { IconDotsVertical } from '@tabler/icons-react';
 
 import { Button } from '../Button';
 import type { ButtonProps } from '../Button';
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownItem,
+  DropdownTrigger,
+} from '../DropdownMenu';
 import { TextLink } from '../TextLink';
 import { cn } from '../../lib/utils';
 
@@ -39,7 +46,15 @@ export interface TreeListActionContext {
 export interface TreeListLabels {
   expandAll: React.ReactNode;
   collapseAll: React.ReactNode;
+  /** Accessible name of the row menu button. Defaults to `Actions`. */
+  actions?: string;
 }
+
+/**
+ * How row actions are shown. `auto` shows buttons, and switches to one menu
+ * button when the list is narrower than 56rem or the viewport is below `md`.
+ */
+export type TreeListActionsLayout = 'auto' | 'buttons' | 'menu';
 
 interface TreeListBaseProps<T>
   extends Omit<
@@ -76,6 +91,8 @@ interface TreeListBaseProps<T>
    * every render.
    */
   actions?: (item: T, context: TreeListActionContext) => TreeListAction<T>[];
+  /** Defaults to `auto`. */
+  actionsLayout?: TreeListActionsLayout;
   /**
    * Marks items that look disabled and cannot be dragged or selected. Their
    * actions still come from `actions`.
@@ -127,6 +144,7 @@ function TreeListInner<T>(
     getOrder,
     header,
     actions,
+    actionsLayout = 'auto',
     isItemDisabled,
     labels,
     onItemsChange,
@@ -200,16 +218,29 @@ function TreeListInner<T>(
     return keys;
   }, [childrenByParent, getItemValue, isItemDisabled]);
 
+  const [openMenuKey, setOpenMenuKey] = React.useState<TreeNodeKey | null>(
+    null
+  );
+  const actionsLabel = labels.actions ?? 'Actions';
+
   const renderRowOverlay = React.useMemo(
     () =>
       actions
         ? (item: T) => {
+            const key = getItemValue(item);
             const rowActions = actions(item, {
-              ancestorDisabled: underDisabled.has(getItemValue(item)),
+              ancestorDisabled: underDisabled.has(key),
             });
             if (rowActions.length === 0) return null;
-            return (
-              <>
+            const menuOpen = openMenuKey === key;
+            const buttons = actionsLayout !== 'menu' && (
+              <span
+                className={cn(
+                  'contents',
+                  actionsLayout === 'auto' &&
+                    '@max-4xl/tree-list:hidden max-md:hidden'
+                )}
+              >
                 {rowActions.map((action) => (
                   <Button
                     key={action.key}
@@ -229,11 +260,67 @@ function TreeListInner<T>(
                     {action.label}
                   </Button>
                 ))}
-              </>
+              </span>
+            );
+            const menu = actionsLayout !== 'buttons' && (
+              <span
+                className={cn(
+                  'contents',
+                  actionsLayout === 'auto' &&
+                    '@max-4xl/tree-list:contents max-md:contents hidden'
+                )}
+              >
+                <Dropdown
+                  open={menuOpen}
+                  onOpenChange={(open) => setOpenMenuKey(open ? key : null)}
+                >
+                  <DropdownTrigger asChild>
+                    <Button
+                      type="button"
+                      intent="tertiary"
+                      size="xs"
+                      icon={IconDotsVertical}
+                      aria-label={actionsLabel}
+                    />
+                  </DropdownTrigger>
+                  <DropdownContent align="end">
+                    {rowActions.map((action) => (
+                      <DropdownItem
+                        key={action.key}
+                        intent={action.danger ? 'danger' : 'default'}
+                        disabled={action.disabled ?? false}
+                        onSelect={() => action.onAction(item)}
+                      >
+                        {action.label}
+                      </DropdownItem>
+                    ))}
+                  </DropdownContent>
+                </Dropdown>
+              </span>
+            );
+            return (
+              <Tree.RowOverlay
+                forceVisible={menuOpen}
+                className={cn(
+                  actionsLayout !== 'buttons' &&
+                    `max-md:static max-md:bg-none max-md:px-0
+                      max-md:opacity-100`
+                )}
+              >
+                {buttons}
+                {menu}
+              </Tree.RowOverlay>
             );
           }
         : undefined,
-    [actions, underDisabled, getItemValue]
+    [
+      actions,
+      actionsLayout,
+      actionsLabel,
+      openMenuKey,
+      underDisabled,
+      getItemValue,
+    ]
   );
 
   const rows = React.useMemo(() => {
@@ -281,7 +368,10 @@ function TreeListInner<T>(
   const canCollapse = expanded.openCount > 0;
 
   return (
-    <div className={cn('flex w-full flex-col', className)} style={style}>
+    <div
+      className={cn('@container/tree-list flex w-full flex-col', className)}
+      style={style}
+    >
       <div
         className="gap-xs pb-sm text-sm text-body-secondary flex items-center
           justify-end"
