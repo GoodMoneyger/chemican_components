@@ -783,7 +783,10 @@ const deepDepartments: Department[] = [
     .filter((d) => d.uuid !== 'honsha')
     .map((d) => ({
       ...d,
-      parent_id: d.parent_id ?? 'level-1',
+      parent_id:
+        d.parent_id === null || d.parent_id === 'honsha'
+          ? 'level-1'
+          : d.parent_id,
       display_order: d.display_order + 1,
     })),
 ];
