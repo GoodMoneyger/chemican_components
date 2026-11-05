@@ -254,6 +254,7 @@ function TreeListInner<T>(
                 }
                 disabled={action.disabled ?? false}
                 onClick={() => action.onAction(item)}
+                className={cn(action.intent === 'text' && 'min-w-0 px-0')}
               >
                 {action.label}
               </Button>
@@ -283,6 +284,9 @@ function TreeListInner<T>(
                 {besideActions.map(renderButton)}
               </span>
             );
+            // Beside actions stay visible on a narrow list, so the overlay
+            // joins the row flow there and only the menu button fades in.
+            const besideInFlow = compact && besideActions.length > 0;
             const menuOnlyAtMobile = besideActions.length === rowActions.length;
             const menu = compact && (
               <span
@@ -305,6 +309,14 @@ function TreeListInner<T>(
                       size="xs"
                       icon={IconDotsVertical}
                       aria-label={actionsLabel}
+                      className={cn(
+                        besideInFlow &&
+                          `max-md:opacity-100 opacity-0 transition-opacity
+                            group-hover:opacity-100
+                            group-has-[:focus-visible]:opacity-100
+                            data-[state=open]:opacity-100
+                            [li:focus-visible>div_&]:opacity-100`
+                      )}
                     />
                   </DropdownTrigger>
                   <DropdownContent align="end">
@@ -329,7 +341,12 @@ function TreeListInner<T>(
                 className={cn(
                   compact &&
                     `max-md:static max-md:bg-none max-md:px-0
-                      max-md:opacity-100`
+                      max-md:opacity-100`,
+                  besideInFlow &&
+                    (actionsLayout === 'auto'
+                      ? `@max-4xl/tree-list:static @max-4xl/tree-list:bg-none
+                        @max-4xl/tree-list:px-0 @max-4xl/tree-list:opacity-100`
+                      : 'px-0 static bg-none opacity-100')
                 )}
               >
                 {buttons}
