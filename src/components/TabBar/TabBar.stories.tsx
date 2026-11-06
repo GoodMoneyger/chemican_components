@@ -163,8 +163,8 @@ export const OverflowCustomLabel: Story = {
   ),
 };
 
-const MobileRender = () => {
-  const [value, setValue] = React.useState('profile');
+const MobileRender = ({ initialValue = 'profile' }) => {
+  const [value, setValue] = React.useState(initialValue);
   return (
     <TabBar value={value} onValueChange={setValue}>
       <Tab value="profile">プロフィール</Tab>
@@ -200,6 +200,23 @@ export const Mobile: Story = {
       description: {
         story:
           'The normal size at 375px, as on a phone: 14px labels and 38px tabs. The bar scrolls sideways without a scrollbar and shades the edge that hides more tabs. The story reports no fine pointer, so it scrolls even with a mouse; on a real desktop the bar collapses into the "more" dropdown instead.',
+      },
+    },
+  },
+};
+
+export const MobileActiveTabOutOfView: Story = {
+  render: () => <MobileRender initialValue="notifications" />,
+  beforeEach: withoutFinePointer,
+  globals: {
+    viewport: { value: 'mobile', isRotated: false },
+  },
+  parameters: {
+    docs: {
+      story: { inline: false, height: '120px' },
+      description: {
+        story:
+          'Opened with the last tab selected, as from a deep link. The bar starts scrolled so the selected tab is in view.',
       },
     },
   },

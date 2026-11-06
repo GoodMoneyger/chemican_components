@@ -198,10 +198,38 @@ export const TabBar = React.forwardRef<
     return () => observer.disconnect();
   }, [calculateVisibleTabs]);
 
+  const activeValue = props.value ?? props.defaultValue;
+  const tabValuesKey = tabs.map((tab) => tab.props.value).join('\n');
+
+  // A tab opened by tapping it is scrolled into view by the browser's focus
+  // handling; one selected any other way (a deep link, a reload) is not.
+  // Tabs widen once the web font loads, so scroll again whenever they resize.
+  React.useEffect(() => {
+    if (useDropdown) return;
+    const list = listRef.current;
+    if (!list) return;
+
+    // Read from the DOM: an uncontrolled bar's activeValue is only its default.
+    const scrollActiveTabIntoView = () => {
+      const activeTab = list.querySelector('[role="tab"][data-state="active"]');
+      if (!activeTab) return;
+      const listRect = list.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
+      if (tabRect.left < listRect.left) {
+        list.scrollLeft += tabRect.left - listRect.left;
+      } else if (tabRect.right > listRect.right) {
+        list.scrollLeft += tabRect.right - listRect.right;
+      }
+    };
+    const observer = new ResizeObserver(scrollActiveTabIntoView);
+    tabRefs.current.forEach((tab) => observer.observe(tab));
+
+    return () => observer.disconnect();
+  }, [activeValue, useDropdown, tabValuesKey]);
+
   const overflowTabs = tabs.slice(visibleCount);
   const hasOverflow = overflowTabs.length > 0;
 
-  const activeValue = props.value ?? props.defaultValue;
   const activeInOverflow = overflowTabs.some(
     (tab) => tab.props.value === activeValue
   );
