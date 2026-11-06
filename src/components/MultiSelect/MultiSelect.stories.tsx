@@ -80,6 +80,12 @@ const meta: Meta<typeof MultiSelect> = {
       control: 'number',
       description: 'Maximum number of options that can be selected at once',
     },
+    side: {
+      control: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+      description:
+        'Side of the trigger the popover opens on; flips when there is no room',
+    },
   },
 };
 

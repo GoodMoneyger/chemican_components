@@ -283,6 +283,13 @@ interface MultiSelectProps<T = string | number>
   popoverClassName?: string;
 
   /**
+   * Which side of the trigger the popover opens on. It flips to the opposite
+   * side when there is not enough room.
+   * @default 'bottom'
+   */
+  side?: 'top' | 'right' | 'bottom' | 'left';
+
+  /**
    * If true, disables the component completely.
    * Optional, defaults to false.
    */
@@ -537,6 +544,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
     autoSize = false,
     singleLine = false,
     popoverClassName,
+    side = 'bottom',
     disabled = false,
     invalid = false,
     responsive,
@@ -1205,6 +1213,7 @@ const MultiSelectInner = <T extends string | number = string | number>(
             maxHeight: screenSize === 'mobile' ? '70vh' : '60vh',
             touchAction: 'manipulation',
           }}
+          side={side}
           align="start"
         >
           {/* Built-in client-side filtering is off when the parent handles
