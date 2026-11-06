@@ -205,12 +205,13 @@ export const TabBar = React.forwardRef<
   // handling; one selected any other way (a deep link, a reload) is not.
   // Tabs widen once the web font loads, so scroll again whenever they resize.
   React.useEffect(() => {
-    if (useDropdown || activeValue === undefined) return;
+    if (useDropdown) return;
     const list = listRef.current;
     if (!list) return;
 
+    // Read from the DOM: an uncontrolled bar's activeValue is only its default.
     const scrollActiveTabIntoView = () => {
-      const activeTab = tabRefs.current.get(activeValue);
+      const activeTab = list.querySelector('[role="tab"][data-state="active"]');
       if (!activeTab) return;
       const listRect = list.getBoundingClientRect();
       const tabRect = activeTab.getBoundingClientRect();
