@@ -3,6 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { IconDownload, IconFilter } from '@tabler/icons-react';
 
 import { Button } from '../Button';
+import { Tag } from '../Tag';
 
 import { SearchBar } from './SearchBar';
 
@@ -147,3 +148,53 @@ LongKeyword.args = {
   initialKeywords: [longFileName, '20405-64-5'],
 };
 LongKeyword.parameters = { layout: 'fullscreen' };
+
+/**
+ * The keywords leave the bar, so the page can list them with its other
+ * search conditions. Removing one there remounts the bar with the new
+ * `initialKeywords`.
+ */
+export const HideKeywords: StoryFn<typeof SearchBar> = (args) => {
+  const [value, setValue] = useState('');
+  const [keywords, setKeywords] = useState<string[]>(
+    args.initialKeywords ?? []
+  );
+  const [version, setVersion] = useState(0);
+  return (
+    <div className="gap-md p-md flex flex-col">
+      <SearchBar
+        {...args}
+        key={version}
+        initialKeywords={keywords}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onSearch={setKeywords}
+        searchOnKeywordAdd
+      />
+      {keywords.length > 0 && (
+        <div className="gap-xxs flex flex-col items-start">
+          <p className="text-body-secondary text-sm">キーワード</p>
+          <div className="gap-1 flex flex-wrap">
+            {keywords.map((keyword, idx) => (
+              <Tag
+                key={`${idx}-${keyword}`}
+                size="sm"
+                onRemove={() => {
+                  setKeywords(keywords.filter((_, i) => i !== idx));
+                  setVersion((v) => v + 1);
+                }}
+              >
+                {keyword}
+              </Tag>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+HideKeywords.args = {
+  ...defaultArgs,
+  hideKeywords: true,
+  initialKeywords: ['アセトン', '67-64-1'],
+};
