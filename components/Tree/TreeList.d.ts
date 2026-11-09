@@ -13,6 +13,13 @@ export interface TreeListAction<T> {
     intent?: ButtonProps['intent'];
     danger?: boolean;
     disabled?: boolean;
+    /**
+     * Keeps the action as a button before the menu button when the actions
+     * collapse into a menu on a narrow list. Below `md` it goes in the menu.
+     */
+    besideMenu?: boolean;
+    /** Item text in the menu. Defaults to `label`. */
+    menuLabel?: React.ReactNode;
     onAction: (item: T) => void;
 }
 export interface TreeListActionContext {
@@ -22,7 +29,16 @@ export interface TreeListActionContext {
 export interface TreeListLabels {
     expandAll: React.ReactNode;
     collapseAll: React.ReactNode;
+    /** Accessible name of the row menu button. Defaults to `Actions`. */
+    actions?: string;
 }
+/**
+ * How row actions are shown. `auto` shows buttons, and switches to one menu
+ * button when the list is narrower than 56rem or the viewport is below `md`.
+ * In `auto` and `menu`, a row whose actions are all `besideMenu` shows the
+ * menu button only below `md`, since above it the menu would be empty.
+ */
+export type TreeListActionsLayout = 'auto' | 'buttons' | 'menu';
 interface TreeListBaseProps<T> extends Omit<TreeProps, 'children' | 'size' | 'onExpandedCountChange' | 'selected' | 'defaultSelected' | 'onSelectedChange' | 'getItemValue' | 'onMove'> {
     /**
      * Flat list of nodes. Nesting comes from `getParentKey`. The list is
@@ -41,12 +57,16 @@ interface TreeListBaseProps<T> extends Omit<TreeProps, 'children' | 'size' | 'on
     /** Title shown in the header bar above the rows. */
     header: React.ReactNode;
     /**
-     * Row actions, shown as buttons in the order returned. Called for every
-     * row; return an empty array to show none. Like `getLabel` and
+     * Row actions, shown as buttons or menu items in the order returned (see
+     * `actionsLayout`). Called for every row; return an empty array to show
+     * none. Set `labels.actions`, the accessible name of the menu button, which
+     * otherwise defaults to the English `Actions`. Like `getLabel` and
      * `isItemDisabled`, pass a stable function so rows are not rebuilt on
      * every render.
      */
     actions?: (item: T, context: TreeListActionContext) => TreeListAction<T>[];
+    /** Defaults to `auto`. */
+    actionsLayout?: TreeListActionsLayout;
     /**
      * Marks items that look disabled and cannot be dragged or selected. Their
      * actions still come from `actions`.
