@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.16.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.15.1...v1.16.0) (2026-11-09)
+
+### Features
+
+* **Tree:** Collapse TreeList row actions into a menu on narrow lists ([#217](https://github.com/GoodMoneyger/chemican_components/issues/217)) ([515c0dd](https://github.com/GoodMoneyger/chemican_components/commit/515c0dd3f6e6bb2633f5bb2ceec4b0954ffbfa26)), references [GoodMoneyger/sds_scan_general#4277](https://github.com/GoodMoneyger/sds_scan_general/issues/4277)
+
+### Bug Fixes
+
+* **TabBar:** Scroll the selected tab into view on touch screens ([#218](https://github.com/GoodMoneyger/chemican_components/issues/218)) ([492fe54](https://github.com/GoodMoneyger/chemican_components/commit/492fe54e06e2508df3894fd08d12278965ce02fd)), references [GoodMoneyger/sds_scan_general#4423](https://github.com/GoodMoneyger/sds_scan_general/issues/4423)
+
 ## [1.15.1](https://github.com/GoodMoneyger/chemican_components/compare/v1.15.0...v1.15.1) (2026-11-04)
 
 ### Bug Fixes
