@@ -10,6 +10,7 @@ import {
   DropdownTrigger,
 } from '../DropdownMenu';
 import { TextLink } from '../TextLink';
+import { Tooltip } from '../Tooltip';
 import { cn } from '../../lib/utils';
 
 import { Tree, resolveTreeValue } from './Tree';
@@ -53,7 +54,10 @@ export interface TreeListActionContext {
 export interface TreeListLabels {
   expandAll: React.ReactNode;
   collapseAll: React.ReactNode;
-  /** Accessible name of the row menu button. Defaults to `Actions`. */
+  /**
+   * Accessible name and tooltip of the row menu button. Defaults to
+   * `Actions`.
+   */
   actions?: string;
 }
 
@@ -451,26 +455,47 @@ function TreeListRowMenu<T>({
   className,
 }: TreeListRowMenuProps<T>) {
   const [open, setOpen] = React.useState(false);
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
+  // Focus returns to the button when the menu closes, which would show the
+  // tooltip after every pick.
+  const menuClosingRef = React.useRef(false);
   return (
     <span className={className} data-force-visible={open || undefined}>
       <Dropdown open={open} onOpenChange={setOpen}>
-        <DropdownTrigger asChild>
-          <Button
-            type="button"
-            intent="tertiary"
-            size="xs"
-            icon={IconDotsVertical}
-            aria-label={label}
-            className={cn(
-              fadeIn &&
-                `max-md:opacity-100 opacity-0 transition-opacity
-                group-hover:opacity-100 group-has-[:focus-visible]:opacity-100
-                data-[state=open]:opacity-100
-                [li:focus-visible>div_&]:opacity-100`
-            )}
-          />
-        </DropdownTrigger>
-        <DropdownContent align="end">
+        <Tooltip
+          content={label}
+          disableHoverableContent
+          open={tooltipOpen}
+          onOpenChange={(next) =>
+            setTooltipOpen(next && !menuClosingRef.current)
+          }
+        >
+          <DropdownTrigger asChild>
+            <Button
+              type="button"
+              intent="tertiary"
+              size="xs"
+              icon={IconDotsVertical}
+              aria-label={label}
+              className={cn(
+                fadeIn &&
+                  `max-md:opacity-100 opacity-0 transition-opacity
+                  group-hover:opacity-100 group-has-[:focus-visible]:opacity-100
+                  data-[state=open]:opacity-100
+                  [li:focus-visible>div_&]:opacity-100`
+              )}
+            />
+          </DropdownTrigger>
+        </Tooltip>
+        <DropdownContent
+          align="end"
+          onCloseAutoFocus={() => {
+            menuClosingRef.current = true;
+            setTimeout(() => {
+              menuClosingRef.current = false;
+            });
+          }}
+        >
           {actions.map((action) => (
             <DropdownItem
               key={action.key}
