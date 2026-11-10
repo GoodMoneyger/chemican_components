@@ -212,6 +212,12 @@ interface MultiSelectProps<T = string | number> extends Omit<React.ButtonHTMLAtt
      */
     popoverClassName?: string;
     /**
+     * Which side of the trigger the popover opens on. It flips to the opposite
+     * side when there is not enough room.
+     * @default 'bottom'
+     */
+    side?: 'top' | 'right' | 'bottom' | 'left';
+    /**
      * If true, disables the component completely.
      * Optional, defaults to false.
      */
