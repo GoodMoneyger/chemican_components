@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.17.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.16.0...v1.17.0) (2026-11-10)
+
+### Features
+
+* **MultiSelect:** Add a side prop for the popover ([#219](https://github.com/GoodMoneyger/chemican_components/issues/219)) ([b58f4a5](https://github.com/GoodMoneyger/chemican_components/commit/b58f4a50fb86f9925f5dd629c9381947ace3f5b6)), references [GoodMoneyger/sds_scan_general#4417](https://github.com/GoodMoneyger/sds_scan_general/issues/4417)
+* **SearchBar:** Add hideKeywords to list keywords outside the bar ([#221](https://github.com/GoodMoneyger/chemican_components/issues/221)) ([dae452f](https://github.com/GoodMoneyger/chemican_components/commit/dae452f0991db4b4ea29485f5a5e2abee6f5750c))
+
+### Bug Fixes
+
+* **Tree:** Show the TreeList row menu label as a tooltip ([#222](https://github.com/GoodMoneyger/chemican_components/issues/222)) ([a1bd7f9](https://github.com/GoodMoneyger/chemican_components/commit/a1bd7f984821dfcaa85ff1e21a57eb255cfb143f)), references [GoodMoneyger/sds_scan_general#4277](https://github.com/GoodMoneyger/sds_scan_general/issues/4277)
+
 ## [1.16.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.15.1...v1.16.0) (2026-11-09)
 
 ### Features
