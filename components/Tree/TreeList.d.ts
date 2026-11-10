@@ -29,7 +29,10 @@ export interface TreeListActionContext {
 export interface TreeListLabels {
     expandAll: React.ReactNode;
     collapseAll: React.ReactNode;
-    /** Accessible name of the row menu button. Defaults to `Actions`. */
+    /**
+     * Accessible name and tooltip of the row menu button. Defaults to
+     * `Actions`.
+     */
     actions?: string;
 }
 /**
