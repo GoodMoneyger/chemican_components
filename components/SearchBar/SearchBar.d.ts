@@ -19,6 +19,11 @@ export interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInput
     initialKeywords?: string[];
     /** Accessible name of each keyword's remove button. */
     removeKeywordAriaLabel?: string;
+    /**
+     * Leaves the keywords out of the bar, for pages that list them elsewhere.
+     * The bar then only holds the text being typed.
+     */
+    hideKeywords?: boolean;
 }
 export declare const SearchBar: React.ForwardRefExoticComponent<SearchBarProps & React.RefAttributes<HTMLInputElement>>;
 export {};
