@@ -133,6 +133,11 @@ export interface SearchBarProps
   initialKeywords?: string[];
   /** Accessible name of each keyword's remove button. */
   removeKeywordAriaLabel?: string;
+  /**
+   * Leaves the keywords out of the bar, for pages that list them elsewhere.
+   * The bar then only holds the text being typed.
+   */
+  hideKeywords?: boolean;
 }
 
 export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
@@ -151,6 +156,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       searchOnKeywordAdd = false,
       initialKeywords,
       removeKeywordAriaLabel = 'Remove keyword',
+      hideKeywords = false,
       ...props
     },
     ref
@@ -218,7 +224,8 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       if (
         (e.key === 'Backspace' || e.key === 'Delete') &&
         !value &&
-        keywords.length > 0
+        keywords.length > 0 &&
+        !hideKeywords
       ) {
         const newKeywords = keywords.slice(0, -1);
         setKeywords(newKeywords);
@@ -267,16 +274,17 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
               <IconSearch size={20} />
             </span>
             <div className={cn(inputGroupClasses)}>
-              {keywords.map((kw, idx) => (
-                <KeywordChip
-                  key={`${idx}-${kw}`}
-                  keyword={kw}
-                  size={size === 'sm' ? 'sm' : 'md'}
-                  disabled={disabled}
-                  onRemove={() => handleRemoveKeyword(idx)}
-                  removeAriaLabel={removeKeywordAriaLabel}
-                />
-              ))}
+              {!hideKeywords &&
+                keywords.map((kw, idx) => (
+                  <KeywordChip
+                    key={`${idx}-${kw}`}
+                    keyword={kw}
+                    size={size === 'sm' ? 'sm' : 'md'}
+                    disabled={disabled}
+                    onRemove={() => handleRemoveKeyword(idx)}
+                    removeAriaLabel={removeKeywordAriaLabel}
+                  />
+                ))}
               <input
                 ref={ref}
                 className={cn(inputClasses)}
@@ -295,7 +303,8 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                   props.onBlur?.(e);
                 }}
                 placeholder={
-                  resolvedState === 'filled' || keywords.length > 0
+                  !hideKeywords &&
+                  (resolvedState === 'filled' || keywords.length > 0)
                     ? ''
                     : placeholder
                 }
@@ -303,7 +312,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                 {...props}
               />
             </div>
-            {(value || keywords.length > 0) && !disabled && (
+            {(value || (keywords.length > 0 && !hideKeywords)) && !disabled && (
               <button
                 type="button"
                 aria-label="Clear"
@@ -315,6 +324,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                       target: { value: '' },
                     } as React.ChangeEvent<HTMLInputElement>);
                   }
+                  if (hideKeywords) return;
                   onSearch?.([]);
                   setKeywords([]); // Clear all chips/keywords
                 }}
