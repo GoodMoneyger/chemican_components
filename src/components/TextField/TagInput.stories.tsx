@@ -126,3 +126,21 @@ function WithValidationExample() {
 export const WithValidation: Story = {
   render: () => <WithValidationExample />,
 };
+
+function WithTagColorExample() {
+  const [tags, setTags] = useState<string[]>(['excluded', 'keywords']);
+  return (
+    <div className="w-96">
+      <TextField.TagInput
+        value={tags}
+        onChange={setTags}
+        tagColorCode={1}
+        placeholder="Add keywords to exclude..."
+      />
+    </div>
+  );
+}
+
+export const WithTagColor: Story = {
+  render: () => <WithTagColorExample />,
+};
