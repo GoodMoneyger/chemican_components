@@ -237,6 +237,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
               <Tag
                 key={index}
                 colorCode={tagColorCode}
+                disabled={disabled ?? false}
                 {...(!disabled && { onRemove: () => removeTag(index) })}
               >
                 {tag}
