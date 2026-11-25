@@ -9,6 +9,17 @@ updates:
       timezone: "Asia/Tokyo"
     cooldown:
       default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
 
   - package-ecosystem: "npm"
     directory: "/"
