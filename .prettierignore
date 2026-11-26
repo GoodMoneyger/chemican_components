@@ -1,2 +1,3 @@
 src/styles/variables.css
 src/tokens.ts
+src/components/Label/spec-types.ts

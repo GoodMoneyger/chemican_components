@@ -38,3 +38,21 @@ jobs:
 
       - name: Run storybook build
         run: npm run build-storybook
+
+  label-spec-types:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Load key for the label spec repo
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.LABEL_SPEC_REPO_DEPLOYMENT_KEY }}
+
+      - name: Download the label spec
+        run: git clone --depth 1 git@github.com:GoodMoneyger/sds_manager_label_spec.git ../label-spec
+
+      - name: Check that the copied spec types are current
+        run: node tools/copy-label-spec-types.mjs ../label-spec --check

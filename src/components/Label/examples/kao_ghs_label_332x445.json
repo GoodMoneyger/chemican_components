@@ -1,0 +1,575 @@
+{
+  "schemaVersion": 1,
+  "language": "ja",
+  "page": { "widthMm": 332.3, "heightMm": 445.2 },
+  "fields": [
+    {
+      "key": "product_code",
+      "label": "製品コード",
+      "source": { "type": "manual", "placeholder": "例: 250001" }
+    },
+    {
+      "key": "fire_service_act",
+      "label": "消防法表示",
+      "source": { "type": "rule", "rule": "fire_service_act" }
+    },
+    {
+      "key": "product_name",
+      "label": "製品名",
+      "required": true,
+      "source": { "type": "sds", "path": "product.name" }
+    },
+    {
+      "key": "product_name_en",
+      "label": "製品名（英語）",
+      "source": { "type": "manual" }
+    },
+    {
+      "key": "company_name",
+      "label": "会社名",
+      "source": { "type": "company", "key": "name" }
+    },
+    {
+      "key": "company_address",
+      "label": "住所",
+      "source": { "type": "company", "key": "address" }
+    },
+    {
+      "key": "company_logo",
+      "label": "ロゴ",
+      "kind": "image",
+      "source": { "type": "company", "key": "logo" }
+    },
+    {
+      "key": "lot",
+      "label": "LOT No.",
+      "source": { "type": "per_print", "allowBlank": true, "maxLength": 10 }
+    },
+    {
+      "key": "net_weight",
+      "label": "正味量（kg）",
+      "required": true,
+      "source": { "type": "manual", "placeholder": "例: 15" }
+    },
+    {
+      "key": "component_names",
+      "label": "成分",
+      "source": {
+        "type": "sds",
+        "path": "section3.components",
+        "format": { "pattern": "{name}", "join": "\n", "limit": 4 }
+      }
+    },
+    {
+      "key": "component_cas",
+      "label": "CAS番号",
+      "source": {
+        "type": "sds",
+        "path": "section3.components",
+        "format": { "pattern": "{cas}", "join": "\n", "limit": 4 }
+      }
+    },
+    {
+      "key": "signal_word",
+      "label": "注意喚起語",
+      "source": { "type": "sds", "path": "section2.signal_word" }
+    },
+    {
+      "key": "pictograms",
+      "label": "絵表示",
+      "kind": "pictogram_list",
+      "source": { "type": "sds", "path": "section2.pictograms" }
+    },
+    {
+      "key": "hazard_statements",
+      "label": "危険有害性情報",
+      "kind": "statement_list",
+      "source": {
+        "type": "sds",
+        "path": "section2.h_statements",
+        "format": { "pattern": "{text}", "join": "\n" }
+      }
+    },
+    {
+      "key": "p_prevention",
+      "label": "注意書き（安全対策）",
+      "kind": "statement_list",
+      "source": {
+        "type": "sds",
+        "path": "section2.p_statements.prevention",
+        "format": { "pattern": "{text}", "join": " " }
+      }
+    },
+    {
+      "key": "storage_note",
+      "label": "製品特有の注意",
+      "maxChars": 80,
+      "source": {
+        "type": "ai",
+        "sdsSections": [7],
+        "instruction": "SDS 7項から、この製品だけの取扱い・保管上の注意（固化したときの扱いなど）を1〜2文で。注意書き（P文）と同じ内容は書かない。該当がなければ空にする。"
+      }
+    },
+    {
+      "key": "p_response",
+      "label": "注意書き（応急措置）",
+      "kind": "statement_list",
+      "source": {
+        "type": "sds",
+        "path": "section2.p_statements.response",
+        "format": { "pattern": "{text}", "join": " " }
+      }
+    },
+    {
+      "key": "p_storage",
+      "label": "注意書き（保管）",
+      "kind": "statement_list",
+      "source": {
+        "type": "sds",
+        "path": "section2.p_statements.storage",
+        "format": { "pattern": "{text}", "join": " " }
+      }
+    },
+    {
+      "key": "p_disposal",
+      "label": "注意書き（廃棄）",
+      "kind": "statement_list",
+      "source": {
+        "type": "sds",
+        "path": "section2.p_statements.disposal",
+        "format": { "pattern": "{text}", "join": " " }
+      }
+    },
+    {
+      "key": "guide_number",
+      "label": "指針番号",
+      "source": { "type": "rule", "rule": "erg_guide_number" }
+    },
+    {
+      "key": "un_number",
+      "label": "国連番号",
+      "source": { "type": "sds", "path": "section14.un_number" }
+    },
+    {
+      "key": "transport_emergency_phone",
+      "label": "輸送時の緊急連絡先",
+      "source": { "type": "company", "key": "transport_emergency_phone" }
+    }
+  ],
+  "elements": [
+    {
+      "id": "grid",
+      "type": "table",
+      "x": 0,
+      "y": 0,
+      "w": 332.3,
+      "h": 445.2,
+      "rules": [
+        { "x1": 0.7, "y1": 0.7, "x2": 331.6, "y2": 0.7, "widthMm": 1.4 },
+        { "x1": 0.7, "y1": 444.5, "x2": 331.6, "y2": 444.5, "widthMm": 1.4 },
+        { "x1": 0.7, "y1": 0.7, "x2": 0.7, "y2": 444.5, "widthMm": 1.4 },
+        { "x1": 331.6, "y1": 0.7, "x2": 331.6, "y2": 444.5, "widthMm": 1.4 },
+        { "x1": 0.7, "y1": 69.8, "x2": 331.6, "y2": 69.8, "widthMm": 0.7 },
+        { "x1": 0.7, "y1": 111.1, "x2": 331.6, "y2": 111.1, "widthMm": 0.7 },
+        { "x1": 221.2, "y1": 69.8, "x2": 221.2, "y2": 111.1, "widthMm": 0.7 },
+        { "x1": 221.2, "y1": 91.0, "x2": 331.6, "y2": 91.0, "widthMm": 0.7 }
+      ],
+      "cells": [
+        {
+          "row": 0,
+          "col": 0,
+          "colSpan": 2,
+          "x": 0.7,
+          "y": 0.7,
+          "w": 330.9,
+          "h": 69.1
+        },
+        {
+          "row": 1,
+          "col": 0,
+          "rowSpan": 2,
+          "x": 0.7,
+          "y": 69.8,
+          "w": 220.5,
+          "h": 41.3
+        },
+        { "row": 1, "col": 1, "x": 221.2, "y": 69.8, "w": 110.4, "h": 21.2 },
+        { "row": 2, "col": 1, "x": 221.2, "y": 91.0, "w": 110.4, "h": 20.1 },
+        {
+          "row": 3,
+          "col": 0,
+          "colSpan": 2,
+          "x": 0.7,
+          "y": 111.1,
+          "w": 330.9,
+          "h": 333.4
+        }
+      ]
+    },
+    {
+      "id": "fire",
+      "type": "text",
+      "x": 67,
+      "y": 2,
+      "w": 198,
+      "h": 13.5,
+      "content": "{{fire_service_act}}",
+      "style": {
+        "fontSizePt": 21,
+        "textAlign": "center",
+        "letterSpacingEm": 0.4
+      }
+    },
+    {
+      "id": "code",
+      "type": "text",
+      "x": 296,
+      "y": 2,
+      "w": 32,
+      "h": 10,
+      "content": "{{product_code}}",
+      "style": {
+        "fontSizePt": 18,
+        "textAlign": "right",
+        "letterSpacingEm": 0.1
+      }
+    },
+    {
+      "id": "name",
+      "type": "text",
+      "x": 35.3,
+      "y": 8.7,
+      "w": 261.4,
+      "h": 36.5,
+      "role": "product_name",
+      "content": "{{product_name}}",
+      "style": {
+        "fontSizePt": 57,
+        "fontWeight": "bold",
+        "textAlign": "center"
+      },
+      "fit": {
+        "maxBox": { "x": 4, "y": 8.7, "w": 324, "h": 36.5 },
+        "minFontSizePt": 32
+      }
+    },
+    {
+      "id": "name_en",
+      "type": "text",
+      "x": 85.4,
+      "y": 43.3,
+      "w": 157.4,
+      "h": 25,
+      "role": "product_subtitle",
+      "content": "{{product_name_en}}",
+      "style": {
+        "fontFamily": "Noto Sans",
+        "fontSizePt": 39,
+        "textAlign": "center"
+      },
+      "fit": {
+        "maxBox": { "x": 4, "y": 43.3, "w": 324, "h": 25 },
+        "minFontSizePt": 22
+      }
+    },
+    {
+      "id": "company",
+      "type": "text",
+      "x": 15.5,
+      "y": 71,
+      "w": 126,
+      "h": 21,
+      "role": "supplier",
+      "content": "{{company_name}}",
+      "style": {
+        "fontSizePt": 41,
+        "fontWeight": "bold",
+        "letterSpacingEm": 0.6
+      }
+    },
+    {
+      "id": "logo",
+      "type": "image",
+      "x": 149.9,
+      "y": 72.7,
+      "w": 68.8,
+      "h": 32.5,
+      "role": "logo",
+      "field": "company_logo"
+    },
+    {
+      "id": "address",
+      "type": "text",
+      "x": 10.9,
+      "y": 95.4,
+      "w": 126.2,
+      "h": 13.5,
+      "role": "supplier",
+      "content": "{{company_address}}",
+      "style": { "fontSizePt": 21, "letterSpacingEm": 0.1 }
+    },
+    {
+      "id": "lot_label",
+      "type": "text",
+      "x": 225.4,
+      "y": 71,
+      "w": 35,
+      "h": 16.7,
+      "role": "static_text",
+      "content": "LOT No.",
+      "style": { "fontFamily": "Noto Sans", "fontSizePt": 26 }
+    },
+    {
+      "id": "lot",
+      "type": "text",
+      "x": 282.2,
+      "y": 71,
+      "w": 45,
+      "h": 16.7,
+      "role": "batch",
+      "content": "{{lot}}",
+      "style": { "fontFamily": "Noto Sans", "fontSizePt": 26 }
+    },
+    {
+      "id": "net_label",
+      "type": "text",
+      "x": 225.4,
+      "y": 92,
+      "w": 35,
+      "h": 16.7,
+      "role": "static_text",
+      "content": "Net Wt.",
+      "style": { "fontFamily": "Noto Sans", "fontSizePt": 26 }
+    },
+    {
+      "id": "net",
+      "type": "text",
+      "x": 282.2,
+      "y": 92,
+      "w": 30,
+      "h": 16.7,
+      "role": "net_quantity",
+      "content": "{{net_weight}}",
+      "style": { "fontFamily": "Noto Sans", "fontSizePt": 26 }
+    },
+    {
+      "id": "net_unit",
+      "type": "text",
+      "x": 315.7,
+      "y": 92,
+      "w": 12,
+      "h": 16.7,
+      "role": "static_text",
+      "content": "kg",
+      "style": { "fontFamily": "Noto Sans", "fontSizePt": 26 }
+    },
+    {
+      "id": "components",
+      "type": "text",
+      "x": 10.9,
+      "y": 112.5,
+      "w": 160,
+      "h": 23,
+      "role": "identifiers",
+      "content": "成分\n{{component_names}}",
+      "style": { "fontSizePt": 16, "fontWeight": "bold" },
+      "fit": {
+        "maxBox": { "x": 10.9, "y": 112.5, "w": 165, "h": 32 },
+        "minFontSizePt": 11
+      }
+    },
+    {
+      "id": "cas",
+      "type": "text",
+      "x": 178.2,
+      "y": 112.5,
+      "w": 60,
+      "h": 23,
+      "role": "identifiers",
+      "content": "CAS 番号\n{{component_cas}}",
+      "style": { "fontSizePt": 16, "fontWeight": "bold" },
+      "fit": {
+        "maxBox": { "x": 178.2, "y": 112.5, "w": 60, "h": 32 },
+        "minFontSizePt": 11
+      }
+    },
+    {
+      "id": "signal_frame",
+      "type": "rect",
+      "x": 6.3,
+      "y": 155.2,
+      "w": 32.5,
+      "h": 16.9,
+      "style": { "stroke": "#000000", "strokeWidthMm": 0.7 }
+    },
+    {
+      "id": "signal",
+      "type": "text",
+      "x": 7,
+      "y": 156,
+      "w": 31,
+      "h": 15,
+      "role": "signal_word",
+      "content": "{{signal_word}}",
+      "style": {
+        "fontSizePt": 30,
+        "textAlign": "center",
+        "verticalAlign": "middle"
+      }
+    },
+    {
+      "id": "pics",
+      "type": "pictogram_area",
+      "x": 45,
+      "y": 146,
+      "w": 135,
+      "h": 33,
+      "role": "pictogram",
+      "field": "pictograms",
+      "maxCount": 6,
+      "gapMm": 0
+    },
+    {
+      "id": "h",
+      "type": "text",
+      "x": 12.7,
+      "y": 185,
+      "w": 300,
+      "h": 29,
+      "role": "hazard_statements",
+      "content": "{{hazard_statements}}",
+      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1 },
+      "columns": 2,
+      "columnGapMm": 50,
+      "fit": {
+        "maxBox": { "x": 12.7, "y": 185, "w": 312, "h": 30 },
+        "minFontSizePt": 14
+      }
+    },
+    {
+      "id": "head_prevention",
+      "type": "text",
+      "x": 3.5,
+      "y": 216,
+      "w": 44,
+      "h": 12,
+      "role": "static_text",
+      "content": "【安全対策】",
+      "style": { "fontSizePt": 19 }
+    },
+    {
+      "id": "prevention",
+      "type": "text",
+      "x": 12.3,
+      "y": 224.2,
+      "w": 314.7,
+      "h": 60,
+      "role": "precautionary_statements",
+      "content": "{{p_prevention}} {{storage_note}}",
+      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "fit": {
+        "maxBox": { "x": 12.3, "y": 224.2, "w": 316, "h": 60.5 },
+        "minFontSizePt": 13
+      }
+    },
+    {
+      "id": "head_response",
+      "type": "text",
+      "x": 3.5,
+      "y": 285,
+      "w": 44,
+      "h": 12,
+      "role": "static_text",
+      "content": "【応急措置】",
+      "style": { "fontSizePt": 19 }
+    },
+    {
+      "id": "response",
+      "type": "text",
+      "x": 12.7,
+      "y": 293.1,
+      "w": 312,
+      "h": 53.5,
+      "role": "precautionary_statements",
+      "content": "{{p_response}}",
+      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "fit": {
+        "maxBox": { "x": 12.3, "y": 293.1, "w": 316, "h": 53.5 },
+        "minFontSizePt": 13
+      }
+    },
+    {
+      "id": "head_storage",
+      "type": "text",
+      "x": 3.5,
+      "y": 347,
+      "w": 29,
+      "h": 12,
+      "role": "static_text",
+      "content": "【保管】",
+      "style": { "fontSizePt": 19 }
+    },
+    {
+      "id": "storage",
+      "type": "text",
+      "x": 12.3,
+      "y": 354.2,
+      "w": 312,
+      "h": 19,
+      "role": "precautionary_statements",
+      "content": "{{p_storage}}",
+      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "fit": {
+        "maxBox": { "x": 12.3, "y": 354.2, "w": 316, "h": 19 },
+        "minFontSizePt": 13
+      }
+    },
+    {
+      "id": "head_disposal",
+      "type": "text",
+      "x": 3.5,
+      "y": 373.5,
+      "w": 29,
+      "h": 12,
+      "role": "static_text",
+      "content": "【廃棄】",
+      "style": { "fontSizePt": 19 }
+    },
+    {
+      "id": "disposal",
+      "type": "text",
+      "x": 12.7,
+      "y": 381,
+      "w": 307,
+      "h": 20,
+      "role": "precautionary_statements",
+      "content": "{{p_disposal}}",
+      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "fit": {
+        "maxBox": { "x": 12.3, "y": 381, "w": 316, "h": 26 },
+        "minFontSizePt": 13
+      }
+    },
+    {
+      "id": "transport",
+      "type": "text",
+      "x": 234.2,
+      "y": 410.6,
+      "w": 90,
+      "h": 26,
+      "content": "指針番号 {{guide_number}}\n国連番号 {{un_number}}",
+      "style": { "fontSizePt": 22 }
+    },
+    {
+      "id": "transport_phone",
+      "type": "text",
+      "x": 14.5,
+      "y": 425.1,
+      "w": 200,
+      "h": 14.4,
+      "role": "emergency_phone",
+      "content": "輸送時の緊急連絡先：{{transport_emergency_phone}}",
+      "style": { "fontSizePt": 22, "letterSpacingEm": 0.3 }
+    }
+  ]
+}

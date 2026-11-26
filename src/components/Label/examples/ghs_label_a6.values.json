@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "values": {
+    "product_name": { "text": "アセトン", "origin": "sds" },
+    "pictograms": { "pictograms": ["GHS02", "GHS07"], "origin": "sds" },
+    "signal_word": { "text": "危険", "origin": "sds" },
+    "hazard_statements": {
+      "origin": "sds",
+      "statements": [
+        { "code": "H225", "text": "引火性の高い液体及び蒸気" },
+        { "code": "H319", "text": "強い眼刺激" },
+        { "code": "H336", "text": "眠気又はめまいのおそれ" }
+      ]
+    },
+    "precautionary_statements": {
+      "origin": "sds",
+      "statements": [
+        {
+          "code": "P210",
+          "text": "熱、高温のもの、火花、裸火及び他の着火源から遠ざけること。禁煙。"
+        },
+        {
+          "code": "P305+P351+P338",
+          "text": "眼に入った場合：水で数分間注意深く洗うこと。次にコンタクトレンズを着用していて容易に外せる場合は外すこと。その後も洗浄を続けること。"
+        }
+      ]
+    },
+    "handling": {
+      "text": "火気厳禁。換気の良い場所で使い、使用後は容器を密閉する。",
+      "origin": "ai",
+      "sourceText": "熱、火花、裸火から遠ざけること。換気の良い場所でのみ使用すること。容器を密閉しておくこと。"
+    },
+    "first_aid": {
+      "text": "眼に入った場合: 水で数分間注意深く洗う。気分が悪い時は医師の診察を受ける。",
+      "origin": "ai",
+      "status": "dropped_essential",
+      "detail": "皮膚に付着した場合の措置が文字数の上限で入らなかった",
+      "sourceText": "皮膚に付着した場合：汚染された衣類を直ちに脱ぐこと。皮膚を水で洗うこと。眼に入った場合：水で数分間注意深く洗うこと。気分が悪いときは医師に連絡すること。",
+      "droppedText": "皮膚に付着した場合：汚染された衣類を直ちに脱ぐこと。皮膚を水で洗うこと。"
+    },
+    "fire_service_act": {
+      "text": "第4類 第1石油類 水溶性 危険等級Ⅱ 火気厳禁",
+      "origin": "rule"
+    },
+    "company_name": { "text": "サンプル化学株式会社", "origin": "company" },
+    "company_address": {
+      "text": "東京都中央区日本橋1-2-3",
+      "origin": "company"
+    },
+    "emergency_phone": { "text": "03-1234-5678", "origin": "company" },
+    "company_logo": {
+      "image": "gs://label-company-assets/sample/logo.png",
+      "origin": "company"
+    },
+    "amount": { "text": "500 mL", "origin": "manual" },
+    "legal_notice": { "text": "労働安全衛生法に基づく表示", "origin": "fixed" }
+  }
+}
