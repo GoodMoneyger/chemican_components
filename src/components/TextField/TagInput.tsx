@@ -10,6 +10,7 @@ import type { IconProp } from '../../lib/utils';
 import { cn, renderIcon } from '../../lib/utils';
 import { useCompositionGuard } from '../../lib/hooks';
 import { Tag } from '../Tag/Tag';
+import type { TagColorCode } from '../Tag/Tag';
 
 import { inputWrapperVariants, iconVariants } from './TextField';
 
@@ -33,6 +34,7 @@ export interface TagInputProps
   helperText?: React.ReactNode;
   onValidateTag?: (tag: string) => { valid: boolean; error?: React.ReactNode };
   defaultValidationError?: React.ReactNode;
+  tagColorCode?: TagColorCode;
 }
 
 export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
@@ -56,6 +58,7 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       className,
       onValidateTag,
       defaultValidationError = 'Invalid tag',
+      tagColorCode = 0,
       ...inputProps
     },
     ref
@@ -233,6 +236,8 @@ export const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
             {tags.map((tag, index) => (
               <Tag
                 key={index}
+                colorCode={tagColorCode}
+                disabled={disabled ?? false}
                 {...(!disabled && { onRemove: () => removeTag(index) })}
               >
                 {tag}
