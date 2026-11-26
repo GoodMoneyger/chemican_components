@@ -1,5 +1,6 @@
 import { default as React } from '../../../node_modules/react';
 import { IconProp } from '../../lib/utils';
+import { TagColorCode } from '../Tag/Tag';
 export interface TagInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onKeyDown'> {
     value: string[];
     onChange: (value: string[]) => void;
@@ -19,5 +20,6 @@ export interface TagInputProps extends Omit<React.InputHTMLAttributes<HTMLInputE
         error?: React.ReactNode;
     };
     defaultValidationError?: React.ReactNode;
+    tagColorCode?: TagColorCode;
 }
 export declare const TagInput: React.ForwardRefExoticComponent<TagInputProps & React.RefAttributes<HTMLInputElement>>;
