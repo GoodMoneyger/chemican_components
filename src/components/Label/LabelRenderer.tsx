@@ -16,7 +16,7 @@ import type {
   TemplateDocument,
   TextElement,
 } from './spec-types';
-import { textCss, textWidth } from './textStyle';
+import { KEEP_LINE_WHOLE, textCss, textWidth, wholeLines } from './textStyle';
 
 type Element = TemplateDocument['elements'][number];
 
@@ -103,7 +103,10 @@ function useTextLayouts(
     () =>
       template.elements
         .filter((e): e is TextElement => e.type === 'text')
-        .map((e) => ({ element: e, text: resolveContent(e.content, values) })),
+        .map((e) => ({
+          element: e,
+          text: resolveContent(e.content, values, template.fields),
+        })),
     [template, values]
   );
 
@@ -140,7 +143,7 @@ function ElementView({
       return (
         <TextView
           element={element}
-          text={resolveContent(element.content, values)}
+          text={resolveContent(element.content, values, template.fields)}
           layout={layout}
         />
       );
@@ -252,7 +255,11 @@ function TextView({
           width: textWidth(element, '100%'),
         }}
       >
-        {text}
+        {wholeLines(element, text)?.map((line, i) => (
+          <div key={i} style={KEEP_LINE_WHOLE}>
+            {line}
+          </div>
+        )) ?? text}
       </div>
     </div>
   );

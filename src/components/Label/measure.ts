@@ -1,6 +1,12 @@
 import type { Measure } from './fit';
 import type { TextElement } from './spec-types';
-import { PX_PER_MM, textCss, textWidth } from './textStyle';
+import {
+  KEEP_LINE_WHOLE,
+  PX_PER_MM,
+  textCss,
+  textWidth,
+  wholeLines,
+} from './textStyle';
 
 let probe: HTMLDivElement | null = null;
 
@@ -37,7 +43,19 @@ export function domMeasure(element: TextElement, text: string): Measure {
       width: textWidth(element, `${widthMm}mm`),
       height: 'auto',
     });
-    el.textContent = text;
+    const lines = wholeLines(element, text);
+    if (lines) {
+      el.replaceChildren(
+        ...lines.map((line) => {
+          const div = document.createElement('div');
+          Object.assign(div.style, KEEP_LINE_WHOLE);
+          div.textContent = line;
+          return div;
+        })
+      );
+    } else {
+      el.textContent = text;
+    }
     return {
       heightMm: el.scrollHeight / PX_PER_MM,
       tooWide: el.scrollWidth > el.clientWidth + 1,

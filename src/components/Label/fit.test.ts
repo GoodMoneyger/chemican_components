@@ -116,6 +116,34 @@ describe('resolveContent', () => {
   });
 });
 
+describe('statement format', () => {
+  it('follows the field pattern, limit and join', () => {
+    const values = {
+      p: {
+        statements: [
+          { code: 'P210', text: '熱から遠ざけること。' },
+          { code: 'P233', text: '容器を密閉しておくこと。' },
+          { code: 'P240', text: '容器を接地すること。' },
+        ],
+        origin: 'sds' as const,
+      },
+    };
+    const field = {
+      key: 'p',
+      label: 'P',
+      kind: 'statement_list' as const,
+      source: {
+        type: 'sds' as const,
+        path: 'section2.p_statements.prevention',
+        format: { pattern: '{code} {text}', join: ' ', limit: 2 },
+      },
+    };
+    expect(resolveContent('{{p}}', values, [field])).toBe(
+      'P210 熱から遠ざけること。 P233 容器を密閉しておくこと。'
+    );
+  });
+});
+
 describe('layoutPictograms', () => {
   const area: PictogramAreaElement = {
     id: 'p',

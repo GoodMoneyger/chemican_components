@@ -210,14 +210,18 @@
       "id": "fire",
       "type": "text",
       "x": 67,
-      "y": 2,
+      "y": 6.1,
       "w": 198,
       "h": 13.5,
       "content": "{{fire_service_act}}",
       "style": {
         "fontSizePt": 21,
         "textAlign": "center",
-        "letterSpacingEm": 0.4
+        "letterSpacingEm": 0.28
+      },
+      "fit": {
+        "maxBox": { "x": 67, "y": 6.1, "w": 198, "h": 13.5 },
+        "minFontSizePt": 17.8
       }
     },
     {
@@ -232,15 +236,19 @@
         "fontSizePt": 18,
         "textAlign": "right",
         "letterSpacingEm": 0.1
+      },
+      "fit": {
+        "maxBox": { "x": 296, "y": 2, "w": 32, "h": 10 },
+        "minFontSizePt": 15.3
       }
     },
     {
       "id": "name",
       "type": "text",
       "x": 35.3,
-      "y": 8.7,
+      "y": 20.1,
       "w": 261.4,
-      "h": 36.5,
+      "h": 26,
       "role": "product_name",
       "content": "{{product_name}}",
       "style": {
@@ -249,7 +257,7 @@
         "textAlign": "center"
       },
       "fit": {
-        "maxBox": { "x": 4, "y": 8.7, "w": 324, "h": 36.5 },
+        "maxBox": { "x": 4, "y": 20.1, "w": 324, "h": 26 },
         "minFontSizePt": 32
       }
     },
@@ -257,9 +265,9 @@
       "id": "name_en",
       "type": "text",
       "x": 85.4,
-      "y": 43.3,
+      "y": 51.2,
       "w": 157.4,
-      "h": 25,
+      "h": 18,
       "role": "product_subtitle",
       "content": "{{product_name_en}}",
       "style": {
@@ -268,7 +276,7 @@
         "textAlign": "center"
       },
       "fit": {
-        "maxBox": { "x": 4, "y": 43.3, "w": 324, "h": 25 },
+        "maxBox": { "x": 4, "y": 51.2, "w": 324, "h": 18 },
         "minFontSizePt": 22
       }
     },
@@ -276,7 +284,7 @@
       "id": "company",
       "type": "text",
       "x": 15.5,
-      "y": 71,
+      "y": 74.0,
       "w": 126,
       "h": 21,
       "role": "supplier",
@@ -284,7 +292,11 @@
       "style": {
         "fontSizePt": 41,
         "fontWeight": "bold",
-        "letterSpacingEm": 0.6
+        "letterSpacingEm": 0.53
+      },
+      "fit": {
+        "maxBox": { "x": 15.5, "y": 74.0, "w": 126, "h": 21 },
+        "minFontSizePt": 34.9
       }
     },
     {
@@ -301,18 +313,22 @@
       "id": "address",
       "type": "text",
       "x": 10.9,
-      "y": 95.4,
+      "y": 99.7,
       "w": 126.2,
       "h": 13.5,
       "role": "supplier",
       "content": "{{company_address}}",
-      "style": { "fontSizePt": 21, "letterSpacingEm": 0.1 }
+      "style": { "fontSizePt": 21, "letterSpacingEm": 0.08 },
+      "fit": {
+        "maxBox": { "x": 10.9, "y": 99.7, "w": 126.2, "h": 13.5 },
+        "minFontSizePt": 17.8
+      }
     },
     {
       "id": "lot_label",
       "type": "text",
       "x": 225.4,
-      "y": 71,
+      "y": 74.3,
       "w": 35,
       "h": 16.7,
       "role": "static_text",
@@ -323,7 +339,7 @@
       "id": "lot",
       "type": "text",
       "x": 282.2,
-      "y": 71,
+      "y": 74.3,
       "w": 45,
       "h": 16.7,
       "role": "batch",
@@ -334,7 +350,7 @@
       "id": "net_label",
       "type": "text",
       "x": 225.4,
-      "y": 92,
+      "y": 94.8,
       "w": 35,
       "h": 16.7,
       "role": "static_text",
@@ -345,7 +361,7 @@
       "id": "net",
       "type": "text",
       "x": 282.2,
-      "y": 92,
+      "y": 94.8,
       "w": 30,
       "h": 16.7,
       "role": "net_quantity",
@@ -356,7 +372,7 @@
       "id": "net_unit",
       "type": "text",
       "x": 315.7,
-      "y": 92,
+      "y": 95.0,
       "w": 12,
       "h": 16.7,
       "role": "static_text",
@@ -433,7 +449,7 @@
       "id": "h",
       "type": "text",
       "x": 12.7,
-      "y": 185,
+      "y": 187.5,
       "w": 300,
       "h": 29,
       "role": "hazard_statements",
@@ -442,7 +458,7 @@
       "columns": 2,
       "columnGapMm": 50,
       "fit": {
-        "maxBox": { "x": 12.7, "y": 185, "w": 312, "h": 30 },
+        "maxBox": { "x": 12.7, "y": 187.5, "w": 312, "h": 30 },
         "minFontSizePt": 14
       }
     },
@@ -450,7 +466,7 @@
       "id": "head_prevention",
       "type": "text",
       "x": 3.5,
-      "y": 216,
+      "y": 217.5,
       "w": 44,
       "h": 12,
       "role": "static_text",
@@ -461,14 +477,14 @@
       "id": "prevention",
       "type": "text",
       "x": 12.3,
-      "y": 224.2,
+      "y": 228.5,
       "w": 314.7,
-      "h": 60,
+      "h": 62,
       "role": "precautionary_statements",
       "content": "{{p_prevention}} {{storage_note}}",
-      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "style": { "fontSizePt": 18, "letterSpacingEm": 0.1, "lineHeight": 1.17 },
       "fit": {
-        "maxBox": { "x": 12.3, "y": 224.2, "w": 316, "h": 60.5 },
+        "maxBox": { "x": 12.3, "y": 228.5, "w": 316, "h": 62 },
         "minFontSizePt": 13
       }
     },
@@ -476,7 +492,7 @@
       "id": "head_response",
       "type": "text",
       "x": 3.5,
-      "y": 285,
+      "y": 286.5,
       "w": 44,
       "h": 12,
       "role": "static_text",
@@ -487,14 +503,14 @@
       "id": "response",
       "type": "text",
       "x": 12.7,
-      "y": 293.1,
+      "y": 297.4,
       "w": 312,
-      "h": 53.5,
+      "h": 55,
       "role": "precautionary_statements",
       "content": "{{p_response}}",
-      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "style": { "fontSizePt": 18, "letterSpacingEm": 0.1, "lineHeight": 1.17 },
       "fit": {
-        "maxBox": { "x": 12.3, "y": 293.1, "w": 316, "h": 53.5 },
+        "maxBox": { "x": 12.3, "y": 297.4, "w": 316, "h": 55 },
         "minFontSizePt": 13
       }
     },
@@ -502,7 +518,7 @@
       "id": "head_storage",
       "type": "text",
       "x": 3.5,
-      "y": 347,
+      "y": 348.5,
       "w": 29,
       "h": 12,
       "role": "static_text",
@@ -513,14 +529,14 @@
       "id": "storage",
       "type": "text",
       "x": 12.3,
-      "y": 354.2,
+      "y": 358.5,
       "w": 312,
-      "h": 19,
+      "h": 20,
       "role": "precautionary_statements",
       "content": "{{p_storage}}",
-      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "style": { "fontSizePt": 18, "letterSpacingEm": 0.1, "lineHeight": 1.17 },
       "fit": {
-        "maxBox": { "x": 12.3, "y": 354.2, "w": 316, "h": 19 },
+        "maxBox": { "x": 12.3, "y": 358.5, "w": 316, "h": 20 },
         "minFontSizePt": 13
       }
     },
@@ -528,7 +544,7 @@
       "id": "head_disposal",
       "type": "text",
       "x": 3.5,
-      "y": 373.5,
+      "y": 375.0,
       "w": 29,
       "h": 12,
       "role": "static_text",
@@ -539,14 +555,14 @@
       "id": "disposal",
       "type": "text",
       "x": 12.7,
-      "y": 381,
+      "y": 385.3,
       "w": 307,
-      "h": 20,
+      "h": 21,
       "role": "precautionary_statements",
       "content": "{{p_disposal}}",
-      "style": { "fontSizePt": 19, "letterSpacingEm": 0.1, "lineHeight": 1.15 },
+      "style": { "fontSizePt": 18, "letterSpacingEm": 0.1, "lineHeight": 1.17 },
       "fit": {
-        "maxBox": { "x": 12.3, "y": 381, "w": 316, "h": 26 },
+        "maxBox": { "x": 12.3, "y": 385.3, "w": 316, "h": 21 },
         "minFontSizePt": 13
       }
     },
@@ -554,7 +570,7 @@
       "id": "transport",
       "type": "text",
       "x": 234.2,
-      "y": 410.6,
+      "y": 417.5,
       "w": 90,
       "h": 26,
       "content": "指針番号 {{guide_number}}\n国連番号 {{un_number}}",
@@ -564,12 +580,16 @@
       "id": "transport_phone",
       "type": "text",
       "x": 14.5,
-      "y": 425.1,
+      "y": 429.9,
       "w": 200,
       "h": 14.4,
       "role": "emergency_phone",
       "content": "輸送時の緊急連絡先：{{transport_emergency_phone}}",
-      "style": { "fontSizePt": 22, "letterSpacingEm": 0.3 }
+      "style": { "fontSizePt": 22, "letterSpacingEm": 0.3 },
+      "fit": {
+        "maxBox": { "x": 14.5, "y": 429.9, "w": 200, "h": 14.4 },
+        "minFontSizePt": 18.7
+      }
     }
   ]
 }
