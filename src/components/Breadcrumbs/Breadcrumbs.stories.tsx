@@ -1,6 +1,5 @@
 import React from 'react';
 import type { Meta, StoryFn } from 'storybook/react-vite';
-import figma from '@figma/code-connect';
 
 import { Breadcrumbs } from './Breadcrumbs';
 
@@ -23,13 +22,6 @@ const meta: Meta<typeof Breadcrumbs> = {
     design: {
       type: 'figma',
       url: 'https://www.figma.com/design/f46iSbgpNKClOOIDRfG7AB/Master-v2.0-SDS%E7%AE%A1%E7%90%86%EF%BC%88JP_Products%EF%BC%89?node-id=15075-132583&m=dev',
-      examples: [Breadcrumbs],
-      props: {
-        size: figma.enum('Size', {
-          Small: 'sm',
-          Medium: 'md',
-        }),
-      },
     },
   },
 };
