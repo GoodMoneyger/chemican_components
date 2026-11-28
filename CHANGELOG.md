@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.0](github.com/GoodMoneyger/chemican_components/compare/v1.17.0...v1.18.0) (2026-11-28)
+
+### Features
+
+* **TextField:** Add tagColorCode prop to TagInput to color tag chips ([b702be5](github.com/GoodMoneyger/chemican_components/commits/b702be5f49a35df109eebf3c6374fa95bc27dc45))
+* **TextField:** Pass disabled to TagInput's tag chips ([6f51ca9](github.com/GoodMoneyger/chemican_components/commits/6f51ca979e60e5be6bab1418f6276df07f459a2a))
+
 ## [1.17.0](https://github.com/GoodMoneyger/chemican_components/compare/v1.16.0...v1.17.0) (2026-11-10)
 
 ### Features
