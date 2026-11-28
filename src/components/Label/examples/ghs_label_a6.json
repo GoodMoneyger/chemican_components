@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "language": "ja",
+  "page": { "widthMm": 148, "heightMm": 105 },
+  "fields": [
+    {
+      "key": "product_name",
+      "label": "製品名",
+      "required": true,
+      "source": { "type": "sds", "path": "product.name" }
+    },
+    {
+      "key": "pictograms",
+      "label": "絵表示",
+      "kind": "pictogram_list",
+      "source": { "type": "sds", "path": "section2.pictograms" }
+    },
+    {
+      "key": "signal_word",
+      "label": "注意喚起語",
+      "source": { "type": "sds", "path": "section2.signal_word" }
+    },
+    {
+      "key": "hazard_statements",
+      "label": "危険有害性情報",
+      "kind": "statement_list",
+      "source": { "type": "sds", "path": "section2.h_statements" }
+    },
+    {
+      "key": "precautionary_statements",
+      "label": "注意書き",
+      "kind": "statement_list",
+      "source": { "type": "sds", "path": "section2.p_statements" }
+    },
+    {
+      "key": "handling",
+      "label": "取扱いの要点",
+      "maxChars": 60,
+      "source": {
+        "type": "ai",
+        "sdsSections": [7],
+        "instruction": "SDS 7項から、取扱いで最も大事な注意を2つだけ。短い文で、決まった言い方を使う。"
+      }
+    },
+    {
+      "key": "first_aid",
+      "label": "応急措置",
+      "maxChars": 120,
+      "source": {
+        "type": "ai",
+        "sdsSections": [4],
+        "instruction": "SDS 4項を使う。眼・皮膚・吸入・飲み込みのうち、一番大事な2つだけ。「医師の診察を受ける」などの決まった言い方を使う。"
+      }
+    },
+    {
+      "key": "fire_service_act",
+      "label": "消防法表示",
+      "source": { "type": "rule", "rule": "fire_service_act" }
+    },
+    {
+      "key": "company_name",
+      "label": "会社名",
+      "source": { "type": "company", "key": "name" }
+    },
+    {
+      "key": "company_address",
+      "label": "住所",
+      "source": { "type": "company", "key": "address" }
+    },
+    {
+      "key": "emergency_phone",
+      "label": "緊急連絡先",
+      "source": { "type": "company", "key": "emergency_phone" }
+    },
+    {
+      "key": "company_logo",
+      "label": "ロゴ",
+      "kind": "image",
+      "source": { "type": "company", "key": "logo" }
+    },
+    {
+      "key": "amount",
+      "label": "内容量",
+      "required": true,
+      "source": { "type": "manual", "placeholder": "例: 500 mL" }
+    },
+    {
+      "key": "lot",
+      "label": "ロット番号",
+      "source": { "type": "per_print", "allowBlank": true, "maxLength": 20 }
+    },
+    {
+      "key": "produced_on",
+      "label": "製造日",
+      "required": true,
+      "source": { "type": "per_print", "format": "date", "default": "today" }
+    },
+    {
+      "key": "legal_notice",
+      "label": "法令表示",
+      "source": { "type": "fixed", "value": "労働安全衛生法に基づく表示" }
+    }
+  ],
+  "elements": [
+    {
+      "id": "frame",
+      "type": "rect",
+      "x": 0.5,
+      "y": 0.5,
+      "w": 147,
+      "h": 104,
+      "style": { "stroke": "#000000", "strokeWidthMm": 0.3 }
+    },
+    {
+      "id": "name",
+      "type": "text",
+      "x": 4,
+      "y": 4,
+      "w": 88,
+      "h": 12,
+      "role": "product_name",
+      "content": "{{product_name}}",
+      "style": { "fontSizePt": 20, "fontWeight": "bold" },
+      "fit": {
+        "maxBox": { "x": 4, "y": 4, "w": 88, "h": 12 },
+        "grow": "down",
+        "minFontSizePt": 12
+      }
+    },
+    {
+      "id": "pics",
+      "type": "pictogram_area",
+      "x": 96,
+      "y": 4,
+      "w": 48,
+      "h": 22,
+      "field": "pictograms",
+      "maxCount": 4,
+      "gapMm": 1.5,
+      "align": "end"
+    },
+    {
+      "id": "signal",
+      "type": "text",
+      "x": 4,
+      "y": 18,
+      "w": 40,
+      "h": 8,
+      "role": "signal_word",
+      "content": "{{signal_word}}",
+      "style": { "fontSizePt": 16, "fontWeight": "bold", "color": "#cc0000" }
+    },
+    {
+      "id": "h",
+      "type": "text",
+      "x": 4,
+      "y": 30,
+      "w": 68,
+      "h": 30,
+      "role": "hazard_statements",
+      "content": "危険有害性情報\n{{hazard_statements}}",
+      "style": { "fontSizePt": 7 },
+      "fit": {
+        "maxBox": { "x": 4, "y": 30, "w": 68, "h": 34 },
+        "minFontSizePt": 5
+      }
+    },
+    {
+      "id": "p",
+      "type": "text",
+      "x": 76,
+      "y": 30,
+      "w": 68,
+      "h": 22,
+      "role": "precautionary_statements",
+      "content": "注意書き\n{{precautionary_statements}}",
+      "style": { "fontSizePt": 7 },
+      "fit": {
+        "maxBox": { "x": 76, "y": 30, "w": 68, "h": 24 },
+        "minFontSizePt": 5
+      }
+    },
+    {
+      "id": "handling",
+      "type": "text",
+      "x": 76,
+      "y": 55,
+      "w": 68,
+      "h": 9,
+      "role": "supplementary_info",
+      "content": "取扱いの要点: {{handling}}",
+      "style": { "fontSizePt": 7 }
+    },
+    {
+      "id": "aid",
+      "type": "text",
+      "x": 4,
+      "y": 66,
+      "w": 140,
+      "h": 10,
+      "role": "supplementary_info",
+      "content": "応急措置: {{first_aid}}",
+      "style": { "fontSizePt": 7 },
+      "fit": {
+        "maxBox": { "x": 4, "y": 66, "w": 140, "h": 12 },
+        "minFontSizePt": 5.5
+      }
+    },
+    {
+      "id": "rule_bottom",
+      "type": "line",
+      "x": 4,
+      "y": 80,
+      "w": 140,
+      "h": 0,
+      "x1": 4,
+      "y1": 80,
+      "x2": 144,
+      "y2": 80,
+      "style": { "stroke": "#000000", "strokeWidthMm": 0.25 }
+    },
+    {
+      "id": "logo",
+      "type": "image",
+      "x": 4,
+      "y": 83,
+      "w": 18,
+      "h": 8,
+      "field": "company_logo"
+    },
+    {
+      "id": "supplier",
+      "type": "text",
+      "x": 24,
+      "y": 83,
+      "w": 50,
+      "h": 18,
+      "role": "supplier",
+      "content": "{{company_name}}\n{{company_address}}\n緊急連絡先 {{emergency_phone}}",
+      "style": { "fontSizePt": 6.5 }
+    },
+    {
+      "id": "fire",
+      "type": "text",
+      "x": 76,
+      "y": 83,
+      "w": 38,
+      "h": 10,
+      "content": "{{fire_service_act}}",
+      "style": { "fontSizePt": 6.5, "fontWeight": "bold" }
+    },
+    {
+      "id": "amount",
+      "type": "text",
+      "x": 116,
+      "y": 83,
+      "w": 28,
+      "h": 5,
+      "role": "net_quantity",
+      "content": "内容量 {{amount}}",
+      "style": { "fontSizePt": 6.5 }
+    },
+    {
+      "id": "lot",
+      "type": "text",
+      "x": 116,
+      "y": 89,
+      "w": 28,
+      "h": 4,
+      "role": "batch",
+      "content": "ロット {{lot}}",
+      "style": { "fontSizePt": 6 }
+    },
+    {
+      "id": "produced",
+      "type": "text",
+      "x": 116,
+      "y": 94,
+      "w": 28,
+      "h": 4,
+      "content": "製造日 {{produced_on}}",
+      "style": { "fontSizePt": 6 }
+    },
+    {
+      "id": "legal",
+      "type": "text",
+      "x": 76,
+      "y": 96,
+      "w": 38,
+      "h": 5,
+      "role": "static_text",
+      "content": "{{legal_notice}}",
+      "style": { "fontSizePt": 5.5, "color": "#555555" }
+    }
+  ]
+}

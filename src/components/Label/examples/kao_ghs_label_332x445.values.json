@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "values": {
+    "product_code": { "text": "250001", "origin": "manual" },
+    "fire_service_act": {
+      "text": "第4類 第2石油類 危険等級Ⅲ 水溶性 火気厳禁",
+      "origin": "rule"
+    },
+    "product_name": { "text": "コータミン　８６Ｐ　コンク", "origin": "sds" },
+    "product_name_en": { "text": "QUARTAMIN 86P CONC", "origin": "manual" },
+    "company_name": { "text": "花王株式会社", "origin": "company" },
+    "company_address": {
+      "text": "東京都中央区日本橋茅場町1-14-10",
+      "origin": "company"
+    },
+    "company_logo": {
+      "image": "gs://label-company-assets/kao/logo.svg",
+      "origin": "company"
+    },
+    "net_weight": { "text": "15", "origin": "manual" },
+    "component_names": {
+      "text": "ステアリルトリメチルアンモニウムクロライド\nイソプロピルアルコール",
+      "origin": "sds"
+    },
+    "component_cas": { "text": "112-03-8\n67-63-0", "origin": "sds" },
+    "signal_word": { "text": "危険", "origin": "sds" },
+    "pictograms": {
+      "pictograms": ["GHS02", "GHS05", "GHS07", "GHS09"],
+      "origin": "sds"
+    },
+    "hazard_statements": {
+      "origin": "sds",
+      "statements": [
+        { "code": "H225", "text": "引火性の高い液体及び蒸気。" },
+        { "code": "H318", "text": "重篤な眼の損傷。" },
+        {
+          "code": "H410",
+          "text": "長期継続的影響によって水生生物に非常に強い毒性。"
+        },
+        { "code": "H302", "text": "飲み込むと有害。" },
+        { "code": "H336", "text": "眠気又はめまいのおそれ。" }
+      ]
+    },
+    "p_prevention": {
+      "origin": "sds",
+      "statements": [
+        {
+          "code": "P210",
+          "text": "熱/火花/裸火/高温のもののような着火源から遠ざけること。禁煙。"
+        },
+        { "code": "P233", "text": "容器を密閉しておくこと。" },
+        { "code": "P240", "text": "容器を接地すること/アースをとること。" },
+        {
+          "code": "P241",
+          "text": "防爆型の【電気機器、換気装置、照明機器などの機器】を使用すること。"
+        },
+        { "code": "P242", "text": "火花を発生させない工具を使用すること。" },
+        { "code": "P243", "text": "静電気放電に対する予防措置を講ずること。" },
+        {
+          "code": "P261",
+          "text": "粉じん/煙/ガス/ミスト/蒸気/スプレーの吸入を避けること。"
+        },
+        { "code": "P264", "text": "取扱い後はよく洗うこと。" },
+        {
+          "code": "P270",
+          "text": "この製品を使用するときに，飲食又は喫煙をしないこと。"
+        },
+        {
+          "code": "P271",
+          "text": "屋外又は換気の良い場所でだけ使用すること。"
+        },
+        { "code": "P273", "text": "環境への放出を避けること。" },
+        {
+          "code": "P280",
+          "text": "保護手袋/保護衣/保護眼鏡/保護面を着用すること。"
+        }
+      ]
+    },
+    "storage_note": {
+      "text": "貯蔵条件によって、全体または一部が固化することがある。そのときは加温・溶融し、均一化して使用する。",
+      "origin": "ai"
+    },
+    "p_response": {
+      "origin": "sds",
+      "statements": [
+        {
+          "code": "P304+P340",
+          "text": "吸入した場合：空気の新鮮な場所に移し，呼吸しやすい姿勢で休息させること。"
+        },
+        { "code": "P312", "text": "気分が悪いときは医師に連絡すること。" },
+        {
+          "code": "P301+P312",
+          "text": "飲み込んだ場合：気分が悪いときは医師に連絡すること。"
+        },
+        { "code": "P330", "text": "口をすすぐこと。" },
+        {
+          "code": "P305+P351+P338",
+          "text": "眼に入った場合：水で数分間注意深く洗うこと。次にコンタクトレンズを着用していて容易に外せる場合は外すこと。その後も洗浄を続けること。"
+        },
+        { "code": "P310", "text": "直ちに医師に連絡すること。" },
+        {
+          "code": "P303+P361+P353",
+          "text": "皮膚（又は髪）に付着した場合：直ちに汚染された衣類を全て脱ぐこと。皮膚を水【又はシャワー】で洗うこと。"
+        },
+        {
+          "code": "P370+P378",
+          "text": "火災の場合：火元への燃焼源を断ち、適切な消火剤を使用して消火すること。"
+        },
+        { "code": "P391", "text": "漏出物を回収すること。" }
+      ]
+    },
+    "p_storage": {
+      "origin": "sds",
+      "statements": [
+        {
+          "code": "P403+P233",
+          "text": "換気の良い場所で保管すること。容器を密閉しておくこと。"
+        },
+        { "code": "P235", "text": "涼しいところに置くこと。" },
+        { "code": "P405", "text": "施錠して保管すること。" }
+      ]
+    },
+    "p_disposal": {
+      "origin": "sds",
+      "statements": [
+        {
+          "code": "P501",
+          "text": "内容物／容器を適切な焼却炉で焼却処理するか、都道府県知事の許可を受けた専門の廃棄物処理業者に委託処理する。"
+        }
+      ]
+    },
+    "guide_number": { "text": "127", "origin": "rule" },
+    "un_number": { "text": "UN1993", "origin": "sds" },
+    "transport_emergency_phone": { "text": "073-423-8151", "origin": "company" }
+  }
+}

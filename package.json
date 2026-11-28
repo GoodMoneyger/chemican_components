@@ -26,6 +26,11 @@
       "import": "./src/tabler-icons.ts",
       "require": "./src/tabler-icons.ts"
     },
+    "./label": {
+      "types": "./src/components/Label/index.ts",
+      "import": "./src/components/Label/index.ts",
+      "require": "./src/components/Label/index.ts"
+    },
     "./tokens": {
       "types": "./src/tokens.ts",
       "import": "./src/tokens.ts",
